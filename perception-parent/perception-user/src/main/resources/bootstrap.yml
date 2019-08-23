@@ -1,0 +1,13 @@
+server:
+  port: 18050
+  servlet:
+    context-path: /
+spring:
+  application:
+    name: user-service
+  profiles:
+    active: local
+
+
+application:
+  description: 用户服务

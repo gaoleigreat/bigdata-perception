@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lego.perception.system.mapper.UserRoleMapper">
+
+    <sql id="find_columns">
+		id as id, user_id as userId, role_id as roleId, creation_date as creationDate,
+		created_by as createdBy, last_update_date as lastUpdateDate, last_updated_by as lastUpdatedBy
+	</sql>
+
+    <sql id="condition">
+        <if test='id != null'>
+            and id = #{id, jdbcType=BIGINT}
+        </if>
+        <if test='userId != null'>
+            and user_id = #{userId, jdbcType=VARCHAR}
+        </if>
+        <if test='roleId != null'>
+            and role_id = #{roleId, jdbcType=VARCHAR}
+        </if>
+        <if test="userIds != null and userIds.size > 0">
+            and user_id in
+            <foreach collection="userIds" index="index" separator="," open="(" close=")">
+                #{userIds[${index}], jdbcType=BIGINT}
+            </foreach>
+        </if>
+    </sql>
+
+    <sql id="page_condition">
+        <if test='arg0.id != null'>
+            and id = #{arg0.id, jdbcType=BIGINT}
+        </if>
+        <if test='arg0.userId != null'>
+            and user_id = #{arg0.userId, jdbcType=VARCHAR}
+        </if>
+        <if test='arg0.roleId != null'>
+            and role_id = #{arg0.roleId, jdbcType=VARCHAR}
+        </if>
+    </sql>
+
+    <select id="findPagedList" resultType="com.lego.framework.system.model.UserRole">
+        select <include refid="find_columns"></include>
+        from tpl_user_role
+        <where>
+            <include refid="page_condition"></include>
+        </where>
+        limit #{arg1.startIndex, jdbcType=INTEGER}, #{arg1.pageSize, jdbcType=INTEGER}
+    </select>
+
+    <select id="findPagedListCount" resultType="java.lang.Long">
+        select count(1)
+        from tpl_user_role
+        <where>
+            <include refid="page_condition"></include>
+        </where>
+    </select>
+
+    <select id="findList" parameterType="com.lego.framework.system.model.UserRole"
+            resultType="com.lego.framework.system.model.UserRole">
+        select <include refid="find_columns"></include>
+        from tpl_user_role
+        <where>
+            <include refid="condition"></include>
+        </where>
+    </select>
+
+    <insert id="insertList">
+        insert into tpl_user_role
+        (user_id, role_id, creation_date, created_by, last_update_date, last_updated_by)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.userId, jdbcType=BIGINT},
+            #{item.roleId, jdbcType=BIGINT},
+            #{item.creationDate, jdbcType=TIMESTAMP},
+            #{item.createdBy, jdbcType=BIGINT},
+            #{item.lastUpdateDate, jdbcType=TIMESTAMP},
+            #{item.lastUpdatedBy, jdbcType=BIGINT}
+            )
+        </foreach>
+    </insert>
+
+    <delete id="deleteList">
+        delete from tpl_user_role
+        where id in
+        <foreach collection="list" item="item" separator="," open="(" close=")" index="index">
+            #{item, jdbcType=BIGINT}
+        </foreach>
+    </delete>
+
+    <delete id="deleteListByUserIds">
+        delete from tpl_user_role
+        where user_id in
+        <foreach collection="list" item="item" separator="," open="(" close=")" index="index">
+            #{item, jdbcType=BIGINT}
+        </foreach>
+    </delete>
+
+    <delete id="delete">
+        delete from tpl_user_role
+        <where>
+            <if test="userId != null">
+               user_id = #{userId, jdbcType=BIGINT}
+            </if>
+            <if test="roleId != null">
+              and role_id = #{roleId, jdbcType=BIGINT}
+            </if>
+            <if test="id != null">
+              and id = #{id, jdbcType=BIGINT}
+            </if>
+        </where>
+    </delete>
+</mapper>

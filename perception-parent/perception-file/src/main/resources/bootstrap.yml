@@ -1,0 +1,13 @@
+server:
+  port: 18090
+  servlet:
+    context-path: /
+spring:
+  application:
+    name: file-service
+  profiles:
+    active: local
+
+
+application:
+  description: 文件服务

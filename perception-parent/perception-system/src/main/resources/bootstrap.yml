@@ -1,0 +1,13 @@
+server:
+  port: 18040
+  servlet:
+    context-path: /
+spring:
+  application:
+    name: system-service
+  profiles:
+    active: local
+
+
+application:
+  description: 系统服务

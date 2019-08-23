@@ -1,0 +1,9 @@
+server:
+  port: 18010
+  servlet:
+    context-path: /
+spring:
+  application:
+    name: eureka-server
+  profiles:
+    active: local

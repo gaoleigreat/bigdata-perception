@@ -1,0 +1,13 @@
+server:
+  port: 18030
+  servlet:
+    context-path: /
+spring:
+  application:
+    name: log-service
+  profiles:
+    active: local
+
+
+application:
+  description: 日志服务
