@@ -1,7 +1,7 @@
 package com.lego.perception.system.init;
 
 import com.lego.perception.system.service.IDictionaryService;
-import com.lego.framework.system.model.Dictionary;
+import com.lego.framework.system.model.entity.Dictionary;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;

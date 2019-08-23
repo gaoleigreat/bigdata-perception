@@ -37,7 +37,7 @@
         </if>
     </sql>
 
-    <select id="findPagedList" resultType="com.lego.framework.system.model.UserRole">
+    <select id="findPagedList" resultType="com.lego.framework.system.model.entity.UserRole">
         select <include refid="find_columns"></include>
         from tpl_user_role
         <where>
@@ -54,8 +54,8 @@
         </where>
     </select>
 
-    <select id="findList" parameterType="com.lego.framework.system.model.UserRole"
-            resultType="com.lego.framework.system.model.UserRole">
+    <select id="findList" parameterType="com.lego.framework.system.model.entity.UserRole"
+            resultType="com.lego.framework.system.model.entity.UserRole">
         select <include refid="find_columns"></include>
         from tpl_user_role
         <where>

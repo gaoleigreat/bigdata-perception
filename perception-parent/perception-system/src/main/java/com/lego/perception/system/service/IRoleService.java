@@ -1,5 +1,5 @@
 package com.lego.perception.system.service;
-import com.lego.framework.system.model.Role;
+import com.lego.framework.system.model.entity.Role;
 import com.survey.lib.common.page.Page;
 import com.survey.lib.common.page.PagedResult;
 import com.survey.lib.common.vo.RespVO;

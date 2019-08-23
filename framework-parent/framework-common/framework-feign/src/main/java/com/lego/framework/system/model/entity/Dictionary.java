@@ -1,4 +1,5 @@
-package com.lego.framework.system.model;
+package com.lego.framework.system.model.entity;
+
 import lombok.Data;
 
 import java.util.Date;
@@ -21,11 +22,12 @@ public class Dictionary {
     private List<Dictionary> children;
 
     public void setCreateInfo() {
-
-
+        Date currentDate=new Date();
+        this.creationDate = currentDate;
+        this.lastUpdateDate = currentDate;
     }
 
     public void setUpdateInfo() {
-
+        this.lastUpdateDate = new Date();
     }
 }

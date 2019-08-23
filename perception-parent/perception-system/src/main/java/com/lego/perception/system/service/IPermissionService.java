@@ -1,5 +1,5 @@
 package com.lego.perception.system.service;
-import com.lego.framework.system.model.Permission;
+import com.lego.framework.system.model.entity.Permission;
 import com.survey.lib.common.vo.RespVO;
 
 import java.util.List;

@@ -2,12 +2,11 @@ package com.lego.perception.system.controller;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
 import com.lego.perception.system.service.IPermissionService;
-import com.lego.framework.system.model.Permission;
+import com.lego.framework.system.model.entity.Permission;
 import com.survey.lib.common.vo.RespVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -17,9 +16,8 @@ import java.util.Map;
 @RequestMapping("/permission/v1")
 @Resource(value="permission", desc="权限管理")
 @Api(value="PermissionController",description = "权限点管理")
+@Slf4j
 public class PermissionController {
-
-    public static final Logger log = LoggerFactory.getLogger(PermissionController.class);
 
     @Autowired
     private IPermissionService permissionService;

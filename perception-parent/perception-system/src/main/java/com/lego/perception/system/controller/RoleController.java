@@ -3,7 +3,7 @@ package com.lego.perception.system.controller;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
 import com.lego.perception.system.service.IRoleService;
-import com.lego.framework.system.model.Role;
+import com.lego.framework.system.model.entity.Role;
 import com.survey.lib.common.page.Page;
 import com.survey.lib.common.page.PagedResult;
 import com.survey.lib.common.vo.RespVO;

@@ -1,7 +1,7 @@
 package com.lego.perception.system.service.impl;
 import com.lego.perception.system.mapper.RolePermissionMapper;
 import com.lego.perception.system.service.IRolePermissionService;
-import com.lego.framework.system.model.RolePermission;
+import com.lego.framework.system.model.entity.RolePermission;
 import com.survey.lib.common.vo.RespVO;
 import com.survey.lib.common.vo.RespVOBuilder;
 import lombok.extern.slf4j.Slf4j;

@@ -1,7 +1,7 @@
 package com.lego.perception.system.controller;
 import com.lego.framework.base.annotation.Resource;
 import com.lego.perception.system.service.IRolePermissionService;
-import com.lego.framework.system.model.RolePermission;
+import com.lego.framework.system.model.entity.RolePermission;
 import com.survey.lib.common.vo.RespVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

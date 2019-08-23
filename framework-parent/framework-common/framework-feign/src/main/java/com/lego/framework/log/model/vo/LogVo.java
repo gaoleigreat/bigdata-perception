@@ -1,4 +1,4 @@
-package com.lego.framework.log.vo;
+package com.lego.framework.log.model.vo;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;

@@ -6,8 +6,8 @@
 		id as id, r_id as rId, r_name as rName, pr_id as prId, pr_name as prName, scope as scope, creation_date as creationDate
 	</sql>
 
-    <select id="findList" parameterType="com.lego.framework.system.model.Permission"
-            resultType="com.lego.framework.system.model.Permission">
+    <select id="findList" parameterType="com.lego.framework.system.model.entity.Permission"
+            resultType="com.lego.framework.system.model.entity.Permission">
         select <include refid="find_columns"></include>
         from tpl_permission_t
         where 1 = 1
@@ -44,7 +44,7 @@
     </delete>
 
     <select id="findUserPermissions" parameterType="java.lang.Long"
-            resultType="com.lego.framework.system.model.Permission">
+            resultType="com.lego.framework.system.model.entity.Permission">
         select t3.r_id      as rId,
                 t3.pr_id     as prId,
                 t3.scope     as scope

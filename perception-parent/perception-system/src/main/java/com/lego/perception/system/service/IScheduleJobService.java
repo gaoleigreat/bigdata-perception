@@ -1,6 +1,6 @@
 package com.lego.perception.system.service;
 
-import com.lego.framework.system.vo.ScheduleJobVO;
+import com.lego.framework.system.model.vo.ScheduleJobVO;
 import com.survey.lib.common.vo.RespVO;
 
 public interface IScheduleJobService {

@@ -1,6 +1,6 @@
 package com.lego.perception.system.mapper;
 import com.lego.survey.lib.mybatis.mapper.Mapper;
-import com.lego.framework.system.model.RolePermission;
+import com.lego.framework.system.model.entity.RolePermission;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

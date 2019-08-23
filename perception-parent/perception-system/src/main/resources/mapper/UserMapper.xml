@@ -166,7 +166,7 @@
 		</if>
 	</sql>
 
-	<select id="findPagedList" resultType="com.lego.framework.system.model.User">
+	<select id="findPagedList" resultType="com.lego.framework.system.model.entity.User">
 			select <include refid="find_columns"></include>
 			  from tpl_user_t
 			 <where>
@@ -184,7 +184,7 @@
 		 </where>
 	</select>
 
-	<select id="findList" parameterType="com.lego.framework.system.model.User" resultType="com.lego.framework.system.model.User">
+	<select id="findList" parameterType="com.lego.framework.system.model.entity.User" resultType="com.lego.framework.system.model.entity.User">
 		select <include refid="find_detail"></include>
 		  from tpl_user_t
 	     <where>
@@ -231,7 +231,7 @@
 		</foreach>
 	</insert>
 	
-	<insert id="save" useGeneratedKeys="true" keyProperty="id" parameterType="com.lego.framework.system.model.User">
+	<insert id="save" useGeneratedKeys="true" keyProperty="id" parameterType="com.lego.framework.system.model.entity.User">
 		insert into tpl_user_t
 		(user_id, username, mail, phone, gender, idcard_no, status, password, head_img, `position`, politics, education, speciality, id_card_img, birth_date, real_name,
 		unit_id, is_resident, created_by, last_update_date, last_updated_by,help_area,help_area_name,help_town,help_town_name,help_village,help_village_name)

@@ -1,7 +1,13 @@
 package com.lego.framework.permission.init;
+
+import com.alibaba.excel.util.CollectionUtils;
 import com.lego.framework.auth.model.entity.Resources;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
+import com.lego.framework.system.feign.PermissionClient;
+import com.lego.framework.system.model.entity.Permission;
+import com.survey.lib.common.context.ServicePermissionContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -15,7 +21,9 @@ import org.springframework.core.type.classreading.MetadataReaderFactory;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
+import javax.security.auth.kerberos.ServicePermission;
 import java.util.*;
 
 @Component
@@ -27,44 +35,22 @@ public class ResourcesInit implements ApplicationRunner {
     @Value("${server.servlet.context-path}")
     private String contextPath;
 
+    @Autowired
+    private PermissionClient permissionClient;
+
     private void initUserPermission() {
         //1.扫描权限点
-        List<Resources> resources = getResource();
+        List<Permission> permissions = getPermission();
         //2.权限点插入数据库
-      //  resourcesClient.saveUserPermissionList(serviceName, resources);
+        permissionClient.save(serviceName, permissions);
     }
 
-   /* private void initServicePermission(){
-        BaseService baseService = new BaseService();
-        baseService.setServiceName(serviceName);
-        List<BaseService> baseServices = securityFeignClient.findBaseServiceList(serviceName);
-        if (CollectionUtils.isEmpty(baseServices)) {
-            baseServices = new ArrayList<>();
-            baseService.setContextPath(contextPath);
-            baseServices.add(baseService);
-            securityFeignClient.insertBaseServiceList(baseServices);
-        }
 
-        ServicePermission servicePermission = new ServicePermission();
-        servicePermission.setServiceName(serviceName);
-        List<ServicePermission> servicePermissions = securityFeignClient.findServicePermissionList(serviceName);
-        if (!CollectionUtils.isEmpty(servicePermissions)) {
-            Set<String> set = new HashSet<>();
-            for (ServicePermission permission : servicePermissions) {
-                if (null == permission || StringUtils.isEmpty(permission.getAuthorized())) {
-                    continue;
-                }
-                set.add(permission.getAuthorized());
-            }
-            ServicePermissionContext.setServiceAuthorized(set);
-        }
-    }*/
-
-    private List<Resources> getResource() {
-        List<Resources> resourcesList = new ArrayList<>();
+    private List<Permission> getPermission() {
+        List<Permission> permissionList = new ArrayList<>();
         ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
         MetadataReaderFactory metadataReaderFactory = new CachingMetadataReaderFactory();
-        String basePath = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + "/com/lego/survey/**/controller/*Controller.class";
+        String basePath = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + "/com/lego/perception/**/controller/*Controller.class";
 
         try {
 
@@ -90,26 +76,26 @@ public class ResourcesInit implements ApplicationRunner {
 
                     Set<MethodMetadata> set = annotationMetadata.getAnnotatedMethods(Operation.class.getName());
                     for (MethodMetadata methodMetadata : set) {
-                        Resources r = new Resources();
-                        r.setRId(rId);
-                        r.setRName(rName);
+                        Permission permission = new Permission();
+                        permission.setRId(rId);
+                        permission.setRName(rName);
                         Map<String, Object> methodMap = methodMetadata.getAnnotationAttributes(Operation.class.getName());
                         for (Map.Entry<String, Object> entry : methodMap.entrySet()) {
                             if ("value".endsWith(entry.getKey())) {
-                                r.setPrId((String) entry.getValue());
+                                permission.setPrId((String) entry.getValue());
                             }
                             if ("desc".endsWith(entry.getKey())) {
-                                r.setPrName((String) entry.getValue());
+                                permission.setPrName((String) entry.getValue());
                             }
                         }
-                        resourcesList.add(r);
+                        permissionList.add(permission);
                     }
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return resourcesList;
+        return permissionList;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.lego.framework.system.model;
+package com.lego.framework.system.model.entity;
 
 import com.lego.framework.config.BaseModel;
 import io.swagger.annotations.ApiModelProperty;

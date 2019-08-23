@@ -2,7 +2,7 @@ package com.lego.perception.system.service.impl;
 
 import com.lego.perception.system.mapper.RoleMapper;
 import com.lego.perception.system.service.IRoleService;
-import com.lego.framework.system.model.Role;
+import com.lego.framework.system.model.entity.Role;
 import com.survey.lib.common.page.Page;
 import com.survey.lib.common.page.PagedResult;
 import com.survey.lib.common.vo.RespVO;

@@ -3,7 +3,7 @@ package com.lego.perception.system.service.impl;
 import com.alibaba.excel.util.CollectionUtils;
 import com.lego.perception.system.mapper.DictionaryMapper;
 import com.lego.perception.system.service.IDictionaryService;
-import com.lego.framework.system.model.Dictionary;
+import com.lego.framework.system.model.entity.Dictionary;
 import com.survey.lib.common.page.Page;
 import com.survey.lib.common.page.PagedResult;
 import com.survey.lib.common.vo.RespVO;

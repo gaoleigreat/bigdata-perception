@@ -1,6 +1,6 @@
 package com.lego.perception.log.repository;
 
-import com.lego.framework.log.model.Log;
+import com.lego.framework.log.model.entity.Log;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

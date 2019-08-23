@@ -1,4 +1,4 @@
-package com.lego.framework.log.model;
+package com.lego.framework.log.model.entity;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;

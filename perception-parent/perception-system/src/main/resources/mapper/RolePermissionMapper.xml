@@ -31,7 +31,7 @@
         </if>
     </sql>
 
-    <select id="findPagedList" resultType="com.lego.framework.system.model.RolePermission">
+    <select id="findPagedList" resultType="com.lego.framework.system.model.entity.RolePermission">
         select <include refid="find_columns"></include>
         from tpl_role_permission_t
         <where>
@@ -48,8 +48,8 @@
         </where>
     </select>
 
-    <select id="findList" parameterType="com.lego.framework.system.model.RolePermission"
-            resultType="com.lego.framework.system.model.RolePermission">
+    <select id="findList" parameterType="com.lego.framework.system.model.entity.RolePermission"
+            resultType="com.lego.framework.system.model.entity.RolePermission">
         select <include refid="find_columns"></include>
         from tpl_role_permission_t
         <where>

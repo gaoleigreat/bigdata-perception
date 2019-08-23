@@ -1,5 +1,5 @@
 package com.lego.framework.auth.feign;
-import com.lego.framework.system.model.User;
+import com.lego.framework.system.model.entity.User;
 import com.survey.lib.common.consts.DictConstant;
 import com.survey.lib.common.consts.RespConsts;
 import com.survey.lib.common.vo.*;

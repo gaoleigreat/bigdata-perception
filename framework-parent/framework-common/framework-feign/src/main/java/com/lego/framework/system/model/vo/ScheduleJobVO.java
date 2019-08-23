@@ -1,9 +1,7 @@
-package com.lego.framework.system.vo;
+package com.lego.framework.system.model.vo;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
-import java.io.Serializable;
 
 @Data
 public class ScheduleJobVO {

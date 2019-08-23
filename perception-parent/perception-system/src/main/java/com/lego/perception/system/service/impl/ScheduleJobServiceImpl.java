@@ -2,7 +2,7 @@ package com.lego.perception.system.service.impl;
 
 import com.lego.perception.system.model.ScheduleJob;
 import com.lego.perception.system.service.IScheduleJobService;
-import com.lego.framework.system.vo.ScheduleJobVO;
+import com.lego.framework.system.model.vo.ScheduleJobVO;
 import com.survey.lib.common.vo.RespVO;
 import com.survey.lib.common.vo.RespVOBuilder;
 import lombok.extern.slf4j.Slf4j;

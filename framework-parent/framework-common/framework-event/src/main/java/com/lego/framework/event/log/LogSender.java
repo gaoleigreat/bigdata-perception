@@ -1,5 +1,5 @@
 package com.lego.framework.event.log;
-import com.lego.framework.log.model.Log;
+import com.lego.framework.log.model.entity.Log;
 import com.survey.lib.common.utils.UuidUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.support.MessageBuilder;

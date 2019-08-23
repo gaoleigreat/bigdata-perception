@@ -3,7 +3,7 @@ import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
 import com.lego.framework.base.page.PagedResult;
 import com.lego.framework.base.sdto.RespVO;
-import com.lego.framework.log.vo.LogVo;
+import com.lego.framework.log.model.vo.LogVo;
 import com.lego.perception.log.service.ILogService;
 import com.survey.lib.common.consts.DictConstant;
 import io.swagger.annotations.Api;

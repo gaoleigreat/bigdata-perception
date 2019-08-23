@@ -119,6 +119,12 @@
             <artifactId>framework-base</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.lego.permission</groupId>
+            <version>${service.version}</version>
+            <artifactId>framework-permission</artifactId>
+        </dependency>
+
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

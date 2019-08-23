@@ -1,8 +1,8 @@
 package com.lego.perception.system.mapper;
 
 import com.lego.survey.lib.mybatis.mapper.Mapper;
-import com.lego.framework.system.model.User;
-import com.lego.framework.system.model.UserRole;
+import com.lego.framework.system.model.entity.User;
+import com.lego.framework.system.model.entity.UserRole;
 import com.survey.lib.common.page.Page;
 import com.survey.lib.common.page.PagedResult;
 import org.springframework.stereotype.Repository;

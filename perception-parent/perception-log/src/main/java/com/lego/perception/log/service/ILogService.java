@@ -1,8 +1,8 @@
 package com.lego.perception.log.service;
 import com.lego.framework.base.page.PagedResult;
 import com.lego.framework.base.sdto.RespVO;
-import com.lego.framework.log.model.Log;
-import com.lego.framework.log.vo.LogVo;
+import com.lego.framework.log.model.entity.Log;
+import com.lego.framework.log.model.vo.LogVo;
 
 /**
  * @author yanglf

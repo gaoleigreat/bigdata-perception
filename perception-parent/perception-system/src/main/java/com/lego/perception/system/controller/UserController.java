@@ -4,7 +4,7 @@ import com.lego.framework.base.annotation.Resource;
 import com.lego.framework.base.context.RequestContext;
 import com.lego.perception.system.service.IRoleService;
 import com.lego.perception.system.service.IUserService;
-import com.lego.framework.system.model.User;
+import com.lego.framework.system.model.entity.User;
 import com.survey.lib.common.page.Page;
 import com.survey.lib.common.page.PagedResult;
 import com.survey.lib.common.vo.RespDataVO;

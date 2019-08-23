@@ -1,4 +1,4 @@
-package com.lego.framework.system.model;
+package com.lego.framework.system.model.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
