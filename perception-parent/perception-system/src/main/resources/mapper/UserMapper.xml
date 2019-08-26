@@ -1,473 +1,391 @@
-<?xml version="1.0" encoding="UTF-8" ?>  
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lego.perception.system.mapper.UserMapper">
-	
-	<sql id="find_columns">
-		id as id, user_id as userId, username as username, mail as mail, phone as phone, gender as gender,
-		status as status, delete_flag as deleteFlag, idcard_no as idCardNO, `position` as `position`, politics as politics,
-		education as education, speciality as speciality, id_card_img as id_card_img, birth_date as birth_date,
-		real_name as realName, head_img as headImg, unit_id as unitId, is_resident as isResident, creation_date as creationDate,
-		created_by as createdBy, last_update_date as lastUpdateDate, last_updated_by as lastUpdatedBy,help_area as helpArea,
-		help_area_name as helpAreaName,help_town as helpTown,help_town_name as helpTownName,help_village as helpVillage,
-		help_village_name as helpVillageName
+
+    <sql id="find_columns">
+		id as id,
+		user_id as userId,
+		username as username,
+		 mail as mail,
+		 phone as phone,
+		  gender as gender,
+		status as status,
+		delete_flag as deleteFlag,
+		 idcard_no as idCardNO,
+		 `position` as `position`,
+		 politics as politics,
+		education as education,
+		 id_card_img as id_card_img,
+		  birth_date as birth_date,
+		real_name as realName,
+		head_img as headImg,
+		  creation_date as creationDate,
+		created_by as createdBy,
+		last_update_date as lastUpdateDate,
+		last_updated_by as lastUpdatedBy
 	</sql>
 
-	<sql id="find_detail">
-		id as id, user_id as userId, username as username, mail as mail, phone as phone, gender as gender,
-		status as status, delete_flag as deleteFlag, idcard_no as idCardNO,password as password,`position` as `position`, politics as politics,
-		education as education, speciality as speciality, id_card_img as id_card_img, birth_date as birth_date,
-		real_name as realName, head_img as headImg, unit_id as unitId, creation_date as creationDate,
-		created_by as createdBy, last_update_date as lastUpdateDate, last_updated_by as lastUpdatedBy,help_area as helpArea,
-		help_area_name as helpAreaName,help_town as helpTown,help_town_name as helpTownName,help_village as helpVillage,
-		help_village_name as helpVillageName
+    <sql id="find_detail">
+		id as id,
+		user_id as userId,
+		 username as username,
+		  mail as mail,
+		   phone as phone,
+		   gender as gender,
+		status as status,
+		 delete_flag as deleteFlag,
+		  idcard_no as idCardNO,
+		  password as password,
+		  `position` as `position`,
+		   politics as politics,
+		education as education,
+		 id_card_img as id_card_img,
+		  birth_date as birth_date,
+		real_name as realName,
+		 head_img as headImg,
+		  creation_date as creationDate,
+		created_by as createdBy,
+		last_update_date as lastUpdateDate,
+		last_updated_by as lastUpdatedBy
 	</sql>
 
-	<sql id="condition">
-		<if test='id != null'>
-			and id = #{id, jdbcType=BIGINT}
-		</if>
-		<if test='userId != null and userId != ""'>
-			and user_id = #{userId, jdbcType=VARCHAR}
-		</if>
-		<if test='password != null and password != ""'>
-			and password = #{password, jdbcType=VARCHAR}
-		</if>
-		<if test='username != null and username != ""'>
-			and instr(username, #{username, jdbcType=VARCHAR}) > 0
-		</if>
-		<if test='idCardNO != null and idCardNO != ""'>
-			and idcard_no = #{idCardNO, jdbcType=VARCHAR}
-		</if>
-		<if test='realName != null and realName != ""'>
-			and real_name = #{realName, jdbcType=VARCHAR}
-		</if>
-		<if test='phone != null and phone != ""'>
-			and phone = #{phone, jdbcType=VARCHAR}
-		</if>
-		<if test='mail != null and mail != ""'>
-			and mail = #{mail, jdbcType=VARCHAR}
-		</if>
-		<if test='gender != null'>
-			and gender = #{gender, jdbcType=INTEGER}
-		</if>
-		<if test='status != null'>
-			and status = #{status, jdbcType=INTEGER}
-		</if>
-		<if test='deleteFlag != null'>
-			and delete_Flag = #{deleteFlag, jdbcType=INTEGER}
-		</if>
-		<if test="position != null">
-			and `position` = #{position, jdbcType=INTEGER}
-		</if>
-		<if test="politics != null">
-			and politics = #{politics, jdbcType=INTEGER}
-		</if>
-		<if test="education != null">
-			and education = #{education, jdbcType=INTEGER}
-		</if>
-		<if test="speciality != null">
-			and speciality = #{speciality, jdbcType=INTEGER}
-		</if>
-		<if test="unitId != null">
-			and unit_id = #{unitId, jdbcType=BIGINT}
-		</if>
-		<if test="isResident != null">
-			and is_resident = #{isResident, jdbcType=INTEGER}
-		</if>
-		<if test='userIds != null and userIds.size > 0'>
-			and id in
-			<foreach collection="userIds" separator="," index="index" item="item" open="(" close=")">
-				#{userIds[${index}], jdbcType=BIGINT}
-			</foreach>
-		</if>
-		<if test="phones != null and phones.size > 0">
-			and phone in
-			<foreach collection="phones" separator="," index="index" open="(" close=")">
-				#{phones[${index}], jdbcType=VARCHAR}
-			</foreach>
-		</if>
-	</sql>
-	
-	<sql id="page_condition">
-		<if test='arg0.id != null'>
-			and id = #{arg0.id, jdbcType=BIGINT}
-		</if>
-		<if test='arg0.userId != null and arg0.userId != ""'>
-			and user_id = #{arg0.userId, jdbcType=VARCHAR}
-		</if>
-		<if test='arg0.password != null and arg0.password != ""'>
-			and password = #{arg0.password, jdbcType=VARCHAR}
-		</if>
-		<if test='arg0.username != null and arg0.username != ""'>
-			and instr(username, #{arg0.username, jdbcType=VARCHAR}) > 0
-		</if>
-		<if test='arg0.idCardNO != null and arg0.idCardNO != ""'>
-			and idcard_no = #{arg0.idCardNO, jdbcType=VARCHAR}
-		</if>
-		<if test='arg0.realName != null and arg0.realName != ""'>
-			and real_name = #{arg0.realName, jdbcType=VARCHAR}
-		</if>
-		<if test='arg0.phone != null and arg0.phone != ""'>
-			and phone = #{arg0.phone, jdbcType=VARCHAR}
-		</if>
-		<if test='arg0.mail != null and arg0.mail != ""'>
-			and mail = #{arg0.mail, jdbcType=VARCHAR}
-		</if>
-		<if test='arg0.gender != null'>
-			and gender = #{arg0.gender, jdbcType=INTEGER}
-		</if>
-		<if test='arg0.status != null'>
-			and status = #{arg0.status, jdbcType=INTEGER}
-		</if>
-		<if test='arg0.deleteFlag != null'>
-			and delete_Flag = #{arg0.deleteFlag, jdbcType=INTEGER}
-		</if>
-		<if test="arg0.position != null">
-			and `position` = #{arg0.position, jdbcType=INTEGER}
-		</if>
-		<if test="arg0.politics != null">
-			and politics = #{arg0.politics, jdbcType=INTEGER}
-		</if>
-		<if test="arg0.education != null">
-			and education = #{arg0.education, jdbcType=INTEGER}
-		</if>
-		<if test="arg0.speciality != null">
-			and speciality = #{arg0.speciality, jdbcType=INTEGER}
-		</if>
-		<if test="arg0.unitId != null">
-			and unit_id = #{arg0.unitId, jdbcType=BIGINT}
-		</if>
-		<if test="arg0.isResident != null">
-			and is_resident = #{arg0.isResident, jdbcType=INTEGER}
-		</if>
-		<if test='arg0.userIds != null and arg0.userIds.size > 0'>
-			and id in
-			<foreach collection='arg0.userIds' separator="," index="index" item="item" open="(" close=")">
-				#{arg0.userIds[${index}], jdbcType=BIGINT}
-			</foreach>
-		</if>
-		<if test='arg0.helpArea != null and arg0.helpArea != ""'>
-			and help_area = #{arg0.helpArea, jdbcType=VARCHAR}
-		</if>
-		<if test='arg0.helpAreaName != null and arg0.helpAreaName != ""'>
-			and help_area_name = #{arg0.helpAreaName, jdbcType=VARCHAR}
-		</if>
-		<if test='arg0.helpTown != null and arg0.helpTown != ""'>
-			and help_town = #{arg0.helpTown, jdbcType=VARCHAR}
-		</if>
-		<if test='arg0.helpTownName != null and arg0.helpTownName != ""'>
-			and help_town_name = #{arg0.helpTownName, jdbcType=VARCHAR}
-		</if>
-		<if test='arg0.helpVillage != null and arg0.helpVillage != ""'>
-			and help_village = #{arg0.helpVillage, jdbcType=VARCHAR}
-		</if>
-		<if test='arg0.helpVillageName != null and arg0.helpVillageName != ""'>
-			and help_village_name = #{arg0.helpVillageName, jdbcType=VARCHAR}
-		</if>
-	</sql>
+    <sql id="condition">
+        <if test='id != null'>
+            and id = #{id, jdbcType=BIGINT}
+        </if>
+        <if test='userId != null and userId != ""'>
+            and user_id = #{userId, jdbcType=VARCHAR}
+        </if>
+        <if test='password != null and password != ""'>
+            and password = #{password, jdbcType=VARCHAR}
+        </if>
+        <if test='username != null and username != ""'>
+            and instr(username, #{username, jdbcType=VARCHAR}) > 0
+        </if>
+        <if test='idCardNO != null and idCardNO != ""'>
+            and idcard_no = #{idCardNO, jdbcType=VARCHAR}
+        </if>
+        <if test='realName != null and realName != ""'>
+            and real_name = #{realName, jdbcType=VARCHAR}
+        </if>
+        <if test='phone != null and phone != ""'>
+            and phone = #{phone, jdbcType=VARCHAR}
+        </if>
+        <if test='mail != null and mail != ""'>
+            and mail = #{mail, jdbcType=VARCHAR}
+        </if>
+        <if test='gender != null'>
+            and gender = #{gender, jdbcType=INTEGER}
+        </if>
+        <if test='status != null'>
+            and status = #{status, jdbcType=INTEGER}
+        </if>
+        <if test='deleteFlag != null'>
+            and delete_Flag = #{deleteFlag, jdbcType=INTEGER}
+        </if>
+        <if test="position != null">
+            and `position` = #{position, jdbcType=INTEGER}
+        </if>
+        <if test="politics != null">
+            and politics = #{politics, jdbcType=INTEGER}
+        </if>
+        <if test="education != null">
+            and education = #{education, jdbcType=INTEGER}
+        </if>
+        <if test='userIds != null and userIds.size > 0'>
+            and id in
+            <foreach collection="userIds" separator="," index="index" item="item" open="(" close=")">
+                #{userIds[${index}], jdbcType=BIGINT}
+            </foreach>
+        </if>
+        <if test="phones != null and phones.size > 0">
+            and phone in
+            <foreach collection="phones" separator="," index="index" open="(" close=")">
+                #{phones[${index}], jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </sql>
 
-	<select id="findPagedList" resultType="com.lego.framework.system.model.entity.User">
-			select <include refid="find_columns"></include>
-			  from tpl_user_t
-			 <where>
-				<include refid="page_condition"></include>
-			 </where>
-			 order by creation_date desc
-			 limit #{arg1.startIndex, jdbcType=INTEGER}, #{arg1.pageSize, jdbcType=INTEGER}
-	</select>
-	
-	<select id="findPagedListCount" resultType="java.lang.Long">
-		select count(1)
-		  from tpl_user_t
-		 <where>
-		 	<include refid="page_condition"></include>
-		 </where>
-	</select>
+    <sql id="page_condition">
+        <if test='arg0.id != null'>
+            and id = #{arg0.id, jdbcType=BIGINT}
+        </if>
+        <if test='arg0.userId != null and arg0.userId != ""'>
+            and user_id = #{arg0.userId, jdbcType=VARCHAR}
+        </if>
+        <if test='arg0.password != null and arg0.password != ""'>
+            and password = #{arg0.password, jdbcType=VARCHAR}
+        </if>
+        <if test='arg0.username != null and arg0.username != ""'>
+            and instr(username, #{arg0.username, jdbcType=VARCHAR}) > 0
+        </if>
+        <if test='arg0.idCardNO != null and arg0.idCardNO != ""'>
+            and idcard_no = #{arg0.idCardNO, jdbcType=VARCHAR}
+        </if>
+        <if test='arg0.realName != null and arg0.realName != ""'>
+            and real_name = #{arg0.realName, jdbcType=VARCHAR}
+        </if>
+        <if test='arg0.phone != null and arg0.phone != ""'>
+            and phone = #{arg0.phone, jdbcType=VARCHAR}
+        </if>
+        <if test='arg0.mail != null and arg0.mail != ""'>
+            and mail = #{arg0.mail, jdbcType=VARCHAR}
+        </if>
+        <if test='arg0.gender != null'>
+            and gender = #{arg0.gender, jdbcType=INTEGER}
+        </if>
+        <if test='arg0.status != null'>
+            and status = #{arg0.status, jdbcType=INTEGER}
+        </if>
+        <if test='arg0.deleteFlag != null'>
+            and delete_Flag = #{arg0.deleteFlag, jdbcType=INTEGER}
+        </if>
+        <if test="arg0.position != null">
+            and `position` = #{arg0.position, jdbcType=INTEGER}
+        </if>
+        <if test="arg0.politics != null">
+            and politics = #{arg0.politics, jdbcType=INTEGER}
+        </if>
+        <if test="arg0.education != null">
+            and education = #{arg0.education, jdbcType=INTEGER}
+        </if>
+        <if test='arg0.userIds != null and arg0.userIds.size > 0'>
+            and id in
+            <foreach collection='arg0.userIds' separator="," index="index" item="item" open="(" close=")">
+                #{arg0.userIds[${index}], jdbcType=BIGINT}
+            </foreach>
+        </if>
+    </sql>
 
-	<select id="findList" parameterType="com.lego.framework.system.model.entity.User" resultType="com.lego.framework.system.model.entity.User">
-		select <include refid="find_detail"></include>
-		  from tpl_user_t
-	     <where>
-	     	<include refid="condition"></include>
-	     </where>
-	</select>
+    <select id="findPagedList" resultType="com.lego.framework.system.model.entity.User">
+        select
+        <include refid="find_columns"></include>
+        from tpl_user_t
+        <where>
+            <include refid="page_condition"></include>
+        </where>
+        order by creation_date desc
+        limit #{arg1.startIndex, jdbcType=INTEGER}, #{arg1.pageSize, jdbcType=INTEGER}
+    </select>
 
-	<insert id="insertList">
-		insert into tpl_user_t
-		(id,user_id, username, mail, phone, gender, idcard_no, status, password, head_img, `position`, politics, education, speciality, id_card_img, birth_date, real_name,
-		unit_id, is_resident, created_by, last_update_date, last_updated_by,help_area,help_area_name,help_town,help_town_name,help_village,help_village_name)
-		values
-		<foreach collection="list" item="item" separator=",">
-		(
-		   #{item.id, jdbcType=VARCHAR},
-		   #{item.userId, jdbcType=VARCHAR},
-		   #{item.username, jdbcType=VARCHAR},
-		   #{item.mail, jdbcType=VARCHAR},
-		   #{item.phone, jdbcType=VARCHAR},
-		   #{item.gender, jdbcType=INTEGER},
-		   #{item.idCardNO, jdbcType=VARCHAR},
-		   #{item.status, jdbcType=VARCHAR},
-		   #{item.password, jdbcType=VARCHAR},
-		   #{item.headImg, jdbcType=VARCHAR},
-		   #{item.position, jdbcType=INTEGER},
-		   #{item.politics, jdbcType=INTEGER},
-		   #{item.education, jdbcType=INTEGER},
-		   #{item.speciality, jdbcType=INTEGER},
-		   #{item.idCardImg, jdbcType=VARCHAR},
-		   #{item.birthDate, jdbcType=VARCHAR},
-		   #{item.realName, jdbcType=VARCHAR},
-		   #{item.unitId, jdbcType=BIGINT},
-		   #{item.isResident, jdbcType=INTEGER},
-		   #{item.createdBy, jdbcType=BIGINT},
-		   #{item.lastUpdateDate, jdbcType=TIMESTAMP},
-		   #{item.lastUpdatedBy, jdbcType=BIGINT},
-			#{item.helpArea, jdbcType=VARCHAR},
-			#{item.helpAreaName, jdbcType=VARCHAR},
-			#{item.helpTown, jdbcType=VARCHAR},
-			#{item.helpTownName, jdbcType=VARCHAR},
-			#{item.helpVillage, jdbcType=VARCHAR},
-			#{item.helpVillageName, jdbcType=VARCHAR}
-		)
-		</foreach>
-	</insert>
-	
-	<insert id="save" useGeneratedKeys="true" keyProperty="id" parameterType="com.lego.framework.system.model.entity.User">
-		insert into tpl_user_t
-		(user_id, username, mail, phone, gender, idcard_no, status, password, head_img, `position`, politics, education, speciality, id_card_img, birth_date, real_name,
-		unit_id, is_resident, created_by, last_update_date, last_updated_by,help_area,help_area_name,help_town,help_town_name,help_village,help_village_name)
-		values
-		(
-		  #{userId, jdbcType=VARCHAR},
-		  #{username, jdbcType=VARCHAR},
-		  #{mail, jdbcType=VARCHAR},
-		  #{phone, jdbcType=VARCHAR},
-		  #{gender, jdbcType=INTEGER},
-		  #{idCardNO, jdbcType=VARCHAR},
-		  #{status, jdbcType=VARCHAR},
-		  #{password, jdbcType=VARCHAR},
-		  #{headImg, jdbcType=VARCHAR},
-		  #{position, jdbcType=INTEGER},
-		  #{politics, jdbcType=INTEGER},
-		  #{education, jdbcType=INTEGER},
-		  #{speciality, jdbcType=INTEGER},
-		  #{idCardImg, jdbcType=VARCHAR},
-		  #{birthDate, jdbcType=VARCHAR},
-		  #{realName, jdbcType=VARCHAR},
-		  #{unitId, jdbcType=BIGINT},
-		  #{isResident, jdbcType=INTEGER},
-		  #{createdBy, jdbcType=BIGINT},
-		  #{lastUpdateDate, jdbcType=TIMESTAMP},
-		  #{lastUpdatedBy, jdbcType=BIGINT},
-		  #{helpArea, jdbcType=VARCHAR},
-		  #{helpAreaName, jdbcType=VARCHAR},
-		  #{helpTown, jdbcType=VARCHAR},
-		  #{helpTownName, jdbcType=VARCHAR},
-		  #{helpVillage, jdbcType=VARCHAR},
-		  #{helpVillageName, jdbcType=VARCHAR}
-		)
-	</insert>
+    <select id="findPagedListCount" resultType="java.lang.Long">
+        select count(1)
+        from tpl_user_t
+        <where>
+            <include refid="page_condition"></include>
+        </where>
+    </select>
 
-	<update id="update">
-		update tpl_user_t
-		 <set>
-		 	<if test='userId != null and userId != ""'>
-		 		user_id = #{userId, jdbcType=VARCHAR},
-		 	</if>
-		 	<if test='username != null and username != ""'>
-		 		username = #{username, jdbcType=VARCHAR},
-		 	</if>
-		 	<if test='mail != null and mail != ""'>
-		 		mail = #{mail, jdbcType=VARCHAR},
-		 	</if>
-			<if test='phone != null and phone != ""'>
-				phone = #{phone, jdbcType=VARCHAR},
-			</if>
-		 	<if test='gender != null and gender != ""'>
-		 		gender = #{gender, jdbcType=INTEGER},
-		 	</if>
-		 	<if test='idCardNO != null and idCardNO != ""'>
-		 		idcard_no = #{idCardNO, jdbcType=VARCHAR},
-		 	</if>
-		 	<if test='status != null and status != ""'>
-		 		status = #{status, jdbcType=INTEGER},
-		 	</if>
-		 	<if test='deleteFlag != null and deleteFlag != ""'>
-		 		delete_flag = #{deleteFlag, jdbcType=INTEGER},
-		 	</if>
-			 <if test='password != null and password != ""'>
-				 password = #{password, jdbcType=INTEGER},
-			 </if>
-			 <if test='headImg != null and headImg != ""'>
-				 head_img = #{headImg, jdbcType=INTEGER},
-			 </if>
-			 <if test="position != null ">
-				 `position` = #{position, jdbcType=INTEGER},
-			 </if>
-			 <if test="politics != null">
-				 `politics` = #{politics, jdbcType=INTEGER},
-			 </if>
-			 <if test="education != null">
-				 `education` = #{education, jdbcType=INTEGER},
-			 </if>
-			 <if test="speciality != null">
-				 `speciality` = #{speciality, jdbcType=INTEGER},
-			 </if>
-			 <if test='realName != null'>
-				 real_name = #{realName, jdbcType=VARCHAR},
-			 </if>
-			 <if test='idCardImg != null'>
-				 id_card_img = #{idCardImg, jdbcType=VARCHAR},
-			 </if>
-			 <if test="birthDate != null">
-				 birth_date = #{birthDate, jdbcType=TIMESTAMP},
-			 </if>
-			 <if test="unitId != null">
-				 unit_id = #{unitId, jdbcType=BIGINT},
-			 </if>
-			 <if test="isResident != null">
-				 is_Resident = #{isResident, jdbcType=INTEGER},
-			 </if>
-		 	<if test='lastUpdateDate != null'>
-		 		last_update_date = #{lastUpdateDate, jdbcType=TIMESTAMP},
-		 	</if>
-		 	<if test='lastUpdatedBy != null'>
-		 		last_updated_by = #{lastUpdatedBy, jdbcType=BIGINT},
-		 	</if>
-		 <if test='helpArea != null and helpArea != ""'>
-			 help_area = #{helpArea, jdbcType=VARCHAR},
-		 </if>
-		 <if test='helpAreaName != null and helpAreaName != ""'>
-			 help_area_name = #{helpAreaName, jdbcType=VARCHAR},
-		 </if>
-		 <if test='helpTown != null and helpTown != ""'>
-			 help_town = #{helpTown, jdbcType=VARCHAR},
-		 </if>
-		 <if test='helpTownName != null and helpTownName != ""'>
-			 help_town_name = #{helpTownName, jdbcType=VARCHAR},
-		 </if>
-		 <if test='helpVillage != null and helpVillage != ""'>
-			 help_village = #{helpVillage, jdbcType=VARCHAR},
-		 </if>
-		 <if test='helpVillageName != null and helpVillageName != ""'>
-			 help_village_name = #{helpVillageName, jdbcType=VARCHAR},
-		 </if>
-		 </set>
-		where id = #{id, jdbcType=BIGINT}
-	</update>
+    <select id="findList" parameterType="com.lego.framework.system.model.entity.User"
+            resultType="com.lego.framework.system.model.entity.User">
+        select
+        <include refid="find_detail"></include>
+        from tpl_user_t
+        <where>
+            <include refid="condition"></include>
+        </where>
+    </select>
 
-	<update id="updateByPhone">
-		update tpl_user_t
-		<set>
-			<if test='userId != null'>
-				user_id = #{userId, jdbcType=VARCHAR},
-			</if>
-			<if test='username != null'>
-				username = #{username, jdbcType=VARCHAR},
-			</if>
-			<if test='mail != null'>
-				mail = #{mail, jdbcType=VARCHAR},
-			</if>
-			<if test='phone != null and phone != ""'>
-				phone = #{phone, jdbcType=VARCHAR},
-			</if>
-			<if test='gender != null'>
-				gender = #{gender, jdbcType=INTEGER},
-			</if>
-			<if test='idCardNO != null'>
-				idcard_no = #{idCardNO, jdbcType=VARCHAR},
-			</if>
-			<if test='status != null'>
-				status = #{status, jdbcType=INTEGER},
-			</if>
-			<if test='deleteFlag != null'>
-				delete_flag = #{deleteFlag, jdbcType=INTEGER},
-			</if>
-			<if test='password != null and password != ""'>
-				password = #{password, jdbcType=INTEGER},
-			</if>
-			<if test='headImg != null'>
-				head_img = #{headImg, jdbcType=INTEGER},
-			</if>
-			<if test="position != null">
-				`position` = #{position, jdbcType=INTEGER},
-			</if>
-			<if test="politics != null">
-				`politics` = #{politics, jdbcType=INTEGER},
-			</if>
-			<if test="education != null">
-				`education` = #{education, jdbcType=INTEGER},
-			</if>
-			<if test="speciality != null">
-				`speciality` = #{speciality, jdbcType=INTEGER},
-			</if>
-			<if test='realName != null'>
-				real_name = #{realName, jdbcType=VARCHAR},
-			</if>
-			<if test='idCardImg != null'>
-				id_card_img = #{idCardImg, jdbcType=VARCHAR},
-			</if>
-			<if test="birthDate != null">
-				birth_date = #{birthDate, jdbcType=TIMESTAMP},
-			</if>
-			<if test="unitId != null">
-				unit_id = #{unitId, jdbcType=BIGINT},
-			</if>
-			<if test="isResident != null">
-				is_Resident = #{isResident, jdbcType=INTEGER},
-			</if>
-			<if test='lastUpdateDate != null'>
-				last_update_date = #{lastUpdateDate, jdbcType=TIMESTAMP},
-			</if>
-			<if test='lastUpdatedBy != null'>
-				last_updated_by = #{lastUpdatedBy, jdbcType=BIGINT}
-			</if>
+    <insert id="insertList">
+        insert into tpl_user_t
+        (id,user_id, username, mail, phone, gender, idcard_no,
+         status, password, head_img, `position`, politics,
+        education, id_card_img, birth_date, real_name,
+        created_by, last_update_date,
+        last_updated_by)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.id, jdbcType=VARCHAR},
+            #{item.userId, jdbcType=VARCHAR},
+            #{item.username, jdbcType=VARCHAR},
+            #{item.mail, jdbcType=VARCHAR},
+            #{item.phone, jdbcType=VARCHAR},
+            #{item.gender, jdbcType=INTEGER},
+            #{item.idCardNO, jdbcType=VARCHAR},
+            #{item.status, jdbcType=VARCHAR},
+            #{item.password, jdbcType=VARCHAR},
+            #{item.headImg, jdbcType=VARCHAR},
+            #{item.position, jdbcType=INTEGER},
+            #{item.politics, jdbcType=INTEGER},
+            #{item.education, jdbcType=INTEGER},
+            #{item.idCardImg, jdbcType=VARCHAR},
+            #{item.birthDate, jdbcType=VARCHAR},
+            #{item.realName, jdbcType=VARCHAR},
+            #{item.createdBy, jdbcType=BIGINT},
+            #{item.lastUpdateDate, jdbcType=TIMESTAMP},
+            #{item.lastUpdatedBy, jdbcType=BIGINT}
+            )
+        </foreach>
+    </insert>
 
-			<if test='helpArea != null and helpArea != ""'>
-				help_area = #{helpArea, jdbcType=VARCHAR},
-			</if>
-			<if test='helpAreaName != null and helpAreaName != ""'>
-				help_area_name = #{helpAreaName, jdbcType=VARCHAR},
-			</if>
-			<if test='helpTown != null and helpTown != ""'>
-				help_town = #{helpTown, jdbcType=VARCHAR},
-			</if>
-			<if test='helpTownName != null and helpTownName != ""'>
-				help_town_name = #{helpTownName, jdbcType=VARCHAR},
-			</if>
-			<if test='helpVillage != null and helpVillage != ""'>
-				help_village = #{helpVillage, jdbcType=VARCHAR},
-			</if>
-			<if test='helpVillageName != null and helpVillageName != ""'>
-				help_village_name = #{helpVillageName, jdbcType=VARCHAR},
-			</if>
-		</set>
-		where phone = #{phone, jdbcType=VARCHAR}
-	</update>
+    <insert id="save" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.lego.framework.system.model.entity.User">
+        insert into tpl_user_t
+        (user_id, username, mail, phone, gender, idcard_no,
+         status, password, head_img, `position`, politics, education,
+          id_card_img, birth_date, real_name,
+          created_by, last_update_date, last_updated_by)
+        values (#{userId, jdbcType=VARCHAR},
+                #{username, jdbcType=VARCHAR},
+                #{mail, jdbcType=VARCHAR},
+                #{phone, jdbcType=VARCHAR},
+                #{gender, jdbcType=INTEGER},
+                #{idCardNO, jdbcType=VARCHAR},
+                #{status, jdbcType=VARCHAR},
+                #{password, jdbcType=VARCHAR},
+                #{headImg, jdbcType=VARCHAR},
+                #{position, jdbcType=INTEGER},
+                #{politics, jdbcType=INTEGER},
+                #{education, jdbcType=INTEGER},
+                #{idCardImg, jdbcType=VARCHAR},
+                #{birthDate, jdbcType=VARCHAR},
+                #{realName, jdbcType=VARCHAR},
+                #{createdBy, jdbcType=BIGINT},
+                #{lastUpdateDate, jdbcType=TIMESTAMP},
+                #{lastUpdatedBy, jdbcType=BIGINT})
+    </insert>
+
+    <update id="update">
+        update tpl_user_t
+        <set>
+            <if test='userId != null and userId != ""'>
+                user_id = #{userId, jdbcType=VARCHAR},
+            </if>
+            <if test='username != null and username != ""'>
+                username = #{username, jdbcType=VARCHAR},
+            </if>
+            <if test='mail != null and mail != ""'>
+                mail = #{mail, jdbcType=VARCHAR},
+            </if>
+            <if test='phone != null and phone != ""'>
+                phone = #{phone, jdbcType=VARCHAR},
+            </if>
+            <if test='gender != null and gender != ""'>
+                gender = #{gender, jdbcType=INTEGER},
+            </if>
+            <if test='idCardNO != null and idCardNO != ""'>
+                idcard_no = #{idCardNO, jdbcType=VARCHAR},
+            </if>
+            <if test='status != null and status != ""'>
+                status = #{status, jdbcType=INTEGER},
+            </if>
+            <if test='deleteFlag != null and deleteFlag != ""'>
+                delete_flag = #{deleteFlag, jdbcType=INTEGER},
+            </if>
+            <if test='password != null and password != ""'>
+                password = #{password, jdbcType=INTEGER},
+            </if>
+            <if test='headImg != null and headImg != ""'>
+                head_img = #{headImg, jdbcType=INTEGER},
+            </if>
+            <if test="position != null ">
+                `position` = #{position, jdbcType=INTEGER},
+            </if>
+            <if test="politics != null">
+                `politics` = #{politics, jdbcType=INTEGER},
+            </if>
+            <if test="education != null">
+                `education` = #{education, jdbcType=INTEGER},
+            </if>
+            <if test='realName != null'>
+                real_name = #{realName, jdbcType=VARCHAR},
+            </if>
+            <if test='idCardImg != null'>
+                id_card_img = #{idCardImg, jdbcType=VARCHAR},
+            </if>
+            <if test="birthDate != null">
+                birth_date = #{birthDate, jdbcType=TIMESTAMP},
+            </if>
+            <if test='lastUpdateDate != null'>
+                last_update_date = #{lastUpdateDate, jdbcType=TIMESTAMP},
+            </if>
+            <if test='lastUpdatedBy != null'>
+                last_updated_by = #{lastUpdatedBy, jdbcType=BIGINT},
+            </if>
+        </set>
+        where id = #{id, jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByPhone">
+        update tpl_user_t
+        <set>
+            <if test='userId != null'>
+                user_id = #{userId, jdbcType=VARCHAR},
+            </if>
+            <if test='username != null'>
+                username = #{username, jdbcType=VARCHAR},
+            </if>
+            <if test='mail != null'>
+                mail = #{mail, jdbcType=VARCHAR},
+            </if>
+            <if test='phone != null and phone != ""'>
+                phone = #{phone, jdbcType=VARCHAR},
+            </if>
+            <if test='gender != null'>
+                gender = #{gender, jdbcType=INTEGER},
+            </if>
+            <if test='idCardNO != null'>
+                idcard_no = #{idCardNO, jdbcType=VARCHAR},
+            </if>
+            <if test='status != null'>
+                status = #{status, jdbcType=INTEGER},
+            </if>
+            <if test='deleteFlag != null'>
+                delete_flag = #{deleteFlag, jdbcType=INTEGER},
+            </if>
+            <if test='password != null and password != ""'>
+                password = #{password, jdbcType=INTEGER},
+            </if>
+            <if test='headImg != null'>
+                head_img = #{headImg, jdbcType=INTEGER},
+            </if>
+            <if test="position != null">
+                `position` = #{position, jdbcType=INTEGER},
+            </if>
+            <if test="politics != null">
+                `politics` = #{politics, jdbcType=INTEGER},
+            </if>
+            <if test="education != null">
+                `education` = #{education, jdbcType=INTEGER},
+            </if>
+            <if test='realName != null'>
+                real_name = #{realName, jdbcType=VARCHAR},
+            </if>
+            <if test='idCardImg != null'>
+                id_card_img = #{idCardImg, jdbcType=VARCHAR},
+            </if>
+            <if test="birthDate != null">
+                birth_date = #{birthDate, jdbcType=TIMESTAMP},
+            </if>
+            <if test='lastUpdateDate != null'>
+                last_update_date = #{lastUpdateDate, jdbcType=TIMESTAMP},
+            </if>
+            <if test='lastUpdatedBy != null'>
+                last_updated_by = #{lastUpdatedBy, jdbcType=BIGINT}
+            </if>
+        </set>
+        where phone = #{phone, jdbcType=VARCHAR}
+    </update>
 
     <update id="updateList">
-          <foreach collection="list" item="item">
+        <foreach collection="list" item="item">
             update tpl_user_t
-              <set>
-                  user_id = #{item.userId, jdbcType=VARCHAR},
-                  username = #{item.username, jdbcType=VARCHAR},
-				  real_name = #{item.realName, jdbcType=VARCHAR},
-                  phone = #{item.phone, jdbcType=VARCHAR},
-                  gender = #{item.gender, jdbcType=INTEGER},
-				  delete_flag = #{item.deleteFlag, jdbcType=INTEGER},
-				  unit_id = #{item.unitId, jdbcType=BIGINT},
-				  help_area = #{item.helpArea, jdbcType=VARCHAR},
-				  help_area_name = #{item.helpAreaName, jdbcType=VARCHAR},
-				  help_town = #{item.helpTown, jdbcType=VARCHAR},
-				  help_town_name = #{item.helpTownName, jdbcType=VARCHAR},
-				  help_village = #{item.helpVillage, jdbcType=VARCHAR},
-				  help_village_name = #{item.helpVillageName, jdbcType=VARCHAR}
-              </set>
+            <set>
+                user_id = #{item.userId, jdbcType=VARCHAR},
+                username = #{item.username, jdbcType=VARCHAR},
+                real_name = #{item.realName, jdbcType=VARCHAR},
+                phone = #{item.phone, jdbcType=VARCHAR},
+                gender = #{item.gender, jdbcType=INTEGER},
+                delete_flag = #{item.deleteFlag, jdbcType=INTEGER}
+            </set>
             where id = #{item.id, jdbcType=BIGINT};
-          </foreach>
+        </foreach>
     </update>
 
     <update id="delete">
-        update tpl_user_t set delete_flag = 1
+        update tpl_user_t
+        set delete_flag = 1
         where id = #{id, jdbcType=BIGINT}
     </update>
 
@@ -479,7 +397,9 @@
         </foreach>
     </update>
 
-	<select id="findPassword" resultType="java.lang.String" parameterType="java.lang.Long">
-		select password from tpl_user_t where id = #{id, jdbcType=BIGINT}
-	</select>
+    <select id="findPassword" resultType="java.lang.String" parameterType="java.lang.Long">
+        select password
+        from tpl_user_t
+        where id = #{id, jdbcType=BIGINT}
+    </select>
 </mapper>

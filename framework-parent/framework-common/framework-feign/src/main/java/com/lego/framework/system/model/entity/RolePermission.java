@@ -11,10 +11,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RolePermission extends BaseModel {
 
-    @ApiModelProperty(value="角色名称ID 必填", required = false)
-    private Long roleId;
+    @ApiModelProperty(value = "项目角色ID 必填", required = false)
+    private Long projectRoleId;
 
-    @ApiModelProperty(value="权限点ID 必填", required = false)
+    @ApiModelProperty(value = "权限点ID 必填", required = false)
     private Long permissionId;
 
 }

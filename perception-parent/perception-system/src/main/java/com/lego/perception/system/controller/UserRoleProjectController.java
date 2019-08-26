@@ -1,11 +1,11 @@
 package com.lego.perception.system.controller;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
+import com.lego.framework.base.page.Page;
+import com.lego.framework.base.page.PagedResult;
+import com.lego.framework.base.sdto.RespVO;
+import com.lego.framework.system.model.entity.UserRoleProject;
 import com.lego.perception.system.service.IUserRoleService;
-import com.lego.framework.system.model.entity.UserRole;
-import com.survey.lib.common.page.Page;
-import com.survey.lib.common.page.PagedResult;
-import com.survey.lib.common.vo.RespVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ import java.util.List;
 @Resource(value="userRole", desc="用户权限")
 @Api(value="UserRoleController",description = "用户权限管理")
 @Slf4j
-public class UserRoleController {
+public class UserRoleProjectController {
 
     @Autowired
     private IUserRoleService userRoleService;
@@ -27,42 +27,44 @@ public class UserRoleController {
     @RequestMapping(value="/findList", method=RequestMethod.GET)
     @Operation(value = "find", desc = "查询")
     @ApiOperation("查询")
-    public List<UserRole> findList(@RequestParam("userId")Long userId, @RequestParam(value = "roleId",required = false)Long roleId,
-                                          @RequestParam(value = "programId",required = false)Long programId){
-        UserRole userRoleProgram=new UserRole();
-        userRoleProgram.setUserId(userId);
-        userRoleProgram.setRoleId(roleId);
-        return userRoleService.findList(userRoleProgram);
+    public List<UserRoleProject> findList(@RequestParam("userId")Long userId,
+                                          @RequestParam(value = "roleId",required = false)Long roleId,
+                                          @RequestParam(value = "projectId",required = false)Long projectId){
+        UserRoleProject userRoleProject=new UserRoleProject();
+        userRoleProject.setUserId(userId);
+        userRoleProject.setRoleId(roleId);
+        userRoleProject.setProjectId(projectId);
+        return userRoleService.findList(userRoleProject);
     }
 
     @RequestMapping(value="/findPagedList/{pageSize}/{curPage}", method=RequestMethod.GET)
     @Operation(value = "find", desc = "查询")
     @ApiOperation("分页查询")
-    public PagedResult<UserRole> findPagedList(@ModelAttribute UserRole userRole, @PathParam("") Page page){
+    public PagedResult<UserRoleProject> findPagedList(@ModelAttribute UserRoleProject userRoleProject, @PathParam("") Page page){
 
-        return userRoleService.findPagedList(userRole, page);
+        return userRoleService.findPagedList(userRoleProject, page);
     }
 
     @RequestMapping(value="/save", method = RequestMethod.POST)
     @Operation(value = "save", desc = "更新")
     @ApiOperation("更新")
-    public RespVO save(@RequestParam("")Long userId, @RequestBody List<UserRole> userRolePrograms){
+    public RespVO save(@RequestParam("")Long userId, @RequestBody List<UserRoleProject> userRoleProjects){
 
-        return userRoleService.save(userId, userRolePrograms);
+        return userRoleService.save(userId, userRoleProjects);
     }
 
     @RequestMapping(value="/delete", method = RequestMethod.POST)
     @Operation(value = "save", desc = "更新")
     @ApiOperation("更新")
-    public RespVO save(@RequestBody UserRole userRole){
+    public RespVO save(@RequestBody UserRoleProject userRoleProject){
 
-        return userRoleService.delete(userRole);
+        return userRoleService.delete(userRoleProject);
     }
 
     @RequestMapping(value="/updateAndInsert", method = RequestMethod.POST)
     @ApiOperation("新增用户权限，规则是存在更新，不存在新增")
-    public RespVO updateAndInsert(@RequestBody UserRole userRole){
+    public RespVO updateAndInsert(@RequestBody UserRoleProject userRoleProject){
 
-        return userRoleService.updateAndInsert(userRole);
+        return userRoleService.updateAndInsert(userRoleProject);
     }
 }

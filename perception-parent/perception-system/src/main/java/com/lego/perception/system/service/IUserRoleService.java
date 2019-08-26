@@ -1,40 +1,40 @@
 package com.lego.perception.system.service;
-import com.lego.framework.system.model.entity.UserRole;
-import com.survey.lib.common.page.Page;
-import com.survey.lib.common.page.PagedResult;
-import com.survey.lib.common.vo.RespVO;
+import com.lego.framework.base.page.Page;
+import com.lego.framework.base.page.PagedResult;
+import com.lego.framework.base.sdto.RespVO;
+import com.lego.framework.system.model.entity.UserRoleProject;
 import java.util.List;
 
 public interface IUserRoleService {
 
     /**
      * 查询列表
-     * @param userRole
+     * @param userRoleProject
      * @return
      */
-    List<UserRole> findList(UserRole userRole);
+    List<UserRoleProject> findList(UserRoleProject userRoleProject);
 
     /**
      * 分页查询
-     * @param userRole
+     * @param userRoleProject
      * @param page
      * @return
      */
-    PagedResult<UserRole> findPagedList(UserRole userRole, Page page);
+    PagedResult<UserRoleProject> findPagedList(UserRoleProject userRoleProject, Page page);
 
     /**
      * 新增列表
-     * @param userRoles
+     * @param userRoleProjects
      * @return
      */
-    RespVO insertList(List<UserRole> userRoles);
+    RespVO insertList(List<UserRoleProject> userRoleProjects);
 
     /**
      * 删除
-     * @param userRole
+     * @param userRoleProject
      * @return
      */
-    RespVO delete(UserRole userRole);
+    RespVO delete(UserRoleProject userRoleProject);
 
     /**
      * 删除类表
@@ -55,12 +55,12 @@ public interface IUserRoleService {
      * @param userId
      * @return
      */
-    RespVO save(Long userId, List<UserRole> userRoles);
+    RespVO save(Long userId, List<UserRoleProject> userRoleProjects);
 
     /**
      * 更新或者更新，存在更新，不存在新增
-     * @param userRole
+     * @param userRoleProject
      * @return
      */
-    RespVO updateAndInsert(UserRole userRole);
+    RespVO updateAndInsert(UserRoleProject userRoleProject);
 }

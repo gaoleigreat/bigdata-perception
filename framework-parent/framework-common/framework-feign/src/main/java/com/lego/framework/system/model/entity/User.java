@@ -46,12 +46,6 @@ public class User {
 
     private List<Long> userIds;
 
-    @ApiModelProperty(value = "帮扶单位id")
-    private Long unitId;
-
-    @ApiModelProperty(value = "是否驻村")
-    private Integer isResident;
-
     @ApiModelProperty(value = "身份证合照", required = false)
     private String idCardImg;
 
@@ -64,29 +58,8 @@ public class User {
     @ApiModelProperty("学历，1：研究生及以上，2：博士研究生，3：硕士研究生，4：大学本科，5：大学专科，6：中专技校，7：中等专科，8：职业高中，9：技工学校，10：普通高中，11：初中，12：小学，13：其他")
     private Integer education;
 
-    @ApiModelProperty("技术特长，1：种植，2：养殖，3：林果，4：服务")
-    private Integer speciality;
-
     @ApiModelProperty("真实姓名")
     private String realName;
-
-    @ApiModelProperty("帮扶区县code")
-    private String helpArea;
-
-    @ApiModelProperty("帮扶区县名称")
-    private String helpAreaName;
-
-    @ApiModelProperty("帮扶乡镇code")
-    private String helpTown;
-
-    @ApiModelProperty("帮扶乡镇名称")
-    private String helpTownName;
-
-    @ApiModelProperty("帮扶村code")
-    private String helpVillage;
-
-    @ApiModelProperty("帮扶村code")
-    private String helpVillageName;
 
     @ApiModelProperty("角色id集合")
     private List<Long> roleIds;

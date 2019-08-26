@@ -33,7 +33,7 @@ public class ScheduleJobServiceImpl implements IScheduleJobService {
             Scheduler scheduler = schedulerFactoryBean.getScheduler();
 
             //任务标识
-            JobKey jobKey = JobKey.jobKey(scheduleJobVO.getGroupName(), scheduleJobVO.getJobName());
+            JobKey jobKey = JobKey.jobKey(scheduleJobVO.getJobName(), scheduleJobVO.getGroupName());
 
             //任务存在，返回
             boolean exists = scheduler.checkExists(jobKey);
@@ -41,7 +41,7 @@ public class ScheduleJobServiceImpl implements IScheduleJobService {
                 return RespVOBuilder.failure("任务已存在");
             }
             //创建任务
-            JobDetail jobDetail = JobBuilder.newJob(ScheduleJob.class).withIdentity(scheduleJobVO.getGroupName(), scheduleJobVO.getJobName()).withDescription(scheduleJobVO.getDescription()).build();
+            JobDetail jobDetail = JobBuilder.newJob(ScheduleJob.class).withIdentity(scheduleJobVO.getJobName(), scheduleJobVO.getGroupName()).withDescription(scheduleJobVO.getDescription()).build();
             JobDataMap jobDataMap = jobDetail.getJobDataMap();
             jobDataMap.put("url", scheduleJobVO.getUrl());
             jobDataMap.put("groupName", scheduleJobVO.getGroupName());
@@ -51,8 +51,9 @@ public class ScheduleJobServiceImpl implements IScheduleJobService {
             CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(scheduleJobVO.getCron());
 
             //创建触发器,1秒钟后触发器开始触发
-            CronTrigger trigger = TriggerBuilder.newTrigger().startAt(DateBuilder.futureDate(1, DateBuilder.IntervalUnit.SECOND)).withIdentity("trigger_" + scheduleJobVO.getGroupName(), "trigger_" + scheduleJobVO.getJobName()).withSchedule(scheduleBuilder).build();
-
+            CronTrigger trigger = TriggerBuilder.newTrigger().startAt(DateBuilder.futureDate(1, DateBuilder.IntervalUnit.SECOND)).withIdentity("trigger_" + scheduleJobVO.getJobName(), "trigger_" + scheduleJobVO.getGroupName()).withSchedule(scheduleBuilder).build();
+            TriggerKey key = trigger.getKey();
+            log.info("jobKey:{},---------triggerKey:{}", jobKey, key);
             //部署定时任务
             scheduler.scheduleJob(jobDetail, trigger);
 
@@ -73,10 +74,10 @@ public class ScheduleJobServiceImpl implements IScheduleJobService {
     public RespVO pauseJob(ScheduleJobVO scheduleJobVO) {
         try {
             Scheduler scheduler = schedulerFactoryBean.getScheduler();
-            TriggerKey triggerKey = TriggerKey.triggerKey("trigger_" + scheduleJobVO.getGroupName(), "trigger_" + scheduleJobVO.getJobName());
+            TriggerKey triggerKey = TriggerKey.triggerKey("trigger_" + scheduleJobVO.getJobName(), "trigger_" + scheduleJobVO.getGroupName());
 
             scheduler.pauseTrigger(triggerKey);
-            log.info("=========================pause job:" + scheduleJobVO.getJobName() + "-----" + scheduleJobVO.getGroupName() + " success========================");
+            log.info("pauseJob=========triggerKey:{}================pause jobName:{}---groupName:{}------ success===========", triggerKey, scheduleJobVO.getJobName(), scheduleJobVO.getGroupName());
         } catch (SchedulerException e) {
             log.error("", e);
             return RespVOBuilder.failure(e.getMessage());
@@ -88,9 +89,9 @@ public class ScheduleJobServiceImpl implements IScheduleJobService {
     public RespVO resumeJob(ScheduleJobVO scheduleJobVO) {
         try {
             Scheduler scheduler = schedulerFactoryBean.getScheduler();
-            TriggerKey triggerKey = TriggerKey.triggerKey("trigger_" + scheduleJobVO.getGroupName(), "trigger_" + scheduleJobVO.getJobName());
+            TriggerKey triggerKey = TriggerKey.triggerKey("trigger_" + scheduleJobVO.getJobName(), "trigger_" + scheduleJobVO.getGroupName());
             scheduler.resumeTrigger(triggerKey);
-            log.error("=========================resume job:" + scheduleJobVO.getJobName() + "-----" + scheduleJobVO.getGroupName() + " success========================");
+            log.info("resumeJob=======triggerKey:{}==================resume jobName:{}----groupName:{}----success========================", triggerKey, scheduleJobVO.getJobName(), scheduleJobVO.getGroupName());
         } catch (SchedulerException e) {
             log.error("", e);
             return RespVOBuilder.failure(e.getMessage());
@@ -102,7 +103,7 @@ public class ScheduleJobServiceImpl implements IScheduleJobService {
     public RespVO deleteJob(ScheduleJobVO scheduleJobVO) {
         try {
             Scheduler scheduler = schedulerFactoryBean.getScheduler();
-            JobKey jobKey = JobKey.jobKey(scheduleJobVO.getGroupName(), scheduleJobVO.getJobName());
+            JobKey jobKey = JobKey.jobKey(scheduleJobVO.getJobName(), scheduleJobVO.getGroupName());
             scheduler.deleteJob(jobKey);
             log.error("=========================delete job:" + scheduleJobVO.getGroupName() + "-----" + scheduleJobVO.getJobName() + " success========================");
         } catch (SchedulerException e) {
@@ -130,11 +131,11 @@ public class ScheduleJobServiceImpl implements IScheduleJobService {
                 String cron = (String) jobDataMap.get("cron");
                 String url = (String) jobDataMap.get("url");
 
-                if (!StringUtils.isEmpty(scheduleJobVO.getGroupName()) && groupName.indexOf(scheduleJobVO.getGroupName()) < 0) {
+                if (!StringUtils.isEmpty(scheduleJobVO.getGroupName()) && !groupName.contains(scheduleJobVO.getGroupName())) {
                     continue;
                 }
 
-                if (!StringUtils.isEmpty(scheduleJobVO.getJobName()) && jobName.indexOf(scheduleJobVO.getJobName()) < 0) {
+                if (!StringUtils.isEmpty(scheduleJobVO.getJobName()) && !jobName.contains(scheduleJobVO.getJobName())) {
                     continue;
                 }
 

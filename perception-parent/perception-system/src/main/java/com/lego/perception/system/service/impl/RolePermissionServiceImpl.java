@@ -59,7 +59,7 @@ public class RolePermissionServiceImpl implements IRolePermissionService {
         }
         //2,查询原始数据
         RolePermission queryParam = new RolePermission();
-        queryParam.setRoleId(roleId);
+        queryParam.setProjectRoleId(roleId);
         List<RolePermission> originList = rolePermissionMapper.findList(queryParam);
 
         //3.
@@ -71,7 +71,7 @@ public class RolePermissionServiceImpl implements IRolePermissionService {
         List<Long> newUserIds = new ArrayList<>();
 
         for(RolePermission rolePermission : rolePermissions){
-            rolePermission.setRoleId(roleId);
+            rolePermission.setProjectRoleId(roleId);
         }
 
         //如果原始数据是空，新增新数据，返回；

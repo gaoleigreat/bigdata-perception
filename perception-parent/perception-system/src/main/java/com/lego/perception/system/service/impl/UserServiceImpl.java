@@ -1,4 +1,5 @@
 package com.lego.perception.system.service.impl;
+import com.lego.framework.system.model.entity.UserRoleProject;
 import com.lego.perception.system.mapper.RoleMapper;
 import com.lego.perception.system.mapper.UserMapper;
 import com.lego.perception.system.service.IRoleService;
@@ -6,7 +7,6 @@ import com.lego.perception.system.service.IUserRoleService;
 import com.lego.perception.system.service.IUserService;
 import com.lego.framework.system.model.entity.Role;
 import com.lego.framework.system.model.entity.User;
-import com.lego.framework.system.model.entity.UserRole;
 import com.survey.lib.common.page.Page;
 import com.survey.lib.common.page.PagedResult;
 import com.survey.lib.common.utils.SecurityUtils;
@@ -57,13 +57,13 @@ public class UserServiceImpl implements IUserService {
 					u.setRoleName(u.getUsername());
 				}
 			}
-			UserRole queryParam = new UserRole();
+			UserRoleProject queryParam = new UserRoleProject();
 			queryParam.setUserIds(userIds);
-			List<UserRole> userRoleProgramList = userRoleService.findList(queryParam);
+			List<UserRoleProject> userRoleProjects = userRoleService.findList(queryParam);
 
 			List<Long> roleIds = new ArrayList<>();
-			if(!CollectionUtils.isEmpty(userRoleProgramList)){
-				for(UserRole urp : userRoleProgramList){
+			if(!CollectionUtils.isEmpty(userRoleProjects)){
+				for(UserRoleProject urp : userRoleProjects){
 					if(null == urp || null == urp.getUserId() || null == urp.getRoleId()){
 						continue;
 					}
@@ -134,15 +134,15 @@ public class UserServiceImpl implements IUserService {
 	 * @return
 	 */
 	public String findName(Long ids){
-		UserRole querys = new UserRole();
+		UserRoleProject querys = new UserRoleProject();
 		querys.setUserId(ids);
-		List<UserRole> userRoleProgramList = userRoleService.findList(querys);
-		if(userRoleProgramList==null|| userRoleProgramList.size()<=0){
+		List<UserRoleProject> userRoleProjects = userRoleService.findList(querys);
+		if(userRoleProjects==null|| userRoleProjects.size()<=0){
 			return null;
 		}
 		StringBuilder stringBuilder = new StringBuilder();
-			for(int i = 0;i<userRoleProgramList.size();i++){
-				Long rid = userRoleProgramList.get(i).getRoleId();
+			for(int i = 0;i<userRoleProjects.size();i++){
+				Long rid = userRoleProjects.get(i).getRoleId();
 				Role queryrole = new Role();
 				queryrole.setId(rid);
 				List<Role> roleList = roleMapper.findList(queryrole);
@@ -158,22 +158,6 @@ public class UserServiceImpl implements IUserService {
 		return userMapper.findList(user);
 	}
 
-	/**
-	 * 根据uid,roleid判断信息员是否记录
-	 * @param uid
-	 * @param roleId
-	 * @return
-	 */
-	public UserRole findUserRole(Long uid,Long roleId){
-		UserRole userRoleProgram = new UserRole();
-		userRoleProgram.setUserId(uid);
-		userRoleProgram.setRoleId(roleId);
-		List<UserRole> userRoles = userRoleService.findList(userRoleProgram);
-		if(userRoles!=null && userRoles.size()>0){
-			return userRoles.get(0);
-		}
-		return null;
-	}
 
 	/**
 	 * 根据手机号查询用户
@@ -329,7 +313,7 @@ public class UserServiceImpl implements IUserService {
 		}*/
 		user.setCreationDate(new Date());
 		user.setLastUpdateDate(new Date());
-		userMapper.insert(user);
+		userMapper.save(user);
 		return RespVOBuilder.success(user.getId());
 	}
 
@@ -461,12 +445,12 @@ public class UserServiceImpl implements IUserService {
 			return RespVOBuilder.failure("参数缺失");
 		}
 		int count = userMapper.delete(id);
-		UserRole quserRoleProgram = new UserRole();
-		quserRoleProgram.setUserId(id);
-		List<UserRole> userRoleProgramList = userRoleService.findList(quserRoleProgram);
-		if(userRoleProgramList!=null&& userRoleProgramList.size()>0){
-			for(int i = 0;i<userRoleProgramList.size();i++){
-				userRoleService.delete(userRoleProgramList.get(i));
+		UserRoleProject userRoleProject = new UserRoleProject();
+		userRoleProject.setUserId(id);
+		List<UserRoleProject> userRoleProjects = userRoleService.findList(userRoleProject);
+		if(userRoleProjects!=null&& userRoleProjects.size()>0){
+			for (UserRoleProject userRoleProject1 : userRoleProjects) {
+				userRoleService.delete(userRoleProject1);
 			}
 		}
 		return RespVOBuilder.success(count);

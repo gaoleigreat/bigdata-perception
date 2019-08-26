@@ -65,7 +65,7 @@
 
     <springProfile name="!prod">
         <!-- 当 "生产" 环境时，该配置不激活-->
-        <logger name="com.lego.survey" level="DEBUG"/>
+        <logger name="com.lego.perception" level="DEBUG"/>
         <logger name="org.springframework.data.mongodb.core" level="DEBUG"/>
     </springProfile>
 

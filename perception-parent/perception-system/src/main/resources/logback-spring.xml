@@ -6,7 +6,7 @@
     <property name="logDir" value="security-service"/>-->
 
     <springProperty scope="context" name="maxHistory" source="logging.maxHistory" defaultValue="2400"/>
-    <springProperty scope="context" name="logDir" source="spring.application.name" defaultValue="settlement-service"/>
+    <springProperty scope="context" name="logDir" source="spring.application.name" defaultValue="system-service"/>
 
 
     <!-- 日志上下文名称 -->
@@ -47,7 +47,7 @@
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>%msg%n</pattern>
         </encoder>
-        <filter class="com.lego.survey.lib.log.filter.AccessLogFilter" />
+        <filter class="com.lego.survey.lib.log.filter.AccessLogFilter"/>
     </appender>
 
     <appender name="service" class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -59,13 +59,12 @@
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>%msg%n</pattern>
         </encoder>
-        <filter class="com.lego.survey.lib.log.filter.ServiceLogFilter" />
+        <filter class="com.lego.survey.lib.log.filter.ServiceLogFilter"/>
     </appender>
 
     <springProfile name="!prod">
         <!-- 当 "生产" 环境时，该配置不激活-->
-        <logger name="com.lego.survey" level="DEBUG"/>
-        <logger name="org.springframework.data.mongodb.core" level="DEBUG"/>
+        <logger name="com.lego.perception" level="DEBUG"/>
     </springProfile>
 
     <logger name="access">
