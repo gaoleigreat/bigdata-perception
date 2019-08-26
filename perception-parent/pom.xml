@@ -18,6 +18,7 @@
         <module>perception-auth</module>
         <module>perception-user</module>
         <module>perception-log</module>
+        <module>perception-file-online-preview</module>
     </modules>
 
 </project>
