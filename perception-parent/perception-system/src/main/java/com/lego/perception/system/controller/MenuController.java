@@ -1,11 +1,11 @@
 package com.lego.perception.system.controller;
 
+import com.framework.common.page.PagedResult;
+import com.framework.common.sdto.RespDataVO;
+import com.framework.common.sdto.RespVO;
+import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
-import com.lego.framework.base.page.PagedResult;
-import com.lego.framework.base.sdto.RespDataVO;
-import com.lego.framework.base.sdto.RespVO;
-import com.lego.framework.base.sdto.RespVOBuilder;
 import com.lego.framework.system.model.entity.Menu;
 import com.lego.perception.system.service.IMenuService;
 import io.swagger.annotations.Api;

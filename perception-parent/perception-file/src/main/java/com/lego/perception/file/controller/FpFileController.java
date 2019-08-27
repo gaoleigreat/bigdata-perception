@@ -1,10 +1,10 @@
 package com.lego.perception.file.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.framework.common.sdto.RespVO;
+import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.base.utils.FpFileUtil;
 import com.lego.perception.file.service.IFpFileService;
-import com.survey.lib.common.vo.RespVO;
-import com.survey.lib.common.vo.RespVOBuilder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;

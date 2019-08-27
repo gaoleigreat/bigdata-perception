@@ -1,9 +1,6 @@
 package com.lego.perception.auth.utils;
-
-import com.lego.survey.base.context.AppContext;
+import com.lego.framework.base.context.AppContext;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataAccessException;
-import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
@@ -24,7 +21,6 @@ public class RedisUtil {
     /** 默认缓存时间  // 单位秒 设置成一个钟 */
     private static final int DEFAULT_CACHE_SECONDS = 60 * 60 * 1;
 
-    @SuppressWarnings("unchecked")
     private static RedisTemplate<String, Object> redisTemplate =
             (RedisTemplate<String, Object>) AppContext.getBean("redisTemplate");
 

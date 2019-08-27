@@ -1,12 +1,8 @@
 package com.lego.framework.permission.init;
-
-import com.alibaba.excel.util.CollectionUtils;
-import com.lego.framework.auth.model.entity.Resources;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
 import com.lego.framework.system.feign.PermissionClient;
 import com.lego.framework.system.model.entity.Permission;
-import com.survey.lib.common.context.ServicePermissionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
@@ -21,9 +17,6 @@ import org.springframework.core.type.classreading.MetadataReaderFactory;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-
-import javax.security.auth.kerberos.ServicePermission;
 import java.util.*;
 
 @Component

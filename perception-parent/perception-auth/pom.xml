@@ -76,62 +76,42 @@
             <version>${jjwt.version}</version>
         </dependency>
 
-        <!-- event -->
-      <!--  <dependency>
-            <groupId>com.lego.event</groupId>
-            <artifactId>survey-event</artifactId>
-            <version>${service.version}</version>
-        </dependency>-->
-
         <dependency>
             <groupId>com.lego.base</groupId>
             <version>${service.version}</version>
-            <artifactId>survey-base</artifactId>
+            <artifactId>framework-base</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.lego.swagger</groupId>
-            <artifactId>lib-swagger</artifactId>
+            <groupId>com.framework.swagger</groupId>
+            <artifactId>framework-swagger</artifactId>
             <version>${service.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.lego.feign</groupId>
-            <artifactId>survey-feign</artifactId>
+            <artifactId>framework-feign</artifactId>
             <version>${service.version}</version>
             <exclusions>
                 <exclusion>
-                    <groupId>com.lego.mybatis</groupId>
-                    <artifactId>lib-mybatis</artifactId>
+                    <groupId>com.framework.mybatis</groupId>
+                    <artifactId>framework-mybatis</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
 
 
         <dependency>
-            <groupId>com.lego.log</groupId>
+            <groupId>com.framework.log</groupId>
             <version>${service.version}</version>
-            <artifactId>lib-log</artifactId>
+            <artifactId>framework-log</artifactId>
         </dependency>
 
 
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>${mysql.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.lego.mybatis</groupId>
+            <groupId>com.framework.common</groupId>
             <version>${service.version}</version>
-            <artifactId>lib-mybatis</artifactId>
-        </dependency>
-
-
-        <dependency>
-            <groupId>com.lego.common</groupId>
-            <version>${service.version}</version>
-            <artifactId>lib-common</artifactId>
+            <artifactId>framework-common</artifactId>
         </dependency>
 
 

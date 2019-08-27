@@ -1,7 +1,7 @@
 package com.lego.framework.base.filter;
+import com.framework.common.consts.HttpConsts;
+import com.framework.common.sdto.CurrentVo;
 import com.lego.framework.base.context.RequestContext;
-import com.survey.lib.common.consts.HttpConsts;
-import com.survey.lib.common.vo.CurrentVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;

@@ -14,8 +14,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.lego.common</groupId>
-            <artifactId>lib-common</artifactId>
+            <groupId>com.framework.common</groupId>
+            <artifactId>framework-common</artifactId>
             <version>${service.version}</version>
         </dependency>
         <dependency>
@@ -42,8 +42,8 @@
             <version>${service.version}</version>
             <exclusions>
                 <exclusion>
-                    <groupId>com.lego.mybatis</groupId>
-                    <artifactId>lib-mybatis</artifactId>
+                    <groupId>com.framework.mybatis</groupId>
+                    <artifactId>framework-mybatis</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

@@ -127,8 +127,8 @@
             <version>${service.version}</version>
             <exclusions>
                 <exclusion>
-                    <groupId>com.lego.mybatis</groupId>
-                    <artifactId>lib-mybatis</artifactId>
+                    <groupId>com.framework.mybatis</groupId>
+                    <artifactId>framework-mybatis</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -142,9 +142,9 @@
 
 
         <dependency>
-            <groupId>com.lego.log</groupId>
+            <groupId>com.framework.log</groupId>
             <version>${service.version}</version>
-            <artifactId>lib-log</artifactId>
+            <artifactId>framework-log</artifactId>
         </dependency>
 
 

@@ -1,9 +1,9 @@
 package com.lego.perception.system.service.impl;
+import com.framework.common.sdto.RespVO;
+import com.framework.common.sdto.RespVOBuilder;
 import com.lego.perception.system.mapper.RolePermissionMapper;
 import com.lego.perception.system.service.IRolePermissionService;
 import com.lego.framework.system.model.entity.RolePermission;
-import com.survey.lib.common.vo.RespVO;
-import com.survey.lib.common.vo.RespVOBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

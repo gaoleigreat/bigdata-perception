@@ -4,6 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+
 /**
  * @author yanglf
  * @description
@@ -11,7 +12,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  **/
 @EnableFeignClients(basePackages = "com.lego")
 @EnableEurekaClient
-@SpringBootApplication(scanBasePackages = {"com.lego"})
+@SpringBootApplication(scanBasePackages = {"com.lego", "com.framework"})
 public class SystemServiceApplication {
 
     public static void main(String[] args) {

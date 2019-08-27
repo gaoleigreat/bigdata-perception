@@ -1,13 +1,13 @@
 package com.lego.perception.system.service.impl;
 
 import com.alibaba.excel.util.CollectionUtils;
+import com.framework.common.page.Page;
+import com.framework.common.page.PagedResult;
+import com.framework.common.sdto.RespVO;
+import com.framework.common.sdto.RespVOBuilder;
 import com.lego.perception.system.mapper.DictionaryMapper;
 import com.lego.perception.system.service.IDictionaryService;
 import com.lego.framework.system.model.entity.Dictionary;
-import com.survey.lib.common.page.Page;
-import com.survey.lib.common.page.PagedResult;
-import com.survey.lib.common.vo.RespVO;
-import com.survey.lib.common.vo.RespVOBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -90,7 +90,7 @@ public class DictionaryServiceImpl implements IDictionaryService {
             return RespVOBuilder.failure("参数缺失");
         }
         dictionary.setCreateInfo();
-        dictionaryMapper.insert(dictionary);
+        dictionaryMapper.save(dictionary);
         return RespVOBuilder.success();
     }
 

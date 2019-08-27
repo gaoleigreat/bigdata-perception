@@ -1,6 +1,6 @@
 package com.lego.perception.system.service.impl;
 
-import com.lego.framework.base.page.PagedResult;
+import com.framework.common.page.PagedResult;
 import com.lego.framework.system.model.entity.Menu;
 import com.lego.perception.system.mapper.MenuMapper;
 import com.lego.perception.system.service.IMenuService;

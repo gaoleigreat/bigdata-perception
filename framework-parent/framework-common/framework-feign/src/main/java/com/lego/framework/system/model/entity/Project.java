@@ -1,5 +1,7 @@
 package com.lego.framework.system.model.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lego.framework.config.BaseModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -39,14 +41,22 @@ public class Project {
     private Long lastUpdatedBy;
     @ApiModelProperty("是否删除(1-否;2-是)")
     private Integer deleteFlag;
+    @ApiModelProperty("项目状态")
+    private Integer status;
 
-    public void setCreateInfo() {
+
+    @JSONField(serialize = false, deserialize = false)
+    public void setCreateInfo(Long userId) {
         Date currentTime = new Date();
         this.creationDate = currentTime;
         this.lastUpdateDate = currentTime;
+        this.createdBy = userId;
+        this.lastUpdatedBy = userId;
     }
 
-    public void setUpdateInfo() {
+    @JSONField(serialize = false, deserialize = false)
+    public void setUpdateInfo(Long userId) {
         this.lastUpdateDate = new Date();
+        this.lastUpdatedBy = userId;
     }
 }

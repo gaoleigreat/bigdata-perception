@@ -1,6 +1,6 @@
 package com.lego.framework.base.service;
 
-import com.survey.lib.common.vo.CurrentVo;
+import com.framework.common.sdto.CurrentVo;
 
 public interface IAuthCheckService {
 
@@ -9,6 +9,6 @@ public interface IAuthCheckService {
      * @param token
      * @return
      */
-    CurrentVo getData(String token,String deviceType);
+    CurrentVo getData(String token, String deviceType);
 
 }

@@ -1,9 +1,9 @@
 package com.lego.perception.file.service.impl;
+import com.framework.common.consts.RespConsts;
+import com.framework.common.sdto.RespVO;
+import com.framework.common.sdto.RespVOBuilder;
 import com.lego.perception.file.model.UploadFile;
 import com.lego.perception.file.service.IFdfsFileService;
-import com.survey.lib.common.consts.RespConsts;
-import com.survey.lib.common.vo.RespVO;
-import com.survey.lib.common.vo.RespVOBuilder;
 import org.csource.common.MyException;
 import org.csource.fastdfs.StorageClient;
 import org.csource.fastdfs.TrackerGroup;

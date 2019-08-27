@@ -1,10 +1,9 @@
 package com.lego.perception.auth.utils;
-
+import com.framework.common.consts.HttpConsts;
+import com.framework.common.sdto.CurrentVo;
+import com.framework.common.sdto.TokenVo;
+import com.lego.framework.system.model.entity.User;
 import com.lego.perception.auth.propery.JwtProperty;
-import com.lego.survey.user.model.entity.User;
-import com.survey.lib.common.consts.HttpConsts;
-import com.survey.lib.common.vo.CurrentVo;
-import com.survey.lib.common.vo.TokenVo;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,7 +123,7 @@ public class JwtTokenUtil {
             String subject = claims.getSubject();
             Date expiration = claims.getExpiration();
             String userName = claims.get("userName", String.class);
-            String userId = claims.get("userId", String.class);
+            Long userId = claims.get("userId", Long.class);
             tokenVo.setToken(token);
             tokenVo.setExpireTime(expiration);
             tokenVo.setDeviceType(subject);
@@ -145,7 +144,7 @@ public class JwtTokenUtil {
      */
     public boolean validateToken(String token, User user) {
         String username = getUserNameFromToken(token);
-        return username.equals(user.getUserName()) && !isTokenExpired(token);
+        return username.equals(user.getUsername()) && !isTokenExpired(token);
     }
 
     /**

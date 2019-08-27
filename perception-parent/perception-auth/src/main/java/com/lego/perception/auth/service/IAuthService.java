@@ -1,9 +1,7 @@
 package com.lego.perception.auth.service;
-
-import com.lego.survey.user.model.entity.User;
-import com.survey.lib.common.vo.AuthVo;
-import com.survey.lib.common.vo.TokenVo;
-
+import com.framework.common.sdto.AuthVo;
+import com.framework.common.sdto.TokenVo;
+import com.lego.framework.system.model.entity.User;
 /**
  * @author yanglf
  * @descript
@@ -41,7 +39,7 @@ public interface IAuthService {
      * @param deviceType
      * @return
      */
-    String hasLogin(String userId, String deviceType);
+    String hasLogin(Long userId, String deviceType);
 
     /**
      * 更新  session 数据
@@ -49,7 +47,7 @@ public interface IAuthService {
      * @param deviceType
      * @return
      */
-    Integer setUserToken(User user,String deviceType,String token);
+    Integer setUserToken(User user, String deviceType, String token);
 
     /**
      * 生成服务 token

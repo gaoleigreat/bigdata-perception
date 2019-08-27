@@ -24,8 +24,8 @@
             <version>${service.version}</version>
             <exclusions>
                 <exclusion>
-                    <groupId>com.lego.mybatis</groupId>
-                    <artifactId>lib-mybatis</artifactId>
+                    <groupId>com.framework.mybatis</groupId>
+                    <artifactId>framework-mybatis</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

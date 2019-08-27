@@ -93,14 +93,14 @@
 
 
         <dependency>
-            <groupId>com.lego.log</groupId>
-            <artifactId>lib-log</artifactId>
+            <groupId>com.framework.log</groupId>
+            <artifactId>framework-log</artifactId>
             <version>${service.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>com.lego.swagger</groupId>
-            <artifactId>lib-swagger</artifactId>
+            <groupId>com.framework.swagger</groupId>
+            <artifactId>framework-swagger</artifactId>
             <version>${service.version}</version>
         </dependency>
 

@@ -41,14 +41,14 @@
 
         <!-- lib -->
         <dependency>
-            <groupId>com.lego.common</groupId>
-            <artifactId>lib-common</artifactId>
+            <groupId>com.framework.common</groupId>
+            <artifactId>framework-common</artifactId>
             <version>${service.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>com.lego.swagger</groupId>
-            <artifactId>lib-swagger</artifactId>
+            <groupId>com.framework.swagger</groupId>
+            <artifactId>framework-swagger</artifactId>
             <version>${service.version}</version>
         </dependency>
 
@@ -58,8 +58,8 @@
         </dependency>
 
         <dependency>
-            <groupId>com.lego.excel</groupId>
-            <artifactId>lib-excel</artifactId>
+            <groupId>com.framework.excel</groupId>
+            <artifactId>framework-excel</artifactId>
             <version>${service.version}</version>
         </dependency>
 
@@ -94,8 +94,8 @@
 
 
         <dependency>
-            <groupId>com.lego.mybatis</groupId>
-            <artifactId>lib-mybatis</artifactId>
+            <groupId>com.framework.mybatis</groupId>
+            <artifactId>framework-mybatis</artifactId>
             <version>${service.version}</version>
         </dependency>
 

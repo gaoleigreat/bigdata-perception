@@ -1,7 +1,6 @@
 package com.lego.perception.file.service;
+import com.framework.common.sdto.RespVO;
 import com.lego.perception.file.model.UploadFile;
-import com.survey.lib.common.vo.RespVO;
-
 public interface IFdfsFileService {
 
     /**

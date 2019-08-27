@@ -1,7 +1,8 @@
 package com.lego.framework.base.context;
 
+import com.framework.common.sdto.CurrentVo;
 import com.lego.framework.base.service.IAuthCheckService;
-import com.survey.lib.common.vo.CurrentVo;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -13,9 +14,8 @@ import javax.servlet.ServletContext;
 /**
  * @author yanglf
  */
+@Slf4j
 public class RequestContext {
-
-    public static final Logger log = LoggerFactory.getLogger(RequestContext.class);
 
     private static ThreadLocal<CurrentVo> current = new ThreadLocal<CurrentVo>();
 

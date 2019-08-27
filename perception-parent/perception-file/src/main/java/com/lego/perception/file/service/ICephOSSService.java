@@ -1,10 +1,9 @@
 package com.lego.perception.file.service;
 
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.framework.common.sdto.RespDataVO;
+import com.framework.common.sdto.RespVO;
 import com.lego.perception.file.model.OssUploadFile;
-import com.survey.lib.common.vo.RespDataVO;
-import com.survey.lib.common.vo.RespVO;
-
 import java.io.InputStream;
 import java.net.URL;
 

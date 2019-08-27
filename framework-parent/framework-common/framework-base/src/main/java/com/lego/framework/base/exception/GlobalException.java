@@ -1,9 +1,9 @@
 package com.lego.framework.base.exception;
 
-import com.survey.lib.common.consts.RespConsts;
-import com.survey.lib.common.exception.*;
-import com.survey.lib.common.vo.RespVO;
-import com.survey.lib.common.vo.RespVOBuilder;
+import com.framework.common.consts.RespConsts;
+import com.framework.common.exception.*;
+import com.framework.common.sdto.RespVO;
+import com.framework.common.sdto.RespVOBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.actuate.endpoint.invoke.ParameterMappingException;
 import org.springframework.dao.DuplicateKeyException;

@@ -1,14 +1,13 @@
 package com.lego.perception.auth.controller;
 
+import com.framework.common.consts.DictConstant;
+import com.framework.common.consts.HttpConsts;
+import com.framework.common.consts.RespConsts;
+import com.framework.common.sdto.*;
+import com.lego.framework.base.exception.ExceptionBuilder;
+import com.lego.framework.system.feign.UserClient;
+import com.lego.framework.system.model.entity.User;
 import com.lego.perception.auth.service.IAuthService;
-import com.lego.survey.base.exception.ExceptionBuilder;
-import com.lego.survey.user.feign.UserClient;
-import com.lego.survey.user.model.entity.User;
-import com.survey.lib.common.consts.DictConstant;
-import com.survey.lib.common.consts.HttpConsts;
-import com.survey.lib.common.consts.RespConsts;
-import com.survey.lib.common.utils.HttpUtils;
-import com.survey.lib.common.vo.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -86,17 +85,20 @@ public class AuthController {
         if (currentVo == null) {
             ExceptionBuilder.sessionTimeoutException();
         }
-        String userId = currentVo.getUserId();
+        Long userId = currentVo.getUserId();
         String hasLogin = iAuthService.hasLogin(userId, deviceType);
         if (hasLogin != null) {
             // 删除之前的  token
             iAuthService.deleteUserToken(token, deviceType);
         }
-        User user = userClient.findByUserId(userId);
-        if (user != null) {
-            TokenVo tokenVo = iAuthService.generateUserToken(user, deviceType);
-            if (tokenVo != null) {
-                return RespVOBuilder.success(tokenVo);
+        RespVO<User> userRespVO = userClient.findUserById(User.builder().id(userId).build());
+        if (userRespVO.getRetCode() == RespConsts.SUCCESS_RESULT_CODE) {
+            User user = userRespVO.getInfo();
+            if (user != null) {
+                TokenVo tokenVo = iAuthService.generateUserToken(user, deviceType);
+                if (tokenVo != null) {
+                    return RespVOBuilder.success(tokenVo);
+                }
             }
         }
         return RespVOBuilder.failure();
@@ -127,7 +129,7 @@ public class AuthController {
 
     })
     @RequestMapping(value = {"/loginToken"}, method = RequestMethod.GET)
-    public String loginToken(@RequestParam String userId,
+    public String loginToken(@RequestParam Long userId,
                              @RequestParam String deviceType) {
         return iAuthService.hasLogin(userId, deviceType);
     }
@@ -149,10 +151,17 @@ public class AuthController {
 
 
     @RequestMapping(value = "/setAuthVo", method = RequestMethod.POST)
-    public RespVO setAuthVo(@RequestParam String userId, String deviceType,String token) {
-        User user = userClient.findByUserId(userId);
-        Integer integer = iAuthService.setUserToken(user, deviceType,token);
-        return integer > 0 ? RespVOBuilder.success() : RespVOBuilder.failure();
+    public RespVO setAuthVo(@RequestParam Long userId, String deviceType, String token) {
+        RespVO<User> userRespVO = userClient.findUserById(User.builder().id(userId).build());
+        if (userRespVO.getRetCode() == RespConsts.SUCCESS_RESULT_CODE) {
+            User user = userRespVO.getInfo();
+            if (user != null) {
+                Integer integer = iAuthService.setUserToken(user, deviceType, token);
+                return integer > 0 ? RespVOBuilder.success() : RespVOBuilder.failure();
+            }
+        }
+        return RespVOBuilder.failure();
+
     }
 
 

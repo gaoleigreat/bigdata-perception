@@ -1,10 +1,10 @@
 package com.lego.perception.system.controller;
 
+import com.framework.common.sdto.RespVO;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
 import com.lego.perception.system.service.IScheduleJobService;
 import com.lego.framework.system.model.vo.ScheduleJobVO;
-import com.survey.lib.common.vo.RespVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;

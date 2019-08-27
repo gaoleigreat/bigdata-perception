@@ -1,5 +1,4 @@
 package com.lego.perception.file.service;
-import com.survey.lib.common.vo.RespVO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;

@@ -1,15 +1,15 @@
 package com.lego.perception.system.controller;
+import com.framework.common.page.Page;
+import com.framework.common.page.PagedResult;
+import com.framework.common.sdto.RespDataVO;
+import com.framework.common.sdto.RespVO;
+import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
 import com.lego.framework.base.context.RequestContext;
 import com.lego.perception.system.service.IRoleService;
 import com.lego.perception.system.service.IUserService;
 import com.lego.framework.system.model.entity.User;
-import com.survey.lib.common.page.Page;
-import com.survey.lib.common.page.PagedResult;
-import com.survey.lib.common.vo.RespDataVO;
-import com.survey.lib.common.vo.RespVO;
-import com.survey.lib.common.vo.RespVOBuilder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -61,7 +61,7 @@ public class UserController {
 
     @RequestMapping(value = "/findListByUserIds", method = RequestMethod.POST)
     @ApiOperation("查询")
-    public RespVO findListByUserIds(@RequestBody User user) {
+    public RespVO<RespDataVO<User>> findListByUserIds(@RequestBody User user) {
         user.setDeleteFlag(2);
         return RespVOBuilder.success(userService.findList(user));
     }
@@ -148,7 +148,7 @@ public class UserController {
     @ApiOperation("验证码验证后，修改用户手机号")
     public RespVO updateUserAndValidate(@RequestBody User user, @RequestParam("otherPhone") String otherPhone,
                                         @RequestParam("code") String code) {
-        String userId = RequestContext.getCurrent().getUserId();
+        Long userId = RequestContext.getCurrent().getUserId();
         //user.setId(curUser.getId());
         return userService.updateUserAndValidate(user, otherPhone, code);
     }
@@ -164,7 +164,6 @@ public class UserController {
     @RequestMapping(value = "/findUserById", method = RequestMethod.POST)
     public RespVO<User> findUserById(@RequestBody User user) {
         return RespVOBuilder.success(userService.findById(user));
-
     }
 
     @ApiOperation("查询全部用户")
@@ -172,4 +171,5 @@ public class UserController {
     public RespVO<RespDataVO<User>> findListByUsers(@RequestBody User user) {
         return RespVOBuilder.success(userService.findList(user));
     }
+
 }

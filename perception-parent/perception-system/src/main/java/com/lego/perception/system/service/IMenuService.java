@@ -1,6 +1,5 @@
 package com.lego.perception.system.service;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.lego.framework.base.page.PagedResult;
+import com.framework.common.page.PagedResult;
 import com.lego.framework.system.model.entity.Menu;
 import org.apache.ibatis.session.RowBounds;
 import java.util.List;

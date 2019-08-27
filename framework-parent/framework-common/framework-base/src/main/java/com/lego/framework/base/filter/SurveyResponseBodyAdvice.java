@@ -1,11 +1,10 @@
 package com.lego.framework.base.filter;
 
 import com.alibaba.fastjson.JSONObject;
-import com.survey.lib.common.utils.HttpUtils;
-import com.survey.lib.common.vo.HeaderVo;
+import com.framework.common.sdto.HeaderVo;
+import com.lego.framework.base.utils.HttpUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;

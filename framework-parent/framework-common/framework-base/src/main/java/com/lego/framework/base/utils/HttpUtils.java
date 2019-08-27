@@ -1,7 +1,6 @@
 package com.lego.framework.base.utils;
 
-import com.survey.lib.common.utils.HeaderUtils;
-import com.survey.lib.common.vo.HeaderVo;
+import com.framework.common.sdto.HeaderVo;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 

@@ -1,9 +1,9 @@
 package com.lego.framework.system.feign;
 
+import com.framework.common.consts.RespConsts;
+import com.framework.common.sdto.RespVO;
+import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.system.model.entity.Permission;
-import com.survey.lib.common.consts.RespConsts;
-import com.survey.lib.common.vo.RespVO;
-import com.survey.lib.common.vo.RespVOBuilder;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;

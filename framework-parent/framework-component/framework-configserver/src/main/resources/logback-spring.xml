@@ -45,7 +45,7 @@
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>%msg%n</pattern>
         </encoder>
-        <filter class="com.lego.survey.lib.log.filter.AccessLogFilter"/>
+        <filter class="com.framework.log.filter.AccessLogFilter"/>
     </appender>
 
     <appender name="service" class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -57,7 +57,7 @@
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>%msg%n</pattern>
         </encoder>
-        <filter class="com.lego.survey.lib.log.filter.ServiceLogFilter"/>
+        <filter class="com.framework.log.filter.ServiceLogFilter"/>
     </appender>
 
     <springProfile name="!prod">

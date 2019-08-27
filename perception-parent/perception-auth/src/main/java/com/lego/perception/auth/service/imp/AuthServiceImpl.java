@@ -1,34 +1,26 @@
 package com.lego.perception.auth.service.imp;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.framework.common.sdto.AuthVo;
+import com.framework.common.sdto.CurrentVo;
+import com.framework.common.sdto.TokenVo;
+import com.lego.framework.system.model.entity.User;
 import com.lego.perception.auth.propery.JwtProperty;
 import com.lego.perception.auth.service.IAuthService;
-import com.lego.perception.auth.service.IResourcesService;
 import com.lego.perception.auth.utils.JwtTokenUtil;
-import com.lego.survey.user.model.entity.OwnProject;
-import com.lego.survey.user.model.entity.OwnSection;
-import com.lego.survey.user.model.entity.User;
-import com.survey.lib.common.consts.HttpConsts;
-import com.survey.lib.common.vo.AuthVo;
-import com.survey.lib.common.vo.CurrentVo;
-import com.survey.lib.common.vo.TokenVo;
-import com.survey.lib.common.vo.UserSectionVo;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -48,8 +40,6 @@ public class AuthServiceImpl implements IAuthService {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
-    @Autowired
-    private IResourcesService iResourcesService;
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
@@ -75,50 +65,18 @@ public class AuthServiceImpl implements IAuthService {
         authVo.setToken(token);
         authVo.setExpiration(tokenVo.getExpireTime());
         ops.set(prefix + currentVo.getUserId() + ":" + deviceType, JSONObject.toJSONString(authVo), expiresSecond, TimeUnit.SECONDS);
-        tokenVo.setUserName(user.getUserName());
-        tokenVo.setCardId(user.getCardId());
-        tokenVo.setPermissions(user.getPermission());
-        tokenVo.setRole(user.getRole());
+        tokenVo.setUserName(user.getUsername());
+        tokenVo.setCardId(user.getIdCardNO());
+        //tokenVo.setRole(user.getRole());
         tokenVo.setUserId(user.getId());
         return tokenVo;
     }
 
     private CurrentVo generateCurrentVo(User user, String deviceType) {
         CurrentVo currentVo = new CurrentVo();
-        currentVo.setGroupId(user.getGroup().getId());
-        currentVo.setGroupName(user.getGroup().getName());
-        currentVo.setName(user.getName());
-        currentVo.setPermissions(user.getPermission());
+        currentVo.setName(user.getRealName());
+        //currentVo.setPermissions(user.getPermission());
         currentVo.setPhone(user.getPhone());
-        List<OwnProject> ownProjects = user.getOwnProjects();
-        List<String> projectCodes = new ArrayList<>();
-        if (!CollectionUtils.isEmpty(ownProjects)) {
-            ownProjects.forEach(ownProject -> projectCodes.add(ownProject.getCode()));
-        }
-        currentVo.setProjects(projectCodes);
-        currentVo.setRole(user.getRole());
-        currentVo.setUserId(user.getId());
-        currentVo.setUserName(user.getUserName());
-        List<UserSectionVo> userSectionVos = new ArrayList<>();
-        List<OwnSection> ownSections = user.getOwnSections();
-        if (!CollectionUtils.isEmpty(ownSections)) {
-            ownSections.forEach(ownSection -> {
-                UserSectionVo userSectionVo = new UserSectionVo();
-                userSectionVo.setId(ownSection.getId());
-                userSectionVo.setRole(ownSection.getName());
-                userSectionVo.setCode(ownSection.getCode());
-                userSectionVos.add(userSectionVo);
-            });
-        }
-        currentVo.setUserSections(userSectionVos);
-
-        currentVo.setDeviceType(deviceType);
-        String role = user.getRole();
-        if (role != null) {
-            List<String> resource = iResourcesService.queryRoleResource(role);
-            currentVo.setResourcesScopes(resource);
-        }
-
         return currentVo;
     }
 
@@ -132,7 +90,7 @@ public class AuthServiceImpl implements IAuthService {
             if (tokenVo == null) {
                 return null;
             }
-            String userId = tokenVo.getUserId();
+            Long userId = tokenVo.getUserId();
             ValueOperations<String, String> ops = stringRedisTemplate.opsForValue();
             Boolean hasValue = stringRedisTemplate.hasKey(prefix + userId + ":" + deviceType);
             if (hasValue == null || !hasValue) {
@@ -163,7 +121,7 @@ public class AuthServiceImpl implements IAuthService {
     }
 
     @Override
-    public String hasLogin(String userId, String deviceType) {
+    public String hasLogin(Long userId, String deviceType) {
         Boolean hasKey = stringRedisTemplate.hasKey(prefix + userId + ":" + deviceType);
         if (hasKey != null && hasKey) {
             ValueOperations<String, String> ops = stringRedisTemplate.opsForValue();

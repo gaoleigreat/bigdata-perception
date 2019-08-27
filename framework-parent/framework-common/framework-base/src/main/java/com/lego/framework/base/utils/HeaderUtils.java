@@ -1,11 +1,10 @@
 package com.lego.framework.base.utils;
-
-import com.survey.lib.common.vo.HeaderVo;
+import com.framework.common.sdto.HeaderVo;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static com.survey.lib.common.consts.HttpConsts.*;
+import static com.framework.common.consts.HttpConsts.*;
 
 /**
  * @author yanglf

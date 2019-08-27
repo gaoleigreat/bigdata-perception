@@ -1,8 +1,8 @@
 package com.lego.framework.auth.feign;
+import com.framework.common.consts.DictConstant;
+import com.framework.common.consts.RespConsts;
+import com.framework.common.sdto.*;
 import com.lego.framework.system.model.entity.User;
-import com.survey.lib.common.consts.DictConstant;
-import com.survey.lib.common.consts.RespConsts;
-import com.survey.lib.common.vo.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
