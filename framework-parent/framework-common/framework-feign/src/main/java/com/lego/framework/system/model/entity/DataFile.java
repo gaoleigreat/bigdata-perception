@@ -1,5 +1,6 @@
 package com.lego.framework.system.model.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,7 +16,8 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UnstructuredDataFile {
+@TableName("tpl_data_file")
+public class DataFile {
     @ApiModelProperty("id")
     private Long id;
 
