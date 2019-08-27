@@ -1,12 +1,12 @@
 package com.lego.perception.file.controller;
 
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.framework.common.sdto.RespDataVO;
+import com.framework.common.sdto.RespVO;
+import com.framework.common.sdto.RespVOBuilder;
+import com.framework.common.utils.UuidUtils;
 import com.lego.perception.file.model.OssUploadFile;
 import com.lego.perception.file.service.ICephOSSService;
-import com.survey.lib.common.utils.UuidUtils;
-import com.survey.lib.common.vo.RespDataVO;
-import com.survey.lib.common.vo.RespVO;
-import com.survey.lib.common.vo.RespVOBuilder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;

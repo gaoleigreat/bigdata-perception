@@ -1,17 +1,17 @@
 package com.lego.framework.zuul.filter;
 
+import com.framework.common.consts.HttpConsts;
+import com.framework.common.consts.RespConsts;
+import com.framework.common.sdto.CurrentVo;
+import com.framework.common.sdto.RespVO;
+import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.auth.feign.AuthClient;
+import com.lego.framework.base.utils.HttpUtils;
 import com.lego.framework.zuul.predicate.RibbonVersionHolder;
 import com.lego.framework.zuul.utils.JwtPatternUrl;
 import com.lego.framework.zuul.utils.RouteUtil;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
-import com.survey.lib.common.consts.HttpConsts;
-import com.survey.lib.common.consts.RespConsts;
-import com.survey.lib.common.utils.HttpUtils;
-import com.survey.lib.common.vo.CurrentVo;
-import com.survey.lib.common.vo.RespVO;
-import com.survey.lib.common.vo.RespVOBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -143,14 +143,13 @@ public class LoginFilter extends ZuulFilter {
         ctx.setSendZuulResponse(true);
         ctx.setResponseStatusCode(200);
         if (currentVo != null) {
-            ctx.addZuulRequestHeader("userId", currentVo.getUserId());
+            ctx.addZuulRequestHeader("userId", currentVo.getUserId()+"");
             ctx.addZuulRequestHeader("userName", currentVo.getUserName());
             try {
                 ctx.addZuulRequestHeader("name", URLEncoder.encode(currentVo.getName(), "UTF-8"));
             } catch (UnsupportedEncodingException e) {
                 ctx.addZuulRequestHeader("name", currentVo.getName());
             }
-            ctx.addZuulRequestHeader("role", currentVo.getRole());
         }
     }
 

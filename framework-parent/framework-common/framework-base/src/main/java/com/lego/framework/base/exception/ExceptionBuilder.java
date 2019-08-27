@@ -1,8 +1,8 @@
 package com.lego.framework.base.exception;
 
-import com.survey.lib.common.consts.RespConsts;
-import com.survey.lib.common.exception.*;
-import com.survey.lib.common.vo.DataErrorVo;
+import com.framework.common.consts.RespConsts;
+import com.framework.common.exception.*;
+import com.framework.common.sdto.DataErrorVo;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 

@@ -8,7 +8,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @EnableFeignClients("com.lego")
 @EnableEurekaClient
-@SpringBootApplication(scanBasePackages = {"com.lego"})
+@SpringBootApplication(scanBasePackages = {"com.lego", "com.framework"})
 public class FileServerApplication {
 
     public static void main(String[] args) {

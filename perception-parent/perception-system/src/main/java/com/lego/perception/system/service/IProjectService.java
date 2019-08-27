@@ -1,6 +1,5 @@
 package com.lego.perception.system.service;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.lego.framework.base.page.PagedResult;
+import com.framework.common.page.PagedResult;
 import com.lego.framework.system.model.entity.Project;
 import org.apache.ibatis.session.RowBounds;
 
@@ -18,19 +17,19 @@ public interface IProjectService {
 
     Integer deleteByPrimaryKey(Long id);
 
-    Integer insert(Project project);
+    Integer insert(Project project, Long userId);
 
-    Integer insertSelective(Project project);
+    Integer insertSelective(Project project, Long userId);
 
-    Integer insertSelectiveIgnore(Project project);
+    Integer insertSelectiveIgnore(Project project, Long userId);
 
-    Integer updateByPrimaryKeySelective(Project project);
+    Integer updateByPrimaryKeySelective(Project project, Long userId);
 
-    Integer updateByPrimaryKey(Project project);
+    Integer updateByPrimaryKey(Project project, Long userId);
 
-    Integer batchInsert(List<Project> projectList);
+    Integer batchInsert(List<Project> projectList, Long userId);
 
-    Integer batchUpdate(List<Project> projectList);
+    Integer batchUpdate(List<Project> projectList, Long userId);
 
     /**
      * 存在即更新
@@ -38,7 +37,7 @@ public interface IProjectService {
      * @param project
      * @return
      */
-    Integer upsert(Project project);
+    Integer upsert(Project project, Long userId);
 
     /**
      * 存在即更新，可选择具体属性
@@ -46,7 +45,7 @@ public interface IProjectService {
      * @param project
      * @return
      */
-    Integer upsertSelective(Project project);
+    Integer upsertSelective(Project project, Long userId);
 
     List<Project> query(Project project);
 

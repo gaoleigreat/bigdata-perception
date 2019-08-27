@@ -1,7 +1,6 @@
 package com.lego.perception.system.service;
+import com.framework.common.sdto.RespVO;
 import com.lego.framework.system.model.entity.Permission;
-import com.survey.lib.common.vo.RespVO;
-
 import java.util.List;
 import java.util.Map;
 

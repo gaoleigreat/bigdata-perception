@@ -1,8 +1,8 @@
 package com.lego.perception.system.service;
+import com.framework.common.page.Page;
+import com.framework.common.page.PagedResult;
+import com.framework.common.sdto.RespVO;
 import com.lego.framework.system.model.entity.User;
-import com.survey.lib.common.page.Page;
-import com.survey.lib.common.page.PagedResult;
-import com.survey.lib.common.vo.RespVO;
 import java.util.List;
 
 public interface IUserService {

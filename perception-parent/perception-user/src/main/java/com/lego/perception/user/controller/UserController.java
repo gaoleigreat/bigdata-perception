@@ -1,14 +1,16 @@
 package com.lego.perception.user.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.framework.common.consts.DictConstant;
+import com.framework.common.sdto.HeaderVo;
+import com.framework.common.sdto.RespVO;
+import com.framework.common.sdto.RespVOBuilder;
+import com.framework.common.sdto.TokenVo;
 import com.lego.framework.auth.feign.AuthClient;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
+import com.lego.framework.base.utils.HeaderUtils;
 import com.lego.framework.event.log.LogSender;
-import com.survey.lib.common.consts.DictConstant;
-import com.survey.lib.common.utils.HeaderUtils;
-import com.survey.lib.common.utils.HttpUtils;
-import com.survey.lib.common.vo.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;

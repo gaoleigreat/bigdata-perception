@@ -1,6 +1,6 @@
 package com.lego.perception.log.service;
-import com.lego.framework.base.page.PagedResult;
-import com.lego.framework.base.sdto.RespVO;
+import com.framework.common.page.PagedResult;
+import com.framework.common.sdto.RespVO;
 import com.lego.framework.log.model.entity.Log;
 import com.lego.framework.log.model.vo.LogVo;
 

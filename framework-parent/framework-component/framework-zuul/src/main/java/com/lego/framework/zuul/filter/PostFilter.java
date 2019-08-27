@@ -1,8 +1,8 @@
 package com.lego.framework.zuul.filter;
+import com.lego.framework.base.utils.HttpUtils;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
-import com.survey.lib.common.utils.HttpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.netflix.ribbon.RibbonHttpResponse;

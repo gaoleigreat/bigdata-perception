@@ -1,9 +1,8 @@
 package com.lego.framework.zuul.utils;
 
 import com.alibaba.fastjson.JSON;
+import com.framework.common.sdto.RespVO;
 import com.netflix.zuul.context.RequestContext;
-import com.survey.lib.common.vo.RespVO;
-
 import java.io.IOException;
 
 /**

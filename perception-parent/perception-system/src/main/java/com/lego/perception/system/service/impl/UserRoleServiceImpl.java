@@ -1,9 +1,9 @@
 package com.lego.perception.system.service.impl;
 
-import com.lego.framework.base.page.Page;
-import com.lego.framework.base.page.PagedResult;
-import com.lego.framework.base.sdto.RespVO;
-import com.lego.framework.base.sdto.RespVOBuilder;
+import com.framework.common.page.Page;
+import com.framework.common.page.PagedResult;
+import com.framework.common.sdto.RespVO;
+import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.system.model.entity.UserRoleProject;
 import com.lego.perception.system.mapper.UserRoleProjectMapper;
 import com.lego.perception.system.service.IUserRoleService;

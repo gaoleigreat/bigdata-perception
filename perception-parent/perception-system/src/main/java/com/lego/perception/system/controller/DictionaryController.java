@@ -1,13 +1,13 @@
 package com.lego.perception.system.controller;
 
+import com.framework.common.page.Page;
+import com.framework.common.page.PagedResult;
+import com.framework.common.sdto.RespVO;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
 import com.lego.perception.system.init.DictionaryInit;
 import com.lego.perception.system.service.IDictionaryService;
 import com.lego.framework.system.model.entity.Dictionary;
-import com.survey.lib.common.page.Page;
-import com.survey.lib.common.page.PagedResult;
-import com.survey.lib.common.vo.RespVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;

@@ -1,12 +1,12 @@
 package com.lego.perception.file.service.impl;
 
 import com.amazonaws.services.s3.model.*;
+import com.framework.common.sdto.RespDataVO;
+import com.framework.common.sdto.RespVO;
+import com.framework.common.sdto.RespVOBuilder;
 import com.lego.perception.file.model.OssUploadFile;
 import com.lego.perception.file.init.CephInit;
 import com.lego.perception.file.service.ICephOSSService;
-import com.survey.lib.common.vo.RespDataVO;
-import com.survey.lib.common.vo.RespVO;
-import com.survey.lib.common.vo.RespVOBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

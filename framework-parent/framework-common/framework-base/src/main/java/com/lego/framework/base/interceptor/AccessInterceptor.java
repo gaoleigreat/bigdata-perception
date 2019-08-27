@@ -1,5 +1,5 @@
 package com.lego.framework.base.interceptor;
-import com.survey.lib.common.utils.HttpUtils;
+import com.framework.common.utils.HttpUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.servlet.HandlerInterceptor;

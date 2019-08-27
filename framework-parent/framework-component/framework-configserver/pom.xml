@@ -64,9 +64,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.lego.log</groupId>
+            <groupId>com.framework.log</groupId>
             <version>${service.version}</version>
-            <artifactId>lib-log</artifactId>
+            <artifactId>framework-log</artifactId>
         </dependency>
 
 

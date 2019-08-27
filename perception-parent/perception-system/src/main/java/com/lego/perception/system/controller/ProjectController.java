@@ -1,11 +1,11 @@
 package com.lego.perception.system.controller;
 
+import com.framework.common.page.PagedResult;
+import com.framework.common.sdto.RespDataVO;
+import com.framework.common.sdto.RespVO;
+import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
-import com.lego.framework.base.page.PagedResult;
-import com.lego.framework.base.sdto.RespDataVO;
-import com.lego.framework.base.sdto.RespVO;
-import com.lego.framework.base.sdto.RespVOBuilder;
 import com.lego.framework.system.model.entity.Project;
 import com.lego.perception.system.service.IProjectService;
 import io.swagger.annotations.Api;
@@ -15,6 +15,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 /**
  * @author yanglf
@@ -74,8 +75,9 @@ public class ProjectController {
     @RequestMapping(value = "/save_tplProject",method = RequestMethod.POST)
     @Operation(value = "save_tplProject", desc = "新增项目")
     @ApiOperation("新增项目")
-    public RespVO insert(@RequestBody Project project) {
-        Integer num = iProjectService.insertSelective(project);
+    public RespVO insert(@RequestBody Project project, HttpServletRequest request) {
+        String userId = request.getHeader("userId");
+        Integer num = iProjectService.insertSelective(project,Long.valueOf(userId));
         return RespVOBuilder.success();
     }
 
@@ -87,8 +89,9 @@ public class ProjectController {
     @RequestMapping(value = "/update_tplProject",method = RequestMethod.PUT)
     @Operation(value = "update_tplProject", desc = "修改项目")
     @ApiOperation("修改项目")
-    public RespVO updateByPrimaryKeySelective(@ModelAttribute Project project) {
-        Integer num = iProjectService.updateByPrimaryKeySelective(project);
+    public RespVO updateByPrimaryKeySelective(@ModelAttribute Project project,HttpServletRequest request) {
+        String userId = request.getHeader("userId");
+        Integer num = iProjectService.updateByPrimaryKeySelective(project,Long.valueOf(userId));
         return RespVOBuilder.success();
     }
 

@@ -1,9 +1,9 @@
 package com.lego.perception.system.mapper;
 
-import com.lego.survey.lib.mybatis.mapper.Mapper;
+import com.framework.common.page.Page;
+import com.framework.common.page.PagedResult;
+import com.framework.mybatis.mapper.Mapper;
 import com.lego.framework.system.model.entity.Dictionary;
-import com.survey.lib.common.page.Page;
-import com.survey.lib.common.page.PagedResult;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

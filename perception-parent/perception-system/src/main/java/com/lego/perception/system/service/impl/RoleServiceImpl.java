@@ -1,12 +1,12 @@
 package com.lego.perception.system.service.impl;
 
+import com.framework.common.page.Page;
+import com.framework.common.page.PagedResult;
+import com.framework.common.sdto.RespVO;
+import com.framework.common.sdto.RespVOBuilder;
 import com.lego.perception.system.mapper.RoleMapper;
 import com.lego.perception.system.service.IRoleService;
 import com.lego.framework.system.model.entity.Role;
-import com.survey.lib.common.page.Page;
-import com.survey.lib.common.page.PagedResult;
-import com.survey.lib.common.vo.RespVO;
-import com.survey.lib.common.vo.RespVOBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,7 +54,7 @@ public class RoleServiceImpl implements IRoleService {
             return RespVOBuilder.failure("参数缺失");
         }
         role.setCreateInfo();
-        roleMapper.insert(role);
+        roleMapper.save(role);
         return RespVOBuilder.success();
     }
 

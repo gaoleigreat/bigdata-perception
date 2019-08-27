@@ -12,7 +12,7 @@ import org.springframework.cloud.stream.annotation.EnableBinding;
  */
 @EnableFeignClients(basePackages = "com.lego")
 @EnableEurekaClient
-@SpringBootApplication(scanBasePackages = {"com.lego"})
+@SpringBootApplication(scanBasePackages = {"com.lego", "com.framework"})
 @EnableBinding(LogSource.class)
 public class UserServiceApplication {
 

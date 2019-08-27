@@ -1,11 +1,11 @@
 package com.lego.perception.log.controller;
+import com.framework.common.consts.DictConstant;
+import com.framework.common.page.PagedResult;
+import com.framework.common.sdto.RespVO;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
-import com.lego.framework.base.page.PagedResult;
-import com.lego.framework.base.sdto.RespVO;
 import com.lego.framework.log.model.vo.LogVo;
 import com.lego.perception.log.service.ILogService;
-import com.survey.lib.common.consts.DictConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;

@@ -1,6 +1,5 @@
 package com.lego.perception.system.service.impl;
-
-import com.lego.framework.base.page.PagedResult;
+import com.framework.common.page.PagedResult;
 import com.lego.framework.system.model.entity.Project;
 import com.lego.perception.system.mapper.ProjectMapper;
 import com.lego.perception.system.service.IProjectService;
@@ -42,45 +41,45 @@ public class ProjectServiceImpl implements IProjectService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer insert(Project project) {
-        project.setCreateInfo();
+    public Integer insert(Project project,Long userId) {
+        project.setCreateInfo(userId);
         return projectMapper.insert(project);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer insertSelective(Project project) {
-        project.setCreateInfo();
+    public Integer insertSelective(Project project,Long userId) {
+        project.setCreateInfo(userId);
         return projectMapper.insertSelective(project);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer insertSelectiveIgnore(Project project) {
-        project.setCreateInfo();
+    public Integer insertSelectiveIgnore(Project project,Long userId) {
+        project.setCreateInfo(userId);
         return projectMapper.insertSelectiveIgnore(project);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer updateByPrimaryKeySelective(Project project) {
-        project.setUpdateInfo();
+    public Integer updateByPrimaryKeySelective(Project project,Long userId) {
+        project.setUpdateInfo(userId);
         return projectMapper.updateByPrimaryKeySelective(project);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer updateByPrimaryKey(Project project) {
-        project.setUpdateInfo();
+    public Integer updateByPrimaryKey(Project project,Long userId) {
+        project.setUpdateInfo(userId);
         return projectMapper.updateByPrimaryKey(project);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer batchInsert(List<Project> projectList) {
+    public Integer batchInsert(List<Project> projectList,Long userId) {
         if (!CollectionUtils.isEmpty(projectList)) {
             for (Project project : projectList) {
-                project.setCreateInfo();
+                project.setCreateInfo(userId);
             }
         }
         return projectMapper.batchInsert(projectList);
@@ -88,10 +87,10 @@ public class ProjectServiceImpl implements IProjectService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer batchUpdate(List<Project> projectList) {
+    public Integer batchUpdate(List<Project> projectList,Long userId) {
         if (!CollectionUtils.isEmpty(projectList)) {
             for (Project project : projectList) {
-                project.setUpdateInfo();
+                project.setUpdateInfo(userId);
             }
         }
         return projectMapper.batchUpdate(projectList);
@@ -99,15 +98,15 @@ public class ProjectServiceImpl implements IProjectService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer upsert(Project project) {
-        project.setUpdateInfo();
+    public Integer upsert(Project project,Long userId) {
+        project.setUpdateInfo(userId);
         return projectMapper.upsert(project);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer upsertSelective(Project project) {
-        project.setUpdateInfo();
+    public Integer upsertSelective(Project project,Long userId) {
+        project.setUpdateInfo(userId);
         return projectMapper.upsertSelective(project);
     }
 

@@ -1,17 +1,18 @@
 package com.lego.perception.log.service.impl;
-
-import com.lego.framework.base.page.PagedResult;
-import com.lego.framework.base.sdto.RespVO;
-import com.lego.framework.base.sdto.RespVOBuilder;
+import com.framework.common.page.PagedResult;
+import com.framework.common.sdto.RespVO;
+import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.log.model.entity.Log;
 import com.lego.framework.log.model.vo.LogVo;
 import com.lego.perception.log.repository.LogRepository;
 import com.lego.perception.log.service.ILogService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +53,7 @@ public class LogServiceImpl implements ILogService {
             }
             logVos.add(logVo);
         }*/
-        pagedResult.setPage(new com.survey.lib.common.page.Page(pageIndex, pageSize, 0, (int)logPage.getTotalElements(), logPage.getTotalPages()));
+        pagedResult.setPage(new com.framework.common.page.Page(pageIndex, pageSize, 0, (int)logPage.getTotalElements(), logPage.getTotalPages()));
         pagedResult.setResultList(logVos);
         return RespVOBuilder.success(pagedResult);
     }
