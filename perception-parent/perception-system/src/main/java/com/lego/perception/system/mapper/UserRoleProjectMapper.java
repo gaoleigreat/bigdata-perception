@@ -1,34 +1,37 @@
 package com.lego.perception.system.mapper;
 
-import com.lego.survey.lib.mybatis.mapper.Mapper;
+import com.lego.framework.base.page.Page;
+import com.lego.framework.base.page.PagedResult;
 import com.lego.framework.system.model.entity.User;
-import com.lego.framework.system.model.entity.UserRole;
-import com.survey.lib.common.page.Page;
-import com.survey.lib.common.page.PagedResult;
+import com.lego.framework.system.model.entity.UserRoleProject;
+import com.lego.survey.lib.mybatis.mapper.Mapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author yanglf
+ */
 @Repository
-public interface UserRoleMapper extends Mapper<UserRole> {
+public interface UserRoleProjectMapper extends Mapper<UserRoleProject> {
 
     /**
      * 查询列表
      *
-     * @param userRole
+     * @param userRoleProject
      * @return
      */
-    List<UserRole> findList(UserRole userRole);
+    List<UserRoleProject> findList(UserRoleProject userRoleProject);
 
     /**
      * 分页查询
      *
-     * @param userRole
+     * @param userRoleProject
      * @param page
      * @return
      */
-    PagedResult<UserRole> findPagedList(UserRole userRole, Page page);
+    PagedResult<UserRoleProject> findPagedList(UserRoleProject userRoleProject, Page page);
 
     /**
      * 分页查询某种权限的 用户
@@ -42,20 +45,20 @@ public interface UserRoleMapper extends Mapper<UserRole> {
     /**
      * 分页查询某种角色的用户列表
      *
-     * @param userRole
+     * @param userRoleProject
      * @param user
      * @param page
      * @return
      */
-    PagedResult<User> findPagedList(UserRole userRole, User user, Page page);
+    PagedResult<User> findPagedList(UserRoleProject userRoleProject, User user, Page page);
 
     /**
      * 新增列表
      *
-     * @param userRoles
+     * @param userRoleProjects
      * @return
      */
-    Integer insertList(List<UserRole> userRoles);
+    Integer insertList(List<UserRoleProject> userRoleProjects);
 
     /**
      * 删除类表
@@ -76,8 +79,8 @@ public interface UserRoleMapper extends Mapper<UserRole> {
     /**
      * 删除用户权限
      *
-     * @param userRole
+     * @param userRoleProject
      * @return
      */
-    Integer delete(UserRole userRole);
+    Integer delete(UserRoleProject userRoleProject);
 }

@@ -1,8 +1,6 @@
 package com.lego.framework.base.utils;
-
-import sun.misc.BASE64Encoder;
-
 import java.security.MessageDigest;
+import java.util.Base64;
 import java.util.Random;
 
 /**
@@ -15,7 +13,8 @@ public class SecurityUtils {
     public static final String SECRET_DICT_Aa = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     public static final String SECRET_DICT_Aa0 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     public static final String SECRET_DICT_0 = "0123456789";
-    public static final String SECRET_DICT_A0="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    public static final String SECRET_DICT_A0 = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
     /**
      * 生成密钥
      *
@@ -44,8 +43,8 @@ public class SecurityUtils {
         String cipherText;
         try {
             MessageDigest md5 = MessageDigest.getInstance("MD5");
-            BASE64Encoder base64en = new BASE64Encoder();
-            cipherText = base64en.encode(md5.digest(clearText.getBytes("utf-8")));
+            Base64.Encoder encoder = Base64.getEncoder();
+            cipherText = encoder.encodeToString(md5.digest(clearText.getBytes("utf-8")));
         } catch (Exception e) {
             throw new RuntimeException("加密失败[clearText: " + clearText + "]");
         }

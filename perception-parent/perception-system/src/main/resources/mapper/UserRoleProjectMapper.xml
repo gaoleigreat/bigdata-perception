@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.lego.perception.system.mapper.UserRoleMapper">
+<mapper namespace="com.lego.perception.system.mapper.UserRoleProjectMapper">
 
     <sql id="find_columns">
-		id as id, user_id as userId, role_id as roleId, creation_date as creationDate,
+		id as id, user_id as userId,
+		 role_id as roleId,
+		 project_id as projectId,
+		 status as status,
+		 creation_date as creationDate,
 		created_by as createdBy, last_update_date as lastUpdateDate, last_updated_by as lastUpdatedBy
 	</sql>
 
@@ -12,10 +16,16 @@
             and id = #{id, jdbcType=BIGINT}
         </if>
         <if test='userId != null'>
-            and user_id = #{userId, jdbcType=VARCHAR}
+            and user_id = #{userId, jdbcType=BIGINT}
         </if>
         <if test='roleId != null'>
-            and role_id = #{roleId, jdbcType=VARCHAR}
+            and role_id = #{roleId, jdbcType=BIGINT}
+        </if>
+        <if test="projectId!=null">
+            and project_id = #{projectId, jdbcType=BIGINT}
+        </if>
+        <if test="status!=null">
+            and status=#{status}
         </if>
         <if test="userIds != null and userIds.size > 0">
             and user_id in
@@ -30,16 +40,23 @@
             and id = #{arg0.id, jdbcType=BIGINT}
         </if>
         <if test='arg0.userId != null'>
-            and user_id = #{arg0.userId, jdbcType=VARCHAR}
+            and user_id = #{arg0.userId, jdbcType=BIGINT}
         </if>
         <if test='arg0.roleId != null'>
-            and role_id = #{arg0.roleId, jdbcType=VARCHAR}
+            and role_id = #{arg0.roleId, jdbcType=BIGINT}
+        </if>
+        <if test="arg0.projectId!=null">
+            and project_id = #{arg0.projectId, jdbcType=BIGINT}
+        </if>
+        <if test="arg0.status!=null">
+            and status=#{arg0.status}
         </if>
     </sql>
 
-    <select id="findPagedList" resultType="com.lego.framework.system.model.entity.UserRole">
-        select <include refid="find_columns"></include>
-        from tpl_user_role
+    <select id="findPagedList" resultType="com.lego.framework.system.model.entity.UserRoleProject">
+        select
+        <include refid="find_columns"></include>
+        from tpl_user_role_project
         <where>
             <include refid="page_condition"></include>
         </where>
@@ -48,16 +65,17 @@
 
     <select id="findPagedListCount" resultType="java.lang.Long">
         select count(1)
-        from tpl_user_role
+        from tpl_user_role_project
         <where>
             <include refid="page_condition"></include>
         </where>
     </select>
 
-    <select id="findList" parameterType="com.lego.framework.system.model.entity.UserRole"
-            resultType="com.lego.framework.system.model.entity.UserRole">
-        select <include refid="find_columns"></include>
-        from tpl_user_role
+    <select id="findList" parameterType="com.lego.framework.system.model.entity.UserRoleProject"
+            resultType="com.lego.framework.system.model.entity.UserRoleProject">
+        select
+        <include refid="find_columns"></include>
+        from tpl_user_role_project
         <where>
             <include refid="condition"></include>
         </where>
@@ -65,12 +83,14 @@
 
     <insert id="insertList">
         insert into tpl_user_role
-        (user_id, role_id, creation_date, created_by, last_update_date, last_updated_by)
+        (user_id, role_id,project_id,`status`, creation_date, created_by, last_update_date, last_updated_by)
         values
         <foreach collection="list" item="item" separator=",">
             (
             #{item.userId, jdbcType=BIGINT},
             #{item.roleId, jdbcType=BIGINT},
+            #{item.projectId, jdbcType=BIGINT},
+            #{item.status, jdbcType=INTEGER},
             #{item.creationDate, jdbcType=TIMESTAMP},
             #{item.createdBy, jdbcType=BIGINT},
             #{item.lastUpdateDate, jdbcType=TIMESTAMP},
@@ -99,13 +119,13 @@
         delete from tpl_user_role
         <where>
             <if test="userId != null">
-               user_id = #{userId, jdbcType=BIGINT}
+                user_id = #{userId, jdbcType=BIGINT}
             </if>
             <if test="roleId != null">
-              and role_id = #{roleId, jdbcType=BIGINT}
+                and role_id = #{roleId, jdbcType=BIGINT}
             </if>
             <if test="id != null">
-              and id = #{id, jdbcType=BIGINT}
+                and id = #{id, jdbcType=BIGINT}
             </if>
         </where>
     </delete>

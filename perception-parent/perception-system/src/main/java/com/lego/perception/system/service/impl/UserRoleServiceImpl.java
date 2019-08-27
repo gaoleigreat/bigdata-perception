@@ -1,16 +1,18 @@
 package com.lego.perception.system.service.impl;
-import com.lego.perception.system.mapper.UserRoleMapper;
+
+import com.lego.framework.base.page.Page;
+import com.lego.framework.base.page.PagedResult;
+import com.lego.framework.base.sdto.RespVO;
+import com.lego.framework.base.sdto.RespVOBuilder;
+import com.lego.framework.system.model.entity.UserRoleProject;
+import com.lego.perception.system.mapper.UserRoleProjectMapper;
 import com.lego.perception.system.service.IUserRoleService;
-import com.lego.framework.system.model.entity.UserRole;
-import com.survey.lib.common.page.Page;
-import com.survey.lib.common.page.PagedResult;
-import com.survey.lib.common.vo.RespVO;
-import com.survey.lib.common.vo.RespVOBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,69 +22,71 @@ import java.util.List;
 public class UserRoleServiceImpl implements IUserRoleService {
 
     @Autowired
-    private UserRoleMapper userRoleMapper;
+    private UserRoleProjectMapper userRoleProjectMapper;
 
     @Override
-    public List<UserRole> findList(UserRole userRole) {
+    public List<UserRoleProject> findList(UserRoleProject userRoleProject) {
 
-        return userRoleMapper.findList(userRole);
+        return userRoleProjectMapper.findList(userRoleProject);
     }
 
     @Override
-    public PagedResult<UserRole> findPagedList(UserRole userRole, Page page) {
+    public PagedResult<UserRoleProject> findPagedList(UserRoleProject userRoleProject, Page page) {
 
-        return userRoleMapper.findPagedList(userRole, page);
+        return userRoleProjectMapper.findPagedList(userRoleProject, page);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public RespVO insertList(List<UserRole> userRolePrograms) {
-        if(CollectionUtils.isEmpty(userRolePrograms)){
+    public RespVO insertList(List<UserRoleProject> userRoleProjects) {
+        if (CollectionUtils.isEmpty(userRoleProjects)) {
             return RespVOBuilder.failure("参数缺失");
         }
-        for(UserRole userRoleProgram : userRolePrograms){
-            userRoleProgram.setCreateInfo();
+        for (UserRoleProject userRoleProject : userRoleProjects) {
+            userRoleProject.setCreateInfo();
         }
-        userRoleMapper.insertList(userRolePrograms);
+        userRoleProjectMapper.insertList(userRoleProjects);
         return RespVOBuilder.success();
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public RespVO delete(UserRole userRole) {
-        if(null == userRole || (null == userRole.getId() && (null == userRole.getUserId() || null == userRole.getRoleId()))){
+    public RespVO delete(UserRoleProject userRoleProject) {
+        if (null == userRoleProject || (null == userRoleProject.getId() && (null == userRoleProject.getUserId() || null == userRoleProject.getRoleId()
+                || null == userRoleProject.getProjectId()
+        ))) {
             return RespVOBuilder.failure("参数缺失");
         }
-        userRoleMapper.delete(userRole);
+        userRoleProjectMapper.delete(userRoleProject);
         return RespVOBuilder.success();
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public RespVO deleteList(List<Long> ids) {
-        if(CollectionUtils.isEmpty(ids)){
+        if (CollectionUtils.isEmpty(ids)) {
             return RespVOBuilder.failure("参数缺失");
         }
-        userRoleMapper.deleteList(ids);
+        userRoleProjectMapper.deleteList(ids);
         return RespVOBuilder.success();
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public RespVO deleteListByUserIds(List<Long> userIds) {
-        if(CollectionUtils.isEmpty(userIds)){
+        if (CollectionUtils.isEmpty(userIds)) {
             return RespVOBuilder.failure("参数缺失");
         }
-        for (int i = 0; i < userIds.size(); i++) {
-            UserRole query = new UserRole();
-            query.setUserId(userIds.get(i));
-            List<UserRole> userRoleList = userRoleMapper.findList(query);
+        for (Long userId : userIds) {
+            UserRoleProject query = new UserRoleProject();
+            query.setUserId(userId);
+            List<UserRoleProject> userRoleList = userRoleProjectMapper.findList(query);
             List<Long> ids = new ArrayList<>();
-            if(userRoleList!=null&&userRoleList.size()>0){
-                for (int j = 0; j < userRoleList.size(); j++) {
-                    ids.add(userRoleList.get(j).getId());
+            if (userRoleList != null && userRoleList.size() > 0) {
+                for (UserRoleProject userRoleProject : userRoleList) {
+                    ids.add(userRoleProject.getId());
                 }
-                userRoleMapper.deleteList(ids);
+                userRoleProjectMapper.deleteList(ids);
             }
         }
         return RespVOBuilder.success();
@@ -90,55 +94,65 @@ public class UserRoleServiceImpl implements IUserRoleService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public RespVO save(Long userId, List<UserRole> userRoles) {
+    public RespVO save(Long userId, List<UserRoleProject> userRoleProjects) {
         //1.校验
-        if(null == userId){
+        if (null == userId) {
             return RespVOBuilder.failure("参数缺失");
         }
         //2,查询原始数据
-        UserRole queryParam = new UserRole();
+        UserRoleProject queryParam = new UserRoleProject();
         queryParam.setUserId(userId);
-        List<UserRole> originList = userRoleMapper.findList(queryParam);
+        List<UserRoleProject> originList = userRoleProjectMapper.findList(queryParam);
 
         //3.
-        List<UserRole> toInsert = new ArrayList<>();
+        List<UserRoleProject> toInsert = new ArrayList<>();
         List<Long> toDelete = new ArrayList<>();
 
         List<Long> originIds = new ArrayList<>();
         List<String> originUserIds = new ArrayList<>();
         List<String> newUserIds = new ArrayList<>();
 
-
-        //如果新数据是空，删除原始数据，返回；
-        if(CollectionUtils.isEmpty(userRoles)){
-            userRoleMapper.deleteList(originIds);
+        //如果原始数据是空，新增新数据，返回；
+        if(CollectionUtils.isEmpty(originList)){
+            userRoleProjectMapper.insertList(userRoleProjects);
             return RespVOBuilder.success();
         }else{
-            for(UserRole userRole : userRoles){
-                String key = userRole.getRoleId()+"";
-                newUserIds.add(key);
-                if(originUserIds.contains(key)){
-                    continue;
-                }
-                toInsert.add(userRole);
+            for(UserRoleProject userRoleProgram : originList){
+                originUserIds.add(userRoleProgram.getRoleId()+"$"+userRoleProgram.getProjectId());
+                originIds.add(userRoleProgram.getId());
             }
         }
 
-        for(UserRole userRole : originList){
-            String key = userRole.getRoleId()+"";
-            if(newUserIds.contains(key)){
+        //如果新数据是空，删除原始数据，返回；
+        if (CollectionUtils.isEmpty(userRoleProjects)) {
+            userRoleProjectMapper.deleteList(originIds);
+            return RespVOBuilder.success();
+        } else {
+            for (UserRoleProject userRoleProject : userRoleProjects) {
+                String key = userRoleProject.getRoleId() + "";
+                newUserIds.add(key);
+                if (originUserIds.contains(key)) {
+                    continue;
+                }
+                toInsert.add(userRoleProject);
+            }
+        }
+
+        for (UserRoleProject userRoleProject : originList) {
+            String key = userRoleProject.getRoleId() + "";
+            if (newUserIds.contains(key)) {
                 continue;
             }
-            toDelete.add(userRole.getId());
+            toDelete.add(userRoleProject.getId());
         }
 
         //保存数据
-        if(!CollectionUtils.isEmpty(toInsert)){
-            userRoleMapper.insertList(toInsert);
+        if (!CollectionUtils.isEmpty(toInsert)) {
+            userRoleProjectMapper.insertList(toInsert);
         }
 
-        if(!CollectionUtils.isEmpty(toDelete)){
-            userRoleMapper.deleteList(toDelete);
+        if (!CollectionUtils.isEmpty(toDelete)) {
+            userRoleProjectMapper.deleteList(toDelete);
         }
 
         return RespVOBuilder.success();
@@ -146,13 +160,13 @@ public class UserRoleServiceImpl implements IUserRoleService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public RespVO updateAndInsert(UserRole userRole) {
-        if(null == userRole || null == userRole.getRoleId() || null == userRole.getUserId()){
+    public RespVO updateAndInsert(UserRoleProject userRoleProject) {
+        if (null == userRoleProject || null == userRoleProject.getRoleId() || null == userRoleProject.getUserId() || null ==userRoleProject.getProjectId()) {
             return RespVOBuilder.failure("参数缺失");
         }
-        List<UserRole> originList = findList(userRole);
-        if(CollectionUtils.isEmpty(originList)){
-            insertList(Arrays.asList(new UserRole[]{userRole}));
+        List<UserRoleProject> originList = findList(userRoleProject);
+        if (CollectionUtils.isEmpty(originList)) {
+            insertList(Arrays.asList(userRoleProject));
         }
         return RespVOBuilder.success();
     }
