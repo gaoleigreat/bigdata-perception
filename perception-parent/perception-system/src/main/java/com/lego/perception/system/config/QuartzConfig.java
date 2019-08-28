@@ -65,12 +65,11 @@ public class QuartzConfig {
             // 预防sql注入用的：filter:wall
             ds.setFilters(env.getProperty("define.schedule_job.datasource.filters"));
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
             log.error("init datasource error |", e);
         }
 
         // 类型是List<com.alibaba.druid.filter.Filter>，如果同时配置了filters和proxyFilters，是组合关系，并非替换关系
-        // ds.setProxyFilters();
+        //ds.setProxyFilters();
         DruidConnectionProvider.setTemp(ds);
         return ds;
     }

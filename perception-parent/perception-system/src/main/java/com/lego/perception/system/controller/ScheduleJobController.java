@@ -32,7 +32,7 @@ public class ScheduleJobController {
     }
 
     @RequestMapping(value = "/find", method = RequestMethod.GET)
-    @Operation(value = "查询", desc = "find")
+    @Operation(value = "find", desc = "查询定时任务")
     @ApiOperation("查询定时任务")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "jobName", value = "任务名称", dataType = "String", required = false, example = "1", paramType = "query"),
@@ -68,7 +68,7 @@ public class ScheduleJobController {
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
-    @Operation(value = "delete", desc = "delete")
+    @Operation(value = "delete", desc = "删除定时任务")
     @ApiOperation("删除定时任务")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "jobName", value = "任务名称", dataType = "String", required = true, example = "1", paramType = "query"),

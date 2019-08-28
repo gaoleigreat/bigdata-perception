@@ -86,7 +86,7 @@
         </foreach>
     </insert>
 
-    <insert id="insert">
+    <insert id="save">
 		insert into tpl_dictionary_t
 		(code, parent_code, `value`, description, creation_date, created_by, last_update_date, last_updated_by)
 		values
