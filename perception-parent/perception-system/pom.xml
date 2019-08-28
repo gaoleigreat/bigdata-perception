@@ -147,8 +147,7 @@
             <groupId>org.quartz-scheduler</groupId>
             <artifactId>quartz-jobs</artifactId>
         </dependency>
-
-
+        <!--cad文件处理-->
     </dependencies>
 
 
