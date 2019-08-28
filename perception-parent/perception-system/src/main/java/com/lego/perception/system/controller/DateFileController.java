@@ -3,26 +3,37 @@ package com.lego.perception.system.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.framework.common.page.PagedResult;
+import com.framework.common.consts.HttpConsts;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
+import com.lego.framework.base.exception.ExceptionBuilder;
 import com.lego.framework.file.feign.FileClient;
 import com.lego.framework.system.model.entity.DataFile;
-import com.lego.framework.system.model.entity.Dictionary;
 import com.lego.perception.system.service.IDataFileService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import javax.websocket.server.PathParam;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Validated
 @RestController
@@ -40,7 +51,7 @@ public class DateFileController {
 
 
     @GetMapping(value = "/getDataFileById")
-    @ApiOperation(value = "根据编码查询code", httpMethod = "GET")
+    @ApiOperation(value = "根据Id查询详情", httpMethod = "GET")
     @ApiImplicitParams(
             {
             }
@@ -87,9 +98,57 @@ public class DateFileController {
     @RequestMapping(value = "/insert", method = RequestMethod.POST)
     @Operation(value = "insert", desc = "新增")
     @ApiOperation("新增")
-    public RespVO insert(@RequestBody DataFile dataFile) {
+    public RespVO insert(HttpServletRequest req, @RequestParam(required = false) Long projectId) {
+        List<MultipartFile> fileList = new ArrayList<>();
+        if (req instanceof MultipartHttpServletRequest) {
+            fileList = ((MultipartHttpServletRequest) req).getFiles("file");
+        }
 
-        return dataFileService.insert(dataFile);
+        if (CollectionUtils.isEmpty(fileList)) {
+            return RespVOBuilder.failure("文件上传失败");
+        }
+        RespVO<List<Map<String, Object>>> respVO = fileClient.webUpload(req);
+        if (respVO.getRetCode() != 1) {
+            return RespVOBuilder.failure("文件上传失败");
+        }
+        List<Map<String, Object>> resultList = respVO.getInfo();
+        resultList.stream().forEach(result -> {
+            DataFile dataFile = new DataFile();
+            dataFile.setDeleteFlag(1);
+            Object fileName = result.get("fileName");
+            Object fileUrl = result.get("url");
+            if (StringUtils.isNotBlank(fileName.toString())) {
+                dataFile.setName(fileName.toString());
+                String suffix = fileName.toString().substring(fileName.toString().lastIndexOf(".") + 1);
+                dataFile.setFileType(suffix);
+            }
+            if (StringUtils.isNotBlank(fileUrl.toString())) {
+                dataFile.setName(fileUrl.toString());
+            }
+            if (projectId != null) {
+                dataFile.setProjectId(projectId);
+            } else {
+                dataFile.setProjectId(1L);
+            }
+            Long userId = Long.parseLong(req.getHeader(HttpConsts.USER_ID));
+            dataFile.setCreatedBy(userId);
+            dataFile.setLastUpdatedBy(userId);
+            dataFile.setCreationDate(new Date());
+
+            if (result.get("fileName").toString().endsWith("dwg") || result.get("fileName").toString().endsWith("dxf") || result.get("fileName").toString().endsWith("dwt")) {
+                File file = new File(result.get("fileName").toString());
+                try {
+                    FileUtils.copyURLToFile(new URL(result.get("url").toString()), file);
+                    //Image objImage = Image.load(new FileInputStream(file));
+                } catch (IOException e) {
+                    ExceptionBuilder.operateFailException("url转换文件失败");
+                }
+
+            }
+        });
+
+
+        return null;
     }
 
     @RequestMapping(value = "/updateList", method = RequestMethod.POST)
