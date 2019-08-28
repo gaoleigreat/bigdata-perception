@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Bean;
 @EnableDiscoveryClient
 @EnableHystrix
 @EnableZuulProxy
-@EnableFeignClients(basePackages = "com.lego")
+@EnableFeignClients(basePackages = {"com.lego", "com.framework"})
 public class ZuulServerApplication {
 
     public static void main(String[] args) {

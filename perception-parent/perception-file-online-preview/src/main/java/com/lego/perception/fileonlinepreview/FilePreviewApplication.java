@@ -9,16 +9,15 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.util.Properties;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.lego", "com.framework"})
 @EnableScheduling
 @ComponentScan(value = "com.lego.perception.fileonlinepreview.*")
 @EnableDiscoveryClient
 @EnableEurekaClient
-
 public class FilePreviewApplication {
-	public static void main(String[] args) {
+    public static void main(String[] args) {
         Properties properties = System.getProperties();
         System.out.println(properties.get("user.dir"));
         SpringApplication.run(FilePreviewApplication.class, args);
-	}
+    }
 }

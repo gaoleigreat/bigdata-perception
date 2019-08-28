@@ -18,7 +18,7 @@ import org.springframework.security.web.authentication.SavedRequestAwareAuthenti
 @EnableEurekaClient
 @EnableDiscoveryClient
 @EnableAdminServer
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.lego", "com.framework"})
 public class MonitorServerApplication {
 
     public static void main(String[] args) {

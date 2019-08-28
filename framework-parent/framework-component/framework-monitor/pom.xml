@@ -8,7 +8,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.survey.monitor</groupId>
+    <groupId>com.framework.monitor</groupId>
     <artifactId>framework-monitor</artifactId>
     <description>监控平台(SpringBootAdmin)</description>
 

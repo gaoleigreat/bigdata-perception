@@ -34,25 +34,6 @@ public interface UserRoleProjectMapper extends Mapper<UserRoleProject> {
     PagedResult<UserRoleProject> findPagedList(UserRoleProject userRoleProject, Page page);
 
     /**
-     * 分页查询某种权限的 用户
-     *
-     * @param map
-     * @param page
-     * @return
-     */
-    PagedResult<User> findPagedUserList(Map<String, Object> map, Page page);
-
-    /**
-     * 分页查询某种角色的用户列表
-     *
-     * @param userRoleProject
-     * @param user
-     * @param page
-     * @return
-     */
-    PagedResult<User> findPagedList(UserRoleProject userRoleProject, User user, Page page);
-
-    /**
      * 新增列表
      *
      * @param userRoleProjects
