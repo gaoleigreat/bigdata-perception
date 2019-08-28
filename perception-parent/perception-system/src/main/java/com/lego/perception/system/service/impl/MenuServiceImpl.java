@@ -46,7 +46,8 @@ public class MenuServiceImpl implements IMenuService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer insertSelective(Menu menu) {
+    public Integer insertSelective(Menu menu,Long userId) {
+        menu.setCreateInfo(userId);
         return menuMapper.insertSelective(menu);
     }
 

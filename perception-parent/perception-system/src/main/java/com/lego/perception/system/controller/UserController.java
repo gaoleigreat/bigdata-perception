@@ -1,4 +1,6 @@
 package com.lego.perception.system.controller;
+
+import com.framework.common.consts.HttpConsts;
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
@@ -16,13 +18,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.websocket.server.PathParam;
 import java.util.List;
 
 @RestController
 @RequestMapping("user/v1")
 @Resource(value = "user", desc = "用户管理")
-@Api(value = "UserController",description = "用户管理")
+@Api(value = "UserController", description = "用户管理")
 @Slf4j
 public class UserController {
 
@@ -69,29 +73,31 @@ public class UserController {
     @RequestMapping(value = "/insert", method = RequestMethod.POST)
     @Operation(value = "add", desc = "新增")
     @ApiOperation("新增")
-    public RespVO insert(@RequestBody User user) {
+    public RespVO insert(@RequestBody User user, HttpServletRequest request) {
         if (null == user) {
             return RespVOBuilder.failure("参数缺失");
         }
-        return userService.insert(user);
+        String userId = request.getHeader(HttpConsts.USER_ID);
+        return userService.insert(user, Long.valueOf(userId));
     }
 
     @RequestMapping(value = "/insertList", method = RequestMethod.POST)
     @Operation(value = "add", desc = "新增")
     @ApiOperation("批量新增")
-    public RespVO insert(@RequestBody List<User> users) {
+    public RespVO insert(@RequestBody List<User> users, HttpServletRequest request) {
         if (CollectionUtils.isEmpty(users)) {
             return RespVOBuilder.failure("参数缺失");
         }
-        return userService.insertList(users);
+        String userId = request.getHeader(HttpConsts.USER_ID);
+        return userService.insertList(users, Long.valueOf(userId));
     }
 
     @RequestMapping(value = "/updateAndInsert", method = RequestMethod.POST)
     @Operation(value = "update", desc = "更新")
     @ApiOperation("更新和删除")
-    public RespVO updateAndInsert(@RequestBody User user) {
-
-        return userService.updateAndInsert(user);
+    public RespVO updateAndInsert(@RequestBody User user, HttpServletRequest request) {
+        String userId = request.getHeader(HttpConsts.USER_ID);
+        return userService.updateAndInsert(user, Long.valueOf(userId));
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
@@ -106,17 +112,17 @@ public class UserController {
     @RequestMapping(value = "/update_other_user", method = RequestMethod.POST)
     @Operation(value = "update", desc = "更新")
     @ApiOperation("后台管理更新其他用户信息")
-    public RespVO updateOtherUser(@RequestBody User user) {
-
-        return userService.updateOtherUser(user);
+    public RespVO updateOtherUser(@RequestBody User user, HttpServletRequest request) {
+        String userId = request.getHeader(HttpConsts.USER_ID);
+        return userService.updateOtherUser(user, Long.valueOf(userId));
     }
 
     @RequestMapping(value = "/updateList", method = RequestMethod.POST)
     @Operation(value = "update", desc = "更新")
     @ApiOperation("批量更新")
-    public RespVO updateList(@RequestBody List<User> users) {
-
-        return userService.updateList(users);
+    public RespVO updateList(@RequestBody List<User> users, HttpServletRequest request) {
+        String userId = request.getHeader(HttpConsts.USER_ID);
+        return userService.updateList(users, Long.valueOf(userId));
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
@@ -148,16 +154,14 @@ public class UserController {
     @ApiOperation("验证码验证后，修改用户手机号")
     public RespVO updateUserAndValidate(@RequestBody User user, @RequestParam("otherPhone") String otherPhone,
                                         @RequestParam("code") String code) {
-        Long userId = RequestContext.getCurrent().getUserId();
-        //user.setId(curUser.getId());
         return userService.updateUserAndValidate(user, otherPhone, code);
     }
 
     @RequestMapping(value = "/updateUserPassword", method = RequestMethod.POST)
     @ApiOperation("修改用户密码(不需要手机验证码)")
-    public RespVO updateUserPassword(@RequestBody User user) {
-
-        return userService.updateUserPassword(user);
+    public RespVO updateUserPassword(@RequestBody User user, HttpServletRequest request) {
+        String userId = request.getHeader(HttpConsts.USER_ID);
+        return userService.updateUserPassword(user, Long.valueOf(userId));
     }
 
     @ApiOperation("查询用户")

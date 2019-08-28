@@ -17,7 +17,7 @@ public interface IMenuService {
 
     Integer insert(Menu menu);
 
-    Integer insertSelective(Menu menu);
+    Integer insertSelective(Menu menu,Long userId);
 
     Integer insertSelectiveIgnore(Menu menu);
 

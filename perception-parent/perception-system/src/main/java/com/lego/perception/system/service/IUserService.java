@@ -30,7 +30,7 @@ public interface IUserService {
 	 * @param user
 	 * @return
 	 */
-	RespVO insert(User user);
+	RespVO insert(User user,Long userId);
 
 	/**
 	 * 批量新增
@@ -38,7 +38,7 @@ public interface IUserService {
 	 * @param user
 	 * @return
 	 */
-	RespVO insertList(List<User> user);
+	RespVO insertList(List<User> user,Long userId);
 
 	/**
 	 * 用户存在更新，用户不存在删除
@@ -46,7 +46,7 @@ public interface IUserService {
 	 * @param user
 	 * @return
 	 */
-	RespVO updateAndInsert(User user);
+	RespVO updateAndInsert(User user,Long userId);
 
 	/**
 	 * 更新
@@ -70,7 +70,7 @@ public interface IUserService {
 	 * @param user
 	 * @return
 	 */
-	RespVO updateList(List<User> user);
+	RespVO updateList(List<User> user,Long userId);
 
 	/**
 	 * 删除
@@ -104,14 +104,14 @@ public interface IUserService {
 	 * @param user
 	 * @return
 	 */
-	RespVO updateUserPassword(User user);
+	RespVO updateUserPassword(User user,Long userId);
 
 	/**
 	 * 后台更新用户信息
 	 * @param user
 	 * @return
 	 */
-	RespVO updateOtherUser(User user);
+	RespVO updateOtherUser(User user,Long userId);
 
 
 	/**

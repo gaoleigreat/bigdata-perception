@@ -39,5 +39,6 @@ eureka:
 jwt:
   exclude:
     urlPatterns:
-      - .*api-docs.*
-      - .*swagger.*
+      #- .*api-docs.*
+      #- .*swagger.*
+      - .*.*

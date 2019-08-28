@@ -1,5 +1,6 @@
 package com.lego.perception.system.controller;
 
+import com.framework.common.consts.HttpConsts;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
@@ -15,6 +16,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -75,8 +77,9 @@ public class MenuController {
     @RequestMapping(value = "/save_tplMenu", method = RequestMethod.POST)
     @Operation(value = "save_tplMenu", desc = "新增菜单")
     @ApiOperation("新增菜单")
-    public RespVO insert(@RequestBody Menu menu) {
-        Integer num = iMenuService.insertSelective(menu);
+    public RespVO insert(@RequestBody Menu menu, HttpServletRequest request) {
+        String userId = request.getHeader(HttpConsts.USER_ID);
+        Integer num = iMenuService.insertSelective(menu, Long.valueOf(userId));
         return RespVOBuilder.success();
     }
 

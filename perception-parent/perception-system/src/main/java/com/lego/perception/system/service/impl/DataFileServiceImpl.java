@@ -12,9 +12,11 @@ import com.lego.framework.system.model.entity.DataFile;
 import com.lego.perception.system.mapper.DataFileMapper;
 import com.lego.perception.system.service.IDataFileService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class DataFileServiceImpl implements IDataFileService {
 
     @Autowired

@@ -31,4 +31,8 @@ public class Menu {
     @ApiModelProperty("创建人")
     private Long createdBy;
 
+    public void setCreateInfo(Long userId) {
+        this.creationDate = new Date();
+        this.createdBy = userId;
+    }
 }

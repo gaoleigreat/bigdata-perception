@@ -1,5 +1,6 @@
 package com.lego.perception.system.controller;
 
+import com.framework.common.consts.HttpConsts;
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespVO;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.websocket.server.PathParam;
 import java.util.List;
 
@@ -53,8 +55,9 @@ public class DictionaryController {
     @RequestMapping(value = "/findTree", method = RequestMethod.GET)
     @Operation(value = "find", desc = "查询")
     @ApiOperation("查询树结构")
-    public List<Dictionary> findTree(@ModelAttribute Dictionary dictionary) {
-
+    public List<Dictionary> findTree(@ModelAttribute Dictionary dictionary, HttpServletRequest request) {
+        String userId = request.getHeader(HttpConsts.USER_ID);
+        String userName = request.getHeader(HttpConsts.USER_NAME);
         return dictionaryService.findTree(dictionary);
     }
 

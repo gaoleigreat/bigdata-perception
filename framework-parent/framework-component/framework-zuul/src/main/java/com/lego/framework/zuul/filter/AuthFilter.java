@@ -35,7 +35,7 @@ import static org.springframework.cloud.netflix.zuul.filters.support.FilterConst
  * @since 2019/7/3
  **/
 @Component
-public class LoginFilter extends ZuulFilter {
+public class AuthFilter extends ZuulFilter {
 
     private Logger logger = LoggerFactory.getLogger("access");
 
@@ -66,7 +66,7 @@ public class LoginFilter extends ZuulFilter {
 
     @Override
     public boolean shouldFilter() {
-        return false;
+        return true;
     }
 
     @Override
@@ -142,8 +142,12 @@ public class LoginFilter extends ZuulFilter {
         ctx.getZuulRequestHeaders().put("TRACE", traceInfo);
         ctx.setSendZuulResponse(true);
         ctx.setResponseStatusCode(200);
+        // TODO
+        ctx.addZuulRequestHeader(HttpConsts.USER_ID, "1");
+        ctx.addZuulRequestHeader(HttpConsts.USER_NAME, "admin");
+
         if (currentVo != null) {
-            ctx.addZuulRequestHeader("userId", currentVo.getUserId()+"");
+            ctx.addZuulRequestHeader("userId", currentVo.getUserId() + "");
             ctx.addZuulRequestHeader("userName", currentVo.getUserName());
             try {
                 ctx.addZuulRequestHeader("name", URLEncoder.encode(currentVo.getName(), "UTF-8"));
