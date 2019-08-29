@@ -1,5 +1,4 @@
 package com.lego.perception.log.listener;
-
 import com.alibaba.fastjson.JSONObject;
 import com.lego.framework.event.log.LogSink;
 import com.lego.framework.log.model.entity.Log;

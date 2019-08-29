@@ -1,5 +1,6 @@
 package com.lego.framework.log.model.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +11,7 @@ import java.util.Date;
 
 /**
  * @author yanglf
- * @description  日志
+ * @description 日志
  * @since 2018/12/21
  **/
 @Data
@@ -18,21 +19,31 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Log {
-    /**
-     * 日志id
-     */
     @ApiModelProperty("日志id")
     private String id;
-    /**
-     * 操作用户id
-     */
-    @ApiModelProperty("日志操作用户名")
-    private String userId;
-    /**
-     * 操作时间
-     */
+
+    @ApiModelProperty("日志分类")
+    private String type;
+
+    @ApiModelProperty("标签")
+    private String tag;
+
+    @ApiModelProperty("所属服务")
+    private String service;
+
+    @ApiModelProperty("日志操作用户id")
+    private Long userId;
+
+
+    @ApiModelProperty("操作用户用户名")
+    private String userName;
+
+
     @ApiModelProperty("日志操作时间")
-    private Date time;
+    private Date operatingTime;
+
+    @ApiModelProperty("创建时间")
+    private Date createTime;
     /**
      * 描述信息
      */
@@ -43,4 +54,7 @@ public class Log {
      */
     @ApiModelProperty("日志操作者ip")
     private String ip;
+
+    @ApiModelProperty("日志内容")
+    private String content;
 }

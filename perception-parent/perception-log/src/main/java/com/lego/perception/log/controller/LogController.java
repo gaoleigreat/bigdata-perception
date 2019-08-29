@@ -1,10 +1,11 @@
 package com.lego.perception.log.controller;
+
 import com.framework.common.consts.DictConstant;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespVO;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
-import com.lego.framework.log.model.vo.LogVo;
+import com.lego.framework.log.model.entity.Log;
 import com.lego.perception.log.service.ILogService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(DictConstant.Path.LOG)
 @Api(value = "LogController", description = "日志管理")
-@Resource(value = "log",desc = "日志管理")
+@Resource(value = "log", desc = "日志管理")
 public class LogController {
 
     @Autowired
@@ -31,13 +32,21 @@ public class LogController {
     @ApiOperation(value = "查询日志信息", httpMethod = "GET", notes = "查询日志信息")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "pageIndex", value = "当前页", dataType = "int", required = true, example = "1", paramType = "path"),
-            @ApiImplicitParam(name = "pageSize", value = "每页大小", dataType = "int", defaultValue = "10",example = "10", paramType = "query"),
+            @ApiImplicitParam(name = "pageSize", value = "每页大小", dataType = "int", defaultValue = "10", example = "10", paramType = "query"),
+            @ApiImplicitParam(name = "type", value = "分类", dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "tag", value = "标签", dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "startTime", value = "开始时间", dataType = "long", paramType = "query"),
+            @ApiImplicitParam(name = "endTime", value = "结束时间", dataType = "long", paramType = "query"),
     })
-    @Operation(value = "list",desc = "查询日志信息")
+    @Operation(value = "list", desc = "查询日志信息")
     @RequestMapping(value = "/list/{pageIndex}", method = RequestMethod.GET)
-    public RespVO<PagedResult<LogVo>> query(@PathVariable(value = "pageIndex") int pageIndex,
-                                            @RequestParam(required = false, defaultValue = "10") int pageSize) {
-        return iLogService.list(pageIndex, pageSize);
+    public RespVO<PagedResult<Log>> query(@PathVariable(value = "pageIndex") int pageIndex,
+                                          @RequestParam(required = false, defaultValue = "10") int pageSize,
+                                          @RequestParam(required = false) String type,
+                                          @RequestParam(required = false) String tag,
+                                          @RequestParam(required = false) Long startTime,
+                                          @RequestParam(required = false) Long endTime) {
+        return iLogService.list(pageIndex, pageSize, type, tag, startTime, endTime);
     }
 
 

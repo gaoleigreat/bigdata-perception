@@ -1,4 +1,5 @@
 package com.lego.framework.event.log;
+
 import com.framework.common.utils.UuidUtils;
 import com.lego.framework.log.model.entity.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +19,37 @@ public class LogSender {
     @Autowired
     private LogSource logSource;
 
-    public void  sendLogEvent(String ip,String userId,String desc){
-        Log log= Log.builder()
-                .id(UuidUtils.generateShortUuid())
-                .time(new Date())
+    /**
+     * @param ip            请求ID
+     * @param userId        操作用户ID
+     * @param desc          描述
+     * @param content       日志内容
+     * @param service       发送者所属服务
+     * @param tag           日志 tag
+     * @param type          日志类型
+     * @param operatingTime 日志操作时间
+     * @param userName      操作用户用户名
+     */
+    public void sendLogEvent(String ip,
+                             Long userId,
+                             String desc,
+                             String content,
+                             String service,
+                             String tag,
+                             String type,
+                             Date operatingTime,
+                             String userName) {
+        Log log = Log.builder()
                 .ip(ip)
                 .userId(userId)
-                .desc(desc).build();
+                .userName(userName)
+                .desc(desc)
+                .operatingTime(operatingTime)
+                .content(content)
+                .service(service)
+                .tag(tag)
+                .type(type)
+                .build();
         logSource.printLog().send(MessageBuilder.withPayload(log).build());
     }
 

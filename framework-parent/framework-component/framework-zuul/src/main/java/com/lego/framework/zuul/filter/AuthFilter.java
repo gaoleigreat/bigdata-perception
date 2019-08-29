@@ -147,8 +147,8 @@ public class AuthFilter extends ZuulFilter {
         ctx.addZuulRequestHeader(HttpConsts.USER_NAME, "admin");
 
         if (currentVo != null) {
-            ctx.addZuulRequestHeader("userId", currentVo.getUserId() + "");
-            ctx.addZuulRequestHeader("userName", currentVo.getUserName());
+            ctx.addZuulRequestHeader(HttpConsts.USER_ID, currentVo.getUserId() + "");
+            ctx.addZuulRequestHeader(HttpConsts.USER_NAME, currentVo.getUserName());
             try {
                 ctx.addZuulRequestHeader("name", URLEncoder.encode(currentVo.getName(), "UTF-8"));
             } catch (UnsupportedEncodingException e) {

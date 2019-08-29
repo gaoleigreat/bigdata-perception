@@ -2,6 +2,7 @@ package com.lego.perception.user.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.framework.common.consts.DictConstant;
+import com.framework.common.consts.HttpConsts;
 import com.framework.common.sdto.HeaderVo;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
@@ -10,6 +11,7 @@ import com.lego.framework.auth.feign.AuthClient;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
 import com.lego.framework.base.utils.HeaderUtils;
+import com.lego.framework.base.utils.HttpUtils;
 import com.lego.framework.event.log.LogSender;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -56,6 +58,9 @@ public class UserController {
                         HttpServletResponse response,
                         @NotBlank(message = "用户名不能为空") @RequestParam String user,
                         @NotBlank(message = "密码不能为空") @Size(min = 6, max = 32, message = "密码长度为6-23位") @RequestParam String pwd) throws IOException {
+
+        String userId = request.getHeader(HttpConsts.USER_ID);
+        String userName = request.getHeader(HttpConsts.USER_NAME);
         // TODO 验证是否登录    是否携带注册令牌  sso_ticket
         String ssoTicket = request.getHeader("sso_ticket");
         if (StringUtils.isBlank(ssoTicket)) {
@@ -87,7 +92,7 @@ public class UserController {
         String deviceType = headerVo.getDeviceType();
         // TODO 验证 token
         Cookie[] cookies = request.getCookies();
-        
+
 
         return authClient.delete(token, deviceType);
     }
