@@ -147,6 +147,18 @@
             <artifactId>framework-log</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.framework.excel</groupId>
+            <version>${service.version}</version>
+            <artifactId>framework-excel</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>easyexcel</artifactId>
+            <version>${easy.excel.version}</version>
+        </dependency>
+
 
     </dependencies>
 

@@ -4,8 +4,11 @@ import com.framework.common.consts.RespConsts;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
+import com.framework.excel.ExcelService;
+import com.lego.framework.base.utils.DateUtils;
 import com.lego.framework.base.utils.UuidUtils;
 import com.lego.framework.log.model.entity.Log;
+import com.lego.framework.log.model.vo.LogExportVo;
 import com.lego.framework.system.feign.UserClient;
 import com.lego.framework.system.model.entity.User;
 import com.lego.perception.log.repository.LogRepository;
@@ -21,6 +24,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -40,6 +46,9 @@ public class LogServiceImpl implements ILogService {
 
     @Autowired
     private LogRepository logRepository;
+
+    @Autowired
+    private ExcelService excelService;
 
 
     @Override
@@ -69,6 +78,52 @@ public class LogServiceImpl implements ILogService {
                                          Long endTime) {
         PagedResult<Log> pagedResult = new PagedResult<>();
         Pageable pageable = PageRequest.of(pageIndex - 1, pageSize, Sort.Direction.DESC, "time");
+        Criteria criteria = getCriteria(type, tag, startTime, endTime);
+        Query query = new Query(criteria);
+        query.with(pageable).with(Sort.by(Sort.Direction.DESC, "time"));
+        List<Log> logs = mongoTemplate.find(query, Log.class);
+        Long totalCount = mongoTemplate.count(query, Log.class);
+        Long totalPage = totalCount % pageSize == 0 ? 1 : totalCount / pageSize + 1;
+        pagedResult.setPage(new com.framework.common.page.Page(pageIndex, pageSize, 0, totalCount.intValue(), totalPage.intValue()));
+        pagedResult.setResultList(logs);
+        return RespVOBuilder.success(pagedResult);
+    }
+
+    @Override
+    public Log findLastLoginLogByUserId(String userId) {
+        List<Log> logList = logRepository.findLogByUserIdAndDescOrderByOperatingTimeDesc(userId, "用户登录");
+        return !CollectionUtils.isEmpty(logList) ? logList.get(0) : null;
+    }
+
+    @Override
+    public RespVO exportLog(String type, String tag, Long startTime, Long endTime, HttpServletResponse response) {
+        Criteria criteria = getCriteria(type, tag, startTime, endTime);
+        List<LogExportVo> logExportVos = new ArrayList<>();
+        Query query = new Query(criteria);
+        query.with(Sort.by(Sort.Direction.DESC, "time"));
+        List<Log> logs = mongoTemplate.find(query, Log.class);
+        if (CollectionUtils.isEmpty(logs)) {
+            return RespVOBuilder.failure("查询不到日志信息");
+        }
+        for (Log log : logs) {
+            LogExportVo logExportVo = new LogExportVo();
+            logExportVo.setContent(log.getContent());
+            logExportVo.setDesc(log.getDesc());
+            logExportVo.setOperatingTime(log.getOperatingTime());
+            logExportVo.setTag(log.getTag());
+            logExportVo.setType(log.getType());
+            logExportVo.setUserName(log.getUserName());
+            logExportVos.add(logExportVo);
+        }
+        excelService.writeExcel(logExportVos,
+                DateUtils.getDateTimeAsString(LocalDateTime.now(), "yyyyMMdd-HHmmss") + ".xlsx",
+                "日志",
+                null,
+                response);
+        return RespVOBuilder.success();
+    }
+
+    private Criteria getCriteria(String type, String tag, Long startTime, Long endTime) {
         Criteria criteria = new Criteria();
         if (!StringUtils.isEmpty(type)) {
             criteria.and("type").is(type);
@@ -82,20 +137,6 @@ public class LogServiceImpl implements ILogService {
         if (!StringUtils.isEmpty(endTime)) {
             criteria.is("time").is(new Date(endTime));
         }
-
-        Query query = new Query(criteria);
-        query.with(pageable).with(Sort.by(Sort.Direction.DESC, "time"));
-        List<Log> logs = mongoTemplate.find(query, Log.class);
-        Long totalCount = mongoTemplate.count(query, Log.class);
-        Long totalPage = totalCount % pageSize == 0 ? 1 : totalCount / pageSize + 1;
-        pagedResult.setPage(new com.framework.common.page.Page(pageIndex, pageSize, 0, totalCount.intValue(), totalPage.intValue()));
-        pagedResult.setResultList(logs);
-        return RespVOBuilder.success(pagedResult);
-    }
-
-    @Override
-    public Log findLastLoginLogByUserId(String userId) {
-        List<Log> logList = logRepository.findLogByUserIdAndDescOrderByTimeDesc(userId, "用户登录");
-        return !CollectionUtils.isEmpty(logList) ? logList.get(0) : null;
+        return criteria;
     }
 }

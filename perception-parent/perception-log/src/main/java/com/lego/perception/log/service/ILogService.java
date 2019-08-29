@@ -2,6 +2,9 @@ package com.lego.perception.log.service;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespVO;
 import com.lego.framework.log.model.entity.Log;
+
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * @author yanglf
  * @description
@@ -31,4 +34,14 @@ public interface ILogService {
      * @return
      */
     Log findLastLoginLogByUserId(String id);
+
+    /**
+     * 导出日志信息
+     * @param type
+     * @param tag
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    RespVO exportLog(String type, String tag, Long startTime, Long endTime, HttpServletResponse response);
 }

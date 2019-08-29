@@ -14,6 +14,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * @author yanglf
  * @description
@@ -49,5 +51,32 @@ public class LogController {
         return iLogService.list(pageIndex, pageSize, type, tag, startTime, endTime);
     }
 
+
+    @ApiOperation(value = "导出日志信息", httpMethod = "GET", notes = "导出日志信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "type", value = "分类", dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "tag", value = "标签", dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "startTime", value = "开始时间", dataType = "long", paramType = "query"),
+            @ApiImplicitParam(name = "endTime", value = "结束时间", dataType = "long", paramType = "query"),
+    })
+    @Operation(value = "exportList", desc = "导出日志信息")
+    @RequestMapping(value = "/exportList", method = RequestMethod.GET)
+    public RespVO exportList(
+            @RequestParam(required = false) String type,
+            @RequestParam(required = false) String tag,
+            @RequestParam(required = false) Long startTime,
+            @RequestParam(required = false) Long endTime,
+            HttpServletResponse response) {
+        return iLogService.exportLog(type, tag, startTime, endTime,response);
+    }
+
+
+
+    @ApiOperation(value = "新增日志", httpMethod = "POST", notes = "新增日志")
+    @Operation(value = "save", desc = "新增日志")
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    public RespVO save(@RequestBody Log log) {
+        return iLogService.add(log);
+    }
 
 }
