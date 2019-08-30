@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/formTemplateHistory/v1")
 @Resource(value = "formTemplateHistory", desc = "历史数据模板管理")
-@Api(tags="数据模板管理")
+@Api(tags="formTemplateHistory",description = "历史数据模板管理")
 @Slf4j
 public class FormTemplateHistoryController {
 

@@ -23,7 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/formTemplate/v1")
 @Resource(value = "formTemplate", desc = "表单模板管理")
-@Api(tags="表单模板管理")
+@Api(tags="formTemplate",description = "表单模板管理")
 @Slf4j
 public class FormTemplateController {
 

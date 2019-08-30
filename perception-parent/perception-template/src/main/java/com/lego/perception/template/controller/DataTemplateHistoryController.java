@@ -12,12 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resources;
-
 @RestController
 @RequestMapping("/dataTemplateHistory/v1")
 @Resource(value = "dataTemplateHistory", desc = "历史数据模板管理")
-@Api(tags = "数据模板管理")
+@Api(tags = "dataTemplateHistory",description = "历史数据模板管理")
 @Slf4j
 public class DataTemplateHistoryController {
 

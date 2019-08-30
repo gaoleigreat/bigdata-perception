@@ -21,7 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/formTemplateItem/v1")
 @Resource(value = "formTemplateItem", desc = "表单模板数据项")
-@Api(tags = "表单模板数据项")
+@Api(tags = "formTemplateItem",description = "表单模板数据项")
 @Slf4j
 public class FormTemplateItemController {
 

@@ -28,7 +28,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/enumeration/v1")
 @Resource(value = "enumeration", desc = "枚举管理")
-@Api(tags = "枚举管理")
+@Api(tags = "enumeration",description = "枚举管理")
 @Slf4j
 public class EnumerationController {
 

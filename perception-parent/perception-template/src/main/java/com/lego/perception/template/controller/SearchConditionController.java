@@ -7,8 +7,7 @@ import com.lego.framework.template.model.entity.DataTemplateItem;
 import com.lego.perception.template.service.ISearchConditionService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,11 +21,10 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/searchCondition/v1")
-@Api(tags="")
+@Api(tags="searchCondition",description = "高级搜索条件")
 @Resource(value = "searchCondition", desc = "搜索条件")
+@Slf4j
 public class SearchConditionController {
-
-    private static final Logger log = LoggerFactory.getLogger(SearchConditionController.class);
 
     @Autowired
     private ISearchConditionService searchConditionService;

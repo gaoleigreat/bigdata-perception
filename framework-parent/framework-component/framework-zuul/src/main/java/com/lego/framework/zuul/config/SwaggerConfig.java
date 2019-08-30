@@ -27,27 +27,29 @@ public class SwaggerConfig {
     @Bean
     @Primary
     public SwaggerResourcesProvider swaggerResourcesProvider() {
-        return () ->{
+        return () -> {
             List<SwaggerResource> resources = new ArrayList<>();
            /* properties.getRoutes().values()
                     .forEach(route -> resources
                             .add(createResource(
                                     route.getId(),route.getPath().replace("/**",""))));*/
 
-            resources.add(createResource("权限服务","auth-service"));
-            resources.add(createResource("文件服务","file-service"));
-            resources.add(createResource("系统服务","system-service"));
-            resources.add(createResource("日志服务","log-service"));
-            resources.add(createResource("用户服务","user-service"));
+            resources.add(createResource("权限服务", "auth-service"));
+            resources.add(createResource("文件服务", "file-service"));
+            resources.add(createResource("系统服务", "system-service"));
+            resources.add(createResource("日志服务", "log-service"));
+            resources.add(createResource("用户服务", "user-service"));
+            resources.add(createResource("模板服务", "template-service"));
 
-            return  resources;
+
+            return resources;
         };
     }
 
     private SwaggerResource createResource(String name, String location) {
         SwaggerResource swaggerResource = new SwaggerResource();
         swaggerResource.setName(name);
-        swaggerResource.setLocation("/"+location+"/v2/api-docs");
+        swaggerResource.setLocation("/" + location + "/v2/api-docs");
         swaggerResource.setSwaggerVersion("2.0");
         return swaggerResource;
     }

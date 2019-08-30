@@ -23,7 +23,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/dataTemplateItem/v1")
 @Resource(value = "dataTemplateItem", desc = "数据模板数据项")
-@Api(tags="数据模板数据项")
+@Api(tags="dataTemplateItem",description = "数据模板数据项")
 public class DataTemplateItemController {
 
     private static final Logger log = LoggerFactory.getLogger(DataTemplateItemController.class);

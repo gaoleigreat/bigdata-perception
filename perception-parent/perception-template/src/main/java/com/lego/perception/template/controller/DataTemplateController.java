@@ -27,7 +27,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/dataTemplate/v1")
 @Resource(value = "dataTemplate", desc = "数据模板管理")
-@Api(tags = "数据模板管理")
+@Api(tags = "dataTemplate",description ="数据模板管理" )
 public class DataTemplateController {
 
     public static final Logger log = LoggerFactory.getLogger(DataTemplateController.class);
