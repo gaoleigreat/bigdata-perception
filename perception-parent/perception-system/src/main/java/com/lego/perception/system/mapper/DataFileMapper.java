@@ -1,10 +1,11 @@
 package com.lego.perception.system.mapper;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.framework.common.page.Page;
-import com.framework.common.page.PagedResult;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lego.framework.system.model.entity.DataFile;
 import com.lego.framework.system.model.entity.Dictionary;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -46,6 +47,11 @@ public interface DataFileMapper extends BaseMapper<DataFile> {
      * @return
      */
     Integer deleteList(List<Long> ids);
+
+
+
+
+    IPage<DataFile> queryList(IPage<DataFile> page, @Param("ew") Wrapper<DataFile> queryWrapper, @Param("dataFile") DataFile dataFile);
 
 
 }

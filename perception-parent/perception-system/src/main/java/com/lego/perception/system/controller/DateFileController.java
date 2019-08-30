@@ -27,7 +27,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -112,6 +111,7 @@ public class DateFileController {
             return RespVOBuilder.failure("文件上传失败");
         }
         List<Map<String, Object>> resultList = respVO.getInfo();
+        List<DataFile> dataFiles = new ArrayList<>();
         resultList.stream().forEach(result -> {
             DataFile dataFile = new DataFile();
             dataFile.setDeleteFlag(1);
@@ -134,21 +134,29 @@ public class DateFileController {
             dataFile.setCreatedBy(userId);
             dataFile.setLastUpdatedBy(userId);
             dataFile.setCreationDate(new Date());
+            dataFile.setLastUpdateDate(new Date());
 
             if (result.get("fileName").toString().endsWith("dwg") || result.get("fileName").toString().endsWith("dxf") || result.get("fileName").toString().endsWith("dwt")) {
                 File file = new File(result.get("fileName").toString());
                 try {
                     FileUtils.copyURLToFile(new URL(result.get("url").toString()), file);
+
+                    //文件转化为pdf,
+
+                    //pdf 文件上传
+
+                    //获取上传结果，赋值给previewUrl
+
                     //Image objImage = Image.load(new FileInputStream(file));
                 } catch (IOException e) {
                     ExceptionBuilder.operateFailException("url转换文件失败");
                 }
 
             }
+            dataFiles.add(dataFile);
+
         });
-
-
-        return null;
+        return dataFileService.insertList(dataFiles);
     }
 
     @RequestMapping(value = "/updateList", method = RequestMethod.POST)
