@@ -5,6 +5,7 @@ zuul:
     system-service: /system-service/**
     log-service: /log-service/**
     user-service: /user-service/**
+    template-service: /template-service/**
   ignored-services: '*'
 
 

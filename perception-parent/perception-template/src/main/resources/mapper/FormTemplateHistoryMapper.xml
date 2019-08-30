@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lego.perception.template.mapper.FormTemplateHistoryMapper">
+
+    <sql id="find_columns">
+		id as id, tag as tag, template_name as templateName, template_code as templateCode, description as description, category as category, data_template_id as dataTemplateId,
+		creation_date as creationDate, created_by as createdBy, last_update_date as last_update_date, last_updated_by as last_updated_by
+	</sql>
+
+    <sql id="condition">
+        <if test='id != null'>
+            and id = #{id, jdbcType=BIGINT}
+        </if>
+        <if test="templateName != null and templateName != ''">
+            and templateName = #{templateName, jdbcType=VARCHAR}
+        </if>
+        <if test=" tag != null and tag != ''">
+            and tag = #{tag, jdbcType=VARCHAR}
+        </if>
+        <if test="templateCode != null and templateCode != ''">
+            and template_code = #{templateCode, jdbcType=VARCHAR}
+        </if>
+        <if test="dataTemplateId != null and dataTemplateId != ''">
+            and data_template_id = #{dataTemplateId, jdbcType=VARCHAR}
+        </if>
+        <if test="category != null">
+            and category = #{category, jdbcType=BIGINT}
+        </if>
+    </sql>
+
+    <select id="findList" parameterType="com.lego.framework.template.model.entity.FormTemplateHistory"
+            resultType="com.lego.framework.template.model.entity.FormTemplateHistory">
+        select <include refid="find_columns"></include>
+        from tpl_form_template_tag_t
+        <where>
+            <include refid="condition"></include>
+        </where>
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.lego.framework.template.model.entity.FormTemplateHistory">
+        insert into tpl_form_template_tag_t
+        (id, tag, template_name, template_code, description, category, data_template_id, creation_date, created_by,last_update_date, last_updated_by)
+        values
+            (
+            #{id, jdbcType=BIGINT},
+            #{tag, jdbcType=VARCHAR},
+            #{templateName, jdbcType=VARCHAR},
+            #{templateCode, jdbcType=VARCHAR},
+            #{description, jdbcType=VARCHAR},
+            #{category, jdbcType=BIGINT},
+            #{dataTemplateId, jdbcType=BIGINT},
+            #{creationDate, jdbcType=TIMESTAMP},
+            #{createdBy, jdbcType=BIGINT},
+            #{lastUpdateDate, jdbcType=TIMESTAMP},
+            #{lastUpdatedBy, jdbcType=BIGINT}
+            )
+    </insert>
+
+    <sql id="item_find_columns">
+		id as id, parent_id as parentId, template_id as templateId, title as title, field as field, data_field_id as dataFieldId,
+		is_required as isRequired, category as category,default_value as defaultValue, sort as sort, enum_id as enumId,
+		description as decription, permission as permission, status as status, valid_str as validStr, is_search as isSearch,
+		creation_date as creationDate, last_update_date as last_update_date, created_by as createdBy, last_updated_by as last_updated_by
+	</sql>
+
+    <sql id="item_condition">
+        <if test='id != null'>
+            and id = #{id, jdbcType=BIGINT}
+        </if>
+        <if test="parentId != null and parentId != ''">
+            and parent_id = #{parentId, jdbcType=BIGINT}
+        </if>
+        <if test="templateId != null and templateId != ''">
+            and template_id = #{templateId, jdbcType=BIGINT}
+        </if>
+        <if test="title != null and title != ''">
+            and title = #{title, jdbcType=VARCHAR}
+        </if>
+        <if test="field != null and field != ''">
+            and field = #{field, jdbcType=VARCHAR}
+        </if>
+        <if test="category != null">
+            and category = #{category, jdbcType=BIGINT}
+        </if>
+        <if test="isSearch != null">
+            and is_search = #{isSearch, jdbcType=INTEGER}
+        </if>
+        <if test="status != null">
+            and status = #{status, jdbcType=INTEGER}
+        </if>
+    </sql>
+
+    <select id="findItems" parameterType="com.lego.framework.template.model.entity.FormTemplateItem"
+            resultType="com.lego.framework.template.model.entity.FormTemplateItem">
+        select <include refid="item_find_columns"></include>
+        from tpl_form_template_item_tag_t
+        <where>
+            <include refid="item_condition"></include>
+        </where>
+    </select>
+
+    <insert id="insertItems">
+        insert into tpl_form_template_item_tag_t
+        (id, parent_id, template_id, title, field, data_field_id, is_required, category, default_value, sort, enum_id,
+        description,status,permission, valid_str, is_search, creation_date, created_by, last_update_date, last_updated_by)
+        values
+        <foreach collection="list" separator="," item="item">
+            (
+            #{item.id, jdbcType=BIGINT},
+            #{item.parentId, jdbcType=BIGINT},
+            #{item.templateId, jdbcType=BIGINT},
+            #{item.title, jdbcType=VARCHAR},
+            #{item.field, jdbcType=VARCHAR},
+            #{item.dataFieldId, jdbcType=BIGINT},
+            #{item.isRequired, jdbcType=INTEGER},
+            #{item.category, jdbcType=BIGINT},
+            #{item.defaultValue, jdbcType=VARCHAR},
+            #{item.sort, jdbcType=INTEGER},
+            #{item.enumId, jdbcType=BIGINT},
+            #{item.description, jdbcType=VARCHAR},
+            #{item.status, jdbcType=INTEGER},
+            #{item.permission, jdbcType=VARCHAR},
+            #{item.validStr, jdbcType=VARCHAR},
+            #{item.isSearch, jdbcType=INTEGER},
+            #{item.creationDate, jdbcType=TIMESTAMP},
+            #{item.createdBy, jdbcType=BIGINT},
+            #{item.lastUpdateDate, jdbcType=TIMESTAMP},
+            #{item.lastUpdatedBy, jdbcType=BIGINT}
+            )
+        </foreach>
+    </insert>
+</mapper>
