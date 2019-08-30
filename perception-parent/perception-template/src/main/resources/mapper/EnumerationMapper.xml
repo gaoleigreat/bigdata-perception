@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lego.perception.template.mapper.EnumerationMapper">
+
+    <sql id="find_columns">
+		id as id, enum_code as enumCode, enum_name as enumName, creation_date as creationDate, created_by as createdBy,
+		last_update_date as lastUpdateDate, last_updated_by as lastUpdatedBy
+	</sql>
+
+    <sql id="condition">
+        <if test='id != null'>
+            and id = #{id, jdbcType=BIGINT}
+        </if>
+        <if test="enumCode != null and enumCode != ''">
+            and enum_code = #{enumCode, jdbcType=VARCHAR}
+        </if>
+        <if test="enumName != null and enumName != ''">
+            and instr(enum_name, #{enumName, jdbcType=VARCHAR}) > 0
+        </if>
+    </sql>
+
+    <sql id="page_condition">
+        <if test='arg0.id != null'>
+            and id = #{arg0.id, jdbcType=BIGINT}
+        </if>
+        <if test="arg0.enumCode != null and arg0.enumCode != ''">
+            and enum_code = #{arg0.enumCode, jdbcType=VARCHAR}
+        </if>
+        <if test="arg0.enumName != null and arg0.enumName != ''">
+            and instr(enum_name, #{arg0.enumName, jdbcType=VARCHAR}) > 0
+        </if>
+    </sql>
+
+    <select id="findPagedList" resultType="com.lego.framework.template.model.entity.Enumeration">
+        select <include refid="find_columns"></include>
+        from tpl_enum_t
+        <where>
+            <include refid="page_condition"></include>
+        </where>
+        order by creation_date desc
+        limit #{arg1.startIndex, jdbcType=INTEGER}, #{arg1.pageSize, jdbcType=INTEGER}
+    </select>
+
+    <select id="findPagedListCount" resultType="java.lang.Long">
+        select count(1)
+        from tpl_enum_t
+        <where>
+            <include refid="page_condition"></include>
+        </where>
+    </select>
+
+    <select id="findList" parameterType="com.lego.framework.template.model.entity.Enumeration"
+            resultType="com.lego.framework.template.model.entity.Enumeration">
+        select <include refid="find_columns"></include>
+        from tpl_enum_t
+        <where>
+            <include refid="condition"></include>
+        </where>
+        order by last_update_date desc
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.lego.framework.template.model.entity.Enumeration">
+        insert into tpl_enum_t
+        (enum_code, enum_name, description, created_by, last_updated_by, last_update_date)
+        values
+        (
+         #{enumCode, jdbcType=VARCHAR},
+         #{enumName, jdbcType=VARCHAR},
+         #{description, jdbcType=VARCHAR},
+         #{createdBy, jdbcType=BIGINT},
+         #{lastUpdatedBy, jdbcType=BIGINT},
+         #{lastUpdateDate, jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+    <update id="update">
+        update tpl_enum_t
+        <set>
+            <if test='enumCode != null and enumCode != ""'>
+                enum_code = #{enumCode, jdbcType=VARCHAR},
+            </if>
+            <if test='enumName != null and enumName != ""'>
+                enum_name = #{enumName, jdbcType=VARCHAR},
+            </if>
+            <if test='description != null'>
+                description = #{description, jdbcType=VARCHAR},
+            </if>
+            <if test='lastUpdatedBy != null'>
+                last_updated_by = #{lastUpdatedBy, jdbcType=VARCHAR},
+            </if>
+            <if test='lastUpdateDate != null'>
+                last_update_date = #{lastUpdateDate, jdbcType=TIMESTAMP}
+            </if>
+        </set>
+        where id = #{id, jdbcType=BIGINT}
+    </update>
+
+    <delete id="delete">
+        delete from tpl_enum_t
+        where id = #{id, jdbcType=BIGINT}
+    </delete>
+</mapper>

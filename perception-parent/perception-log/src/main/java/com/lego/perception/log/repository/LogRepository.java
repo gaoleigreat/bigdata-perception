@@ -20,4 +20,7 @@ public interface LogRepository extends MongoRepository<Log, String> {
     List<Log> findLogByUserIdAndDescOrderByOperatingTimeDesc(String userId, String desc);
 
 
+
+
+
 }

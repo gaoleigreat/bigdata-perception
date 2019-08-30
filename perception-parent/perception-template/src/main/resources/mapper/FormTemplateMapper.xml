@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lego.perception.template.mapper.FormTemplateMapper">
+
+    <sql id="find_columns">
+		id as id, template_name as templateName, template_code as templateCode, description as description, category as category,
+		permission as permission, data_template_id as dataTemplateId,
+		creation_date as creationDate, created_by as createdBy, last_update_date as lastUpdateDate, last_updated_by as lastUpdatedBy
+	</sql>
+
+    <sql id="condition">
+        <if test='id != null'>
+            and id = #{id, jdbcType=BIGINT}
+        </if>
+        <if test="templateName != null and templateName != ''">
+            and templateName = #{templateName, jdbcType=VARCHAR}
+        </if>
+        <if test="templateCode != null and templateCode != ''">
+            and template_code = #{templateCode, jdbcType=VARCHAR}
+        </if>
+        <if test="dataTemplateId != null and dataTemplateId != ''">
+            and data_template_id = #{dataTemplateId, jdbcType=VARCHAR}
+        </if>
+        <if test="category != null">
+            and category = #{category, jdbcType=BIGINT}
+        </if>
+    </sql>
+
+    <sql id="page_condition">
+        <if test='arg0.id != null'>
+            and id = #{arg0.id, jdbcType=BIGINT}
+        </if>
+        <if test="arg0.templateCode != null and arg0.templateCode != ''">
+            and template_code = #{arg0.templateCode, jdbcType=VARCHAR}
+        </if>
+        <if test="arg0.templateName != null and arg0.templateName != ''">
+            and template_name = #{arg0.templateName, jdbcType=VARCHAR}
+        </if>
+    </sql>
+
+    <select id="findList" parameterType="com.lego.framework.template.model.entity.FormTemplate"
+            resultType="com.lego.framework.template.model.entity.FormTemplate">
+        select <include refid="find_columns"></include>
+        from tpl_form_template_t
+        <where>
+            <include refid="condition"></include>
+        </where>
+
+    </select>
+
+    <select id="findPagedList" resultType="com.lego.framework.template.model.entity.FormTemplate">
+        select <include refid="find_columns"></include>
+        from tpl_form_template_t
+        <where>
+            <include refid="page_condition"></include>
+        </where>
+    </select>
+
+    <select id="findPagedListCount" resultType="java.lang.Long">
+        select count(1)
+        from tpl_form_template_t
+        <where>
+            <include refid="page_condition"></include>
+        </where>
+    </select>
+
+    <insert id="insert">
+        insert into tpl_form_template_t
+        (template_name, template_code, description, category, permission, data_template_id, creation_date, created_by,last_update_date, last_updated_by)
+        values
+            (
+            #{templateName, jdbcType=VARCHAR},
+            #{templateCode, jdbcType=VARCHAR},
+            #{description, jdbcType=VARCHAR},
+            #{category, jdbcType=BIGINT},
+            #{permission, jdbcType=VARCHAR},
+            #{dataTemplateId, jdbcType=BIGINT},
+            #{creationDate, jdbcType=TIMESTAMP},
+            #{createdBy, jdbcType=BIGINT},
+            #{lastUpdateDate, jdbcType=TIMESTAMP},
+            #{lastUpdatedBy, jdbcType=BIGINT}
+            )
+    </insert>
+
+    <update id="update">
+            update tpl_form_template_t
+            <set>
+                <if test='templateName != null'>
+                    template_name = #{templateName, jdbcType=VARCHAR},
+                </if>
+                <if test='templateCode != null'>
+                    template_code = #{templateCode, jdbcType=VARCHAR},
+                </if>
+                <if test='category != null'>
+                    category = #{category, jdbcType=BIGINT},
+                </if>
+                <if test="permission != null">
+                    permission = #{permission, jdbcType=VARCHAR},
+                </if>
+                <if test="description != null">
+                    description = #{description, jdbcType=VARCHAR},
+                </if>
+                <if test='dataTemplateId != null'>
+                    data_template_id = #{dataTemplateId, jdbcType=BIGINT},
+                </if>
+                <if test='lastUpdatedBy != null'>
+                    last_updated_by = #{lastUpdatedBy, jdbcType=BIGINT},
+                </if>
+                <if test='lastUpdateDate != null'>
+                    last_update_date = #{lastUpdateDate, jdbcType=TIMESTAMP},
+                </if>
+            </set>
+            where id = #{id, jdbcType=BIGINT};
+    </update>
+
+    <delete id="delete">
+        delete from tpl_form_template_t
+        where id = #{id, jdbcType=VARCHAR}
+    </delete>
+</mapper>

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lego.perception.template.mapper.DataTemplateItemMapper">
+
+    <sql id="find_columns">
+		id as id, parent_id as parentId, template_id as templateId, title as title, field as field, category as category,
+		default_value as defaultValue, sort as sort, enum_id as enumId, region_url as regionUrl, description as decription,absolute_field as absoluteField,source as source,
+		g_field as gField, s_field as sField, status as status, creation_date as creationDate, last_update_date as last_update_date,
+		created_by as createdBy, last_updated_by as last_updated_by
+	</sql>
+
+    <sql id="condition">
+        <if test='id != null'>
+            and id = #{id, jdbcType=BIGINT}
+        </if>
+        <if test="parentId != null and parentId != ''">
+            and parent_id = #{parentId, jdbcType=VARCHAR}
+        </if>
+        <if test="templateId != null and templateId != ''">
+            and template_id = #{templateId, jdbcType=VARCHAR}
+        </if>
+        <if test="title != null and title != ''">
+            and title = #{title, jdbcType=VARCHAR}
+        </if>
+        <if test="field != null and field != ''">
+            and field = #{field, jdbcType=VARCHAR}
+        </if>
+        <if test="category != null">
+            and category = #{category, jdbcType=BIGINT}
+        </if>
+        <if test="source != null">
+            and source = #{source, jdbcType=INTEGER}
+        </if>
+        <if test="status != null">
+            and status = #{status, jdbcType=INTEGER}
+        </if>
+        <if test="isSearch != null">
+            and is_search = #{isSearch, jdbcType=INTEGER}
+        </if>
+        <if test="ids != null and ids.size > 0">
+            and id in
+            <foreach collection="ids" index="index" separator="," open="(" close=")">
+                #{ids[${index}], jdbcType=BIGINT}
+            </foreach>
+        </if>
+    </sql>
+
+    <select id="findList" parameterType="com.lego.framework.template.model.entity.DataTemplateItem"
+            resultType="com.lego.framework.template.model.entity.DataTemplateItem">
+        select <include refid="find_columns"></include>
+        from tpl_data_template_item_t
+        <where>
+            <include refid="condition"></include>
+        </where>
+       order by  sort asc
+    </select>
+
+    <insert id="insertList">
+        insert into tpl_data_template_item_t
+        (id, parent_id, template_id, title, field, category, default_value, sort, enum_id, region_url, description, absolute_field, status, source, s_field,
+         g_field, creation_date, created_by, last_update_date, last_updated_by)
+        values
+        <foreach collection="list" separator="," item="item">
+        (
+         #{item.id, jdbcType=BIGINT},
+         #{item.parentId, jdbcType=BIGINT},
+         #{item.templateId, jdbcType=BIGINT},
+         #{item.title, jdbcType=VARCHAR},
+         #{item.field, jdbcType=VARCHAR},
+         #{item.category, jdbcType=BIGINT},
+         #{item.defaultValue, jdbcType=VARCHAR},
+         #{item.sort, jdbcType=INTEGER},
+         #{item.enumId, jdbcType=BIGINT},
+         #{item.regionUrl, jdbcType=VARCHAR},
+         #{item.description, jdbcType=VARCHAR},
+         #{item.absoluteField, jdbcType=VARCHAR},
+         #{item.status, jdbcType=INTEGER},
+         #{item.source, jdbcType=INTEGER},
+         #{item.sField, jdbcType=VARCHAR},
+         #{item.gField, jdbcType=VARCHAR},
+         #{item.creationDate, jdbcType=TIMESTAMP},
+         #{item.createdBy, jdbcType=BIGINT},
+         #{item.lastUpdateDate, jdbcType=TIMESTAMP},
+         #{item.lastUpdatedBy, jdbcType=BIGINT}
+        )
+        </foreach>
+    </insert>
+
+    <update id="updateList">
+        <foreach collection="list" item="item">
+            update tpl_data_template_item_t
+            <set>
+                <if test='item.parentId != null'>
+                    parent_id = #{item.parentId, jdbcType=BIGINT},
+                </if>
+                <if test='item.templateId != null'>
+                    template_id = #{item.templateId, jdbcType=BIGINT},
+                </if>
+                <if test='item.title != null'>
+                    title = #{item.title, jdbcType=VARCHAR},
+                </if>
+                <if test='item.field != null'>
+                    field = #{item.field, jdbcType=VARCHAR},
+                </if>
+                <if test='item.category != null'>
+                    category = #{item.category, jdbcType=BIGINT},
+                </if>
+                <if test='item.defaultValue != null'>
+                    default_value = #{item.defaultValue, jdbcType=VARCHAR},
+                </if>
+                <if test='item.sort != null'>
+                    sort = #{item.sort, jdbcType=INTEGER},
+                </if>
+                <if test='item.enumId != null'>
+                    enum_id = #{item.enumId, jdbcType=BIGINT},
+                </if>
+                <if test="item.regionUrl != null">
+                    region_url = #{item.regionUrl, jdbcType=VARCHAR},
+                </if>
+                <if test='item.description != null'>
+                    description = #{item.description, jdbcType=VARCHAR},
+                </if>
+                <if test="item.absoluteField != null">
+                    absolute_field = #{item.absoluteField, jdbcType=VARCHAR},
+                </if>
+                <if test='item.status != null'>
+                    status = #{item.status, jdbcType=INTEGER},
+                </if>
+                <if test='item.source != null'>
+                    source = #{item.source, jdbcType=INTEGER},
+                </if>
+                <if test='item.gField != null'>
+                    g_field = #{item.gField, jdbcType=VARCHAR},
+                </if>
+                <if test='item.sField != null'>
+                    s_field = #{item.sField, jdbcType=VARCHAR},
+                </if>
+                <if test='item.lastUpdatedBy != null'>
+                    last_updated_by = #{item.lastUpdatedBy, jdbcType=BIGINT},
+                </if>
+                <if test='item.lastUpdateDate != null'>
+                    last_update_date = #{item.lastUpdateDate, jdbcType=TIMESTAMP},
+                </if>
+            </set>
+            where id = #{item.id, jdbcType=BIGINT};
+        </foreach>
+    </update>
+
+    <delete id="deleteList">
+        delete from tpl_data_template_item_t
+        where id in
+        <foreach collection="list" separator="," item="item" open="(" close=")">
+            #{item, jdbcType=BIGINT}
+        </foreach>
+    </delete>
+</mapper>
