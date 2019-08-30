@@ -16,9 +16,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import javax.websocket.server.PathParam;
-import java.util.List;
 
 @RestController
 @RequestMapping("/formTemplate/v1")
@@ -70,32 +68,6 @@ public class FormTemplateController {
 
         return RespVOBuilder.success(formTemplate);
     }
-
-    @RequestMapping(value="/findFamilyTemplate/{code}", method=RequestMethod.GET)
-    @Operation(value = "findFamilyTemplate", desc = "查询家庭成员模板")
-    @ApiOperation("查询家庭成员模板")
-    public RespVO<FormTemplate> findFamilyTemplate(@PathVariable String code){
-        FormTemplate template = new FormTemplate();
-        template.setTemplateCode(code);
-        FormTemplate formTemplate = formTemplateService.find(template);
-        List<FormTemplateItem> items = formTemplate.getItems();
-        for (FormTemplateItem item : items) {
-            Integer category = item.getCategory();
-            if(category==11){
-                List<FormTemplateItem> list = item.getItems();
-                for (FormTemplateItem formTemplateItem : list) {
-                    formTemplateItem.setParentId(-1L);
-                }
-                formTemplate.setItems(list);
-                break;
-            }
-        }
-        return RespVOBuilder.success(formTemplate);
-    }
-
-
-
-
 
 
     @RequestMapping(value="/insert", method=RequestMethod.PUT)
