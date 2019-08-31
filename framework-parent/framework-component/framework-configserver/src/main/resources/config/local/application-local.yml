@@ -158,3 +158,9 @@ fpfile:
   url:  http://localhost:50010/survey/api-file/file/fpfile/download
 
 
+sso:
+  name: sso-server
+  url_prefix: http://t.weather.sojson.com/api/weather
+
+
+

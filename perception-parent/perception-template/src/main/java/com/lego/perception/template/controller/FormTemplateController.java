@@ -7,7 +7,6 @@ import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
 import com.lego.framework.template.model.entity.FormTemplate;
-import com.lego.framework.template.model.entity.FormTemplateItem;
 import com.lego.perception.template.service.IFormTemplateService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;

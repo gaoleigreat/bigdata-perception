@@ -13,10 +13,12 @@ import com.lego.framework.base.annotation.Resource;
 import com.lego.framework.base.utils.HeaderUtils;
 import com.lego.framework.base.utils.HttpUtils;
 import com.lego.framework.event.log.LogSender;
+import com.lego.framework.sso.SsoClient;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -42,10 +44,14 @@ import java.util.UUID;
 @RequestMapping(DictConstant.Path.USER)
 @Api(value = "UserController", description = "用户管理")
 @Resource(value = "user", desc = "用户管理")
+@Slf4j
 public class UserController {
 
     @Autowired
     private AuthClient authClient;
+
+    @Autowired
+    private SsoClient ssoClient;
 
 
     @ApiOperation(value = "用户登录", httpMethod = "POST", notes = "用户登录")
@@ -68,6 +74,8 @@ public class UserController {
             return "redirect:http://baidu.com";
         }
         // TODO 校验注册令牌
+        String ticketResult = ssoClient.redirectSsoService("101030100");
+        log.info("校验 sso 票据:{}",ticketResult);
         // 创建本地会话
         Cookie cookie = new Cookie("PERCEPTION_TOKEN", UUID.randomUUID().toString().replace("-", ""));
         response.addCookie(cookie);
@@ -96,6 +104,5 @@ public class UserController {
 
         return authClient.delete(token, deviceType);
     }
-
 
 }

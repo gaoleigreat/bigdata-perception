@@ -2,6 +2,8 @@ package com.lego.framework.base.filter;
 
 import com.alibaba.fastjson.JSONObject;
 import com.framework.common.sdto.HeaderVo;
+import com.framework.common.sdto.RespVO;
+import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.base.utils.HttpUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
@@ -34,22 +36,8 @@ public class SurveyResponseBodyAdvice implements ResponseBodyAdvice<Object> {
 
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
-        try {
-            ServletServerHttpRequest ssReq = (ServletServerHttpRequest) request;
-            ServletServerHttpResponse ssResp = (ServletServerHttpResponse) response;
-            HttpServletRequest req = ssReq.getServletRequest();
-            HttpServletResponse resp = ssResp.getServletResponse();
-            String headers = HttpUtils.getHeaderVo(req);
-            if (!StringUtils.isEmpty(headers)) {
-                HeaderVo headerVo = JSONObject.parseObject(headers, HeaderVo.class);
-                resp.setHeader("resp_time", System.currentTimeMillis() + "");
-                resp.setHeader("token", headerVo.getToken());
-                resp.setHeader("req_time", headerVo.getTime());
-                resp.setHeader("req_url", req.getRequestURI());
-            }
-        } catch (Exception e) {
-            log.error("error:{}", e);
-        }
         return body;
     }
+
+
 }

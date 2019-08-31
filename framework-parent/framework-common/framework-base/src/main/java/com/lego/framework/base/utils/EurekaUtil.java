@@ -31,11 +31,12 @@ public class EurekaUtil {
         String url = "http://" + eurekaIp + ":" + eurekaPort + "/eureka/apps/" + servicename;
         OkHttpClient okHttpClient = new OkHttpClient();
         Request request = new Request.Builder()
-                .url(url)//请求接口。如果需要传参拼接到接口后面。
+                //请求接口。如果需要传参拼接到接口后面。
+                .url(url)
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/xml")
                 .get()
-                .build();//创建Request 对象
+                .build();
         Response response;
         try {
             response = okHttpClient.newCall(request).execute();
@@ -66,7 +67,8 @@ public class EurekaUtil {
         String url = "http://" + eurekaIp + ":" + eurekaPort + "/eureka/apps/" + servicename;
         OkHttpClient okHttpClient = new OkHttpClient();
         Request request = new Request.Builder()
-                .url(url)//请求接口。如果需要传参拼接到接口后面。
+                //请求接口。如果需要传参拼接到接口后面。
+                .url(url)
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/xml")
                 .get()

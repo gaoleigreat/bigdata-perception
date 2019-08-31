@@ -19,12 +19,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import javax.websocket.server.PathParam;
-import java.util.ArrayList;
-import java.util.List;
+
 @RestController
 @RequestMapping("/dataTemplate/v1")
 @Resource(value = "dataTemplate", desc = "数据模板管理")
-@Api(tags = "dataTemplate",description ="数据模板管理" )
+@Api(tags = "dataTemplate", description = "数据模板管理")
 @Slf4j
 public class DataTemplateController {
 
@@ -63,27 +62,10 @@ public class DataTemplateController {
     @RequestMapping(value = "/findByCode/{code}", method = RequestMethod.GET)
     @Operation(value = "find", desc = "查询")
     @ApiOperation("查询模板详情")
-    public RespVO<DataTemplate> findByCode(@PathVariable String code,
-                                           @RequestParam(required = false, defaultValue = "0") Integer type) {
+    public RespVO<DataTemplate> findByCode(@PathVariable String code) {
         DataTemplate template = new DataTemplate();
         template.setTemplateCode(code);
         DataTemplate dataTemplate = dataTemplateService.find(template);
-        if (type == 1) {
-            if (dataTemplate != null) {
-                List<DataTemplateItem> dataTemplateItems = new ArrayList<>();
-                List<DataTemplateItem> items = dataTemplate.getItems();
-                if (items != null) {
-                    for (DataTemplateItem item : items) {
-                        String field = item.getField();
-                        if (!field.equals("k")) {
-                            dataTemplateItems.add(item);
-                        }
-                    }
-                }
-                dataTemplate.setItems(dataTemplateItems);
-            }
-        }
-
         return RespVOBuilder.success(dataTemplate);
     }
 
