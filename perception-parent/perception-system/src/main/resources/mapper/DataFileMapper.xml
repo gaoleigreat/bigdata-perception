@@ -3,7 +3,7 @@
 <mapper namespace="com.lego.perception.system.mapper.DataFileMapper">
 
     <sql id="find_columns">
-		id as id, name as name, file_type as fileType,  project_id as project_id,file_url as file_url, creation_date as creationDate,
+		id as id, name as name, file_type as fileType,  project_id as project_id,file_url as file_url, previewUrl as preview_url, creation_date as creationDate,
 		created_by as createdBy, last_update_date as lastUpdateDate, last_updated_by as lastUpdatedBy
 	</sql>
 
@@ -26,7 +26,9 @@
         <if test='fileUrl != null and parentCode != ""'>
             and file_url = #{fileUrl, jdbcType=VARCHAR}
         </if>
-
+        <if test='previewUrl != null and parentCode != ""'>
+            and preview_url = #{previewUrl, jdbcType=VARCHAR}
+        </if>
         <if test="deleteFlag != null">
             and delete_flag = #{deleteFlag, jdbcType=INTEGER}
         </if>
@@ -46,7 +48,7 @@
 
     <insert id="insertList">
         insert into tpl_data_file
-        (id, 'name', file_type, project_id,file_url, creation_date, created_by, last_updated_by)
+        (id, 'name', file_type, project_id,file_url,preview_url, creation_date, created_by, last_updated_by)
         values
         <foreach collection="list" item="item" separator=",">
             (
@@ -55,6 +57,7 @@
             #{item.fileType, jdbcType=VARCHAR},
             #{item.projectId, jdbcType=BIGINT},
             #{item.fileUrl, jdbcType=VARCHAR},
+            #{item.previewUrl, jdbcType=VARCHAR},
             #{item.creationDate, jdbcType=TIMESTAMP},
             #{item.createdBy, jdbcType=VARCHAR},
             #{item.lastUpdatedBy, jdbcType=TIMESTAMP}
@@ -72,6 +75,7 @@
                 file_type= #{item.fileType, jdbcType=VARCHAR},
                 project_id = #{item.projectId, jdbcType=BIGINT},
                 file_url = #{item.fileUrl, jdbcType=VARCHAR},
+                preview_url = #{item.previewUrl, jdbcType=VARCHAR},
                 last_updated_by = #{item.lastUpdatedBy, jdbcType=VARCHAR}
 
             </set>
@@ -87,4 +91,18 @@
             #{item, jdbcType=BIGINT}
         </foreach>
     </update>
+
+
+
+
+    <select id="queryList" resultType="com.lego.framework.system.model.entity.DataFile">
+        SELECT
+        <include refid="find_columns"/>
+        from
+        tpl_data_file
+        <include refid="condition"/>
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
 </mapper>

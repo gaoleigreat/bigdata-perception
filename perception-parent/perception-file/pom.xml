@@ -72,7 +72,6 @@
         </dependency>
 
 
-
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-aws-context</artifactId>
@@ -102,6 +101,22 @@
             <artifactId>framework-base</artifactId>
         </dependency>
 
+
+        <!--文件轉換-->
+        <dependency>
+            <groupId>com.aspose</groupId>
+            <artifactId>aspose-cad</artifactId>
+            <version>19.7</version>
+            <classifier>javadoc</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>com.aspose</groupId>
+            <artifactId>aspose-cad</artifactId>
+            <version>19.7</version>
+
+        </dependency>
+
     </dependencies>
 
 
@@ -118,31 +133,29 @@
                     </execution>
                 </executions>
             </plugin>
-          <!--  <plugin>
-                <groupId>com.spotify</groupId>
-                <artifactId>docker-maven-plugin</artifactId>
-                <version>1.0.0</version>
-                <configuration>
-                    <imageName>${project.artifactId}</imageName>
-                    <imageTags>
-                        <imageTag>latest</imageTag>
-                    </imageTags>
-                    <dockerDirectory>${project.basedir}/src/main/docker</dockerDirectory>
-                    <resources>
-                        <resource>
-                            <targetPath>/</targetPath>
-                            <directory>${project.build.directory}</directory>
-                            <include>${project.build.finalName}.jar</include>
-                        </resource>
-                    </resources>
-                </configuration>
-            </plugin>-->
-
+            <!--  <plugin>
+                  <groupId>com.spotify</groupId>
+                  <artifactId>docker-maven-plugin</artifactId>
+                  <version>1.0.0</version>
+                  <configuration>
+                      <imageName>${project.artifactId}</imageName>
+                      <imageTags>
+                          <imageTag>latest</imageTag>
+                      </imageTags>
+                      <dockerDirectory>${project.basedir}/src/main/docker</dockerDirectory>
+                      <resources>
+                          <resource>
+                              <targetPath>/</targetPath>
+                              <directory>${project.build.directory}</directory>
+                              <include>${project.build.finalName}.jar</include>
+                          </resource>
+                      </resources>
+                  </configuration>
+              </plugin>-->
 
 
         </plugins>
     </build>
-
 
 
 </project>

@@ -130,6 +130,9 @@ public class DataFileServiceImpl implements IDataFileService {
             if (dataFile.getFileUrl() != null) {
                 queryWrapper.eq("file_url", dataFile.getFileUrl());
             }
+            if (dataFile.getPreviewUrl() != null) {
+                queryWrapper.eq("preview_url", dataFile.getPreviewUrl());
+            }
             if (dataFile.getFileType() != null) {
                 queryWrapper.eq("file_type", dataFile.getFileType());
             }

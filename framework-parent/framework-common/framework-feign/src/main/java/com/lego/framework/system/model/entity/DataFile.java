@@ -1,5 +1,6 @@
 package com.lego.framework.system.model.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,7 @@ import java.util.Date;
 @TableName("tpl_data_file")
 public class DataFile {
     @ApiModelProperty("id")
+    @TableId
     private Long id;
 
     @ApiModelProperty("文件名称")
@@ -32,6 +34,10 @@ public class DataFile {
 
     @ApiModelProperty("文件URl")
     private String fileUrl;
+
+
+    @ApiModelProperty("文件URl")
+    private String previewUrl;
 
     @ApiModelProperty("创建时间")
     private Date creationDate;
