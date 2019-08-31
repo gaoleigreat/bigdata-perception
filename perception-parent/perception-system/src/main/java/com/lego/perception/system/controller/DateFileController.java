@@ -130,11 +130,7 @@ public class DateFileController {
             } else {
                 dataFile.setProjectId(1L);
             }
-            Long userId = Long.parseLong(req.getHeader(HttpConsts.USER_ID));
-            dataFile.setCreatedBy(userId);
-            dataFile.setLastUpdatedBy(userId);
-            dataFile.setCreationDate(new Date());
-            dataFile.setLastUpdateDate(new Date());
+
 
             if (result.get("fileName").toString().endsWith("dwg") || result.get("fileName").toString().endsWith("dxf") || result.get("fileName").toString().endsWith("dwt")) {
                 File file = new File(result.get("fileName").toString());
