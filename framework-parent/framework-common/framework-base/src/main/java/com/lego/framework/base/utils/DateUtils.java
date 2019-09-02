@@ -451,19 +451,19 @@ public class DateUtils {
     }
 
 
-    public static LocalDateTime parseStringToDateTime(String time, String format) {
+    public static LocalDateTime string2DateTime(String time, String format) {
         DateTimeFormatter df = DateTimeFormatter.ofPattern(format);
         return LocalDateTime.parse(time, df);
     }
 
 
-    public static LocalDateTime dateToLocalDateTime(Date date) {
+    public static LocalDateTime date2LocalDateTime(Date date) {
         ZoneId zoneId = ZoneId.systemDefault();
         return LocalDateTime.ofInstant(date.toInstant(), zoneId);
     }
 
 
-    public static Date localDateTimeToDate(LocalDateTime localDateTime) {
+    public static Date localDateTime2Date(LocalDateTime localDateTime) {
         ZoneId zoneId = ZoneId.systemDefault();
         ZonedDateTime zdt = localDateTime.atZone(zoneId);
         return Date.from(zdt.toInstant());

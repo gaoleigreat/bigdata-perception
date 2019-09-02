@@ -15,13 +15,16 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
+/**
+ * @author yanglf
+ */
 @Service(value = "dataTemplateHistoryServiceImpl")
 @Slf4j
 public class DataTemplateHistoryServiceImpl implements IHistoryTemplateService<DataTemplateHistory> {
 
     @Autowired
     @Qualifier(value = "dataTemplateItemService")
-    private ITemplateItemService dataTemplateItemService;
+    private ITemplateItemService<DataTemplateItem> dataTemplateItemService;
 
     @Autowired
     private DataTemplateHistoryMapper dataTemplateHistoryMapper;
@@ -30,7 +33,7 @@ public class DataTemplateHistoryServiceImpl implements IHistoryTemplateService<D
     public DataTemplateHistory find(String code, String tag) {
         DataTemplateHistory result = null;
         if(StringUtils.isEmpty(code) || StringUtils.isEmpty(tag)){
-            return result;
+            return null;
         }
 
         DataTemplateHistory queryParam = new DataTemplateHistory();
@@ -71,7 +74,7 @@ public class DataTemplateHistoryServiceImpl implements IHistoryTemplateService<D
 
         dataTemplateHistoryMapper.save(dataTemplateHistory);
 
-        if(CollectionUtils.isEmpty(dataTemplateHistory.getItems())){
+        if(!CollectionUtils.isEmpty(dataTemplateHistory.getItems())){
             List<DataTemplateItem> items = dataTemplateItemService.convertTree2List(dataTemplateHistory.getId(), dataTemplateHistory.getItems());
             dataTemplateHistoryMapper.insertItems(items);
         }

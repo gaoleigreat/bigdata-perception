@@ -3,6 +3,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.lego.framework.config.BaseModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @TableName(value = "tpl_role_t")
 public class Role extends BaseModel {
 

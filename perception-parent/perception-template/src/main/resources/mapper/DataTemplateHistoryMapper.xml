@@ -25,7 +25,7 @@
     <select id="findList" parameterType="com.lego.framework.template.model.entity.DataTemplateHistory"
             resultType="com.lego.framework.template.model.entity.DataTemplateHistory">
         select <include refid="find_columns"></include>
-        from fp_data_template_tag_t
+        from tpl_data_template_tag_t
         <where>
             <include refid="condition"></include>
         </where>
@@ -84,18 +84,19 @@
     <select id="findItems" parameterType="com.lego.framework.template.model.entity.DataTemplateItem"
             resultType="com.lego.framework.template.model.entity.DataTemplateItem">
         select <include refid="find_item_columns"></include>
-        from tpl_data_template_tag_t
+        from tpl_data_template_item_tag_t
         <where>
             <include refid="item_condition"></include>
         </where>
     </select>
 
     <insert id="insertItems">
-        insert into tpl_data_template_tag_t
-        (id, parent_id, template_id, title, field, category, default_value, sort, enum_id, description, status, source, s_field,
+        insert into tpl_data_template_item_tag_t
+        (id, parent_id, template_id, title, field, category, default_value,
+         sort, enum_id, description, status, source, s_field,
         g_field, creation_date, created_by, last_update_date, last_updated_by)
         values
-        <foreach collection="list" separator="," item="item">
+        <foreach collection="list" separator="," item="item" index="i">
             (
             #{item.id, jdbcType=BIGINT},
             #{item.parentId, jdbcType=BIGINT},
@@ -108,7 +109,7 @@
             #{item.enumId, jdbcType=BIGINT},
             #{item.description, jdbcType=VARCHAR},
             #{item.status, jdbcType=INTEGER},
-            #{item.source, jdbcType=INTEGER},
+            #{item.source, jdbcType=VARCHAR},
             #{item.sField, jdbcType=VARCHAR},
             #{item.gField, jdbcType=VARCHAR},
             #{item.creationDate, jdbcType=TIMESTAMP},

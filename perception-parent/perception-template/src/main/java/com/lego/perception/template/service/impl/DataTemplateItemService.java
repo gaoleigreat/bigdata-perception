@@ -154,6 +154,7 @@ public class DataTemplateItemService implements ITemplateItemService<DataTemplat
                 item.setTemplateId(templateId);
                 item.setId(itemId++);
                 item.setParentId(parentId);
+                item.setCreateInfo();
                 targetList.add(item);
             }
 
@@ -184,10 +185,8 @@ public class DataTemplateItemService implements ITemplateItemService<DataTemplat
         ValidateResult v = new ValidateResult();
         if(null == item.getSource()){
             v.setResult(false);
-            v.setMsg("不能为空");
+            v.setMsg("字段来源不能为空");
             return v;
-        }else{
-            //来源不为空，暂不校验
         }
         v.setResult(true);
         return v;

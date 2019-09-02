@@ -102,7 +102,7 @@ public class DataTemplateServiceImpl implements IDataTemplateService {
         dataTemplate.setCreateInfo();
 
         //新增模板
-        dataTemplateMapper.insert(dataTemplate);
+        dataTemplateMapper.save(dataTemplate);
 
         //新增模板数据项
         if(!CollectionUtils.isEmpty(dataTemplate.getItems())){

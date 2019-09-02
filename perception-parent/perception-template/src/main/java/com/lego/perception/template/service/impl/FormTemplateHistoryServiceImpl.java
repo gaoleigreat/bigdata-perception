@@ -14,6 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import java.util.List;
 
+/**
+ * @author yanglf
+ */
 @Service(value = "formTemplateHistoryServiceImpl")
 @Slf4j
 public class FormTemplateHistoryServiceImpl implements IHistoryTemplateService<FormTemplateHistory> {
@@ -21,7 +24,7 @@ public class FormTemplateHistoryServiceImpl implements IHistoryTemplateService<F
 
     @Autowired
     @Qualifier(value = "formTemplateItemServiceImpl")
-    private ITemplateItemService formTemplateItemService;
+    private ITemplateItemService<FormTemplateItem> formTemplateItemService;
 
     @Autowired
     private FormTemplateHistoryMapper formTemplateHistoryMapper;
@@ -69,9 +72,11 @@ public class FormTemplateHistoryServiceImpl implements IHistoryTemplateService<F
             return RespVOBuilder.failure("模板名称不能为空");
         }
 
+        formTemplateHistory.setCreateInfo();
+
         formTemplateHistoryMapper.save(formTemplateHistory);
 
-        if(CollectionUtils.isEmpty(formTemplateHistory.getItems())){
+        if(!CollectionUtils.isEmpty(formTemplateHistory.getItems())){
             List<FormTemplateItem> items = formTemplateItemService.convertTree2List(formTemplateHistory.getId(), formTemplateHistory.getItems());
             formTemplateHistoryMapper.insertItems(items);
         }

@@ -32,10 +32,12 @@ public class BaseModel {
     }
 
     public void setCreateInfo() {
-
+        Date currentDate=new Date();
+        this.creationDate=currentDate;
+        this.lastUpdateDate=currentDate;
     }
 
     public void setUpdateInfo() {
-
+        this.lastUpdateDate=new Date();
     }
 }

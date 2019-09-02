@@ -2,6 +2,7 @@ package com.lego.perception.template.mapper;
 import com.framework.mybatis.mapper.Mapper;
 import com.lego.framework.template.model.entity.DataTemplateHistory;
 import com.lego.framework.template.model.entity.DataTemplateItem;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -35,5 +36,5 @@ public interface DataTemplateHistoryMapper extends Mapper<DataTemplateHistory> {
      * @param dataTemplateItemList
      * @return
      */
-    Integer insertItems(List<DataTemplateItem> dataTemplateItemList);
+    Integer insertItems(@Param(value = "list") List<DataTemplateItem> dataTemplateItemList);
 }

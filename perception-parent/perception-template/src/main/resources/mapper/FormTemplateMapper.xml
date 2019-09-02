@@ -64,7 +64,7 @@
         </where>
     </select>
 
-    <insert id="insert">
+    <insert id="save">
         insert into tpl_form_template_t
         (template_name, template_code, description, category, permission, data_template_id, creation_date, created_by,last_update_date, last_updated_by)
         values

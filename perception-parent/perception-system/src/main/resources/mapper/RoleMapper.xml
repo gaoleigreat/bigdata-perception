@@ -71,7 +71,7 @@
         </where>
     </select>
 
-    <insert id="insertList">
+    <insert id="insertList" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
         insert into tpl_role_t
         (role_name, scope, status, creation_date, created_by, last_update_date, last_updated_by)
         values

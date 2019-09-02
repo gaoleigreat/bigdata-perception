@@ -37,7 +37,7 @@
         </where>
     </select>
 
-    <insert id="insert" useGeneratedKeys="true" keyProperty="id"
+    <insert id="save" useGeneratedKeys="true" keyProperty="id"
             parameterType="com.lego.framework.template.model.entity.FormTemplateHistory">
         insert into tpl_form_template_tag_t
         (id, tag, template_name, template_code, description, category, data_template_id, creation_date, created_by,last_update_date, last_updated_by)
