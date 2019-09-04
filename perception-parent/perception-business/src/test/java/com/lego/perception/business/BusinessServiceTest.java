@@ -72,9 +72,9 @@ public class BusinessServiceTest {
         formTemplate.setItems(items);
 
         Map<String, Object> mp1 = new HashMap<>();
-        mp1.put("name", "盾构机1");
+        mp1.put("name", "盾构机2");
         mp1.put("type", 1);
-        mp1.put("model", "dg-001");
+        mp1.put("model", "dg-002");
         mp1.put("creation_date", new Date());
         RespVO respVO = iBusinessService.insertBusinessData(formTemplate, mp1);
         log.info("respVO:{}", respVO);
