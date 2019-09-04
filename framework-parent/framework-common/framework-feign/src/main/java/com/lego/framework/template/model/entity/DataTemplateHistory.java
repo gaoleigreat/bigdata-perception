@@ -1,5 +1,4 @@
 package com.lego.framework.template.model.entity;
-
 import io.swagger.annotations.ApiModelProperty;
 
 public class DataTemplateHistory extends DataTemplate{

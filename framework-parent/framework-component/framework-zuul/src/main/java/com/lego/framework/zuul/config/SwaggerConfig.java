@@ -40,7 +40,7 @@ public class SwaggerConfig {
             resources.add(createResource("日志服务", "log-service"));
             resources.add(createResource("用户服务", "user-service"));
             resources.add(createResource("模板服务", "template-service"));
-
+            resources.add(createResource("业务服务", "business-service"));
 
             return resources;
         };

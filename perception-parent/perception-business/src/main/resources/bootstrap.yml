@@ -1,0 +1,13 @@
+server:
+  port: 18070
+  servlet:
+    context-path: /
+spring:
+  application:
+    name: business-service
+  profiles:
+    active: local
+
+
+application:
+  description: 业务服务

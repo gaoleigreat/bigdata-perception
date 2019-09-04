@@ -20,6 +20,7 @@
         <module>perception-log</module>
         <module>perception-file-online-preview</module>
         <module>perception-template</module>
+        <module>perception-business</module>
     </modules>
 
 </project>

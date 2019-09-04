@@ -1,0 +1,493 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lego.perception.system.mapper.SystemMapper">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.lego.framework.system.model.entity.TbSystem" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="code" column="code"/>
+        <result property="name" column="name"/>
+        <result property="host" column="host"/>
+        <result property="port" column="port"/>
+        <result property="desc" column="desc"/>
+        <result property="creationDate" column="creation_date"/>
+        <result property="createdBy" column="created_by"/>
+    </resultMap>
+
+    <!--
+          选择性插入
+        -->
+    <sql id="Base_Insert_Selective">
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="code != null">
+                code,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="host != null">
+                host,
+            </if>
+            <if test="port != null">
+                port,
+            </if>
+            <if test="desc != null">
+                desc,
+            </if>
+            <if test="creationDate != null">
+                creation_date,
+            </if>
+            <if test="createdBy != null">
+                created_by
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="code != null">
+                #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="host != null">
+                #{host,jdbcType=VARCHAR},
+            </if>
+            <if test="port != null">
+                #{port,jdbcType=BIGINT},
+            </if>
+            <if test="desc != null">
+                #{desc,jdbcType=VARCHAR},
+            </if>
+            <if test="creationDate != null">
+                #{creationDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createdBy != null">
+                #{createdBy,jdbcType=BIGINT}
+            </if>
+        </trim>
+    </sql>
+
+    <!--
+      数据库表的基本查询列名集合
+    -->
+    <sql id="Base_Column_List">
+        id, code, name, host, port, desc, creation_date, created_by
+    </sql>
+
+    <!--
+        Where子句
+      -->
+    <sql id="Base_Query_Where">
+        <if test="id != null">
+            and id = #{id,jdbcType=BIGINT}
+        </if>
+        <if test="code != null">
+            and code = #{code,jdbcType=VARCHAR}
+        </if>
+        <if test="name != null">
+            and name = #{name,jdbcType=VARCHAR}
+        </if>
+        <if test="host != null">
+            and host = #{host,jdbcType=VARCHAR}
+        </if>
+        <if test="port != null">
+            and port = #{port,jdbcType=BIGINT}
+        </if>
+        <if test="desc != null">
+            and desc = #{desc,jdbcType=VARCHAR}
+        </if>
+        <if test="creationDate != null">
+            and creation_date = #{creationDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="createdBy != null">
+            and created_by = #{createdBy,jdbcType=BIGINT}
+        </if>
+    </sql>
+
+    <!--
+        基本更新字段
+    -->
+    <sql id="Base_Update_Column">
+        <set>
+            <if test="id != null">
+                id = #{id,jdbcType=BIGINT},
+            </if>
+            <if test="code != null">
+                code = #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="host != null">
+                host = #{host,jdbcType=VARCHAR},
+            </if>
+            <if test="port != null">
+                port = #{port,jdbcType=BIGINT},
+            </if>
+            <if test="desc != null">
+                desc = #{desc,jdbcType=VARCHAR},
+            </if>
+            <if test="creationDate != null">
+                creation_date = #{creationDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createdBy != null">
+                created_by = #{createdBy,jdbcType=BIGINT}
+            </if>
+        </set>
+    </sql>
+
+    <!--
+        分页查询数据库表
+      -->
+    <select id="selectPaged" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tpl_system
+    </select>
+
+    <!--
+      根据主键查询数据库表
+    -->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tpl_system
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+
+    <!--
+      根据主键删除数据库表中的记录
+    -->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete FROM tpl_system
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <!--
+      添加一条记录到数据库表中
+    -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.lego.framework.system.model.entity.TbSystem">
+        insert into tpl_system
+        (<include refid="Base_Column_List"/>)
+        values (
+        <if test="id != null">
+            #{id,jdbcType=BIGINT},
+        </if>
+        <if test="code != null">
+            #{code,jdbcType=VARCHAR},
+        </if>
+        <if test="name != null">
+            #{name,jdbcType=VARCHAR},
+        </if>
+        <if test="host != null">
+            #{host,jdbcType=VARCHAR},
+        </if>
+        <if test="port != null">
+            #{port,jdbcType=BIGINT},
+        </if>
+        <if test="desc != null">
+            #{desc,jdbcType=VARCHAR},
+        </if>
+        <if test="creationDate != null">
+            #{creationDate,jdbcType=TIMESTAMP},
+        </if>
+        <if test="createdBy != null">
+            #{createdBy,jdbcType=BIGINT}
+        </if>
+        )
+    </insert>
+
+    <!--
+     有选择的添加一条记录到数据库表中
+   -->
+    <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.lego.framework.system.model.entity.TbSystem">
+        insert into tpl_system
+        <include refid="Base_Insert_Selective"/>
+    </insert>
+
+    <!--
+      有选择的可忽略添加一条记录到数据库表中
+    -->
+    <insert id="insertSelectiveIgnore" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.lego.framework.system.model.entity.TbSystem">
+        insert ignore into tpl_system
+        <include refid="Base_Insert_Selective"/>
+    </insert>
+
+    <!--
+      根据主键有选择的更新数据库表
+    -->
+    <update id="updateByPrimaryKeySelective" parameterType="com.lego.framework.system.model.entity.TbSystem">
+        update tpl_system
+        <include refid="Base_Update_Column"></include>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+
+    <!--
+      根据主键更新数据库表
+    -->
+    <update id="updateByPrimaryKey" parameterType="com.lego.framework.system.model.entity.TbSystem">
+        update tpl_system
+        <set>
+            <if test="id != null">
+                id = #{id,jdbcType=BIGINT},
+            </if>
+            <if test="code != null">
+                code = #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="host != null">
+                host = #{host,jdbcType=VARCHAR},
+            </if>
+            <if test="port != null">
+                port = #{port,jdbcType=BIGINT},
+            </if>
+            <if test="desc != null">
+                desc = #{desc,jdbcType=VARCHAR},
+            </if>
+            <if test="creationDate != null">
+                creation_date = #{creationDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createdBy != null">
+                created_by = #{createdBy,jdbcType=BIGINT}
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <!--
+      批量添加记录到数据库表中
+    -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into tpl_system
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id, code, name, host, port, desc, creation_date, created_by
+        </trim>
+        values
+        <foreach collection="list" index="index" item="item" separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{item.id,jdbcType=BIGINT}, #{item.code,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR},
+                #{item.host,jdbcType=VARCHAR}, #{item.port,jdbcType=BIGINT}, #{item.desc,jdbcType=VARCHAR},
+                #{item.creationDate,jdbcType=TIMESTAMP}, #{item.createdBy,jdbcType=BIGINT}
+            </trim>
+        </foreach>
+    </insert>
+
+    <!--
+      根据主键批量更新数据库表中的记录
+    -->
+    <update id="batchUpdate" parameterType="java.util.List">
+        <foreach collection="list" index="index" item="item" separator=";">
+            update tpl_system
+            <set>
+                <trim suffixOverrides=",">
+                    <if test="item.id != null">
+                        id = #{item.id,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.code != null">
+                        code = #{item.code,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.name != null">
+                        name = #{item.name,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.host != null">
+                        host = #{item.host,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.port != null">
+                        port = #{item.port,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.desc != null">
+                        desc = #{item.desc,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.creationDate != null">
+                        creation_date = #{item.creationDate,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.createdBy != null">
+                        created_by = #{item.createdBy,jdbcType=BIGINT}
+                    </if>
+                </trim>
+            </set>
+            <where>
+                <trim suffixOverrides=",">
+                    where id = #{id,jdbcType=BIGINT}
+                </trim>
+            </where>
+        </foreach>
+    </update>
+
+    <!--
+     使用给定的字段名定义Where子句
+   -->
+    <sql id="Identifiers_Array_Conditions">
+        <foreach collection="array" index="index" item="item" separator=" and ">
+            <if test="item == 'id'">
+                id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="item == 'code'">
+                code = #{code,jdbcType=VARCHAR}
+            </if>
+            <if test="item == 'name'">
+                name = #{name,jdbcType=VARCHAR}
+            </if>
+            <if test="item == 'host'">
+                host = #{host,jdbcType=VARCHAR}
+            </if>
+            <if test="item == 'port'">
+                port = #{port,jdbcType=BIGINT}
+            </if>
+            <if test="item == 'desc'">
+                desc = #{desc,jdbcType=VARCHAR}
+            </if>
+            <if test="item == 'creationDate'">
+                creation_date = #{creationDate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="item == 'createdBy'">
+                created_by = #{createdBy,jdbcType=BIGINT}
+            </if>
+        </foreach>
+    </sql>
+
+    <!--
+      存在即更新否则插入
+    -->
+    <update id="upsert" parameterType="com.lego.framework.system.model.entity.TbSystem">
+        insert into tpl_system
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id, code, name, host, port, desc, creation_date, created_by
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{id,jdbcType=BIGINT}, #{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{host,jdbcType=VARCHAR},
+            #{port,jdbcType=BIGINT}, #{desc,jdbcType=VARCHAR}, #{creationDate,jdbcType=TIMESTAMP},
+            #{createdBy,jdbcType=BIGINT}
+        </trim>
+        on duplicate key update
+        <trim suffixOverrides=",">
+            #{id,jdbcType=BIGINT}, #{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{host,jdbcType=VARCHAR},
+            #{port,jdbcType=BIGINT}, #{desc,jdbcType=VARCHAR}, #{creationDate,jdbcType=TIMESTAMP},
+            #{createdBy,jdbcType=BIGINT}
+        </trim>
+    </update>
+
+
+    <!--
+      带有空值检查的存在即更新否则插入
+    -->
+    <update id="upsertSelective" parameterType="com.lego.framework.system.model.entity.TbSystem">
+        insert into tpl_system
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id !=null ">
+                id,
+            </if>
+            <if test="code !=null ">
+                code,
+            </if>
+            <if test="name !=null ">
+                name,
+            </if>
+            <if test="host !=null ">
+                host,
+            </if>
+            <if test="port !=null ">
+                port,
+            </if>
+            <if test="desc !=null ">
+                desc,
+            </if>
+            <if test="creationDate !=null ">
+                creation_date,
+            </if>
+            <if test="createdBy !=null ">
+                created_by
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id !=null ">
+                id = #{id,jdbcType=BIGINT},
+            </if>
+            <if test="code !=null ">
+                code = #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="name !=null ">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="host !=null ">
+                host = #{host,jdbcType=VARCHAR},
+            </if>
+            <if test="port !=null ">
+                port = #{port,jdbcType=BIGINT},
+            </if>
+            <if test="desc !=null ">
+                desc = #{desc,jdbcType=VARCHAR},
+            </if>
+            <if test="creationDate !=null ">
+                creation_date = #{creationDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createdBy !=null ">
+                created_by = #{createdBy,jdbcType=BIGINT}
+            </if>
+        </trim>
+        on duplicate key update
+        <trim suffixOverrides=",">
+            <if test="id !=null ">
+                id = #{id,jdbcType=BIGINT},
+            </if>
+            <if test="code !=null ">
+                code = #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="name !=null ">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="host !=null ">
+                host = #{host,jdbcType=VARCHAR},
+            </if>
+            <if test="port !=null ">
+                port = #{port,jdbcType=BIGINT},
+            </if>
+            <if test="desc !=null ">
+                desc = #{desc,jdbcType=VARCHAR},
+            </if>
+            <if test="creationDate !=null ">
+                creation_date = #{creationDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createdBy !=null ">
+                created_by = #{createdBy,jdbcType=BIGINT}
+            </if>
+        </trim>
+    </update>
+
+    <select id="query" resultMap="BaseResultMap" parameterType="com.lego.framework.system.model.entity.TbSystem">
+        select
+        <include refid="Base_Column_List"/>
+        from tpl_system
+        <where>
+            <include refid="Base_Query_Where"></include>
+        </where>
+    </select>
+
+    <select id="queryTotal" resultType="long">
+        select count(*) from tpl_system
+    </select>
+
+
+    <delete id="deleteBatch">
+        delete from tpl_system where id in
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
