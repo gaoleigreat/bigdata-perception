@@ -85,7 +85,7 @@ public class BusinessServiceTest {
     @Test
     public void testQuery() {
         Map<String, Object> mp1 = new HashMap<>();
-        // mp1.put("name","盾构机1");
+        mp1.put("name", "盾构机1");
         RespVO respVO = iBusinessService.queryBusinessData("tpl_device_info", mp1);
         log.info("respVO:{}", respVO);
         Assert.assertEquals(respVO.getRetCode(), RespConsts.SUCCESS_RESULT_CODE);
