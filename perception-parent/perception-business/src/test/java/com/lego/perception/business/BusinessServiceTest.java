@@ -38,14 +38,14 @@ public class BusinessServiceTest {
         formTemplate.setDescription("tpl_device_info");
         formTemplate.setTemplateName("device_business_01");
         List<FormTemplateItem> items = new ArrayList<>();
-        items.add(getFormTemplateItem(1, 1, "设备名称", "name", 1,null));
+        items.add(getFormTemplateItem(1, 1, "设备名称", "name", 1, null));
 
-        items.add(getFormTemplateItem(9, 2, "设备类型", "type", 1,null));
-        items.add(getFormTemplateItem(2, 1, "设备型号", "model", 1,null));
-        items.add(getFormTemplateItem(9, 1, "当前状态(0-停止运行;1-正则运行)", "status", 1,"0"));
+        items.add(getFormTemplateItem(9, 2, "设备类型", "type", 1, null));
+        items.add(getFormTemplateItem(2, 1, "设备型号", "model", 1, null));
+        items.add(getFormTemplateItem(9, 1, "当前状态(0-停止运行;1-正则运行)", "status", 1, "0"));
 
-        items.add(getFormTemplateItem(3, 2, "创建时间", "creation_date", 1,null));
-        items.add(getFormTemplateItem(9, 2, "创建用户id", "created_by", 1,null));
+        items.add(getFormTemplateItem(3, 2, "创建时间", "creation_date", 1, null));
+        items.add(getFormTemplateItem(9, 2, "创建用户id", "created_by", 1, null));
 
         formTemplate.setItems(items);
         RespVO respVO = iBusinessService.createBusinessTable(formTemplate);
@@ -54,65 +54,42 @@ public class BusinessServiceTest {
     }
 
 
-
     @Test
-    public void  testInsertBusinessData(){
+    public void testInsertBusinessData() {
         FormTemplate formTemplate = new FormTemplate();
         formTemplate.setDescription("tpl_device_info");
         formTemplate.setTemplateName("device_business_01");
         List<FormTemplateItem> items = new ArrayList<>();
-        items.add(getFormTemplateItem(1, 1, "设备名称", "name", 1,null));
+        items.add(getFormTemplateItem(1, 1, "设备名称", "name", 1, null));
 
-        items.add(getFormTemplateItem(9, 2, "设备类型", "type", 1,null));
-        items.add(getFormTemplateItem(2, 1, "设备型号", "model", 1,null));
-        items.add(getFormTemplateItem(9, 1, "当前状态(0-停止运行;1-正则运行)", "status", 1,"0"));
+        items.add(getFormTemplateItem(9, 2, "设备类型", "type", 1, null));
+        items.add(getFormTemplateItem(2, 1, "设备型号", "model", 1, null));
+        items.add(getFormTemplateItem(9, 1, "当前状态(0-停止运行;1-正则运行)", "status", 1, "0"));
 
-        items.add(getFormTemplateItem(3, 2, "创建时间", "creation_date", 1,null));
-        items.add(getFormTemplateItem(9, 2, "创建用户id", "created_by", 1,null));
+        items.add(getFormTemplateItem(3, 2, "创建时间", "creation_date", 1, null));
+        items.add(getFormTemplateItem(9, 2, "创建用户id", "created_by", 1, null));
 
         formTemplate.setItems(items);
 
-        Map<String,Object> mp1=new HashMap<>();
-        mp1.put("name","盾构机1");
-        mp1.put("type",1);
-        mp1.put("model","dg-001");
-        mp1.put("creation_date",new Date());
+        Map<String, Object> mp1 = new HashMap<>();
+        mp1.put("name", "盾构机1");
+        mp1.put("type", 1);
+        mp1.put("model", "dg-001");
+        mp1.put("creation_date", new Date());
         RespVO respVO = iBusinessService.insertBusinessData(formTemplate, mp1);
-        log.info("respVO:{}",respVO);
-        Assert.assertEquals(respVO.getRetCode(),RespConsts.SUCCESS_RESULT_CODE);
+        log.info("respVO:{}", respVO);
+        Assert.assertEquals(respVO.getRetCode(), RespConsts.SUCCESS_RESULT_CODE);
     }
 
 
     @Test
-    public void  testQuery(){
-        FormTemplate formTemplate = new FormTemplate();
-        formTemplate.setDescription("tpl_device_info");
-        formTemplate.setTemplateName("device_business_01");
-        List<FormTemplateItem> items = new ArrayList<>();
-        items.add(getFormTemplateItem(1, 1, "设备名称", "name", 1,null));
-
-        items.add(getFormTemplateItem(9, 2, "设备类型", "type", 1,null));
-        items.add(getFormTemplateItem(2, 1, "设备型号", "model", 1,null));
-        items.add(getFormTemplateItem(9, 1, "当前状态(0-停止运行;1-正则运行)", "status", 1,"0"));
-
-        items.add(getFormTemplateItem(3, 2, "创建时间", "creation_date", 1,null));
-        items.add(getFormTemplateItem(9, 2, "创建用户id", "created_by", 1,null));
-
-        formTemplate.setItems(items);
-        Map<String,Object> mp1=new HashMap<>();
-       // mp1.put("name","盾构机1");
-        RespVO respVO = iBusinessService.queryBusinessData(formTemplate, mp1);
-        log.info("respVO:{}",respVO);
-        Assert.assertEquals(respVO.getRetCode(),RespConsts.SUCCESS_RESULT_CODE);
+    public void testQuery() {
+        Map<String, Object> mp1 = new HashMap<>();
+        // mp1.put("name","盾构机1");
+        RespVO respVO = iBusinessService.queryBusinessData("tpl_device_info", mp1);
+        log.info("respVO:{}", respVO);
+        Assert.assertEquals(respVO.getRetCode(), RespConsts.SUCCESS_RESULT_CODE);
     }
-
-
-
-
-
-
-
-
 
 
     private FormTemplateItem getFormTemplateItem(Integer category,
