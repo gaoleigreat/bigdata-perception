@@ -16,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import javax.websocket.server.PathParam;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/formTemplate/v1")
@@ -92,4 +94,13 @@ public class FormTemplateController {
 
         return formTemplateService.delete(id);
     }
+
+
+    @RequestMapping(value="/queryFields/{code}", method=RequestMethod.GET)
+    @Operation(value = "queryFields", desc = "查询模板字段")
+    @ApiOperation("查询模板字段")
+    public RespVO<List<String>> queryFields(@PathVariable String code){
+        return formTemplateService.queryFields(code);
+    }
+
 }

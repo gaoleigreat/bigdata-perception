@@ -40,21 +40,23 @@ public class GrayAwarePredicate extends AbstractServerPredicate {
     @Override
     public boolean apply(@Nullable PredicateKey predicateKey) {
         // 是否 流量 接入  从 Redis 中获取需要灰度的实例
-        Set<String> grays = stringRedisTemplate.opsForSet().members("gray");
-        assert predicateKey != null;
-        DiscoveryEnabledServer server = (DiscoveryEnabledServer) predicateKey.getServer();
+        try {
+            Set<String> grays = stringRedisTemplate.opsForSet().members("gray");
+            assert predicateKey != null;
+            DiscoveryEnabledServer server = (DiscoveryEnabledServer) predicateKey.getServer();
 
-        if (!CollectionUtils.isEmpty(grays)) {
-            grays = grays.stream().map(String::toUpperCase).collect(Collectors.toSet());
-            if (predicateKey.getServer() instanceof DiscoveryEnabledServer) {
-                // 判断 获取到的实例  是否和请求中的一致  一致 就禁用流量接入
-                return !(grays.contains(server.getInstanceInfo().getInstanceId().toUpperCase()));
-            } else {
-                return !(grays.contains(predicateKey.getServer().getId().toUpperCase()));
+            if (!CollectionUtils.isEmpty(grays)) {
+                grays = grays.stream().map(String::toUpperCase).collect(Collectors.toSet());
+                if (predicateKey.getServer() instanceof DiscoveryEnabledServer) {
+                    // 判断 获取到的实例  是否和请求中的一致  一致 就禁用流量接入
+                    return !(grays.contains(server.getInstanceInfo().getInstanceId().toUpperCase()));
+                } else {
+                    return !(grays.contains(predicateKey.getServer().getId().toUpperCase()));
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-
         return true;
     }
 
@@ -87,10 +89,10 @@ public class GrayAwarePredicate extends AbstractServerPredicate {
 
 
     private List<DiscoveryEnabledServer> getTargetServers(List<Server> eligibleServers, String targetVersion) {
-       /* if (StringUtils.isBlank(targetVersion)) {
+        if (StringUtils.isBlank(targetVersion)) {
             log.debug("客户端未配置目标版本直接路由");
             return null;
-        }*/
+        }
         List<DiscoveryEnabledServer> targetServers = new ArrayList<>();
         for (Server eligibleServer : eligibleServers) {
             if (eligibleServer instanceof DiscoveryEnabledServer) {

@@ -30,6 +30,14 @@ public interface BusinessMapper extends Mapper<BusinessTable> {
 
 
     /**
+     * 查询表是否存在
+     * @param tableName
+     * @return
+     */
+    Integer existTable(@Param(value = "tableName") String tableName);
+
+
+    /**
      * 查询业务数据
      *
      * @param businessTable

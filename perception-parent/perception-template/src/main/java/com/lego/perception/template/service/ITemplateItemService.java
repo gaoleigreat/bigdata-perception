@@ -40,6 +40,14 @@ public interface ITemplateItemService<T> {
      */
     List<T> convertList2Tree(List<T> items);
 
+
+    /**
+     * 提取模板字段
+     * @param items
+     * @return
+     */
+    List<String>  convertList2String(List<T> items);
+
     /**
      * 树形结构转为列表
      * @param items

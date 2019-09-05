@@ -1,4 +1,5 @@
 package com.lego.perception.template.service.impl;
+
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.template.model.entity.FormTemplateItem;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service(value = "formTemplateItemServiceImpl")
 @Slf4j
@@ -34,7 +36,7 @@ public class FormTemplateItemServiceImpl implements ITemplateItemService<FormTem
 
     @Override
     public List<FormTemplateItem> findList(FormTemplateItem item) {
-        if(null == item || (null == item.getParentId() && null == item.getTemplateId())){
+        if (null == item || (null == item.getParentId() && null == item.getTemplateId())) {
             return Collections.EMPTY_LIST;
         }
         return formTemplateItemMapper.findList(item);
@@ -42,16 +44,16 @@ public class FormTemplateItemServiceImpl implements ITemplateItemService<FormTem
 
     @Override
     public RespVO insertList(List<FormTemplateItem> items) {
-        if(CollectionUtils.isEmpty(items)){
+        if (CollectionUtils.isEmpty(items)) {
             return RespVOBuilder.failure("参数缺失");
         }
         //设置id, parentId
         Long itemId = createFormItemId(Long.valueOf(items.size())) - items.size() + 1;
-        for(FormTemplateItem item : items){
-            if(null == item){
+        for (FormTemplateItem item : items) {
+            if (null == item) {
                 continue;
             }
-            if(null == item.getParentId()){
+            if (null == item.getParentId()) {
                 item.setParentId(-1L);
             }
             item.setId(itemId++);
@@ -60,13 +62,13 @@ public class FormTemplateItemServiceImpl implements ITemplateItemService<FormTem
     }
 
     private RespVO insert(List<FormTemplateItem> items) {
-        for(FormTemplateItem item : items){
+        for (FormTemplateItem item : items) {
             ValidateResult v = validateNull(item);
-            if(!v.getResult()){
+            if (!v.getResult()) {
                 return RespVOBuilder.failure(v.getMsg());
             }
             v = validateFormNull(item);
-            if(!v.getResult()){
+            if (!v.getResult()) {
                 return RespVOBuilder.failure(v.getMsg());
             }
         }
@@ -76,13 +78,13 @@ public class FormTemplateItemServiceImpl implements ITemplateItemService<FormTem
 
     @Override
     public RespVO insertTree(Long templateId, List<FormTemplateItem> items) {
-        if(CollectionUtils.isEmpty(items)){
+        if (CollectionUtils.isEmpty(items)) {
             return RespVOBuilder.success();
         }
         //树形数据项，设置id，parentId，并转为平行结构
         List<FormTemplateItem> insertItemList = convertTree2List(templateId, items);
 
-        if(!CollectionUtils.isEmpty(insertItemList)){
+        if (!CollectionUtils.isEmpty(insertItemList)) {
             return insert(insertItemList);
         }
 
@@ -93,23 +95,23 @@ public class FormTemplateItemServiceImpl implements ITemplateItemService<FormTem
     public List<FormTemplateItem> convertList2Tree(List<FormTemplateItem> itemList) {
         Map<Long, List<FormTemplateItem>> map = new HashMap<>();
         List<FormTemplateItem> items = new ArrayList<>();
-        if(!CollectionUtils.isEmpty(itemList)){
-            for(FormTemplateItem dataTemplateItem : itemList){
-                if(null == dataTemplateItem || null == dataTemplateItem.getParentId()){
+        if (!CollectionUtils.isEmpty(itemList)) {
+            for (FormTemplateItem dataTemplateItem : itemList) {
+                if (null == dataTemplateItem || null == dataTemplateItem.getParentId()) {
                     continue;
                 }
 
-                if(map.containsKey(dataTemplateItem.getParentId())){
+                if (map.containsKey(dataTemplateItem.getParentId())) {
                     map.get(dataTemplateItem.getParentId()).add(dataTemplateItem);
-                }else{
+                } else {
                     List<FormTemplateItem> lst = new ArrayList<>();
                     lst.add(dataTemplateItem);
                     map.put(dataTemplateItem.getParentId(), lst);
                 }
             }
 
-            for(FormTemplateItem dataTemplateItem : itemList){
-                if(map.containsKey(dataTemplateItem.getId())){
+            for (FormTemplateItem dataTemplateItem : itemList) {
+                if (map.containsKey(dataTemplateItem.getId())) {
                     dataTemplateItem.setItems(map.get(dataTemplateItem.getId()));
                 }
             }
@@ -119,18 +121,38 @@ public class FormTemplateItemServiceImpl implements ITemplateItemService<FormTem
     }
 
     @Override
+    public List<String> convertList2String(List<FormTemplateItem> itemList) {
+        Map<String, String> map = new HashMap<>();
+        if (!CollectionUtils.isEmpty(itemList)) {
+            for (FormTemplateItem formTemplateItem : itemList) {
+                if (null == formTemplateItem || null == formTemplateItem.getParentId()) {
+                    continue;
+                }
+                String field = formTemplateItem.getField();
+                if (formTemplateItem.getParentId() == -1) {
+                    map.put(field, field);
+                } else {
+                    String s = map.get(field);
+                    map.put(field, s + field);
+                }
+            }
+        }
+        return new ArrayList<>(map.values());
+    }
+
+    @Override
     public List<FormTemplateItem> convertTree2List(Long templateId, List<FormTemplateItem> itemList) {
         List<FormTemplateItem> targetList = new ArrayList<>();
         convertTree2List(targetList, itemList, -1L, templateId);
         return targetList;
     }
 
-    private void convertTree2List(List<FormTemplateItem> targetList, List<FormTemplateItem> dataTemplateItems, Long parentId, Long templateId){
-        if(!CollectionUtils.isEmpty(dataTemplateItems)){
+    private void convertTree2List(List<FormTemplateItem> targetList, List<FormTemplateItem> dataTemplateItems, Long parentId, Long templateId) {
+        if (!CollectionUtils.isEmpty(dataTemplateItems)) {
             Long itemId = createFormItemId(Long.valueOf(dataTemplateItems.size())) - dataTemplateItems.size() + 1;
 
             //设置id
-            for(FormTemplateItem item : dataTemplateItems){
+            for (FormTemplateItem item : dataTemplateItems) {
                 item.setTemplateId(templateId);
                 item.setId(itemId++);
                 item.setParentId(parentId);
@@ -138,16 +160,16 @@ public class FormTemplateItemServiceImpl implements ITemplateItemService<FormTem
             }
 
             //递归 处理子节点
-            for(FormTemplateItem item : dataTemplateItems){
+            for (FormTemplateItem item : dataTemplateItems) {
                 convertTree2List(targetList, item.getItems(), item.getId(), templateId);
             }
         }
     }
 
-    private ValidateResult validateFormNull(FormTemplateItem item){
+    private ValidateResult validateFormNull(FormTemplateItem item) {
 
         ValidateResult v = new ValidateResult();
-        if(null == item.getField()){
+        if (null == item.getField()) {
             v.setResult(false);
             v.setMsg("数据字段不能为空");
             return v;
@@ -158,12 +180,12 @@ public class FormTemplateItemServiceImpl implements ITemplateItemService<FormTem
 
     @Override
     public RespVO updateList(List<FormTemplateItem> items) {
-        if(CollectionUtils.isEmpty(items)){
+        if (CollectionUtils.isEmpty(items)) {
             return RespVOBuilder.failure("参数缺失");
         }
 
-        for(FormTemplateItem item : items){
-            if(null == item || null == item.getId()){
+        for (FormTemplateItem item : items) {
+            if (null == item || null == item.getId()) {
                 return RespVOBuilder.failure("参数缺失");
             }
             item.setUpdateInfo();
@@ -174,7 +196,7 @@ public class FormTemplateItemServiceImpl implements ITemplateItemService<FormTem
 
     @Override
     public RespVO deleteList(List<Long> ids) {
-        if(CollectionUtils.isEmpty(ids)){
+        if (CollectionUtils.isEmpty(ids)) {
             return RespVOBuilder.failure("参数缺失");
         }
         formTemplateItemMapper.deleteList(ids);
@@ -206,22 +228,22 @@ public class FormTemplateItemServiceImpl implements ITemplateItemService<FormTem
         return null;
     }
 
-    public void getFieldTree(List<FormTemplateItem> itemList, Map<String, Object> map){
-        for(FormTemplateItem it : itemList){
-            if(null == it || null == it.getCategory()){
+    public void getFieldTree(List<FormTemplateItem> itemList, Map<String, Object> map) {
+        for (FormTemplateItem it : itemList) {
+            if (null == it || null == it.getCategory()) {
                 continue;
             }
-            if(10 == it.getCategory()){
+            if (10 == it.getCategory()) {
                 Map<String, Object> m = new HashMap<>();
                 getFieldTree(it.getItems(), m);
                 map.put(it.getField(), m);
-            }else if(11 == it.getCategory()){
+            } else if (11 == it.getCategory()) {
                 List<Map<String, Object>> lst = new ArrayList<>();
                 Map<String, Object> m = new HashMap<>();
                 getFieldTree(it.getItems(), m);
                 lst.add(m);
                 map.put(it.getField(), lst);
-            }else{
+            } else {
                 map.put(it.getField(), "");
             }
         }

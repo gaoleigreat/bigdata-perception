@@ -205,4 +205,24 @@ public class FormTemplateServiceImpl implements IFormTemplateService {
         List<FormTemplate> list = formTemplateMapper.findList(formTemplate);
         return list!=null && list.size()>0 ? list.get(0) : null;
     }
+
+    @Override
+    public RespVO<List<String>> queryFields(String code) {
+        FormTemplate queryTemplate=new FormTemplate();
+        queryTemplate.setTemplateCode(code);
+        FormTemplate template = find(queryTemplate);
+        if(template==null){
+            return RespVOBuilder.success();
+        }
+        List<FormTemplateItem> itemList = template.getItems();
+        if(CollectionUtils.isEmpty(itemList)){
+            return RespVOBuilder.success();
+        }
+        for (FormTemplateItem templateItem : itemList) {
+
+        }
+
+
+        return null;
+    }
 }

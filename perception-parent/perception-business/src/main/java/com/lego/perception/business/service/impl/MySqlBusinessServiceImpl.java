@@ -1,4 +1,5 @@
 package com.lego.perception.business.service.impl;
+
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.business.model.entity.BusinessTable;
@@ -10,6 +11,7 @@ import com.lego.perception.business.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -21,8 +23,8 @@ import java.util.Map;
  * @date : 2019/9/3 18:10
  * @desc :
  */
-@Service
-public class BusinessServiceImpl implements IBusinessService {
+@Service(value = "mySqlBusinessServiceImpl")
+public class MySqlBusinessServiceImpl implements IBusinessService {
 
     @Autowired
     private BusinessMapper businessMapper;
@@ -54,8 +56,9 @@ public class BusinessServiceImpl implements IBusinessService {
             sb.append(",");
         }
         sb.replace(sb.length() - 1, sb.length(), "");
-        Integer businessTable = businessMapper.createBusinessTable(tableName, sb.toString());
-        if (businessTable > 0) {
+        businessMapper.createBusinessTable(tableName, sb.toString());
+        Integer existTable = businessMapper.existTable(tableName);
+        if (existTable != null) {
             return RespVOBuilder.success();
         }
         return RespVOBuilder.failure();
@@ -105,10 +108,10 @@ public class BusinessServiceImpl implements IBusinessService {
         Long id = (Long) data.get("id");
         BusinessTable business = new BusinessTable(id, tableName, null);
         Integer delBusinessData = businessMapper.delBusinessData(business);
-        if(delBusinessData>0){
+        if (delBusinessData > 0) {
             return RespVOBuilder.success();
         }
-        return null;
+        return RespVOBuilder.failure();
     }
 
 

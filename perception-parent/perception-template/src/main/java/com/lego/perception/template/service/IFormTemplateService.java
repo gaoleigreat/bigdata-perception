@@ -66,4 +66,11 @@ public interface IFormTemplateService {
      * @return
      */
     FormTemplate findById(Long id);
+
+    /**
+     * 查询模板字段
+     * @param code
+     * @return
+     */
+    RespVO<List<String>> queryFields(String code);
 }

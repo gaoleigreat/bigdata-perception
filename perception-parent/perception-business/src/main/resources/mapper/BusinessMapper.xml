@@ -13,6 +13,12 @@
     </update>
 
 
+    <select id="existTable" resultType="java.lang.Integer">
+        select count(1)
+        from ${tableName}
+    </select>
+
+
     <insert id="insertBusinessData" parameterType="com.lego.framework.business.model.entity.BusinessTable"
             useGeneratedKeys="true" keyProperty="id">
         INSERT IGNORE INTO ${tableName}
