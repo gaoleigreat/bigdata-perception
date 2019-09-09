@@ -30,7 +30,7 @@ public interface IBusinessService {
      * @param data
      * @return
      */
-    RespVO insertBusinessData(FormTemplate formTemplate, Map<String, Object> data);
+    RespVO insertBusinessData(FormTemplate formTemplate, List<Map<String, Object>> data);
 
 
     /**

@@ -29,6 +29,7 @@ public class LogSender {
      * @param type          日志类型
      * @param operatingTime 日志操作时间
      * @param userName      操作用户用户名
+     * @param systemId      系统id
      */
     public void sendLogEvent(String ip,
                              Long userId,
@@ -38,7 +39,8 @@ public class LogSender {
                              String tag,
                              String type,
                              Date operatingTime,
-                             String userName) {
+                             String userName,
+                             Long systemId) {
         Log log = Log.builder()
                 .ip(ip)
                 .userId(userId)
@@ -49,6 +51,7 @@ public class LogSender {
                 .service(service)
                 .tag(tag)
                 .type(type)
+                .systemId(systemId)
                 .build();
         logSource.printLog().send(MessageBuilder.withPayload(log).build());
     }

@@ -11,6 +11,7 @@
         <result property="sysId" column="sys_id"/>
         <result property="templateId" column="template_id"/>
         <result property="templateType" column="template_type"/>
+        <result property="sourceType" column="source_type"/>
         <result property="creationDate" column="creation_date"/>
         <result property="createdBy" column="created_by"/>
     </resultMap>
@@ -38,6 +39,9 @@
             <if test="templateType != null">
                 template_type,
             </if>
+            <if test="sourceType!=null">
+                source_type,
+            </if>
             <if test="creationDate != null">
                 creation_date,
             </if>
@@ -64,6 +68,9 @@
             <if test="templateType != null">
                 #{templateType,jdbcType=INTEGER},
             </if>
+            <if test="sourceType!=null">
+                #{sourceType,jdbcType=INTEGER},
+            </if>
             <if test="creationDate != null">
                 #{creationDate,jdbcType=TIMESTAMP},
             </if>
@@ -77,7 +84,7 @@
       数据库表的基本查询列名集合
     -->
     <sql id="Base_Column_List">
-        id, table_name, business_id, sys_id, template_id, template_type, creation_date, created_by
+        id, `table_name`, business_id, sys_id, template_id, template_type,source_type, creation_date, created_by
     </sql>
 
     <!--
@@ -101,6 +108,9 @@
         </if>
         <if test="templateType != null">
             and template_type = #{templateType,jdbcType=INTEGER}
+        </if>
+        <if test="sourceType!=null">
+            and source_type =#{sourceType,jdbcType=INTEGER}
         </if>
         <if test="creationDate != null">
             and creation_date = #{creationDate,jdbcType=TIMESTAMP}
@@ -132,6 +142,9 @@
             </if>
             <if test="templateType != null">
                 template_type = #{templateType,jdbcType=INTEGER},
+            </if>
+            <if test="sourceType!=null">
+                source_type=#{sourceType,jdbcType=INTEGER},
             </if>
             <if test="creationDate != null">
                 creation_date = #{creationDate,jdbcType=TIMESTAMP},
@@ -197,6 +210,9 @@
         <if test="templateType != null">
             #{templateType,jdbcType=INTEGER},
         </if>
+        <if test="sourceType != null">
+            #{sourceType,jdbcType=INTEGER},
+        </if>
         <if test="creationDate != null">
             #{creationDate,jdbcType=TIMESTAMP},
         </if>
@@ -258,6 +274,9 @@
             <if test="templateType != null">
                 template_type = #{templateType,jdbcType=INTEGER},
             </if>
+            <if test="sourceType!=null">
+                source_type =#{sourceType,jdbcType=INTEGER},
+            </if>
             <if test="creationDate != null">
                 creation_date = #{creationDate,jdbcType=TIMESTAMP},
             </if>
@@ -274,14 +293,16 @@
     <insert id="batchInsert" parameterType="java.util.List">
         insert into tpl_business_template
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            id, table_name, business_id, sys_id, template_id, template_type, creation_date, created_by
+            id, table_name, business_id, sys_id, template_id, template_type,source_type, creation_date, created_by
         </trim>
         values
         <foreach collection="list" index="index" item="item" separator=",">
             <trim prefix="(" suffix=")" suffixOverrides=",">
                 #{item.id,jdbcType=BIGINT}, #{item.tableName,jdbcType=VARCHAR}, #{item.businessId,jdbcType=BIGINT},
                 #{item.sysId,jdbcType=BIGINT}, #{item.templateId,jdbcType=BIGINT},
-                #{item.templateType,jdbcType=INTEGER}, #{item.creationDate,jdbcType=TIMESTAMP},
+                #{item.templateType,jdbcType=INTEGER},
+                #{item.sourceType,jdbcType=INTEGER},
+                #{item.creationDate,jdbcType=TIMESTAMP},
                 #{item.createdBy,jdbcType=BIGINT}
             </trim>
         </foreach>
@@ -312,6 +333,9 @@
                     </if>
                     <if test="item.templateType != null">
                         template_type = #{item.templateType,jdbcType=INTEGER},
+                    </if>
+                    <if test="item.sourceType != null">
+                        source_type = #{item.sourceType,jdbcType=INTEGER},
                     </if>
                     <if test="item.creationDate != null">
                         creation_date = #{item.creationDate,jdbcType=TIMESTAMP},
@@ -352,6 +376,9 @@
             <if test="item == 'templateType'">
                 template_type = #{templateType,jdbcType=INTEGER}
             </if>
+            <if test="item == 'sourceType'">
+                source_type = #{sourceType,jdbcType=INTEGER}
+            </if>
             <if test="item == 'creationDate'">
                 creation_date = #{creationDate,jdbcType=TIMESTAMP}
             </if>
@@ -367,18 +394,21 @@
     <update id="upsert" parameterType="com.lego.framework.template.model.entity.BusinessTemplate">
         insert into tpl_business_template
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            id, table_name, business_id, sys_id, template_id, template_type, creation_date, created_by
+            id, table_name, business_id, sys_id, template_id, template_type,source_type, creation_date, created_by
         </trim>
         values
         <trim prefix="(" suffix=")" suffixOverrides=",">
             #{id,jdbcType=BIGINT}, #{tableName,jdbcType=VARCHAR}, #{businessId,jdbcType=BIGINT},
-            #{sysId,jdbcType=BIGINT}, #{templateId,jdbcType=BIGINT}, #{templateType,jdbcType=INTEGER},
+            #{sysId,jdbcType=BIGINT}, #{templateId,jdbcType=BIGINT},
+            #{templateType,jdbcType=BIGINT}
+            #{sourceType,jdbcType=INTEGER},
             #{creationDate,jdbcType=TIMESTAMP}, #{createdBy,jdbcType=BIGINT}
         </trim>
         on duplicate key update
         <trim suffixOverrides=",">
             #{id,jdbcType=BIGINT}, #{tableName,jdbcType=VARCHAR}, #{businessId,jdbcType=BIGINT},
             #{sysId,jdbcType=BIGINT}, #{templateId,jdbcType=BIGINT}, #{templateType,jdbcType=INTEGER},
+            #{sourceType,jdbcType=INTEGER},
             #{creationDate,jdbcType=TIMESTAMP}, #{createdBy,jdbcType=BIGINT}
         </trim>
     </update>
@@ -408,6 +438,9 @@
             <if test="templateType !=null ">
                 template_type,
             </if>
+            <if test="sourceType !=null ">
+                source_type,
+            </if>
             <if test="creationDate !=null ">
                 creation_date,
             </if>
@@ -434,6 +467,9 @@
             </if>
             <if test="templateType !=null ">
                 template_type = #{templateType,jdbcType=INTEGER},
+            </if>
+            <if test="sourceType !=null ">
+                source_type = #{sourceType,jdbcType=INTEGER},
             </if>
             <if test="creationDate !=null ">
                 creation_date = #{creationDate,jdbcType=TIMESTAMP},
@@ -462,6 +498,9 @@
             <if test="templateType !=null ">
                 template_type = #{templateType,jdbcType=INTEGER},
             </if>
+            <if test="sourceType !=null ">
+                source_type = #{sourceType,jdbcType=INTEGER},
+            </if>
             <if test="creationDate !=null ">
                 creation_date = #{creationDate,jdbcType=TIMESTAMP},
             </if>
@@ -471,7 +510,8 @@
         </trim>
     </update>
 
-    <select id="query" resultMap="BaseResultMap" parameterType="com.lego.framework.template.model.entity.BusinessTemplate">
+    <select id="query" resultMap="BaseResultMap"
+            parameterType="com.lego.framework.template.model.entity.BusinessTemplate">
         select
         <include refid="Base_Column_List"/>
         from tpl_business_template

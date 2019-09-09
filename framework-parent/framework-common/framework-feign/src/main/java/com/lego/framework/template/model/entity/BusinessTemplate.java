@@ -32,6 +32,8 @@ public class BusinessTemplate {
     private Long templateId;
     @ApiModelProperty("模板类型(0-表单模板;1-数据模板)")
     private Integer templateType;
+    @ApiModelProperty("数据源类型0-MySql;1-Mongo")
+    private Integer sourceType;
     @ApiModelProperty("创建时间")
     private Date creationDate;
     @ApiModelProperty("创建人")

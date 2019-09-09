@@ -122,23 +122,61 @@ public class FormTemplateItemServiceImpl implements ITemplateItemService<FormTem
 
     @Override
     public List<String> convertList2String(List<FormTemplateItem> itemList) {
-        Map<String, String> map = new HashMap<>();
+        Map<Long, String> mapKey = new HashMap<>();
+        List<String> list = new ArrayList<>();
+        getFormFields(itemList, mapKey);
+        getTreeFields(itemList, mapKey, list);
+        return list;
+    }
+
+
+    private void getFormFields(List<FormTemplateItem> itemList,
+                               Map<Long, String> mapKey) {
         if (!CollectionUtils.isEmpty(itemList)) {
             for (FormTemplateItem formTemplateItem : itemList) {
                 if (null == formTemplateItem || null == formTemplateItem.getParentId()) {
                     continue;
                 }
+                Long id = formTemplateItem.getId();
                 String field = formTemplateItem.getField();
-                if (formTemplateItem.getParentId() == -1) {
-                    map.put(field, field);
-                } else {
-                    String s = map.get(field);
-                    map.put(field, s + field);
-                }
+                mapKey.put(id, field);
+                List<FormTemplateItem> items = formTemplateItem.getItems();
+                getFormFields(items, mapKey);
             }
         }
-        return new ArrayList<>(map.values());
     }
+
+
+    private void getTreeFields(List<FormTemplateItem> itemList,
+                               Map<Long, String> mapKey,
+                               List<String> list) {
+        if (!CollectionUtils.isEmpty(itemList)) {
+            for (FormTemplateItem formTemplateItem : itemList) {
+                if (null == formTemplateItem || null == formTemplateItem.getParentId()) {
+                    continue;
+                }
+                Long parentId = formTemplateItem.getParentId();
+                String field = formTemplateItem.getField();
+                if (parentId == -1) {
+                    list.add(field);
+                } else {
+                    String s = mapKey.get(parentId);
+                    if (list.contains(s)) {
+                        List<String> collect = list.stream().filter(str -> str.contains(s)).collect(Collectors.toList());
+                        if (!CollectionUtils.isEmpty(collect)) {
+                            StringBuilder sb = new StringBuilder();
+                            for (String c : collect) {
+                                sb.append(c + ".");
+                            }
+                            list.add(sb.toString() + field);
+                        }
+                    }
+                }
+                getTreeFields(formTemplateItem.getItems(), mapKey, list);
+            }
+        }
+    }
+
 
     @Override
     public List<FormTemplateItem> convertTree2List(Long templateId, List<FormTemplateItem> itemList) {

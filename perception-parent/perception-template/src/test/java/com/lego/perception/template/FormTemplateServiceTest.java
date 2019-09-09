@@ -3,6 +3,7 @@ package com.lego.perception.template;
 import com.framework.common.consts.RespConsts;
 import com.framework.common.sdto.RespVO;
 import com.lego.framework.template.model.entity.FormTemplate;
+import com.lego.framework.template.model.entity.FormTemplateItem;
 import com.lego.perception.template.service.IFormTemplateService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,25 +31,22 @@ public class FormTemplateServiceTest {
 
 
     @Test
-    public void testFindList(){
-        FormTemplate formTemplate=new FormTemplate();
+    public void testFindList() {
+        FormTemplate formTemplate = new FormTemplate();
         List<FormTemplate> list = iFormTemplateService.findList(formTemplate);
-        log.info("list:{}",list);
+        log.info("list:{}", list);
     }
 
     @Test
-    public void  testInsert(){
-        FormTemplate formTemplate=new FormTemplate();
+    public void testInsert() {
+        FormTemplate formTemplate = new FormTemplate();
         formTemplate.setCategory(1L);
-        formTemplate.setDataTemplateId(38L);
-        formTemplate.setTemplateCode("test_form_01");
-        formTemplate.setTemplateName("測試表單模板001");
-        formTemplate.setDescription("test");
-        RespVO respVO = iFormTemplateService.insert(formTemplate);
+        formTemplate.setTemplateCode("device_account");
+        formTemplate.setTemplateName("设备台账信息");
+        formTemplate.setDescription("tpl_device_account");
+        RespVO respVO = iFormTemplateService.insert(formTemplate, 0);
         Assert.assertEquals(respVO.getRetCode(), RespConsts.SUCCESS_RESULT_CODE);
     }
-
-
 
 
 }

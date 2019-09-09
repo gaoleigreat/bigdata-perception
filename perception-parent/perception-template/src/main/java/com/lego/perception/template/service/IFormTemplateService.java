@@ -45,7 +45,7 @@ public interface IFormTemplateService {
      * @param dataTemplate
      * @return
      */
-    RespVO insert(FormTemplate dataTemplate);
+    RespVO insert(FormTemplate dataTemplate,Integer sourceType);
 
     /**
      * 更新

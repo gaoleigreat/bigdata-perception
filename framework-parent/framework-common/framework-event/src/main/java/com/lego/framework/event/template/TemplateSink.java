@@ -14,6 +14,9 @@ public interface TemplateSink {
 
     String CREATE_TEMPLATE = "input_create_template";
 
+
+    String CREATE_BUSINESS_TABLE = "input_create_table";
+
     /**
      * 创建模板
      *
@@ -21,4 +24,14 @@ public interface TemplateSink {
      */
     @Input(CREATE_TEMPLATE)
     SubscribableChannel createTemplate();
+
+
+    /**
+     * 创建业务表
+     * @return
+     */
+    @Input(CREATE_BUSINESS_TABLE)
+    SubscribableChannel createBusinessTable();
+
+
 }

@@ -152,7 +152,7 @@ public class DataTemplateItemService implements ITemplateItemService<DataTemplat
                     map.put(field, field);
                 } else {
                     String s = map.get(field);
-                    map.put(field, s + field);
+                    map.put(field, s + "." + field);
                 }
             }
         }

@@ -139,6 +139,12 @@
             <artifactId>framework-permission</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.lego.event</groupId>
+            <version>${service.version}</version>
+            <artifactId>framework-event</artifactId>
+        </dependency>
+
 
     </dependencies>
 

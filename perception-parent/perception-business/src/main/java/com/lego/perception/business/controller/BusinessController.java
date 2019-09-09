@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -54,7 +56,7 @@ public class BusinessController {
     @RequestMapping(value = "/insert", method = RequestMethod.POST)
     @Operation(value = "insert", desc = "新增业务数据")
     public RespVO insertBusinessData(FormTemplate formTemplate,
-                                     Map<String, Object> data,
+                                     List<Map<String, Object>> data,
                                      Integer sourceType) {
         if (sourceType == 0) {
             return mySqlBusinessService.insertBusinessData(formTemplate, data);

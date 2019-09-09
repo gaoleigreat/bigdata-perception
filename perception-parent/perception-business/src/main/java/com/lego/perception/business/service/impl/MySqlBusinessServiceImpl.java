@@ -2,6 +2,7 @@ package com.lego.perception.business.service.impl;
 
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
+import com.lego.framework.base.exception.ExceptionBuilder;
 import com.lego.framework.business.model.entity.BusinessTable;
 import com.lego.framework.template.model.entity.FormTemplate;
 import com.lego.framework.template.model.entity.FormTemplateItem;
@@ -10,6 +11,7 @@ import com.lego.perception.business.service.IBusinessService;
 import com.lego.perception.business.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -66,15 +68,18 @@ public class MySqlBusinessServiceImpl implements IBusinessService {
 
 
     @Override
-    public RespVO insertBusinessData(FormTemplate formTemplate, Map<String, Object> data) {
+    @Transactional(rollbackFor = RuntimeException.class)
+    public RespVO insertBusinessData(FormTemplate formTemplate, List<Map<String, Object>> data) {
         String tableName = formTemplate.getDescription();
         // 参数校验
-        BusinessTable businessTable = new BusinessTable(null, tableName, data);
-        Integer insertBusinessData = businessMapper.insertBusinessData(businessTable);
-        if (insertBusinessData > 0) {
-            return RespVOBuilder.success();
+        for (Map<String, Object> objectMap : data) {
+            BusinessTable businessTable = new BusinessTable(null, tableName, objectMap);
+            Integer insertBusinessData = businessMapper.insertBusinessData(businessTable);
+            if (insertBusinessData <= 0) {
+                ExceptionBuilder.operateFailException("新增数据失败");
+            }
         }
-        return RespVOBuilder.failure();
+        return RespVOBuilder.success();
     }
 
 

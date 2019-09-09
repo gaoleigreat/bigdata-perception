@@ -6,6 +6,7 @@ import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
+import com.lego.framework.event.template.TemplateProcessorSender;
 import com.lego.framework.template.model.entity.*;
 import com.lego.perception.template.init.EnumerationInit;
 import com.lego.perception.template.mapper.FormTemplateMapper;
@@ -15,8 +16,10 @@ import com.lego.perception.template.service.ITemplateValidateService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.integration.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +45,9 @@ public class FormTemplateServiceImpl implements IFormTemplateService {
     @Autowired
     private EnumerationInit enumerationInit;
 
+    @Autowired
+    private TemplateProcessorSender templateProcessorSender;
+
     @Override
     public PagedResult<FormTemplate> findPagedList(FormTemplate template, Page page) {
 
@@ -64,7 +70,7 @@ public class FormTemplateServiceImpl implements IFormTemplateService {
     public FormTemplate find(FormTemplate formTemplate) {
         FormTemplate template = null;
         List<FormTemplate> templateList = formTemplateMapper.findList(formTemplate);
-        if(!CollectionUtils.isEmpty(templateList)){
+        if (!CollectionUtils.isEmpty(templateList)) {
 
             template = templateList.get(0);
 
@@ -79,16 +85,16 @@ public class FormTemplateServiceImpl implements IFormTemplateService {
             query.setTemplateId(template.getDataTemplateId());
             List<DataTemplateItem> dataTemplateItems = dataTemplateItemService.findList(query);
             Map<String, String> map = new HashMap<>();
-            if(!CollectionUtils.isEmpty(dataTemplateItems)){
-                for(DataTemplateItem item : dataTemplateItems){
+            if (!CollectionUtils.isEmpty(dataTemplateItems)) {
+                for (DataTemplateItem item : dataTemplateItems) {
                     map.put(item.getAbsoluteField(), item.getTitle());
                 }
             }
 
-            if(!CollectionUtils.isEmpty(itemList)){
-                for(FormTemplateItem item : itemList){
+            if (!CollectionUtils.isEmpty(itemList)) {
+                for (FormTemplateItem item : itemList) {
                     item.setDataFieldName(map.get(item.getDataField()));
-                    if(null != item.getEnumId()){
+                    if (null != item.getEnumId()) {
                         item.setEnumName(enumerationMap.containsKey(item.getEnumId()) ? enumerationMap.get(item.getEnumId()).getEnumName() : "");
                     }
                 }
@@ -103,13 +109,13 @@ public class FormTemplateServiceImpl implements IFormTemplateService {
     }
 
     @Override
-    public RespVO insert(FormTemplate template) {
-        if(null == template){
+    public RespVO insert(FormTemplate template, Integer sourceType) {
+        if (null == template) {
             return RespVOBuilder.failure("参数缺失");
         }
 
         ValidateResult v = validateTemplate(template);
-        if(!v.getResult()){
+        if (!v.getResult()) {
             return RespVOBuilder.failure(v.getMsg());
         }
 
@@ -119,11 +125,13 @@ public class FormTemplateServiceImpl implements IFormTemplateService {
         formTemplateMapper.save(template);
 
         //新增模板数据项
-        if(!CollectionUtils.isEmpty(template.getItems())){
+        if (!CollectionUtils.isEmpty(template.getItems())) {
             RespVO r = formTemplateItemService.insertTree(template.getId(), template.getItems());
-            if(r.getRetCode()!= RespConsts.SUCCESS_RESULT_CODE){
+            if (r.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
                 return r;
             }
+            // TODO 发送成功事件
+            templateProcessorSender.sendTemplateCreateEvent(template, sourceType);
         }
 
         return RespVOBuilder.success();
@@ -131,12 +139,12 @@ public class FormTemplateServiceImpl implements IFormTemplateService {
 
 
     private ValidateResult validateTemplate(FormTemplate template) {
-        ValidateResult  v = templateValidateService.validateTemplate(template);
-        if (!v.getResult()){
+        ValidateResult v = templateValidateService.validateTemplate(template);
+        if (!v.getResult()) {
             return v;
         }
         v = isDuplicate(template);
-        if (!v.getResult()){
+        if (!v.getResult()) {
             return v;
         }
 
@@ -149,7 +157,7 @@ public class FormTemplateServiceImpl implements IFormTemplateService {
         FormTemplate templateParam = new FormTemplate();
         templateParam.setTemplateCode(dataTemplate.getTemplateCode());
         List<FormTemplate> lst = formTemplateMapper.findList(templateParam);
-        if(!CollectionUtils.isEmpty(lst)){
+        if (!CollectionUtils.isEmpty(lst)) {
             v.setResult(false);
             v.setMsg("模板编码重复");
             return v;
@@ -163,7 +171,7 @@ public class FormTemplateServiceImpl implements IFormTemplateService {
         FormTemplate templateParam = new FormTemplate();
         templateParam.setTemplateCode(dataTemplate.getTemplateCode());
         List<FormTemplate> lst = formTemplateMapper.findList(templateParam);
-        if(!CollectionUtils.isEmpty(lst) && !id.equals(lst.get(0).getId())){
+        if (!CollectionUtils.isEmpty(lst) && !id.equals(lst.get(0).getId())) {
             v.setResult(false);
             v.setMsg("模板编码重复");
             return v;
@@ -174,13 +182,13 @@ public class FormTemplateServiceImpl implements IFormTemplateService {
 
     @Override
     public RespVO update(FormTemplate formTemplate) {
-        if(null == formTemplate || null == formTemplate.getId()){
+        if (null == formTemplate || null == formTemplate.getId()) {
             return RespVOBuilder.failure("参数缺失");
         }
 
-        if(null != formTemplate.getTemplateCode()){
+        if (null != formTemplate.getTemplateCode()) {
             ValidateResult v = isDuplicate(formTemplate, formTemplate.getId());
-            if(!v.getResult()){
+            if (!v.getResult()) {
                 return RespVOBuilder.failure(v.getMsg());
             }
         }
@@ -191,7 +199,7 @@ public class FormTemplateServiceImpl implements IFormTemplateService {
 
     @Override
     public RespVO delete(Long id) {
-        if(null == id){
+        if (null == id) {
             return RespVOBuilder.failure("参数缺失");
         }
         formTemplateMapper.delete(id);
@@ -200,29 +208,24 @@ public class FormTemplateServiceImpl implements IFormTemplateService {
 
     @Override
     public FormTemplate findById(Long id) {
-        FormTemplate formTemplate=new FormTemplate();
+        FormTemplate formTemplate = new FormTemplate();
         formTemplate.setId(id);
         List<FormTemplate> list = formTemplateMapper.findList(formTemplate);
-        return list!=null && list.size()>0 ? list.get(0) : null;
+        return list != null && list.size() > 0 ? list.get(0) : null;
     }
 
     @Override
     public RespVO<List<String>> queryFields(String code) {
-        FormTemplate queryTemplate=new FormTemplate();
+        FormTemplate queryTemplate = new FormTemplate();
         queryTemplate.setTemplateCode(code);
         FormTemplate template = find(queryTemplate);
-        if(template==null){
+        if (template == null) {
             return RespVOBuilder.success();
         }
         List<FormTemplateItem> itemList = template.getItems();
-        if(CollectionUtils.isEmpty(itemList)){
+        if (CollectionUtils.isEmpty(itemList)) {
             return RespVOBuilder.success();
         }
-        for (FormTemplateItem templateItem : itemList) {
-
-        }
-
-
-        return null;
+        return RespVOBuilder.success(formTemplateItemService.convertList2String(itemList));
     }
 }

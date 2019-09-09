@@ -10,14 +10,15 @@ import com.mongodb.client.result.UpdateResult;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.BulkOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author : yanglf
@@ -41,9 +42,9 @@ public class MongoBusinessServiceImpl implements IBusinessService {
     }
 
     @Override
-    public RespVO insertBusinessData(FormTemplate formTemplate, Map<String, Object> data) {
+    public RespVO insertBusinessData(FormTemplate formTemplate, List<Map<String, Object>> data) {
         String tableName = formTemplate.getDescription();
-        mongoTemplate.save(data, tableName);
+        mongoTemplate.insert(data,tableName);
         return RespVOBuilder.success();
     }
 

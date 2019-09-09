@@ -62,11 +62,8 @@ public class UserController {
     @RequestMapping(value = {"/login"}, method = RequestMethod.POST)
     public String login(HttpServletRequest request,
                         HttpServletResponse response,
-                        @NotBlank(message = "用户名不能为空") @RequestParam String user,
-                        @NotBlank(message = "密码不能为空") @Size(min = 6, max = 32, message = "密码长度为6-23位") @RequestParam String pwd) throws IOException {
-
-        String userId = request.getHeader(HttpConsts.USER_ID);
-        String userName = request.getHeader(HttpConsts.USER_NAME);
+                        @NotBlank(message = "用户名不能为空") @RequestParam String userName,
+                        @NotBlank(message = "密码不能为空") @Size(min = 6, max = 32, message = "密码长度为6-23位") @RequestParam String password) throws IOException {
         // TODO 验证是否登录    是否携带注册令牌  sso_ticket
         String ssoTicket = request.getHeader("sso_ticket");
         if (StringUtils.isBlank(ssoTicket)) {

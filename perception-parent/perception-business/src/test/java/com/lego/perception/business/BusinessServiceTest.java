@@ -10,6 +10,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -29,6 +30,7 @@ public class BusinessServiceTest {
 
 
     @Autowired
+    @Qualifier(value = "mySqlBusinessServiceImpl")
     private IBusinessService iBusinessService;
 
 
@@ -76,7 +78,9 @@ public class BusinessServiceTest {
         mp1.put("type", 1);
         mp1.put("model", "dg-002");
         mp1.put("creation_date", new Date());
-        RespVO respVO = iBusinessService.insertBusinessData(formTemplate, mp1);
+        List<Map<String,Object>> maps=new ArrayList<>();
+        maps.add(mp1);
+        RespVO respVO = iBusinessService.insertBusinessData(formTemplate, maps);
         log.info("respVO:{}", respVO);
         Assert.assertEquals(respVO.getRetCode(), RespConsts.SUCCESS_RESULT_CODE);
     }
