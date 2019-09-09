@@ -1,16 +1,17 @@
 zuul:
   routes:
-    auth-service: /api-auth/**
-    file-service: /api-file/**
-    project-service: /api-project/**
-    report-service: /api-report/**
-    settlement-service: /api-settlement/**
-    user-service: /api-security/**
+    auth-service: /auth-service/**
+    file-service: /file-service/**
+    system-service: /system-service/**
+    log-service: /log-service/**
+    user-service: /user-service/**
+    template-service: /template-service/**
+    business-service: /business-service/**
   ignored-services: '*'
 
 
 session:
-  domain: survey-zuul
+  domain: zuul-server
 
 feign:
   hystrix:
@@ -40,8 +41,6 @@ eureka:
 jwt:
   exclude:
     urlPatterns:
-      - /api-security/security/login
-      - .*api-docs.*
-      - .*swagger.*
-      - /api-security/package/.*
-      - /api-file/file/.*
+      #- .*api-docs.*
+      #- .*swagger.*
+      - .*.*

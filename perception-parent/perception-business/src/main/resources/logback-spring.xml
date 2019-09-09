@@ -6,7 +6,7 @@
     <property name="logDir" value="user-service"/>-->
 
     <springProperty scope="context" name="maxHistory" source="logging.maxHistory" defaultValue="2400"/>
-    <springProperty scope="context" name="logDir" source="spring.application.name" defaultValue="log-service"/>
+    <springProperty scope="context" name="logDir" source="spring.application.name" defaultValue="business-service"/>
 
 
     <!-- 日志上下文名称 -->
