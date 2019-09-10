@@ -1,18 +1,15 @@
 package com.lego.perception.user.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.framework.common.consts.DictConstant;
 import com.framework.common.consts.HttpConsts;
 import com.framework.common.sdto.HeaderVo;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
-import com.framework.common.sdto.TokenVo;
 import com.lego.framework.auth.feign.AuthClient;
-import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
 import com.lego.framework.base.utils.HeaderUtils;
-import com.lego.framework.base.utils.HttpUtils;
-import com.lego.framework.event.log.LogSender;
 import com.lego.framework.sso.SsoClient;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -67,14 +64,16 @@ public class UserController {
         // TODO 验证是否登录    是否携带注册令牌  sso_ticket
         String ssoTicket = request.getHeader("sso_ticket");
         if (StringUtils.isBlank(ssoTicket)) {
-            // TODO 重定向到  SSO 服务
+            // TODO 重定向到  SSO 服务(进行登录操作)
             return "redirect:http://baidu.com";
         }
-        // TODO 校验注册令牌
+        // TODO 调用sso服务校验注册令牌
         String ticketResult = ssoClient.redirectSsoService("101030100");
-        log.info("校验 sso 票据:{}",ticketResult);
+        log.info("校验 sso 票据:{}", ticketResult);
         // 创建本地会话
         Cookie cookie = new Cookie("PERCEPTION_TOKEN", UUID.randomUUID().toString().replace("-", ""));
+        cookie.setPath("/");
+        cookie.setMaxAge(60 * 60 * 2);
         response.addCookie(cookie);
         PrintWriter writer = response.getWriter();
         RespVO respVO = RespVOBuilder.success();
@@ -90,16 +89,29 @@ public class UserController {
 
     })
     @RequestMapping(value = {"/logout"}, method = RequestMethod.POST)
-    public RespVO<TokenVo> logout(HttpServletRequest request) {
+    public String logout(HttpServletRequest request,
+                         HttpServletResponse response,
+                         @CookieValue(value = "PERCEPTION_TOKEN") String perceptionToken) throws IOException {
         HeaderVo headerVo = HeaderUtils.parseHeader(request);
-        String userId = request.getHeader("userId");
-        String token = headerVo.getToken();
-        String deviceType = headerVo.getDeviceType();
-        // TODO 验证 token
-        Cookie[] cookies = request.getCookies();
-
-
-        return authClient.delete(token, deviceType);
+        if (headerVo != null) {
+            // TODO 验证 本地  cookie  perceptionToken
+            String ssoTicket = request.getHeader("sso_ticket");
+            if (!StringUtils.isBlank(ssoTicket)) {
+                // 重定sso 服务  请求  全局注销
+                return "redirect:http://baidu.com";
+            }
+            // 删除本地  token
+            Cookie cookie = new Cookie("PERCEPTION_TOKEN", null);
+            cookie.setPath("/");
+            cookie.setMaxAge(0);
+            response.addCookie(cookie);
+        }
+        PrintWriter writer = response.getWriter();
+        RespVO respVO = RespVOBuilder.success();
+        writer.write(JSONObject.toJSONString(respVO));
+        writer.flush();
+        writer.close();
+        return null;
     }
 
 }

@@ -1,28 +1,28 @@
 define:
   user:
     name: admin
-    password: '{cipher}a1d30c1325f1b0cd2e4619bff2be57bc32ae0413c0ce1fee07153b60bfa3a782'
+    password: admin123
   auth:
     securityKey: 121231313131313
   druid:
     username: admin
-    password: '{cipher}a1d30c1325f1b0cd2e4619bff2be57bc32ae0413c0ce1fee07153b60bfa3a782'
+    password: admin123
   mysql:
     write:
-      url: jdbc:mysql://192.168.0.95:3306/survey?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8
-      username: root
-      password: mysql
+      url: jdbc:mysql://192.168.105.22:3306/perception_base?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+      username: base_master
+      password: base_master
     read1:
-      url: jdbc:mysql://192.168.0.95:3306/survey?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8
-      username: root
-      password: mysql
+      url: jdbc:mysql://192.168.105.22:3306/perception_base?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+      username: base_slaver
+      password: base_slaver
 eureka:
   client:
     fetch-registry: true
     register-with-eureka: true
-    registry-fetch-interval-seconds: 30
+    registry-fetch-interval-seconds: 5
     serviceUrl:
-      defaultZone: http://${define.user.name}:${define.user.password}@192.168.0.154:48010/eureka/
+      defaultZone: http://${define.user.name}:${define.user.password}@192.168.105.22:18010/eureka/
   instance:
     prefer-ip-address: true
     instance-id: ${spring.cloud.client.ip-address}:${server.port}
@@ -44,16 +44,16 @@ spring:
       override-system-properties: false    # 是否覆盖Java运行时参数
   data:
     mongodb:
-      host: 192.168.0.95
+      host: 192.168.105.22
       port: 27017
-      database: survey
+      database: perception
       #username: admin
       #password: '{cipher}a1d30c1325f1b0cd2e4619bff2be57bc32ae0413c0ce1fee07153b60bfa3a782'
   redis:
-    host: 192.168.0.95
+    host: 192.168.105.22
     port: 6379
-    password: Legaoyun@2018
-    database: 0
+    password: bigdb123
+    database: 2
     jedis:
       pool:
         max-active: 20
@@ -62,7 +62,7 @@ spring:
         min-idle: 0
     timeout: 10000
   rabbitmq:
-    host: 192.168.0.154
+    host: 114.116.44.104
     port: 5672
     username: admin
     password: legaoyun@2018
@@ -96,33 +96,71 @@ logging:
   file: /home/work/logs/${spring.application.name}/error_log
   maxHistory: 200
 
+
+
+feign:
+  compression:
+    request:
+      enabled: true # 请求压缩
+      mime-types: text/xml,application/xml,application/json
+      min-request-size: 2048
+    response:
+      enabled: true
+  hystrix:
+    enabled: true
+  httpclient:
+    enabled: false
+  okhttp:
+    enabled: true
+    max-connections: 500
+    max-connections-per-route: 100
+
 #feign:
 #  hystrix:
 #    enabled: true
 # ribbon 的超时时间（<）hystrix的超时时间
 #MaxAutoRetries+MaxAutoRetriesNextServer+(MaxAutoRetries *MaxAutoRetriesNextServer) =重试次数
 #重试期间，时间超过了hystrix的超时时间，便会立即执行熔断，fallback
-# (1 + MaxAutoRetries + MaxAutoRetriesNextServer) * ReadTimeout=hystrix 超时时间
+# ribbonTimeout = (ribbonReadTimeout + ribbonConnectTimeout) * (maxAutoRetries + 1) * (maxAutoRetriesNextServer + 1);
 #当ribbon超时后且hystrix没有超时，便会采取重试机制。当OkToRetryOnAllOperations设置为false时，只会对get请求进行重试
-
 ribbon:
   ConnectTimeout: 3000  #ribbon 负载均衡连接超时时间
   ReadTimeout: 20000  #ribbon 负载均衡读取超时时间
-  #MaxAutoRetries: 1   #同一台实例最大重试次数,不包括首次调用
-  #MaxAutoRetriesNextServer: 1  #重试负载均衡其他的实例最大重试次数,不包括首次调用
+  #MaxAutoRetries: 1   #同配置首台服务器重试1次
+  #MaxAutoRetriesNextServer: 1  #配置其他服务器重试1次
   #OkToRetryOnAllOperations: false #否所有操作都重试
 
 hystrix:
+  threadpool:
+    default:
+      coreSize: 500
+      maximumSize: 10
+      maxQueueSize: -1
   command:
     default:
+      fallback:
+        enabled: true
       execution:
+        timeout:
+          enabled: true
         isolation:
+          strategy: SEMAPHORE  # 隔离策略
+          semaphore:
+            maxConcurrentRequests: 500  # 最大并发数
           thread:
             timeoutInMilliseconds: 60000
 
 
 
+
 fpfile:
-  path: /opt/work/file
-  url:  http://192.168.0.154:50010/survey/api-file/file/fpfile/download
+  path: D:\业务文档\测量\file
+  url:  http://localhost:50010/survey/api-file/file/fpfile/download
+
+
+sso:
+  name: sso-server
+  url_prefix: http://t.weather.sojson.com/api/weather
+
+
 
