@@ -149,6 +149,20 @@
             <version>${service.version}</version>
             <artifactId>framework-log</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.framework.excel</groupId>
+            <artifactId>framework-excel</artifactId>
+            <version>${service.version}</version>
+        </dependency>  <dependency>
+            <groupId>com.framework.word</groupId>
+            <artifactId>framework-word</artifactId>
+            <version>${service.version}</version>
+        </dependency>
+        <dependency>
+        <groupId>net.sf.json-lib</groupId>
+        <artifactId>json-lib</artifactId>
+        <version>2.4</version>
+    </dependency>
 
 
     </dependencies>
