@@ -1,7 +1,6 @@
 package com.lego.perception.template.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.framework.common.sdto.RespVO;
 import com.framework.excel.utils.ExcelTemplateUtil;
 import com.framework.word.util.WordTemplateUtil;
@@ -43,7 +42,7 @@ import java.util.*;
 public class TemplateDataController {
     @Autowired
     private IFormTemplateService formTemplateService;
-
+    @Autowired
     private BusinessClient businessClient;
 
     /**
