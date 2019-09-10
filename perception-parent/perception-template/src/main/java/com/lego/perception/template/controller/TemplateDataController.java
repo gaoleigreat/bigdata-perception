@@ -1,7 +1,6 @@
 package com.lego.perception.template.controller;
 
 import com.framework.common.sdto.RespVO;
-import com.framework.common.sdto.RespVOBuilder;
 import com.framework.excel.utils.ExcelTemplateUtil;
 import com.lego.framework.base.annotation.Resource;
 import com.lego.framework.base.exception.ExceptionBuilder;
@@ -67,7 +66,7 @@ public class TemplateDataController {
         });
 
         // 3 调用接口上传
-        return businessClient.insert(template, maps, sourceType);
+        return businessClient.insertBusinessData(template, maps, sourceType);
     }
 
     /**
@@ -91,14 +90,14 @@ public class TemplateDataController {
             try {
                 XSSFWorkbook xsf = new XSSFWorkbook(file.getInputStream());
                 ExcelTemplateUtil excelTemplateUtil = new ExcelTemplateUtil();
-                List<Map<String, Object>> sheetValue = excelTemplateUtil.getSheetValue(xsf.getSheetAt(0), null);
-                return sheetValue;
+                // List<Map<String, Object>> sheetValue = excelTemplateUtil.getSheetValue(xsf.getSheetAt(0), null);
+                return null;
             } catch (IOException e) {
                 ExceptionBuilder.operateFailException("文件异常");
             }
 
 
-        }else if (file.getOriginalFilename().endsWith(".docx")){
+        } else if (file.getOriginalFilename().endsWith(".docx")) {
 
         }
 

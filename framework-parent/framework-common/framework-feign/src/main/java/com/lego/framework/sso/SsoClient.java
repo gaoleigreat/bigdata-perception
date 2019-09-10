@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @description
  * @since 2019/8/31
  **/
-@FeignClient(name = "${sso.name}", url = "${sso.url_prefix}")
+@FeignClient(name = "sso", url = "http://www.baidu.com}")
 public interface SsoClient {
 
     /**
