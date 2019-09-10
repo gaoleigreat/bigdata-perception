@@ -97,19 +97,4 @@ public class CSVUtils {
 
 
 
-    /**
-     * CSV写入测试
-     *
-     * @throws Exception
-     */
-    public static void exportCsv() {
-        List<String> dataList = new ArrayList<String>();
-        dataList.add("number,name,sex");
-        dataList.add("1,张三,男");
-        dataList.add("2,李四,男");
-        dataList.add("3,小红,女");
-        boolean isSuccess = CSVUtils.exportCsv(new File("D:/test/ljq.csv"), dataList);
-        System.out.println(isSuccess);
-    }
-
 }
