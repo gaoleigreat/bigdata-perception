@@ -1,6 +1,9 @@
 package com.lego.framework.system.model.entity;
 
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@TableName(value = "tpl_user_t")
 public class User {
     /**
      * 状态，1：启用，2：锁定
@@ -44,8 +48,10 @@ public class User {
     private String headImg;
 
     @ApiModelProperty(value = "用户旧密码", required = false)
+    @TableField(exist = false)
     private String oldPassword;
 
+    @TableField(exist = false)
     private List<Long> userIds;
 
     @ApiModelProperty(value = "身份证合照", required = false)
@@ -64,13 +70,17 @@ public class User {
     private String realName;
 
     @ApiModelProperty("角色id集合")
+    @TableField(exist = false)
     private List<Long> roleIds;
 
     @ApiModelProperty("角色名称")
+    @TableField(exist = false)
     private String roleName;
 
     @ApiModelProperty("角色名称集合")
+    @TableField(exist = false)
     private List<String> reloNames;
+    @TableField(exist = false)
     private List<String> phones;
     private Long id;
 
@@ -89,12 +99,15 @@ public class User {
     @ApiModelProperty(value = "用户邮箱", required = false)
     private String mail;
     @ApiModelProperty(value = "身份证号", required = false)
+    @TableField(value = "idcard_no")
     private String idCardNO;
     private Date creationDate;
     private Long createdBy;
+    @TableField(exist = false)
     private String createdUser;
     private Date lastUpdateDate;
     private Long lastUpdatedBy;
+    @TableField(exist = false)
     private String updatedUser;
 
 }

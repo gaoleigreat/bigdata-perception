@@ -1,5 +1,6 @@
 package com.lego.framework.template.model.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -10,9 +11,8 @@ import java.util.List;
 @TableName(value = "tpl_data_template_t")
 public class DataTemplate extends Template {
 
-    private static final long serialVersionUID = 3180377090477652192L;
-
     @ApiModelProperty("模板数据项")
+    @TableField(exist = false)
     private List<DataTemplateItem> items;
 
     public List<DataTemplateItem> getItems() {

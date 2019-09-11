@@ -43,7 +43,7 @@ public interface BusinessMapper extends Mapper<BusinessTable> {
      * @param businessTable
      * @return
      */
-    List<Map<String, Object>> queryBusinessData(BusinessTable businessTable);
+    List<Map> queryBusinessData(BusinessTable businessTable);
 
 
     /**

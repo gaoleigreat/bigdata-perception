@@ -45,7 +45,7 @@ public class RoleController {
 
 
 
-    @RequestMapping(value="/findPagedList/{pageSize}/{curPage}", method = RequestMethod.GET)
+    @RequestMapping(value="/findPagedList/{pageSize}/{pageIndex}", method = RequestMethod.GET)
     @Operation(value="find", desc="查询")
     @ApiOperation("分页查询")
     public PagedResult<Role> findPagedList(@ModelAttribute Role role, @PathParam("") Page page){

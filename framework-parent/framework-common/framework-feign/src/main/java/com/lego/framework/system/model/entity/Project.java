@@ -1,6 +1,7 @@
 package com.lego.framework.system.model.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lego.framework.config.BaseModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -20,6 +21,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@TableName(value = "tpl_project")
 public class Project {
     @ApiModelProperty("id")
     private Long id;

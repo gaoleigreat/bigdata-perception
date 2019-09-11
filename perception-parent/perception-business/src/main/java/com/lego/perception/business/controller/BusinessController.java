@@ -10,10 +10,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -46,7 +43,7 @@ public class BusinessController {
                                  Integer sourceType) {
         if (sourceType != null && sourceType == 0) {
             return mySqlBusinessService.createBusinessTable(formTemplate);
-        }else {
+        } else {
             return mongoBusinessService.createBusinessTable(formTemplate);
         }
     }
@@ -56,23 +53,24 @@ public class BusinessController {
     @RequestMapping(value = "/insert", method = RequestMethod.POST)
     @Operation(value = "insert", desc = "新增业务数据")
     public RespVO insertBusinessData(FormTemplate formTemplate,
+                                     Long fileId,
                                      List<Map<String, Object>> data,
                                      Integer sourceType) {
         if (sourceType == 0) {
-            return mySqlBusinessService.insertBusinessData(formTemplate, data);
+            return mySqlBusinessService.insertBusinessData(formTemplate, data, fileId);
         } else if (sourceType == 1) {
-            return mongoBusinessService.insertBusinessData(formTemplate, data);
+            return mongoBusinessService.insertBusinessData(formTemplate, data, fileId);
         }
         return RespVOBuilder.failure();
     }
 
 
-    @ApiOperation(value = "查询业务数据", httpMethod = "GET")
-    @RequestMapping(value = "/query", method = RequestMethod.GET)
+    @ApiOperation(value = "查询业务数据", httpMethod = "POST")
+    @RequestMapping(value = "/query", method = RequestMethod.POST)
     @Operation(value = "query", desc = "查询业务数据")
-    public RespVO queryBusinessData(FormTemplate formTemplate,
-                                    Map<String, Object> data,
-                                    Integer sourceType) {
+    public RespVO queryBusinessData(@RequestBody FormTemplate formTemplate,
+                                    @RequestParam Map<String, Object> data,
+                                    @RequestParam Integer sourceType) {
         String tableName = formTemplate.getDescription();
         if (sourceType == 0) {
             return mySqlBusinessService.queryBusinessData(tableName, data);
@@ -86,9 +84,9 @@ public class BusinessController {
     @ApiOperation(value = "修改业务数据", httpMethod = "PUT")
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
     @Operation(value = "update", desc = "修改业务数据")
-    public RespVO updateBusinessData(FormTemplate formTemplate,
-                                     Map<String, Object> data,
-                                     Integer sourceType) {
+    public RespVO updateBusinessData(@RequestBody FormTemplate formTemplate,
+                                     @RequestParam Map<String, Object> data,
+                                     @RequestParam Integer sourceType) {
         String tableName = formTemplate.getDescription();
         if (sourceType == 0) {
             return mySqlBusinessService.updateBusinessData(tableName, data);
@@ -102,9 +100,9 @@ public class BusinessController {
     @ApiOperation(value = "删除业务数据", httpMethod = "DELETE")
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
     @Operation(value = "delete", desc = "删除业务数据")
-    public RespVO delBusinessData(FormTemplate formTemplate,
-                                  Map<String, Object> data,
-                                  Integer sourceType) {
+    public RespVO delBusinessData(@RequestBody FormTemplate formTemplate,
+                                  @RequestParam Map<String, Object> data,
+                                  @RequestParam Integer sourceType) {
         String tableName = formTemplate.getDescription();
         if (sourceType == 0) {
             return mySqlBusinessService.delBusinessData(tableName, data);

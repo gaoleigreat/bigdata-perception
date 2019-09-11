@@ -1,4 +1,5 @@
 package com.lego.perception.system.service;
+import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.lego.framework.system.model.entity.TbSystem;
 import org.apache.ibatis.session.RowBounds;
@@ -13,7 +14,7 @@ import java.util.List;
  */
 public interface SystemService {
 
-    PagedResult<TbSystem> selectPaged(RowBounds rowBounds);
+    PagedResult<TbSystem> selectPaged(TbSystem tbSystem, Page page);
 
     TbSystem selectByPrimaryKey(Long id);
 

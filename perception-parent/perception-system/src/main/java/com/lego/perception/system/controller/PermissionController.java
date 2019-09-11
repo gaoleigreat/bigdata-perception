@@ -60,4 +60,13 @@ public class PermissionController {
 
         return permissionService.save(scope, permissions);
     }
+
+
+
+    @RequestMapping(value = "/findUserPermissions", method = RequestMethod.GET)
+    @ApiOperation("查詢用戶權限信息")
+    public List<Permission> findUserPermissions(@RequestParam Long userId){
+        return permissionService.findUserPermissions(userId);
+    }
+
 }

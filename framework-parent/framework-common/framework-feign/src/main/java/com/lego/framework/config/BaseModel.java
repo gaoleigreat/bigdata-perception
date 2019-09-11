@@ -1,7 +1,10 @@
 package com.lego.framework.config;
+
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.util.Date;
 
 @Data
@@ -19,8 +22,10 @@ public class BaseModel {
 
     private Long lastUpdatedBy;
 
+    @TableField(exist = false)
     private String lastUpdateUser;
 
+    @TableField(exist = false)
     private String createUser;
 
     public Long getId() {
@@ -32,12 +37,12 @@ public class BaseModel {
     }
 
     public void setCreateInfo() {
-        Date currentDate=new Date();
-        this.creationDate=currentDate;
-        this.lastUpdateDate=currentDate;
+        Date currentDate = new Date();
+        this.creationDate = currentDate;
+        this.lastUpdateDate = currentDate;
     }
 
     public void setUpdateInfo() {
-        this.lastUpdateDate=new Date();
+        this.lastUpdateDate = new Date();
     }
 }

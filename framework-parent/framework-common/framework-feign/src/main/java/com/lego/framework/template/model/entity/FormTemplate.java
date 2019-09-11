@@ -1,12 +1,13 @@
 package com.lego.framework.template.model.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
 
+@TableName(value = "tpl_form_template_t")
 public class FormTemplate extends Template {
-
-    private static final long serialVersionUID = -4615921670656794092L;
 
     @ApiModelProperty("数据模板id")
     private Long dataTemplateId;
@@ -18,6 +19,7 @@ public class FormTemplate extends Template {
     private String permission;
 
     @ApiModelProperty("模板项")
+    @TableField(exist = false)
     private List<FormTemplateItem> items;
 
     public Long getDataTemplateId() {

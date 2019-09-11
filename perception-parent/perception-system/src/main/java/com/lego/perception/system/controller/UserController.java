@@ -38,7 +38,7 @@ public class UserController {
     private IRoleService roleService;
 
 
-    @RequestMapping(value = "/findPagedList/{pageSize}/{curPage}", method = RequestMethod.GET)
+    @RequestMapping(value = "/findPagedList/{pageSize}/{pageIndex}", method = RequestMethod.GET)
     @Operation(value = "find", desc = "查询")
     @ApiOperation("分页查询")
     public RespVO<PagedResult<User>> page(@ModelAttribute User user, @PathParam("") Page page) {

@@ -1,5 +1,12 @@
 package com.lego.perception.system.service.impl;
+
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
+import com.framework.mybatis.tool.WhereEntityTool;
+import com.framework.mybatis.utils.PageUtil;
 import com.lego.framework.system.model.entity.Project;
 import com.lego.perception.system.mapper.ProjectMapper;
 import com.lego.perception.system.service.IProjectService;
@@ -24,8 +31,8 @@ public class ProjectServiceImpl implements IProjectService {
     private ProjectMapper projectMapper;
 
     @Override
-    public PagedResult<Project> selectPaged(RowBounds rowBounds) {
-        return projectMapper.selectPaged(rowBounds);
+    public PagedResult<Project> selectPaged(Page page, Project project) {
+        return PageUtil.queryPaged(page, project, projectMapper);
     }
 
     @Override
@@ -41,42 +48,42 @@ public class ProjectServiceImpl implements IProjectService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer insert(Project project,Long userId) {
+    public Integer insert(Project project, Long userId) {
         project.setCreateInfo(userId);
         return projectMapper.insert(project);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer insertSelective(Project project,Long userId) {
+    public Integer insertSelective(Project project, Long userId) {
         project.setCreateInfo(userId);
         return projectMapper.insertSelective(project);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer insertSelectiveIgnore(Project project,Long userId) {
+    public Integer insertSelectiveIgnore(Project project, Long userId) {
         project.setCreateInfo(userId);
         return projectMapper.insertSelectiveIgnore(project);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer updateByPrimaryKeySelective(Project project,Long userId) {
+    public Integer updateByPrimaryKeySelective(Project project, Long userId) {
         project.setUpdateInfo(userId);
         return projectMapper.updateByPrimaryKeySelective(project);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer updateByPrimaryKey(Project project,Long userId) {
+    public Integer updateByPrimaryKey(Project project, Long userId) {
         project.setUpdateInfo(userId);
         return projectMapper.updateByPrimaryKey(project);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer batchInsert(List<Project> projectList,Long userId) {
+    public Integer batchInsert(List<Project> projectList, Long userId) {
         if (!CollectionUtils.isEmpty(projectList)) {
             for (Project project : projectList) {
                 project.setCreateInfo(userId);
@@ -87,7 +94,7 @@ public class ProjectServiceImpl implements IProjectService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer batchUpdate(List<Project> projectList,Long userId) {
+    public Integer batchUpdate(List<Project> projectList, Long userId) {
         if (!CollectionUtils.isEmpty(projectList)) {
             for (Project project : projectList) {
                 project.setUpdateInfo(userId);
@@ -98,14 +105,14 @@ public class ProjectServiceImpl implements IProjectService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer upsert(Project project,Long userId) {
+    public Integer upsert(Project project, Long userId) {
         project.setUpdateInfo(userId);
         return projectMapper.upsert(project);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer upsertSelective(Project project,Long userId) {
+    public Integer upsertSelective(Project project, Long userId) {
         project.setUpdateInfo(userId);
         return projectMapper.upsertSelective(project);
     }

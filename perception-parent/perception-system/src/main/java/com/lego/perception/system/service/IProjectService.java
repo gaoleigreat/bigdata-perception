@@ -1,4 +1,5 @@
 package com.lego.perception.system.service;
+import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.lego.framework.system.model.entity.Project;
 import org.apache.ibatis.session.RowBounds;
@@ -11,7 +12,7 @@ import java.util.List;
 public interface IProjectService {
 
 
-    PagedResult<Project> selectPaged(RowBounds rowBounds);
+    PagedResult<Project> selectPaged(Page page,Project project);
 
     Project selectByPrimaryKey(Long id);
 

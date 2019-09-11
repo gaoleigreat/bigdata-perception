@@ -1,9 +1,14 @@
 package com.lego.perception.system.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
+import com.framework.mybatis.tool.WhereEntityTool;
+import com.framework.mybatis.utils.PageUtil;
 import com.lego.perception.system.mapper.RoleMapper;
 import com.lego.perception.system.service.IRoleService;
 import com.lego.framework.system.model.entity.Role;
@@ -30,12 +35,12 @@ public class RoleServiceImpl implements IRoleService {
     @Override
     public List<Role> findcadreList(Role role) {
         List<Role> roleList = roleMapper.findList(role);
-        if(roleList==null || roleList.size()<=0){
+        if (roleList == null || roleList.size() <= 0) {
             return null;
         }
-        for(int i = 0 ;i<roleList.size();i++){
+        for (int i = 0; i < roleList.size(); i++) {
             Role role1 = roleList.get(i);
-            if(role1.getId()==2){
+            if (role1.getId() == 2) {
                 roleList.remove(i);
             }
         }
@@ -44,13 +49,12 @@ public class RoleServiceImpl implements IRoleService {
 
     @Override
     public PagedResult<Role> findPagedList(Role role, Page page) {
-
-        return roleMapper.findPagedList(role, page);
+        return PageUtil.queryPaged(page, role, roleMapper);
     }
 
     @Override
     public RespVO insert(Role role) {
-        if(null == role){
+        if (null == role) {
             return RespVOBuilder.failure("参数缺失");
         }
         role.setCreateInfo();
@@ -60,10 +64,10 @@ public class RoleServiceImpl implements IRoleService {
 
     @Override
     public RespVO insertList(List<Role> roles) {
-        if(CollectionUtils.isEmpty(roles)){
+        if (CollectionUtils.isEmpty(roles)) {
             return RespVOBuilder.failure("参数缺失");
         }
-        for(Role role : roles){
+        for (Role role : roles) {
             role.setCreateInfo();
         }
         roleMapper.insertList(roles);
@@ -72,7 +76,7 @@ public class RoleServiceImpl implements IRoleService {
 
     @Override
     public RespVO update(Role role) {
-        if(null == role){
+        if (null == role) {
             return RespVOBuilder.failure("参数缺失");
         }
         role.setUpdateInfo();
@@ -82,10 +86,10 @@ public class RoleServiceImpl implements IRoleService {
 
     @Override
     public RespVO updateList(List<Role> roles) {
-        if(CollectionUtils.isEmpty(roles)){
+        if (CollectionUtils.isEmpty(roles)) {
             return RespVOBuilder.failure("参数缺失");
         }
-        for(Role role : roles){
+        for (Role role : roles) {
             role.setUpdateInfo();
         }
         roleMapper.updateList(roles);
@@ -94,7 +98,7 @@ public class RoleServiceImpl implements IRoleService {
 
     @Override
     public RespVO delete(Long id) {
-        if(null == id){
+        if (null == id) {
             return RespVOBuilder.failure("参数缺失");
         }
         roleMapper.delete(id);
@@ -103,7 +107,7 @@ public class RoleServiceImpl implements IRoleService {
 
     @Override
     public RespVO deleteList(List<Long> ids) {
-        if(CollectionUtils.isEmpty(ids)){
+        if (CollectionUtils.isEmpty(ids)) {
             return RespVOBuilder.failure("参数缺失");
         }
         roleMapper.deleteList(ids);
