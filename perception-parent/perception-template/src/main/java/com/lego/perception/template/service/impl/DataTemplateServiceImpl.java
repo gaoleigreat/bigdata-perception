@@ -1,9 +1,14 @@
 package com.lego.perception.template.service.impl;
+
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.framework.common.consts.RespConsts;
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
+import com.framework.mybatis.utils.PageUtil;
 import com.lego.framework.template.model.entity.DataTemplate;
 import com.lego.framework.template.model.entity.DataTemplateItem;
 import com.lego.framework.template.model.entity.Enumeration;
@@ -18,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+
 import java.util.List;
 import java.util.Map;
 
@@ -41,8 +47,7 @@ public class DataTemplateServiceImpl implements IDataTemplateService {
 
     @Override
     public PagedResult<DataTemplate> findPagedList(DataTemplate template, Page page) {
-
-        return dataTemplateMapper.findPagedList(template, page);
+        return PageUtil.queryPaged(page,template,dataTemplateMapper);
     }
 
     @Override
@@ -61,7 +66,7 @@ public class DataTemplateServiceImpl implements IDataTemplateService {
     public DataTemplate find(DataTemplate dataTemplate) {
         DataTemplate template = null;
         List<DataTemplate> templateList = dataTemplateMapper.findList(dataTemplate);
-        if(!CollectionUtils.isEmpty(templateList)){
+        if (!CollectionUtils.isEmpty(templateList)) {
 
             template = templateList.get(0);
 
@@ -72,9 +77,9 @@ public class DataTemplateServiceImpl implements IDataTemplateService {
             List<DataTemplateItem> itemList = dataTemplateItemService.findList(queryParam);
 
             Map<Long, Enumeration> enumerationMap = enumerationInit.getEnumerationIdMap();
-            if(!CollectionUtils.isEmpty(itemList)){
-                for(DataTemplateItem item : itemList){
-                    if(null != item.getEnumId()){
+            if (!CollectionUtils.isEmpty(itemList)) {
+                for (DataTemplateItem item : itemList) {
+                    if (null != item.getEnumId()) {
                         item.setEnumName(enumerationMap.containsKey(item.getEnumId()) ? enumerationMap.get(item.getEnumId()).getEnumName() : "");
                     }
                 }
@@ -90,12 +95,12 @@ public class DataTemplateServiceImpl implements IDataTemplateService {
 
     @Override
     public RespVO insert(DataTemplate dataTemplate) {
-        if(null == dataTemplate){
+        if (null == dataTemplate) {
             return RespVOBuilder.failure("参数缺失");
         }
 
         ValidateResult v = validateTemplate(dataTemplate);
-        if(!v.getResult()){
+        if (!v.getResult()) {
             return RespVOBuilder.failure(v.getMsg());
         }
 
@@ -105,10 +110,10 @@ public class DataTemplateServiceImpl implements IDataTemplateService {
         dataTemplateMapper.save(dataTemplate);
 
         //新增模板数据项
-        if(!CollectionUtils.isEmpty(dataTemplate.getItems())){
+        if (!CollectionUtils.isEmpty(dataTemplate.getItems())) {
 
             RespVO r = dataTemplateItemService.insertTree(dataTemplate.getId(), dataTemplate.getItems());
-            if(r.getRetCode()!= RespConsts.SUCCESS_RESULT_CODE){
+            if (r.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
                 return r;
             }
         }
@@ -117,12 +122,12 @@ public class DataTemplateServiceImpl implements IDataTemplateService {
     }
 
     private ValidateResult validateTemplate(DataTemplate dataTemplate) {
-        ValidateResult  v = templateValidateService.validateTemplate(dataTemplate);
-        if (!v.getResult()){
+        ValidateResult v = templateValidateService.validateTemplate(dataTemplate);
+        if (!v.getResult()) {
             return v;
         }
         v = isDuplicate(dataTemplate);
-        if (!v.getResult()){
+        if (!v.getResult()) {
             return v;
         }
 
@@ -135,7 +140,7 @@ public class DataTemplateServiceImpl implements IDataTemplateService {
         DataTemplate templateParam = new DataTemplate();
         templateParam.setTemplateCode(dataTemplate.getTemplateCode());
         List<DataTemplate> lst = dataTemplateMapper.findList(templateParam);
-        if(!CollectionUtils.isEmpty(lst)){
+        if (!CollectionUtils.isEmpty(lst)) {
             v.setResult(false);
             v.setMsg("模板编码重复");
             return v;
@@ -149,7 +154,7 @@ public class DataTemplateServiceImpl implements IDataTemplateService {
         DataTemplate templateParam = new DataTemplate();
         templateParam.setTemplateCode(dataTemplate.getTemplateCode());
         List<DataTemplate> lst = dataTemplateMapper.findList(templateParam);
-        if(!CollectionUtils.isEmpty(lst) && !id.equals(lst.get(0).getId())){
+        if (!CollectionUtils.isEmpty(lst) && !id.equals(lst.get(0).getId())) {
             v.setResult(false);
             v.setMsg("模板编码重复");
             return v;
@@ -160,13 +165,13 @@ public class DataTemplateServiceImpl implements IDataTemplateService {
 
     @Override
     public RespVO update(DataTemplate dataTemplate) {
-        if(null == dataTemplate){
+        if (null == dataTemplate) {
             return RespVOBuilder.failure("参数缺失");
         }
 
-        if(null != dataTemplate.getTemplateCode()){
+        if (null != dataTemplate.getTemplateCode()) {
             ValidateResult v = isDuplicate(dataTemplate, dataTemplate.getId());
-            if(!v.getResult()){
+            if (!v.getResult()) {
                 return RespVOBuilder.failure(v.getMsg());
             }
         }
@@ -178,7 +183,7 @@ public class DataTemplateServiceImpl implements IDataTemplateService {
 
     @Override
     public RespVO delete(Long id) {
-        if(null == id){
+        if (null == id) {
             return RespVOBuilder.failure("参数缺失");
         }
         dataTemplateMapper.delete(id);
@@ -187,9 +192,9 @@ public class DataTemplateServiceImpl implements IDataTemplateService {
 
     @Override
     public DataTemplate findById(Long templateId) {
-        DataTemplate dataTemplate=new DataTemplate();
+        DataTemplate dataTemplate = new DataTemplate();
         dataTemplate.setId(templateId);
         List<DataTemplate> list = dataTemplateMapper.findList(dataTemplate);
-        return list!=null && list.size()>0 ? list.get(0) : null;
+        return list != null && list.size() > 0 ? list.get(0) : null;
     }
 }

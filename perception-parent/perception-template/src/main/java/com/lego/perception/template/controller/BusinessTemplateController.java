@@ -1,5 +1,6 @@
 package com.lego.perception.template.controller;
 
+import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
@@ -8,8 +9,11 @@ import com.lego.framework.template.model.entity.BusinessTemplate;
 import com.lego.perception.template.service.IBusinessTemplateService;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.websocket.server.PathParam;
 import java.util.List;
 
 /**
@@ -28,10 +32,11 @@ public class BusinessTemplateController {
     /**
      * 分页查询数据
      */
-    @RequestMapping("/select_paged")
-    public RespVO<PagedResult<BusinessTemplate>> selectPaged(RowBounds rowBounds) {
-        PagedResult<BusinessTemplate> page = tplBusinessTemplateService.selectPaged(rowBounds);
-        return RespVOBuilder.success(page);
+    @RequestMapping("/select_paged/{pageSize}/{pageIndex}")
+    public RespVO<PagedResult<BusinessTemplate>> selectPaged(@ModelAttribute BusinessTemplate businessTemplate,
+                                                             @PathParam(value = "")Page page) {
+        PagedResult<BusinessTemplate> pagedResult = tplBusinessTemplateService.selectPaged(businessTemplate,page);
+        return RespVOBuilder.success(pagedResult);
     }
 
     /**

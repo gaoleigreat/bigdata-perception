@@ -69,6 +69,7 @@ public class TemplateDataController {
         if (req instanceof MultipartHttpServletRequest) {
             fileList = ((MultipartHttpServletRequest) req).getFiles("file");
         }
+        Long fileId = 1L;
         fileList.forEach(file -> {
             try {
                 maps.addAll(analyticalData(file, templateId, sourceType));
@@ -80,7 +81,7 @@ public class TemplateDataController {
         });
 
         // 3 调用接口上传
-        return businessClient.insert(template, maps, sourceType);
+        return businessClient.insertBusinessData(template,fileId, maps, sourceType);
     }
 
     /**
@@ -96,7 +97,7 @@ public class TemplateDataController {
         FormTemplate template = new FormTemplate();
         template.setId(templateId);
         template = formTemplateService.find(template);
-        RespVO<List<Map>> query = businessClient.query(template, map, sourceType);
+        RespVO<List<Map>> query = businessClient.queryBusinessData(template, map, sourceType);
         //if (template.get) 模板上传文件是json
         JSONObject jsonObject = new JSONObject();
         query.getInfo().forEach(v -> {
