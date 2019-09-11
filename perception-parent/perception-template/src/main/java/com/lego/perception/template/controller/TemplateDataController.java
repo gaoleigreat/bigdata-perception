@@ -1,6 +1,7 @@
 package com.lego.perception.template.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.framework.common.sdto.RespVO;
 import com.framework.excel.utils.ExcelTemplateUtil;
 import com.framework.word.util.WordTemplateUtil;
@@ -86,11 +87,41 @@ public class TemplateDataController {
      * 数据下载
      *
      * @param templateId 模板id
-     * @param startTime  开始时间
-     * @param endTime    结束时间
+     * @param map        查詢条件
      * @return
      */
-    public RespVO downloadData(Long templateId, Long startTime, Long endTime) {
+    public RespVO downloadData(Long templateId, Map<String, Object> map, Integer sourceType) {
+
+        // 1 根据模板id查寻模板
+        FormTemplate template = new FormTemplate();
+        template.setId(templateId);
+        template = formTemplateService.find(template);
+        RespVO<List<Map>> query = businessClient.query(template, map, sourceType);
+        //if (template.get) 模板上传文件是json
+        JSONObject jsonObject = new JSONObject();
+        query.getInfo().forEach(v -> {
+            Set set = v.keySet();
+            set.forEach(setValue -> {
+                try {
+                    jsonObject.put(setValue.toString(), v.get(setValue));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            });
+        });
+
+        //模板上传文件是xml
+
+        //模板上传文件是csv
+
+        //模板上传文件是xlsx
+
+        //模板上传文件是Word
+
+
+        Object info = query.getInfo();
+
 
         return null;
     }
@@ -135,17 +166,36 @@ public class TemplateDataController {
 
         } else if (file.getOriginalFilename().endsWith(".json")) {
             String str = IOUtils.toString(file.getInputStream(), "utf-8");
-            com.alibaba.fastjson.JSONObject jsonObject = (com.alibaba.fastjson.JSONObject) JSON.parse(str);
-            Set<String> strings = jsonObject.keySet();
-            List<Map<String, Object>> datalist = new ArrayList<>();
+            if (str != null && str.trim().startsWith("[")) {
+                List<Map<String, Object>> datalist = new ArrayList<>();
+                JSONArray jsonArray = JSON.parseArray(str);
+                for (int i = 0; i < jsonArray.size(); i++) {
+                    com.alibaba.fastjson.JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    Set<String> strings = jsonObject.keySet();
 
-            strings.forEach(s -> {
-                Map<String, Object> map = new HashMap<>();
-                map.put(s, jsonObject.get(s));
-                datalist.add(map);
 
-            });
-            return datalist;
+                    strings.forEach(s -> {
+                        Map<String, Object> map = new HashMap<>();
+                        map.put(s, jsonObject.get(s));
+                        datalist.add(map);
+                    });
+                }
+                return datalist;
+            } else {
+                com.alibaba.fastjson.JSONObject jsonObject = (com.alibaba.fastjson.JSONObject) JSON.parse(str);
+                Set<String> strings = jsonObject.keySet();
+                List<Map<String, Object>> datalist = new ArrayList<>();
+
+                strings.forEach(s -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put(s, jsonObject.get(s));
+                    datalist.add(map);
+
+                });
+                return datalist;
+            }
+
+
         } else if (file.getOriginalFilename().endsWith(".csv")) {
             List<String> dataList = CSVUtils.importCsv(file.getInputStream());
             List<Map<String, Object>> resultList = new ArrayList<>();
