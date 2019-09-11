@@ -1,5 +1,7 @@
 package com.lego.framework.system.model.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,6 +18,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@TableName(value = "tpl_user_role_project")
 public class UserRoleProject {
     @ApiModelProperty("id")
     private Long id;
@@ -35,6 +38,7 @@ public class UserRoleProject {
     private Date lastUpdateDate;
     @ApiModelProperty("最后更新人")
     private Long lastUpdatedBy;
+    @TableField(exist = false)
     private List<Long> userIds;
 
     public void setCreateInfo() {

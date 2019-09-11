@@ -1,15 +1,21 @@
 package com.lego.perception.system.service.impl;
 
 import com.alibaba.excel.util.CollectionUtils;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
+import com.framework.mybatis.tool.WhereEntityTool;
+import com.framework.mybatis.utils.PageUtil;
 import com.lego.perception.system.mapper.DictionaryMapper;
 import com.lego.perception.system.service.IDictionaryService;
 import com.lego.framework.system.model.entity.Dictionary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -81,7 +87,7 @@ public class DictionaryServiceImpl implements IDictionaryService {
             dictionary = new Dictionary();
         }
         dictionary.setDeleteFlag(1);
-        return dictionaryMapper.findPagedList(dictionary, page);
+        return PageUtil.queryPaged(page, dictionary, dictionaryMapper);
     }
 
     @Override

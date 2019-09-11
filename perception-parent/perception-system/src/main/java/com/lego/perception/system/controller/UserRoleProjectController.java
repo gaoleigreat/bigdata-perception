@@ -37,7 +37,7 @@ public class UserRoleProjectController {
         return userRoleService.findList(userRoleProject);
     }
 
-    @RequestMapping(value="/findPagedList/{pageSize}/{curPage}", method=RequestMethod.GET)
+    @RequestMapping(value="/findPagedList/{pageSize}/{pageIndex}", method=RequestMethod.GET)
     @Operation(value = "find", desc = "查询")
     @ApiOperation("分页查询")
     public PagedResult<UserRoleProject> findPagedList(@ModelAttribute UserRoleProject userRoleProject, @PathParam("") Page page){

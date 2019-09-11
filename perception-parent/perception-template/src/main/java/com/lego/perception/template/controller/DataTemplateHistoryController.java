@@ -23,10 +23,10 @@ public class DataTemplateHistoryController {
     @Qualifier(value = "dataTemplateHistoryServiceImpl")
     private IHistoryTemplateService dataTemplateHistoryService;
 
-    @RequestMapping(value = "/find/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/find/{code}", method = RequestMethod.GET)
     @Operation(value = "find", desc = "查询")
     @ApiOperation("查询模板详情")
-    public RespVO find(@PathVariable String code, @RequestParam String tag) {
+    public RespVO find(@PathVariable(value = "code") String code, @RequestParam String tag) {
 
         return RespVOBuilder.success(dataTemplateHistoryService.find(code, tag));
     }

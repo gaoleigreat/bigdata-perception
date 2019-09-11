@@ -1,9 +1,13 @@
 package com.lego.framework.template.model.entity;
+
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.lego.framework.config.BaseModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
 
+@TableName(value = "tpl_enum_t")
 public class Enumeration extends BaseModel {
     @ApiModelProperty("枚举编码")
     private String enumCode;
@@ -15,6 +19,7 @@ public class Enumeration extends BaseModel {
     private String description;
 
     @ApiModelProperty("枚举列表")
+    @TableField(exist = false)
     private List<EnumerationItem> items;
 
     public String getEnumCode() {

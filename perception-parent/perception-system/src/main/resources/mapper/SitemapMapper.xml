@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lego.perception.system.mapper.SitemapMapper">
+
+    <sql id="find_columns">
+		id as id, parent_id as parentId,sub_system as subSystem, `name` as `name`, url as url, `type` as `type`, permission as permission, sort as sort,
+		icon as icon, scope as scope, status as status, creation_date as creationDate, created_by as createdBy,
+		last_update_date as lastUpdateDate, last_updated_by as lastUpdatedBy
+	</sql>
+
+    <sql id="condition">
+        <if test='id != null'>
+            and id = #{id, jdbcType=BIGINT}
+        </if>
+        <if test='parentId != null'>
+            and parent_id = #{parentId, jdbcType=BIGINT}
+        </if>
+        <if test='name != null and name != ""'>
+            and instr(`name`, #{name, jdbcType=VARCHAR}) > 0
+        </if>
+        <if test='type != null and type != -1'>
+            and `type` = #{type, jdbcType=INTEGER}
+        </if>
+        <if test="status != null and status != -1">
+            and status = #{status, jdbcType=INTEGER}
+        </if>
+        <if test='scope != null and scope != ""'>
+            and scope = #{scope, jdbcType=VARCHAR}
+        </if>
+        <if test="subSystem != null and subSystem != ''">
+            and sub_system = #{subSystem, jdbcType=VARCHAR}
+        </if>
+    </sql>
+
+    <sql id="page_condition">
+        <if test='arg0.id != null'>
+            and id = #{arg0.id, jdbcType=BIGINT}
+        </if>
+        <if test='arg0.parentId != null'>
+            and parent_id = #{arg0.parentId, jdbcType=BIGINT}
+        </if>
+        <if test='arg0.name != null and arg0.name != ""'>
+            and instr(`name`, #{arg0.name, jdbcType=VARCHAR}) > 0
+        </if>
+        <if test='arg0.type != null and arg0.type != -1'>
+            and `type` = #{arg0.type, jdbcType=INTEGER}
+        </if>
+        <if test="arg0.status != null and arg0.status != -1">
+            and status = #{arg0.status, jdbcType=INTEGER}
+        </if>
+        <if test='arg0.scope != null and arg0.scope != ""'>
+            and scope = #{arg0.scope, jdbcType=VARCHAR}
+        </if>
+        <if test="arg0.subSystem != null and arg0.subSystem != ''">
+            and sub_system = #{arg0.subSystem, jdbcType=VARCHAR}
+        </if>
+    </sql>
+
+    <select id="findPagedList" resultType="com.lego.framework.system.model.entity.Sitemap">
+        select <include refid="find_columns"></include>
+        from tpl_sitemap_t
+        <where>
+            <include refid="page_condition"></include>
+        </where>
+        limit #{arg1.startIndex, jdbcType=INTEGER}, #{arg1.pageSize, jdbcType=INTEGER}
+    </select>
+
+    <select id="findPagedListCount" resultType="java.lang.Long">
+        select count(1)
+        from tpl_sitemap_t
+        <where>
+            <include refid="page_condition"></include>
+        </where>
+    </select>
+
+    <select id="findList" parameterType="com.lego.framework.system.model.entity.Sitemap"
+            resultType="com.lego.framework.system.model.entity.Sitemap">
+        select <include refid="find_columns"></include>
+        from tpl_sitemap_t
+        <where>
+            <include refid="condition"></include>
+        </where>
+    </select>
+
+    <insert id="insertList">
+        insert into tpl_sitemap_t
+        (parent_id, sub_system, `name`, url, `type`, permision, sort, icon, scope, status, created_by, last_update_date, last_updated_by)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.parentId, jdbcType=BIGINT},
+            #{item.subSystem, jdbcType=VARCHAR}
+            #{item.name, jdbcType=VARCHAR},
+            #{item.url, jdbcType=VARCHAR},
+            #{item.type, jdbcType=INTEGER},
+            #{item.permission, jdbcType=VARCHAR},
+            #{item.sort, jdbcType=INTEGER},
+            #{item.icon, jdbcType=VARCHAR},
+            #{item.scope, jdbcType=VARCHAR},
+            #{item.status, jdbcType=INTEGER},
+            #{item.creationDate, jdbcType=TIMESTAMP},
+            #{item.createdBy, jdbcType=BIGINT},
+            #{item.lastUpdateDate, jdbcType=TIMESTAMP},
+            #{item.lastUpdatedBy, jdbcType=BIGINT}
+            )
+        </foreach>
+    </insert>
+
+    <insert id="save">
+		insert into tpl_sitemap_t
+		(parent_id, sub_system, `name`, url, `type`, permission, sort, icon, scope, status, creation_date, created_by, last_update_date, last_updated_by)
+		values
+		(
+          #{parentId, jdbcType=BIGINT},
+          #{subSystem, jdbcType=VARCHAR},
+          #{name, jdbcType=VARCHAR},
+          #{url, jdbcType=VARCHAR},
+          #{type, jdbcType=INTEGER},
+          #{permission, jdbcType=VARCHAR},
+          #{sort, jdbcType=INTEGER},
+          #{icon, jdbcType=VARCHAR},
+          #{scope, jdbcType=VARCHAR},
+          #{status, jdbcType=INTEGER},
+          #{creationDate, jdbcType=TIMESTAMP},
+          #{createdBy, jdbcType=BIGINT},
+          #{lastUpdateDate, jdbcType=TIMESTAMP},
+          #{lastUpdatedBy, jdbcType=BIGINT}
+          )
+	</insert>
+
+    <update id="update">
+        update tpl_sitemap_t
+        <set>
+            <if test='parentId != null'>
+                parent_id = #{parentId, jdbcType=BIGINT},
+            </if>
+            <if test='subSystem != null and subSystem != ""'>
+                sub_system = #{subSystem, jdbcType=VARCHAR},
+            </if>
+            <if test='name != null and name != ""'>
+                `name` = #{name, jdbcType=VARCHAR},
+            </if>
+            <if test='url != null and url != ""'>
+                url = #{url, jdbcType=VARCHAR},
+            </if>
+            <if test='type != null'>
+                `type` = #{type, jdbcType=VARCHAR},
+            </if>
+            <if test='permission != null and permission != ""'>
+                permission = #{permission, jdbcType=VARCHAR},
+            </if>
+            <if test='sort != null'>
+                `sort` = #{sort, jdbcType=VARCHAR},
+            </if>
+            <if test='icon != null and icon != ""'>
+                icon = #{icon, jdbcType=VARCHAR},
+            </if>
+            <if test='scope != null and scope != ""'>
+                scope = #{scope, jdbcType=VARCHAR},
+            </if>
+            <if test='status != null'>
+                status = #{status, jdbcType=INTEGER},
+            </if>
+            <if test='lastUpdateDate != null'>
+                last_update_date = #{lastUpdateDate, jdbcType=TIMESTAMP},
+            </if>
+            <if test='lastUpdatedBy != null'>
+                last_updated_by = #{lastUpdatedBy, jdbcType=BIGINT},
+            </if>
+        </set>
+        where id = #{id, jdbcType=BIGINT}
+    </update>
+
+    <update id="updateList">
+        <foreach collection="list" item="item">
+            update tpl_sitemap_t
+            <set>
+                parent_id = #{item.parentId, jdbcType=BIGINT},
+                sub_system = #{item.subSystem, jdbcType=VARCHAR},
+                `name` = #{item.name, jdbcType=VARCHAR},
+                url = #{item.url, jdbcType=VARCHAR},
+                `type` = #{item.type, jdbcType=INTEGER},
+                permission = #{item.permission, jdbcType=VARCHAR},
+                sort = #{item.sort, jdbcType=INTEGER},
+                icon = #{item.icon, jdbcType=VARCHAR},
+                scope = #{item.scope, jdbcType=VARCHAR},
+                status = #{item.status, jdbcType=INTEGER},
+                last_update_date = #{item.lastUpdateDate, jdbcType=TIMESTAMP},
+                last_updated_by = #{item.lastUpdatedBy, jdbcType=BIGINT},
+            </set>
+            where id = #{item.id, jdbcType=BIGINT};
+        </foreach>
+    </update>
+
+    <delete id="delete">
+        delete from tpl_sitemap_t
+        where id = #{id, jdbcType=BIGINT}
+    </delete>
+
+    <delete id="deleteList">
+        delete from  tpl_sitemap_t
+        where id in
+        <foreach collection="list" item="item" separator="," open="(" close=")" index="index">
+            #{list[${index}], jdbcType=BIGINT}
+        </foreach>
+    </delete>
+</mapper>

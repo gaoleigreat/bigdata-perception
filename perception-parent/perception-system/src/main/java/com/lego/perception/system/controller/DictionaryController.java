@@ -61,7 +61,7 @@ public class DictionaryController {
         return dictionaryService.findTree(dictionary);
     }
 
-    @RequestMapping(value = "/findPagedList", method = RequestMethod.GET)
+    @RequestMapping(value = "/findPagedList/{pageSize}/{pageIndex}", method = RequestMethod.GET)
     @Operation(value = "find", desc = "查询")
     @ApiOperation("分页查询")
     public PagedResult<Dictionary> findPagedList(@ModelAttribute Dictionary dictionary, @PathParam("") Page page) {

@@ -80,7 +80,7 @@ public class BusinessServiceTest {
         mp1.put("creation_date", new Date());
         List<Map<String,Object>> maps=new ArrayList<>();
         maps.add(mp1);
-        RespVO respVO = iBusinessService.insertBusinessData(formTemplate, maps);
+        RespVO respVO = iBusinessService.insertBusinessData(formTemplate, maps,1L);
         log.info("respVO:{}", respVO);
         Assert.assertEquals(respVO.getRetCode(), RespConsts.SUCCESS_RESULT_CODE);
     }
@@ -112,6 +112,5 @@ public class BusinessServiceTest {
         item.setDefaultValue(defaultValue);
         return item;
     }
-
 
 }

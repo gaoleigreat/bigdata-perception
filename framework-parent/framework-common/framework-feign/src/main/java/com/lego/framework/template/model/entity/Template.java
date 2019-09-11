@@ -5,8 +5,6 @@ import io.swagger.annotations.ApiModelProperty;
 
 public class Template extends BaseModel {
 
-    private static final long serialVersionUID = 3117406673485233512L;
-
     @ApiModelProperty("模板名称")
     private String templateName;
 

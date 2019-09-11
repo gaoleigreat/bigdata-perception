@@ -4,6 +4,7 @@ import com.framework.common.consts.RespConsts;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.system.model.entity.Permission;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,6 +33,14 @@ public interface PermissionClient {
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     RespVO save(@RequestParam(value = "scope") String scope, @RequestBody List<Permission> permissions);
 
+
+    /**
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "/findUserPermissions", method = RequestMethod.GET)
+    List<Permission> findUserPermissions(@RequestParam(value = "userId") Long userId);
+
 }
 
 @Component
@@ -40,5 +49,10 @@ class PermissionClientFallback implements PermissionClient {
     @Override
     public RespVO save(String scope, List<Permission> permissions) {
         return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "system服务不可用");
+    }
+
+    @Override
+    public List<Permission> findUserPermissions(Long userId) {
+        return null;
     }
 }

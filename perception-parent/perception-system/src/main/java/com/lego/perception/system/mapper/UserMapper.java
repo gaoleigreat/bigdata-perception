@@ -18,7 +18,7 @@ public interface UserMapper extends Mapper<User> {
 	 * @param page
 	 * @return
 	 */
-	PagedResult<User> findPagedList(User user, Page page);
+	List<User> findPagedList(User user, Page page);
 
 	/**
 	 * 查询列表

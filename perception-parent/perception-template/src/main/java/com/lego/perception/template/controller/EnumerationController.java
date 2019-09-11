@@ -48,11 +48,11 @@ public class EnumerationController {
     @Autowired
     private IDataTemplateService iDataTemplateService;
 
-    @RequestMapping(value = "/findPagedList/{pageSize}/{curPage}", method = RequestMethod.GET)
+    @RequestMapping(value = "/findPagedList/{pageSize}/{pageIndex}", method = RequestMethod.GET)
     @Operation(value = "find", desc = "查询")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "curPage", value = "请求页", dataType = "int", required = true, paramType = "query"),
-            @ApiImplicitParam(name = "pageSize", value = "每页大小", dataType = "int", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "pageIndex", value = "请求页", dataType = "int", required = true, paramType = "path"),
+            @ApiImplicitParam(name = "pageSize", value = "每页大小", dataType = "int", required = true, paramType = "path"),
     })
     @ApiOperation("分页查询枚举")
     public RespVO<PagedResult<Enumeration>> findPagedList(@ModelAttribute Enumeration enumeration, @PathParam("") Page page) {

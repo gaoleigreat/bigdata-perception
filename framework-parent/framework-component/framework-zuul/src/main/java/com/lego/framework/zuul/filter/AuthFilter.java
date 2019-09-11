@@ -142,10 +142,6 @@ public class AuthFilter extends ZuulFilter {
         ctx.getZuulRequestHeaders().put("TRACE", traceInfo);
         ctx.setSendZuulResponse(true);
         ctx.setResponseStatusCode(200);
-        // TODO
-        ctx.addZuulRequestHeader(HttpConsts.USER_ID, "1");
-        ctx.addZuulRequestHeader(HttpConsts.USER_NAME, "admin");
-
         if (currentVo != null) {
             ctx.addZuulRequestHeader(HttpConsts.USER_ID, currentVo.getUserId() + "");
             ctx.addZuulRequestHeader(HttpConsts.USER_NAME, currentVo.getUserName());

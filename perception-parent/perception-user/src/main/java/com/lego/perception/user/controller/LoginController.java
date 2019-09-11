@@ -4,13 +4,18 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.framework.common.consts.DictConstant;
 import com.framework.common.consts.HttpConsts;
+import com.framework.common.consts.RespConsts;
 import com.framework.common.sdto.HeaderVo;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
+import com.framework.common.sdto.TokenVo;
 import com.lego.framework.auth.feign.AuthClient;
 import com.lego.framework.base.annotation.Resource;
 import com.lego.framework.base.utils.HeaderUtils;
+import com.lego.framework.base.utils.SecurityUtils;
 import com.lego.framework.sso.SsoClient;
+import com.lego.framework.system.feign.UserClient;
+import com.lego.framework.system.model.entity.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -42,7 +47,7 @@ import java.util.UUID;
 @Api(value = "UserController", description = "用户管理")
 @Resource(value = "user", desc = "用户管理")
 @Slf4j
-public class UserController {
+public class LoginController {
 
     @Autowired
     private AuthClient authClient;
@@ -50,11 +55,14 @@ public class UserController {
     @Autowired
     private SsoClient ssoClient;
 
+    @Autowired
+    private UserClient userClient;
+
 
     @ApiOperation(value = "用户登录", httpMethod = "POST", notes = "用户登录")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "user", value = "用户名", dataType = "String", required = true, paramType = "query"),
-            @ApiImplicitParam(name = "pwd", value = "密码", dataType = "String", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "userName", value = "用户名", dataType = "String", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "password", value = "密码", dataType = "String", required = true, paramType = "query"),
     })
     @RequestMapping(value = {"/login"}, method = RequestMethod.POST)
     public String login(HttpServletRequest request,
@@ -113,5 +121,33 @@ public class UserController {
         writer.close();
         return null;
     }
+
+
+    @ApiOperation(value = "模拟用户登录", httpMethod = "POST", notes = "模拟用户登录")
+    @ApiImplicitParams({
+
+    })
+    @RequestMapping(value = {"/mock_login"}, method = RequestMethod.POST)
+    @ResponseBody
+    public RespVO mockLogin(@NotBlank(message = "用户名不能为空") @RequestParam String userName,
+                            @NotBlank(message = "密码不能为空") @Size(min = 6, max = 32, message = "密码长度为6-23位") @RequestParam String password) throws IOException {
+        User user = new User();
+        user.setPassword(SecurityUtils.encryptionWithMd5(password));
+        user.setUsername(userName);
+        RespVO<User> respVO = userClient.findUserById(user);
+        if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
+            return RespVOBuilder.failure();
+        }
+        User info = respVO.getInfo();
+        if (info == null) {
+            return RespVOBuilder.failure("用户不存在");
+        }
+        RespVO<TokenVo> tokenVo = authClient.generate(info, HttpConsts.DeviceType.DEVICE_WEB);
+        if (tokenVo.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
+            return RespVOBuilder.failure("登录失败");
+        }
+        return tokenVo;
+    }
+
 
 }

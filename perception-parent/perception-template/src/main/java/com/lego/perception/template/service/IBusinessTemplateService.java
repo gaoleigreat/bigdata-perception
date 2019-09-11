@@ -1,4 +1,5 @@
 package com.lego.perception.template.service;
+import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.lego.framework.template.model.entity.BusinessTemplate;
 import org.apache.ibatis.session.RowBounds;
@@ -16,7 +17,7 @@ import java.util.List;
 public interface IBusinessTemplateService {
 
 
-    PagedResult<BusinessTemplate> selectPaged(RowBounds rowBounds);
+    PagedResult<BusinessTemplate> selectPaged(BusinessTemplate businessTemplate, Page page);
 
     BusinessTemplate selectByPrimaryKey(Long id);
 

@@ -1,11 +1,19 @@
 package com.lego.perception.system.service.impl;
+
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
+import com.framework.mybatis.tool.WhereEntityTool;
+import com.framework.mybatis.utils.PageUtil;
 import com.lego.framework.system.model.entity.TbSystem;
 import com.lego.perception.system.mapper.SystemMapper;
 import com.lego.perception.system.service.SystemService;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 
@@ -17,15 +25,14 @@ import java.util.List;
  */
 @Service("systemService")
 public class SystemServiceImpl implements SystemService {
-    /*<AUTOGEN--BEGIN>*/
 
     @Autowired
     public SystemMapper systemMapper;
 
 
     @Override
-    public PagedResult<TbSystem> selectPaged(RowBounds rowBounds) {
-        return systemMapper.selectPaged(rowBounds);
+    public PagedResult<TbSystem> selectPaged(TbSystem tbSystem, Page page) {
+        return PageUtil.queryPaged(page, tbSystem, systemMapper);
     }
 
     @Override

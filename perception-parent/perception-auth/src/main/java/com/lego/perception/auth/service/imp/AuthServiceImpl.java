@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.framework.common.sdto.AuthVo;
 import com.framework.common.sdto.CurrentVo;
 import com.framework.common.sdto.TokenVo;
+import com.lego.framework.system.feign.PermissionClient;
+import com.lego.framework.system.model.entity.Permission;
 import com.lego.framework.system.model.entity.User;
 import com.lego.perception.auth.propery.JwtProperty;
 import com.lego.perception.auth.service.IAuthService;
@@ -21,6 +23,9 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -43,6 +48,9 @@ public class AuthServiceImpl implements IAuthService {
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
+    private PermissionClient permissionClient;
 
 
     @Override
@@ -74,11 +82,27 @@ public class AuthServiceImpl implements IAuthService {
 
     private CurrentVo generateCurrentVo(User user, String deviceType) {
         CurrentVo currentVo = new CurrentVo();
+        currentVo.setDeviceType(deviceType);
         currentVo.setName(user.getRealName());
-        //currentVo.setPermissions(user.getPermission());
+        findPermissions(currentVo, user);
         currentVo.setPhone(user.getPhone());
         return currentVo;
     }
+
+
+    private void findPermissions(CurrentVo current, User user) {
+        List<Permission> permissions = permissionClient.findUserPermissions(user.getId());
+        Set<String> permissionSet = new HashSet<>();
+        for (Permission permission : permissions) {
+            if (null == permission || org.apache.commons.lang.StringUtils.isEmpty(permission.getScope()) || org.apache.commons.lang.StringUtils.isEmpty(permission.getRId())
+                    || org.apache.commons.lang.StringUtils.isEmpty(permission.getPrId())) {
+                continue;
+            }
+            permissionSet.add(permission.getScope() + "$" + permission.getRId() + "$" + permission.getPrId());
+        }
+        current.setPermissions(permissionSet);
+    }
+
 
     @Override
     public AuthVo verifyUserToken(String token, String deviceType) {

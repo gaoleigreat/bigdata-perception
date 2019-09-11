@@ -1,5 +1,6 @@
 package com.lego.framework.template.model.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,6 +20,7 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@TableName(value = "tpl_business_template")
 public class BusinessTemplate {
     @ApiModelProperty("id")
     private Long id;

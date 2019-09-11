@@ -1,7 +1,9 @@
 package com.lego.perception.business.service;
 
+import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.lego.framework.template.model.entity.FormTemplate;
+
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +32,7 @@ public interface IBusinessService {
      * @param data
      * @return
      */
-    RespVO insertBusinessData(FormTemplate formTemplate, List<Map<String, Object>> data);
+    RespVO insertBusinessData(FormTemplate formTemplate, List<Map<String, Object>> data, Long fileId);
 
 
     /**
@@ -40,7 +42,7 @@ public interface IBusinessService {
      * @param param
      * @return
      */
-    RespVO queryBusinessData(String tableName, Map<String, Object> param);
+    RespVO<RespDataVO<Map>> queryBusinessData(String tableName, Map<String, Object> param);
 
 
     /**
@@ -55,6 +57,7 @@ public interface IBusinessService {
 
     /**
      * 删除业务数据
+     *
      * @param tableName
      * @param data
      * @return

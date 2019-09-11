@@ -1,5 +1,6 @@
 package com.lego.perception.business.service.impl;
 
+import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.template.model.entity.FormTemplate;
@@ -17,6 +18,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 
@@ -42,14 +44,23 @@ public class MongoBusinessServiceImpl implements IBusinessService {
     }
 
     @Override
-    public RespVO insertBusinessData(FormTemplate formTemplate, List<Map<String, Object>> data) {
+    public RespVO insertBusinessData(FormTemplate formTemplate,
+                                     List<Map<String, Object>> data,
+                                     Long fileId) {
+        if (CollectionUtils.isEmpty(data)) {
+            return RespVOBuilder.success();
+        }
+        for (Map<String, Object> datum : data) {
+            datum.put("fileId", fileId);
+        }
         String tableName = formTemplate.getDescription();
-        mongoTemplate.insert(data,tableName);
+        mongoTemplate.insert(data, tableName);
         return RespVOBuilder.success();
     }
 
     @Override
-    public RespVO queryBusinessData(String tableName, Map<String, Object> param) {
+    public RespVO<RespDataVO<Map>> queryBusinessData(String tableName,
+                                                     Map<String, Object> param) {
         Query query = new Query();
         Criteria criteria = new Criteria();
         if (param != null) {
@@ -59,6 +70,11 @@ public class MongoBusinessServiceImpl implements IBusinessService {
         }
         query.addCriteria(criteria);
         List<Map> mapList = mongoTemplate.find(query, Map.class, tableName);
+        if (!CollectionUtils.isEmpty(mapList)) {
+            for (Map map : mapList) {
+                map.remove("fileId");
+            }
+        }
         return RespVOBuilder.success(mapList);
     }
 

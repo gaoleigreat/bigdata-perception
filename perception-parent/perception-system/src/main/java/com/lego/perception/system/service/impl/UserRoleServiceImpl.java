@@ -1,9 +1,14 @@
 package com.lego.perception.system.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
+import com.framework.mybatis.tool.WhereEntityTool;
+import com.framework.mybatis.utils.PageUtil;
 import com.lego.framework.system.model.entity.UserRoleProject;
 import com.lego.perception.system.mapper.UserRoleProjectMapper;
 import com.lego.perception.system.service.IUserRoleService;
@@ -32,8 +37,7 @@ public class UserRoleServiceImpl implements IUserRoleService {
 
     @Override
     public PagedResult<UserRoleProject> findPagedList(UserRoleProject userRoleProject, Page page) {
-
-        return userRoleProjectMapper.findPagedList(userRoleProject, page);
+        return PageUtil.queryPaged(page, userRoleProject, userRoleProjectMapper);
     }
 
     @Override
@@ -113,12 +117,12 @@ public class UserRoleServiceImpl implements IUserRoleService {
         List<String> newUserIds = new ArrayList<>();
 
         //如果原始数据是空，新增新数据，返回；
-        if(CollectionUtils.isEmpty(originList)){
+        if (CollectionUtils.isEmpty(originList)) {
             userRoleProjectMapper.insertList(userRoleProjects);
             return RespVOBuilder.success();
-        }else{
-            for(UserRoleProject userRoleProgram : originList){
-                originUserIds.add(userRoleProgram.getRoleId()+"$"+userRoleProgram.getProjectId());
+        } else {
+            for (UserRoleProject userRoleProgram : originList) {
+                originUserIds.add(userRoleProgram.getRoleId() + "$" + userRoleProgram.getProjectId());
                 originIds.add(userRoleProgram.getId());
             }
         }
@@ -161,7 +165,7 @@ public class UserRoleServiceImpl implements IUserRoleService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public RespVO updateAndInsert(UserRoleProject userRoleProject) {
-        if (null == userRoleProject || null == userRoleProject.getRoleId() || null == userRoleProject.getUserId() || null ==userRoleProject.getProjectId()) {
+        if (null == userRoleProject || null == userRoleProject.getRoleId() || null == userRoleProject.getUserId() || null == userRoleProject.getProjectId()) {
             return RespVOBuilder.failure("参数缺失");
         }
         List<UserRoleProject> originList = findList(userRoleProject);

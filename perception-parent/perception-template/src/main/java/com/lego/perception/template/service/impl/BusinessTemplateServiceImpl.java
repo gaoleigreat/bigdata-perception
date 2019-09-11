@@ -1,5 +1,12 @@
 package com.lego.perception.template.service.impl;
+
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
+import com.framework.mybatis.tool.WhereEntityTool;
+import com.framework.mybatis.utils.PageUtil;
 import com.lego.framework.template.model.entity.BusinessTemplate;
 import com.lego.perception.template.mapper.BusinessTemplateMapper;
 import com.lego.perception.template.service.IBusinessTemplateService;
@@ -24,8 +31,9 @@ public class BusinessTemplateServiceImpl implements IBusinessTemplateService {
 
 
     @Override
-    public PagedResult<BusinessTemplate> selectPaged(RowBounds rowBounds) {
-        return businessTemplateMapper.selectPaged(rowBounds);
+    public PagedResult<BusinessTemplate> selectPaged(BusinessTemplate businessTemplate,
+                                                     Page page) {
+        return PageUtil.queryPaged(page, businessTemplate, businessTemplateMapper);
     }
 
     @Override

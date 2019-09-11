@@ -1,5 +1,6 @@
 package com.lego.perception.business.service.impl;
 
+import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.base.exception.ExceptionBuilder;
@@ -69,10 +70,13 @@ public class MySqlBusinessServiceImpl implements IBusinessService {
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public RespVO insertBusinessData(FormTemplate formTemplate, List<Map<String, Object>> data) {
+    public RespVO insertBusinessData(FormTemplate formTemplate,
+                                     List<Map<String, Object>> data,
+                                     Long fileId) {
         String tableName = formTemplate.getDescription();
         // 参数校验
         for (Map<String, Object> objectMap : data) {
+            objectMap.put("fileId", fileId);
             BusinessTable businessTable = new BusinessTable(null, tableName, objectMap);
             Integer insertBusinessData = businessMapper.insertBusinessData(businessTable);
             if (insertBusinessData <= 0) {
@@ -84,9 +88,14 @@ public class MySqlBusinessServiceImpl implements IBusinessService {
 
 
     @Override
-    public RespVO queryBusinessData(String tableName, Map<String, Object> param) {
+    public RespVO<RespDataVO<Map>> queryBusinessData(String tableName, Map<String, Object> param) {
         BusinessTable businessTable = new BusinessTable(null, tableName, param);
-        List<Map<String, Object>> data = businessMapper.queryBusinessData(businessTable);
+        List<Map> data = businessMapper.queryBusinessData(businessTable);
+        if (!CollectionUtils.isEmpty(data)) {
+            for (Map datum : data) {
+                datum.remove("fileId");
+            }
+        }
         return RespVOBuilder.success(data);
     }
 

@@ -1,10 +1,15 @@
 package com.lego.perception.system.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.framework.common.utils.SecurityUtils;
+import com.framework.mybatis.tool.WhereEntityTool;
+import com.framework.mybatis.utils.PageUtil;
 import com.lego.framework.base.context.RequestContext;
 import com.lego.framework.system.model.entity.UserRoleProject;
 import com.lego.perception.system.mapper.RoleMapper;
@@ -46,11 +51,11 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public PagedResult<User> findPagedList(User user, Page page) {
-        PagedResult<User> userPagedResult = userMapper.findPagedList(user, page);
-        if (!CollectionUtils.isEmpty(userPagedResult.getResultList())) {
+        PagedResult<User> pagedResult = PageUtil.queryPaged(page, user, userMapper);
+        if (!CollectionUtils.isEmpty(pagedResult.getResultList())) {
             Map<Long, List<Long>> roleMap = new HashMap<>();
             List<Long> userIds = new ArrayList<>();
-            for (User u : userPagedResult.getResultList()) {
+            for (User u : pagedResult.getResultList()) {
                 userIds.add(u.getId());
                 if (u.getUsername() == null) {
                     u.setUsername(u.getRealName());
@@ -92,7 +97,7 @@ public class UserServiceImpl implements IUserService {
                 }
             }
 
-            for (User u : userPagedResult.getResultList()) {
+            for (User u : pagedResult.getResultList()) {
                 List<String> roleNamesList = new ArrayList<>();
                 List<Long> roleList = roleMap.get(u.getId());
                 u.setRoleIds(roleMap.get(roleList));
@@ -110,7 +115,7 @@ public class UserServiceImpl implements IUserService {
                 }
             }
         }
-        return userPagedResult;
+        return pagedResult;
     }
 
     @Override

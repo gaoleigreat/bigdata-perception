@@ -1,5 +1,6 @@
 package com.lego.perception.system.controller;
 
+import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
@@ -16,14 +17,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.websocket.server.PathParam;
 import java.util.List;
+
 /**
  * @author yanglf
  */
 @RestController
 @RequestMapping("/project")
-@Resource(value="project", desc="项目管理")
-@Api(value="ProjectController",description = "项目管理")
+@Resource(value = "project", desc = "项目管理")
+@Api(value = "ProjectController", description = "项目管理")
 @Slf4j
 public class ProjectController {
 
@@ -33,12 +36,12 @@ public class ProjectController {
     /**
      * 分页查询数据
      */
-    @RequestMapping(value = "/select_paged",method = RequestMethod.GET)
-    @Operation(value = "select_paged", desc = "分页查询")
+    @RequestMapping(value = "/findPaged/{pageSize}/{pageIndex}", method = RequestMethod.GET)
+    @Operation(value = "findPaged", desc = "分页查询")
     @ApiOperation("分页查询")
-    public RespVO<PagedResult<Project>> selectPaged(RowBounds rowBounds) {
-        PagedResult<Project> page = iProjectService.selectPaged(rowBounds);
-        return RespVOBuilder.success(page);
+    public RespVO<PagedResult<Project>> selectPaged(@PathParam(value = "") Page page, @ModelAttribute Project project) {
+        PagedResult<Project> result = iProjectService.selectPaged(page,project);
+        return RespVOBuilder.success(result);
     }
 
     /**
@@ -46,7 +49,7 @@ public class ProjectController {
      *
      * @return
      */
-    @RequestMapping(value = "/select_by_id",method = RequestMethod.GET)
+    @RequestMapping(value = "/select_by_id", method = RequestMethod.GET)
     @Operation(value = "select_by_id", desc = "根据ID查询项目")
     @ApiOperation("根据ID查询项目")
     public RespVO<Project> selectByPrimaryKey(Long id) {
@@ -59,7 +62,7 @@ public class ProjectController {
      *
      * @return
      */
-    @RequestMapping(value = "/delete_by_id",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delete_by_id", method = RequestMethod.DELETE)
     @Operation(value = "delete_by_id", desc = "删除项目")
     @ApiOperation("删除项目")
     public RespVO deleteByPrimaryKey(Long id) {
@@ -72,12 +75,12 @@ public class ProjectController {
      *
      * @return
      */
-    @RequestMapping(value = "/save_tplProject",method = RequestMethod.POST)
+    @RequestMapping(value = "/save_tplProject", method = RequestMethod.POST)
     @Operation(value = "save_tplProject", desc = "新增项目")
     @ApiOperation("新增项目")
     public RespVO insert(@RequestBody Project project, HttpServletRequest request) {
         String userId = request.getHeader("userId");
-        Integer num = iProjectService.insertSelective(project,Long.valueOf(userId));
+        Integer num = iProjectService.insertSelective(project, Long.valueOf(userId));
         return RespVOBuilder.success();
     }
 
@@ -86,12 +89,12 @@ public class ProjectController {
      *
      * @return
      */
-    @RequestMapping(value = "/update_tplProject",method = RequestMethod.PUT)
+    @RequestMapping(value = "/update_tplProject", method = RequestMethod.PUT)
     @Operation(value = "update_tplProject", desc = "修改项目")
     @ApiOperation("修改项目")
-    public RespVO updateByPrimaryKeySelective(@ModelAttribute Project project,HttpServletRequest request) {
+    public RespVO updateByPrimaryKeySelective(@ModelAttribute Project project, HttpServletRequest request) {
         String userId = request.getHeader("userId");
-        Integer num = iProjectService.updateByPrimaryKeySelective(project,Long.valueOf(userId));
+        Integer num = iProjectService.updateByPrimaryKeySelective(project, Long.valueOf(userId));
         return RespVOBuilder.success();
     }
 
@@ -101,7 +104,7 @@ public class ProjectController {
      *
      * @return
      */
-    @RequestMapping(value = "/query_list",method = RequestMethod.GET)
+    @RequestMapping(value = "/query_list", method = RequestMethod.GET)
     @Operation(value = "query_list", desc = "查询列表")
     @ApiOperation("查询列表")
     public RespVO<RespDataVO<Project>> queryByCondition(@ModelAttribute Project project) {

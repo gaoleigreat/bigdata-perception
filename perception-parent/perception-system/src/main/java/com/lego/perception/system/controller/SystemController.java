@@ -1,5 +1,6 @@
 package com.lego.perception.system.controller;
 
+import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
@@ -8,9 +9,11 @@ import com.lego.framework.system.model.entity.TbSystem;
 import com.lego.perception.system.service.SystemService;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.websocket.server.PathParam;
 import java.util.List;
 
 /**
@@ -28,10 +31,10 @@ public class SystemController {
     /**
      * 分页查询数据
      */
-    @RequestMapping("/select_paged")
-    public RespVO<PagedResult<TbSystem>> selectPaged(RowBounds rowBounds) {
-        PagedResult<TbSystem> page = systemService.selectPaged(rowBounds);
-        return RespVOBuilder.success(page);
+    @RequestMapping("/findPaged/{pageSize}/{pageIndex}")
+    public RespVO<PagedResult<TbSystem>> selectPaged(@ModelAttribute TbSystem tbSystem, @PathParam(value = "")Page page) {
+        PagedResult<TbSystem> result = systemService.selectPaged(tbSystem,page);
+        return RespVOBuilder.success(result);
     }
 
     /**

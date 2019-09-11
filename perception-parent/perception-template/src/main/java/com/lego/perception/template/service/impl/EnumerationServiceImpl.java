@@ -1,10 +1,15 @@
 package com.lego.perception.template.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
+import com.framework.mybatis.tool.WhereEntityTool;
+import com.framework.mybatis.utils.PageUtil;
 import com.lego.framework.template.model.entity.Enumeration;
 import com.lego.framework.template.model.entity.EnumerationItem;
 import com.lego.framework.template.model.entity.ValidateResult;
@@ -31,8 +36,7 @@ public class EnumerationServiceImpl implements IEnumerationService {
 
     @Override
     public PagedResult<Enumeration> findPagedList(Enumeration enumeration, Page page) {
-
-        return enumerationMapper.findPagedList(enumeration, page);
+        return PageUtil.queryPaged(page, enumeration, enumerationMapper);
     }
 
     @Override
