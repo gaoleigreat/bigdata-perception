@@ -79,7 +79,7 @@ public class TemplateDataController {
         });
 
         // 3 调用接口上传
-        return businessClient.insert(template, maps, sourceType);
+        return businessClient.insertBusinessData(template, maps, sourceType);
     }
 
     /**
