@@ -22,17 +22,28 @@ import java.util.Map;
 @FeignClient(value = "system-business", path = "/business")
 public interface BusinessClient {
     @RequestMapping(value = "/insert", method = RequestMethod.POST)
-     RespVO insert(@RequestBody FormTemplate formTemplate,
-                         @RequestBody List<Map<String, Object>> data,
-                         @RequestParam(value = "sourceType") Integer sourceType);
+    RespVO insert(@RequestBody FormTemplate formTemplate,
+                  @RequestBody List<Map<String, Object>> data,
+                  @RequestParam(value = "sourceType") Integer sourceType);
+
+    @RequestMapping(value = "/query", method = RequestMethod.GET)
+    RespVO<List<Map>> query(@RequestBody FormTemplate formTemplate,
+                 @RequestBody Map<String, Object> data,
+                 @RequestParam(value = "sourceType") Integer sourceType);
 
 }
+
 @Component
 class BusinessClientFallback implements BusinessClient {
 
 
     @Override
     public RespVO insert(FormTemplate formTemplate, List<Map<String, Object>> data, Integer sourceType) {
+        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "busuness服务不可用");
+    }
+
+    @Override
+    public RespVO query(FormTemplate formTemplate, Map<String, Object> data, Integer sourceType) {
         return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "busuness服务不可用");
     }
 }
