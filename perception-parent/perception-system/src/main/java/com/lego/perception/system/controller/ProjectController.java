@@ -1,5 +1,6 @@
 package com.lego.perception.system.controller;
 
+import com.framework.common.consts.HttpConsts;
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
@@ -79,7 +80,7 @@ public class ProjectController {
     @Operation(value = "save_tplProject", desc = "新增项目")
     @ApiOperation("新增项目")
     public RespVO insert(@RequestBody Project project, HttpServletRequest request) {
-        String userId = request.getHeader("userId");
+        String userId = request.getHeader(HttpConsts.USER_ID);
         Integer num = iProjectService.insertSelective(project, Long.valueOf(userId));
         return RespVOBuilder.success();
     }
@@ -93,7 +94,7 @@ public class ProjectController {
     @Operation(value = "update_tplProject", desc = "修改项目")
     @ApiOperation("修改项目")
     public RespVO updateByPrimaryKeySelective(@ModelAttribute Project project, HttpServletRequest request) {
-        String userId = request.getHeader("userId");
+        String userId = request.getHeader(HttpConsts.USER_ID);
         Integer num = iProjectService.updateByPrimaryKeySelective(project, Long.valueOf(userId));
         return RespVOBuilder.success();
     }

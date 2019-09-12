@@ -1,5 +1,4 @@
 package com.lego.perception.template.controller;
-
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
@@ -9,13 +8,10 @@ import com.lego.framework.template.model.entity.BusinessTemplate;
 import com.lego.perception.template.service.IBusinessTemplateService;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
 import java.util.List;
-
 /**
  * @author itar
  * @email wuhandzy@gmail.com
@@ -34,8 +30,8 @@ public class BusinessTemplateController {
      */
     @RequestMapping("/select_paged/{pageSize}/{pageIndex}")
     public RespVO<PagedResult<BusinessTemplate>> selectPaged(@ModelAttribute BusinessTemplate businessTemplate,
-                                                             @PathParam(value = "")Page page) {
-        PagedResult<BusinessTemplate> pagedResult = tplBusinessTemplateService.selectPaged(businessTemplate,page);
+                                                             @PathParam(value = "") Page page) {
+        PagedResult<BusinessTemplate> pagedResult = tplBusinessTemplateService.selectPaged(businessTemplate, page);
         return RespVOBuilder.success(pagedResult);
     }
 
@@ -44,8 +40,8 @@ public class BusinessTemplateController {
      *
      * @return
      */
-    @RequestMapping("/select_by_id")
-    public RespVO<BusinessTemplate> selectByPrimaryKey(Long id) {
+    @RequestMapping(value = "/select_by_id", method = RequestMethod.GET)
+    public RespVO<BusinessTemplate> selectByPrimaryKey(@RequestParam Long id) {
         BusinessTemplate po = tplBusinessTemplateService.selectByPrimaryKey(id);
         return RespVOBuilder.success(po);
     }
@@ -55,8 +51,8 @@ public class BusinessTemplateController {
      *
      * @return
      */
-    @RequestMapping("/delete_by_id")
-    public RespVO deleteByPrimaryKey(Long id) {
+    @RequestMapping(value = "/delete_by_id", method = RequestMethod.DELETE)
+    public RespVO deleteByPrimaryKey(@RequestParam Long id) {
         Integer num = tplBusinessTemplateService.deleteByPrimaryKey(id);
         return RespVOBuilder.success();
     }
@@ -66,8 +62,8 @@ public class BusinessTemplateController {
      *
      * @return
      */
-    @RequestMapping("/save_tplBusinessTemplate")
-    public RespVO insert(BusinessTemplate businessTemplate) {
+    @RequestMapping(value = "/save_tplBusinessTemplate", method = RequestMethod.PUT)
+    public RespVO insert(@RequestBody BusinessTemplate businessTemplate) {
         Integer num = tplBusinessTemplateService.insertSelective(businessTemplate);
         return RespVOBuilder.success();
     }
@@ -77,8 +73,8 @@ public class BusinessTemplateController {
      *
      * @return
      */
-    @RequestMapping("/update_tplBusinessTemplate")
-    public RespVO updateByPrimaryKeySelective(BusinessTemplate tplBusinessTemplate) {
+    @RequestMapping(value = "/update_tplBusinessTemplate", method = RequestMethod.PUT)
+    public RespVO updateByPrimaryKeySelective(@RequestBody BusinessTemplate tplBusinessTemplate) {
         Integer num = tplBusinessTemplateService.updateByPrimaryKeySelective(tplBusinessTemplate);
         return RespVOBuilder.success();
     }
@@ -86,9 +82,10 @@ public class BusinessTemplateController {
 
     /**
      * 查询列表
+     *
      * @return
      */
-    @RequestMapping("/query_list")
+    @RequestMapping(value = "/query_list",method = RequestMethod.GET)
     public RespVO<RespDataVO<BusinessTemplate>> queryByCondition(BusinessTemplate businessTemplate) {
         List<BusinessTemplate> list = tplBusinessTemplateService.query(businessTemplate);
         return RespVOBuilder.success(list);

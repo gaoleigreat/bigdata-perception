@@ -35,42 +35,42 @@ public class PermissionServiceImpl implements IPermissionService {
     public List<Map<String, Object>> findTree(Permission permission) {
         List<Permission> permissions = permissionMapper.findList(permission);
 
-        Map<String, Map<String,List<Permission>>> map = new HashMap<>();
-        if(CollectionUtils.isEmpty(permissions)){
+        Map<String, Map<String, List<Permission>>> map = new HashMap<>();
+        if (CollectionUtils.isEmpty(permissions)) {
             return Collections.EMPTY_LIST;
         }
 
-        for(Permission p : permissions){
-            if(null == p || StringUtils.isEmpty(p.getScope()) || StringUtils.isEmpty(p.getPrName()) || StringUtils.isEmpty(p.getRId())){
+        for (Permission p : permissions) {
+            if (null == p || StringUtils.isEmpty(p.getScope()) || StringUtils.isEmpty(p.getPrName()) || StringUtils.isEmpty(p.getRId())) {
                 continue;
             }
-            if(map.containsKey(p.getScope())){
+            if (map.containsKey(p.getScope())) {
                 Map<String, List<Permission>> m1 = map.get(p.getScope());
-                if(m1.containsKey(p.getRId())){
+                if (m1.containsKey(p.getRId())) {
                     m1.get(p.getRName()).add(p);
-                }else{
+                } else {
                     List<Permission> list = new ArrayList<>();
                     list.add(p);
                     m1.put(p.getRName(), list);
                 }
-            }else{
+            } else {
                 Map<String, List<Permission>> m1 = new HashMap<>();
                 List<Permission> list = new ArrayList<>();
                 list.add(p);
-                m1.put(p.getRName(),list);
+                m1.put(p.getRName(), list);
                 map.put(p.getScope(), m1);
             }
         }
         //转为前台的json格式
         List<Map<String, Object>> resultList = new ArrayList<>();
 
-        for(String key : map.keySet()){
+        for (String key : map.keySet()) {
             Map<String, Object> m1 = new HashMap<String, Object>();
 
             Map<String, List<Permission>> mm = map.get(key);
             List<Map<String, Object>> list = new ArrayList<>();
 
-            for(String k : mm.keySet()){
+            for (String k : mm.keySet()) {
                 List<Permission> permissionList = mm.get(k);
                 Map<String, Object> m2 = new HashMap<String, Object>();
                 m2.put("rName", k);
@@ -78,7 +78,7 @@ public class PermissionServiceImpl implements IPermissionService {
                 list.add(m2);
             }
 
-            m1.put("rName",key);
+            m1.put("rName", key);
             m1.put("children", list);
             resultList.add(m1);
         }
@@ -87,7 +87,7 @@ public class PermissionServiceImpl implements IPermissionService {
 
     @Override
     public RespVO insertList(List<Permission> permissions) {
-        if(CollectionUtils.isEmpty(permissions)){
+        if (CollectionUtils.isEmpty(permissions)) {
             return RespVOBuilder.failure("参数缺失");
         }
         permissionMapper.insertList(permissions);
@@ -96,7 +96,7 @@ public class PermissionServiceImpl implements IPermissionService {
 
     @Override
     public RespVO deleteList(List<Long> ids) {
-        if(CollectionUtils.isEmpty(ids)){
+        if (CollectionUtils.isEmpty(ids)) {
             return RespVOBuilder.failure("参数缺失");
         }
         //删除权限点
@@ -108,7 +108,7 @@ public class PermissionServiceImpl implements IPermissionService {
 
     @Override
     public RespVO save(String scope, List<Permission> permissions) {
-        if(StringUtils.isEmpty(scope)){
+        if (StringUtils.isEmpty(scope)) {
             return RespVOBuilder.failure("参数缺失");
         }
 
@@ -119,12 +119,12 @@ public class PermissionServiceImpl implements IPermissionService {
 
         List<Permission> temp = new ArrayList<>();
         Set<String> set = new HashSet<>();
-        for(Permission permission: permissions){
-            if(StringUtils.isEmpty(permission.getRId()) || StringUtils.isEmpty(permission.getPrId())){
+        for (Permission permission : permissions) {
+            if (StringUtils.isEmpty(permission.getRId()) || StringUtils.isEmpty(permission.getPrId())) {
                 continue;
             }
             String key = permission.getRId() + "$" + permission.getPrId();
-            if(!set.contains(key)){
+            if (!set.contains(key)) {
                 permission.setScope(scope);
                 set.add(key);
                 temp.add(permission);
@@ -134,48 +134,48 @@ public class PermissionServiceImpl implements IPermissionService {
         permissions.addAll(temp);
 
 
-        if(CollectionUtils.isEmpty(origin)){
+        if (CollectionUtils.isEmpty(origin)) {
             insertList(permissions);
             return RespVOBuilder.success();
         }
 
-        Map<String, Permission> originMap = new HashMap<String,Permission>();
-        for(Permission permission : origin){
-            originMap.put(permission.getRId()+"$"+permission.getPrId(), permission);
+        Map<String, Permission> originMap = new HashMap<String, Permission>();
+        for (Permission permission : origin) {
+            originMap.put(permission.getRId() + "$" + permission.getPrId(), permission);
             originIds.add(permission.getId());
         }
 
-        Map<String, Permission> newMap = new HashMap<String,Permission>();
+        Map<String, Permission> newMap = new HashMap<String, Permission>();
 
         List<Long> deletes = new ArrayList<Long>();
         List<Permission> inserts = new ArrayList<Permission>();
 
-        if(CollectionUtils.isEmpty(permissions)){
+        if (CollectionUtils.isEmpty(permissions)) {
             deleteList(originIds);
             return RespVOBuilder.success();
-        }else{
-            for(Permission permission: permissions){
+        } else {
+            for (Permission permission : permissions) {
                 permission.setScope(scope);
                 String key = permission.getRId() + "$" + permission.getPrId();
                 newMap.put(key, permission);
-                if(!originMap.containsKey(key)){
+                if (!originMap.containsKey(key)) {
                     inserts.add(permission);
                 }
             }
         }
 
-        for(Permission permission : origin){
+        for (Permission permission : origin) {
             String key = permission.getRId() + "$" + permission.getPrId();
-            if(!newMap.containsKey(key)){
+            if (!newMap.containsKey(key)) {
                 deletes.add(permission.getId());
             }
         }
 
-        if(!CollectionUtils.isEmpty(deletes)){
+        if (!CollectionUtils.isEmpty(deletes)) {
             deleteList(deletes);
         }
 
-        if(!CollectionUtils.isEmpty(inserts)){
+        if (!CollectionUtils.isEmpty(inserts)) {
             insertList(inserts);
         }
 
@@ -185,7 +185,6 @@ public class PermissionServiceImpl implements IPermissionService {
 
     @Override
     public List<Permission> findUserPermissions(Long userId) {
-
         return permissionMapper.findUserPermissions(userId);
     }
 
