@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -93,12 +94,14 @@ public class AuthServiceImpl implements IAuthService {
     private void findPermissions(CurrentVo current, User user) {
         List<Permission> permissions = permissionClient.findUserPermissions(user.getId());
         Set<String> permissionSet = new HashSet<>();
-        for (Permission permission : permissions) {
-            if (null == permission || org.apache.commons.lang.StringUtils.isEmpty(permission.getScope()) || org.apache.commons.lang.StringUtils.isEmpty(permission.getRId())
-                    || org.apache.commons.lang.StringUtils.isEmpty(permission.getPrId())) {
-                continue;
+        if (!CollectionUtils.isEmpty(permissions)) {
+            for (Permission permission : permissions) {
+                if (null == permission || org.apache.commons.lang.StringUtils.isEmpty(permission.getScope()) || org.apache.commons.lang.StringUtils.isEmpty(permission.getRId())
+                        || org.apache.commons.lang.StringUtils.isEmpty(permission.getPrId())) {
+                    continue;
+                }
+                permissionSet.add(permission.getScope() + "$" + permission.getRId() + "$" + permission.getPrId());
             }
-            permissionSet.add(permission.getScope() + "$" + permission.getRId() + "$" + permission.getPrId());
         }
         current.setPermissions(permissionSet);
     }

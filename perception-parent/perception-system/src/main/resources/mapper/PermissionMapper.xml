@@ -8,7 +8,8 @@
 
     <select id="findList" parameterType="com.lego.framework.system.model.entity.Permission"
             resultType="com.lego.framework.system.model.entity.Permission">
-        select <include refid="find_columns"></include>
+        select
+        <include refid="find_columns"></include>
         from tpl_permission_t
         where 1 = 1
         <if test='scope != null and scope != ""'>
@@ -45,30 +46,30 @@
 
     <select id="findUserPermissions" parameterType="java.lang.Long"
             resultType="com.lego.framework.system.model.entity.Permission">
-        select t3.r_id      as rId,
-                t3.pr_id     as prId,
-                t3.scope     as scope
-          from tpl_user_role_project t1
-          inner join tpl_role_permission_t t2 on t1.role_id = t2.role_id
-          inner join tpl_permission_t t3 on t2.permission_id = t3.id
-         where t1.user_id = #{userId, jdbcType=BIGINT}
-         union
-         select t3.r_id      as rId,
-                 t3.pr_id     as prId,
-                 t3.scope     as scope
-          from tpl_group_user_t t0
-          inner join tpl_group_role_program_t t1 on t0.group_id = t1.group_id
-          inner join tpl_role_permission_t t2 on t1.role_id = t2.role_id
-          inner join tpl_permission_t t3 on t2.permission_id = t3.id
-         where t0.user_id = #{userId, jdbcType=BIGINT}
-         union
-         select t4.r_id       as rId,
-                 t4.pr_id      as prId,
-                 t4.scope      as scope
-           from tpl_department_user_t t1
-           inner join tpl_department_role_program_t t2 on t1.department_id = t2.department_id
-           inner join tpl_role_permission_t t3 on t2.role_id = t3.role_id
-           inner join tpl_permission_t t4 on t3.permission_id = t4.id
-          where  t1.user_id = #{userId, jdbcType=BIGINT}
+        select t3.r_id          as rId,
+               t3.pr_id         as prId,
+               t3.scope         as scope
+        from tpl_user_role_project t1
+                 inner join tpl_role_permission_t t2 on t1.role_id = t2.project_role_id
+                 inner join tpl_permission_t t3 on t2.permission_id = t3.id
+        where t1.user_id = #{userId, jdbcType=BIGINT}
+        union
+        select t3.r_id  as rId,
+               t3.pr_id as prId,
+               t3.scope as scope
+        from tpl_group_user_t t0
+                 inner join tpl_group_role_program_t t1 on t0.group_id = t1.group_id
+                 inner join tpl_role_permission_t t2 on t1.role_id = t2.project_role_id
+                 inner join tpl_permission_t t3 on t2.permission_id = t3.id
+        where t0.user_id = #{userId, jdbcType=BIGINT}
+        union
+        select t4.r_id  as rId,
+               t4.pr_id as prId,
+               t4.scope as scope
+        from tpl_department_user_t t1
+                 inner join tpl_department_role_program_t t2 on t1.department_id = t2.department_id
+                 inner join tpl_role_permission_t t3 on t2.role_id = t3.project_role_id
+                 inner join tpl_permission_t t4 on t3.permission_id = t4.id
+        where t1.user_id = #{userId, jdbcType=BIGINT}
     </select>
 </mapper>

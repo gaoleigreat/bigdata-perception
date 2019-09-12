@@ -48,12 +48,11 @@
 
     <insert id="insertList">
         insert into tpl_form_template_item_t
-        (id, parent_id, template_id, title, field, data_field_id, is_required, category, default_value, sort, enum_id, region_url,
+        (parent_id, template_id, title, field, data_field_id, is_required, category, default_value, sort, enum_id, region_url,
         description,status,permission, valid_str, is_search, creation_date, created_by, last_update_date, last_updated_by)
         values
         <foreach collection="list" separator="," item="item">
             (
-            #{item.id, jdbcType=BIGINT},
             #{item.parentId, jdbcType=BIGINT},
             #{item.templateId, jdbcType=BIGINT},
             #{item.title, jdbcType=VARCHAR},
