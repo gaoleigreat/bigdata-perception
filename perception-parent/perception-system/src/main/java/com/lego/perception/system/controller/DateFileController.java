@@ -89,7 +89,7 @@ public class DateFileController {
     @RequestMapping(value = "/insertList", method = RequestMethod.POST)
     @Operation(value = "insert", desc = "新增")
     @ApiOperation("批量新增")
-    public RespVO insertList(@RequestBody List<DataFile> dataFiles) {
+    public RespVO<RespDataVO<Long>> insertList(@RequestBody List<DataFile> dataFiles) {
 
         return dataFileService.insertList(dataFiles);
     }

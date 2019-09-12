@@ -97,4 +97,49 @@ public class CSVUtils {
 
 
 
+    public static boolean exportCsv(FileOutputStream out, List<String> dataList) {
+        boolean isSucess = false;
+        OutputStreamWriter osw = null;
+        BufferedWriter bw = null;
+        try {
+            osw = new OutputStreamWriter(out);
+            bw = new BufferedWriter(osw);
+            if (dataList != null && !dataList.isEmpty()) {
+                for (String data : dataList) {
+                    bw.append(data).append("\r");
+                }
+            }
+            isSucess = true;
+        } catch (Exception e) {
+            isSucess = false;
+        } finally {
+            if (bw != null) {
+                try {
+                    bw.close();
+                    bw = null;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (osw != null) {
+                try {
+                    osw.close();
+                    osw = null;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (out != null) {
+                try {
+                    out.close();
+                    out = null;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return isSucess;
+    }
+
+
 }

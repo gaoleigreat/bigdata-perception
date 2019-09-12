@@ -36,7 +36,7 @@ public class DataFile {
     private String fileUrl;
 
 
-    @ApiModelProperty("文件URl")
+    @ApiModelProperty("预览URl")
     private String previewUrl;
 
     @ApiModelProperty("创建时间")

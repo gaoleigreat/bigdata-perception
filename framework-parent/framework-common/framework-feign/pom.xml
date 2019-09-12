@@ -108,6 +108,7 @@
             <artifactId>framework-mybatis</artifactId>
             <version>${service.version}</version>
         </dependency>
+ 
 
 
     </dependencies>

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
+import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.system.model.entity.DataFile;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DataFileServiceImpl implements IDataFileService {
@@ -54,13 +56,13 @@ public class DataFileServiceImpl implements IDataFileService {
     }
 
     @Override
-    public RespVO insertList(List<DataFile> dataFiles) {
+    public RespVO<RespDataVO<Long>> insertList(List<DataFile> dataFiles) {
         int result = 0;
         if (CollectionUtils.isNotEmpty(dataFiles)) {
             result = dataFileMapper.insertList(dataFiles);
         }
         if (result > 0) {
-            return RespVOBuilder.success();
+            return RespVOBuilder.success(dataFiles.stream().map(DataFile::getId).collect(Collectors.toList()));
         }
         return RespVOBuilder.failure("插入失敗");
     }

@@ -1,6 +1,7 @@
 package com.lego.framework.system.feign;
 
 import com.framework.common.consts.RespConsts;
+import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.system.model.entity.DataFile;
@@ -30,8 +31,7 @@ public interface DataFileClient {
      * @return
      */
     @RequestMapping(value = "/insertList", method = RequestMethod.POST)
-
-    public RespVO insertList(@RequestBody List<DataFile> dataFiles);
+    RespVO<RespDataVO<Long>> insertList(@RequestBody List<DataFile> dataFiles);
 }
 
 @Component
@@ -39,7 +39,7 @@ class DataFileClientFallback implements DataFileClient {
 
 
     @Override
-    public RespVO insertList(List<DataFile> dataFiles) {
+    public RespVO<RespDataVO<Long>> insertList(List<DataFile> dataFiles) {
         return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "system服务不可用");
     }
 }

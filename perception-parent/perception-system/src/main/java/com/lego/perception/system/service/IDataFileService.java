@@ -4,6 +4,7 @@ package com.lego.perception.system.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
+import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.lego.framework.system.model.entity.DataFile;
 import org.springframework.validation.annotation.Validated;
@@ -53,7 +54,7 @@ public interface IDataFileService {
      * @param dictionaries
      * @return
      */
-    RespVO insertList(List<DataFile> dictionaries);
+    RespVO<RespDataVO<Long>> insertList(List<DataFile> dictionaries);
 
     /**
      * 更新

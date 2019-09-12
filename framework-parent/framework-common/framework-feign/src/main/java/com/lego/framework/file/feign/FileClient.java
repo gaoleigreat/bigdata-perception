@@ -4,7 +4,7 @@ package com.lego.framework.file.feign;
 import com.framework.common.consts.RespConsts;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
-import com.lego.framework.system.model.entity.User;
+import com.lego.framework.file.feign.model.UploadFile;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,7 +30,8 @@ public interface FileClient {
     @RequestMapping(value = "/web/upload", method = RequestMethod.POST)
     RespVO<List<Map<String, Object>>> webUpload(HttpServletRequest req);
 
-
+    @RequestMapping(value = "/app/upload", method = RequestMethod.POST)
+     RespVO<Map<String, Object>> appUpload(@RequestBody UploadFile uploadFile) ;
 }
 
 @Component
@@ -39,6 +40,11 @@ class FileClientFallback implements FileClient {
 
     @Override
     public RespVO webUpload(HttpServletRequest req) {
+        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "file-system服务不可用");
+    }
+
+    @Override
+    public RespVO<Map<String, Object>> appUpload(UploadFile uploadFile) {
         return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "file-system服务不可用");
     }
 }
