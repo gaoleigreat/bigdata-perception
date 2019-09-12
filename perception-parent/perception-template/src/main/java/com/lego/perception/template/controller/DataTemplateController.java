@@ -1,24 +1,26 @@
 package com.lego.perception.template.controller;
 
-import com.baomidou.mybatisplus.extension.api.R;
-import com.framework.common.page.Page;
-import com.framework.common.page.PagedResult;
-import com.framework.common.sdto.RespDataVO;
-import com.framework.common.sdto.RespVO;
-import com.framework.common.sdto.RespVOBuilder;
-import com.lego.framework.base.annotation.Operation;
-import com.lego.framework.base.annotation.Resource;
-import com.lego.framework.template.model.entity.DataTemplate;
-import com.lego.framework.template.model.entity.DataTemplateItem;
-import com.lego.perception.template.service.IDataTemplateService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import javax.websocket.server.PathParam;
+        import com.baomidou.mybatisplus.extension.api.R;
+        import com.framework.common.page.Page;
+        import com.framework.common.page.PagedResult;
+        import com.framework.common.sdto.RespDataVO;
+        import com.framework.common.sdto.RespVO;
+        import com.framework.common.sdto.RespVOBuilder;
+        import com.lego.framework.base.annotation.Operation;
+        import com.lego.framework.base.annotation.Resource;
+        import com.lego.framework.template.model.entity.BusinessTemplate;
+        import com.lego.framework.template.model.entity.DataTemplate;
+        import com.lego.framework.template.model.entity.DataTemplateItem;
+        import com.lego.perception.template.service.IBusinessTemplateService;
+        import com.lego.perception.template.service.IDataTemplateService;
+        import io.swagger.annotations.Api;
+        import io.swagger.annotations.ApiImplicitParam;
+        import io.swagger.annotations.ApiImplicitParams;
+        import io.swagger.annotations.ApiOperation;
+        import lombok.extern.slf4j.Slf4j;
+        import org.springframework.beans.factory.annotation.Autowired;
+        import org.springframework.web.bind.annotation.*;
+        import javax.websocket.server.PathParam;
 
 @RestController
 @RequestMapping("/dataTemplate/v1")
@@ -29,6 +31,9 @@ public class DataTemplateController {
 
     @Autowired
     private IDataTemplateService dataTemplateService;
+
+    @Autowired
+    private IBusinessTemplateService iBusinessTemplateService;
 
     @RequestMapping(value = "/findPagedList/{pageSize}/{pageIndex}", method = RequestMethod.GET)
     @Operation(value = "find", desc = "查询")
