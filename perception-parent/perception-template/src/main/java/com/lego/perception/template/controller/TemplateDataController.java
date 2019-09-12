@@ -268,52 +268,17 @@ public class TemplateDataController {
 
         } else if (file.getOriginalFilename().endsWith(".xml")) {
             String str = IOUtils.toString(file.getInputStream(), "utf-8");
-
             JSONObject xmlJSONObj = XML.toJSONObject(str);
-            Iterator keys = xmlJSONObj.keys();
+            Map<String,Object> map = com.alibaba.fastjson.JSONObject.parseObject(xmlJSONObj.toString(), Map.class);
             List<Map<String, Object>> dataList = new ArrayList<>();
-            Map<String, Object> map = new HashMap<>();
-            keys.forEachRemaining(key -> {
-                try {
-                    map.put(key.toString(), xmlJSONObj.get(key.toString()));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            });
             dataList.add(map);
             return dataList;
 
         } else if (file.getOriginalFilename().endsWith(".json")) {
             String str = IOUtils.toString(file.getInputStream(), "utf-8");
-            if (str != null && str.trim().startsWith("[")) {
-                List<Map<String, Object>> datalist = new ArrayList<>();
-                JSONArray jsonArray = JSON.parseArray(str);
-                for (int i = 0; i < jsonArray.size(); i++) {
-                    com.alibaba.fastjson.JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    Set<String> strings = jsonObject.keySet();
-
-
-                    strings.forEach(s -> {
-                        Map<String, Object> map = new HashMap<>();
-                        map.put(s, jsonObject.get(s));
-                        datalist.add(map);
-                    });
-                }
-                return datalist;
-            } else {
-                com.alibaba.fastjson.JSONObject jsonObject = (com.alibaba.fastjson.JSONObject) JSON.parse(str);
-                Set<String> strings = jsonObject.keySet();
-                List<Map<String, Object>> datalist = new ArrayList<>();
-
-                strings.forEach(s -> {
-                    Map<String, Object> map = new HashMap<>();
-                    map.put(s, jsonObject.get(s));
-                    datalist.add(map);
-
-                });
-                return datalist;
-            }
-
+            Map<String,Object> map = com.alibaba.fastjson.JSONObject.parseObject(str, Map.class);
+            List<Map<String, Object>> resultList = new ArrayList<>();
+            resultList.add(map);
 
         } else if (file.getOriginalFilename().endsWith(".csv")) {
             List<String> dataList = CSVUtils.importCsv(file.getInputStream());
