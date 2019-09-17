@@ -2,6 +2,7 @@ package com.lego.framework.sso;
 
 import feign.Headers;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @description
  * @since 2019/8/31
  **/
-@FeignClient(name = "sso", url = "http://www.baidu.com}")
+@FeignClient(name = "sso", url = "http://www.baidu.com}", fallback = SsoClientFallback.class)
 public interface SsoClient {
 
     /**
@@ -24,5 +25,13 @@ public interface SsoClient {
     @RequestMapping(value = "/city/{cityCode}", method = RequestMethod.GET)
     String redirectSsoService(@PathVariable(value = "cityCode") String cityCode);
 
+}
 
+@Component
+class SsoClientFallback implements SsoClient {
+
+    @Override
+    public String redirectSsoService(String cityCode) {
+        return null;
+    }
 }

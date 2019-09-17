@@ -8,9 +8,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.lego.file</groupId>
-    <artifactId>perception-file</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <artifactId>perception-data</artifactId>
 
     <dependencies>
         <!--  spring cloud -->
@@ -39,10 +37,10 @@
             <artifactId>spring-cloud-starter-zipkin</artifactId>
         </dependency>
 
-        <!--<dependency>
+        <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-bus-amqp</artifactId>
-        </dependency>-->
+        </dependency>
 
 
         <!-- spring boot 监控 -->
@@ -55,6 +53,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-actuator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
 
         <!--JMX management-->
@@ -84,10 +87,36 @@
         </dependency>
 
         <dependency>
+            <groupId>com.lego.feign</groupId>
+            <artifactId>framework-feign</artifactId>
+            <version>${service.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.framework.common</groupId>
             <artifactId>framework-common</artifactId>
             <version>${service.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.framework.mybatis</groupId>
+            <artifactId>framework-mybatis</artifactId>
+            <version>${service.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.version}</version>
+        </dependency>
+
+
+        <!-- mongodb -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+        </dependency>
+
 
         <dependency>
             <groupId>com.framework.log</groupId>
@@ -101,48 +130,18 @@
             <artifactId>framework-base</artifactId>
         </dependency>
 
-
-        <!--文件轉換-->
         <dependency>
-            <groupId>com.aspose</groupId>
-            <artifactId>aspose-cad</artifactId>
-            <version>19.7</version>
-            <classifier>javadoc</classifier>
+            <groupId>com.lego.permission</groupId>
+            <version>${service.version}</version>
+            <artifactId>framework-permission</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.aspose</groupId>
-            <artifactId>aspose-cad</artifactId>
-            <version>19.7</version>
+            <groupId>com.lego.event</groupId>
+            <version>${service.version}</version>
+            <artifactId>framework-event</artifactId>
         </dependency>
-
-
-        <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-common</artifactId>
-            <version>3.1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-hdfs</artifactId>
-            <version>3.1.0</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-mapreduce-client-core -->
-        <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-mapreduce-client-core</artifactId>
-            <version>3.1.0</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>27.0.1-jre</version>
-        </dependency>
-
     </dependencies>
-
 
     <build>
         <plugins>
@@ -157,26 +156,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--  <plugin>
-                  <groupId>com.spotify</groupId>
-                  <artifactId>docker-maven-plugin</artifactId>
-                  <version>1.0.0</version>
-                  <configuration>
-                      <imageName>${project.artifactId}</imageName>
-                      <imageTags>
-                          <imageTag>latest</imageTag>
-                      </imageTags>
-                      <dockerDirectory>${project.basedir}/src/main/docker</dockerDirectory>
-                      <resources>
-                          <resource>
-                              <targetPath>/</targetPath>
-                              <directory>${project.build.directory}</directory>
-                              <include>${project.build.finalName}.jar</include>
-                          </resource>
-                      </resources>
-                  </configuration>
-              </plugin>-->
-
 
         </plugins>
     </build>

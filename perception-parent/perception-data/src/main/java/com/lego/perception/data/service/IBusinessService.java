@@ -1,9 +1,7 @@
-package com.lego.perception.business.service;
+package com.lego.perception.data.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
-import com.lego.framework.business.model.entity.BusinessTable;
 import com.lego.framework.template.model.entity.FormTemplate;
 import com.lego.framework.template.model.entity.SearchParam;
 

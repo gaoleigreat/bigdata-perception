@@ -1,0 +1,16 @@
+spring:
+  cloud:
+    config:
+      fail-fast: true
+      uri: http://192.168.0.86:48020
+      profile: sit
+      label: master
+      username: admin
+      password: admin123
+      retry:
+        max-attempts: 3
+    stream:
+      bindings:
+        output_log:
+          destination: printLog
+          content-type: application/json

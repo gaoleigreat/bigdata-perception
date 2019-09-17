@@ -4,6 +4,7 @@ import com.framework.common.consts.RespConsts;
 import com.framework.common.sdto.RespVO;
 import com.lego.framework.template.model.entity.FormTemplate;
 import com.lego.framework.template.model.entity.FormTemplateItem;
+import com.lego.framework.template.model.entity.SearchParam;
 import com.lego.perception.business.service.IBusinessService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
@@ -88,9 +89,14 @@ public class BusinessServiceTest {
 
     @Test
     public void testQuery() {
-        Map<String, Object> mp1 = new HashMap<>();
-        mp1.put("name", "盾构机1");
-        RespVO respVO = iBusinessService.queryBusinessData("tpl_device_info", mp1);
+        List<SearchParam> params=new ArrayList<>();
+        SearchParam param1=new SearchParam();
+        param1.setAbsoluteField("name");
+        param1.setDataType(1);
+        param1.setSymbol("=");
+        param1.setValue("盾构机1");
+        params.add(param1);
+        RespVO respVO = iBusinessService.queryBusinessData("tpl_device_info", params);
         log.info("respVO:{}", respVO);
         Assert.assertEquals(respVO.getRetCode(), RespConsts.SUCCESS_RESULT_CODE);
     }

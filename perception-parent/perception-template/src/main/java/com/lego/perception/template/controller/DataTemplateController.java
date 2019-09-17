@@ -38,7 +38,7 @@ public class DataTemplateController {
     @RequestMapping(value = "/findPagedList/{pageSize}/{pageIndex}", method = RequestMethod.GET)
     @Operation(value = "find", desc = "查询")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "pageIndex", value = "请求页", dataType = "int", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "pageIndex", value = "请求页",dataType = "int" ,required = true, paramType = "query"),
             @ApiImplicitParam(name = "pageSize", value = "每页大小", dataType = "int", required = true, paramType = "query"),
     })
     @ApiOperation("分页查询模板列表")

@@ -11,7 +11,10 @@ import org.apache.hadoop.fs.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -34,6 +37,14 @@ public class HdfsServiceImpl implements IHdfsService {
 
     @Value("${hdfs.url}")
     private String hdfsUrl;
+
+
+    @PostConstruct
+    public void init() {
+        System.setProperty("HADOOP_USER_NAME", "root");
+        conf.set("hadoop.home.dir", "D:\\etc\\hadoop-2.8.5.tar\\hadoop-2.8.5");
+        conf.set("fs.defaultFS", hdfsUrl);
+    }
 
     /**
      * 获取HDFS文件系统
@@ -89,6 +100,24 @@ public class HdfsServiceImpl implements IHdfsService {
         return uploadFileToHdfs(false, true, srcFile, dstPath);
     }
 
+
+    @Override
+    public RespVO copyfileToHdfs(String dstPath, File file) {
+        try {
+            FileSystem fs = getFileSystem();
+            // 上傳文件的Path
+            Path src = new Path(file.getPath());
+            //要上传到hdfs的目标路径
+            Path hdfsDstPath = new Path(generateHdfsPath(dstPath));
+            fs.copyFromLocalFile(src, hdfsDstPath);
+            return RespVOBuilder.success();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RespVOBuilder.failure();
+        }
+    }
+
+
     /**
      * 上传文件至HDFS
      *
@@ -127,6 +156,7 @@ public class HdfsServiceImpl implements IHdfsService {
      * @author adminstrator
      * @since 1.0.0
      */
+    @Override
     public boolean checkExists(String path) {
         FileSystem fileSystem = null;
         try {
@@ -149,7 +179,7 @@ public class HdfsServiceImpl implements IHdfsService {
      * 获取HDFS上面的某个路径下面的所有文件或目录（不包含子目录）信息
      *
      * @param path HDFS的相对目录路径，比如：/testDir
-     * @return java.util.List<java.util.Map                               <                               java.lang.String                               ,                               java.lang.Object>>
+     * @return java.util.List<java.util.Map                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               <                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               java.lang.String                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               java.lang.Object>>
      * @author adminstrator
      * @since 1.0.0
      */
@@ -260,11 +290,12 @@ public class HdfsServiceImpl implements IHdfsService {
      * @author adminstrator
      * @since 1.0.0
      */
+    @Override
     public byte[] openWithBytes(String path) {
         //HDFS文件路径
         Path hdfsPath = new Path(generateHdfsPath(path));
 
-        FileSystem fileSystem = null;
+        FileSystem fileSystem;
         FSDataInputStream inputStream = null;
         try {
             fileSystem = getFileSystem();
@@ -294,16 +325,15 @@ public class HdfsServiceImpl implements IHdfsService {
      * @author adminstrator
      * @since 1.0.0
      */
+    @Override
     public String openWithString(String path) {
         //HDFS文件路径
         Path hdfsPath = new Path(generateHdfsPath(path));
-
         FileSystem fileSystem = null;
         FSDataInputStream inputStream = null;
         try {
             fileSystem = getFileSystem();
             inputStream = fileSystem.open(hdfsPath);
-
             return IOUtils.toString(inputStream, Charset.forName("UTF-8"));
         } catch (IOException e) {
             log.error(MessageFormat.format("打开HDFS上面的文件失败，path:{0}", path), e);
@@ -328,6 +358,7 @@ public class HdfsServiceImpl implements IHdfsService {
      * @author adminstrator
      * @since 1.0.0
      */
+    @Override
     public <T extends Object> T openWithObject(String path, Class<T> clazz) {
         //1、获得文件的json字符串
         String jsonStr = this.openWithString(path);
@@ -373,6 +404,7 @@ public class HdfsServiceImpl implements IHdfsService {
      * @author adminstrator
      * @since 1.0.0
      */
+    @Override
     public boolean delete(String path) {
         //HDFS文件路径
         Path hdfsPath = new Path(generateHdfsPath(path));
@@ -399,6 +431,7 @@ public class HdfsServiceImpl implements IHdfsService {
      * @author adminstrator
      * @since 1.0.0
      */
+    @Override
     public BlockLocation[] getFileBlockLocations(String path) {
         //HDFS文件路径
         Path hdfsPath = new Path(generateHdfsPath(path));
@@ -429,12 +462,10 @@ public class HdfsServiceImpl implements IHdfsService {
      */
     private String generateHdfsPath(String dstPath) {
         if (dstPath.startsWith("/")) {
-            hdfsUrl += dstPath;
+            return hdfsUrl + dstPath;
         } else {
-            hdfsUrl = hdfsUrl + "/" + dstPath;
+            return hdfsUrl + "/" + dstPath;
         }
-
-        return hdfsUrl;
     }
 
     /**

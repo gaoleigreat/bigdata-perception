@@ -28,44 +28,35 @@ public class SearchConditionController {
     @Autowired
     private ISearchConditionService searchConditionService;
 
-    @RequestMapping(value = "/newHousehold/{templateCode}", method = RequestMethod.GET)
-    @ApiOperation("新农户")
-    public RespVO<Map<String, Object>> newHousehold(@PathVariable("templateCode") String templateCode){
-        List<DataTemplateItem> items = searchConditionService.findSearchCondition(templateCode);
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("items", items);
-        map.put("symbols", getSymbols());
-        return RespVOBuilder.success(map);
-    }
 
-    @RequestMapping(value = "/household/{templateCode}", method = RequestMethod.GET)
-    @ApiOperation("户档")
+    @RequestMapping(value = "/{templateCode}", method = RequestMethod.GET)
+    @ApiOperation(value = "搜索条件",httpMethod = "GET")
     public RespVO<Map<String, Object>> household(@PathVariable("templateCode") String templateCode){
         List<DataTemplateItem> items = searchConditionService.findSearchCondition(templateCode);
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>(3);
         map.put("items", items);
         map.put("symbols", getSymbols());
         return RespVOBuilder.success(map);
     }
 
     private Map<Integer, List<ConditionSymbol>> getSymbols(){
-        List<ConditionSymbol> enumList = Arrays.asList(new ConditionSymbol[]{new ConditionSymbol("包含","in"),
+        List<ConditionSymbol> enumList = Arrays.asList(new ConditionSymbol("包含","in"),
                 new ConditionSymbol("不包含","notin"),
                 new ConditionSymbol("为空","notExists"),
-                new ConditionSymbol("不为空","exists")});
-        List<ConditionSymbol> numList = Arrays.asList(new ConditionSymbol[]{new ConditionSymbol("等于","="),
+                new ConditionSymbol("不为空","exists"));
+        List<ConditionSymbol> numList = Arrays.asList(new ConditionSymbol("等于","="),
                 new ConditionSymbol("大于",">"),
                 new ConditionSymbol("大于等于",">="),
                 new ConditionSymbol("小于","<"),
-                new ConditionSymbol("小于等于", "<=")});
-        List<ConditionSymbol> stringList = Arrays.asList(new ConditionSymbol[]{new ConditionSymbol("包含","like"),
+                new ConditionSymbol("小于等于", "<="));
+        List<ConditionSymbol> stringList = Arrays.asList(new ConditionSymbol("包含","like"),
                 new ConditionSymbol("等于","="),
                 new ConditionSymbol("为空","notExists"),
-                new ConditionSymbol("不为空","exists")});
-        List<ConditionSymbol> booleanList = Arrays.asList(new ConditionSymbol[]{new ConditionSymbol("是","true"),
+                new ConditionSymbol("不为空","exists"));
+        List<ConditionSymbol> booleanList = Arrays.asList(new ConditionSymbol("是","true"),
                 new ConditionSymbol("否","false"),
                 new ConditionSymbol("为空","notExists"),
-                new ConditionSymbol("不为空","exists")});
+                new ConditionSymbol("不为空","exists"));
         Map<Integer, List<ConditionSymbol>> map = new HashMap<>();
         map.put(1, stringList);
         map.put(2, stringList);
