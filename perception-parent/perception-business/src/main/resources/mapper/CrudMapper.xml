@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lego.perception.business.mapper.CrudMapper">
+
+
+    <update id="createBusinessTable">
+        CREATE TABLE IF NOT EXISTS ${tableName}
+        (
+            id BIGINT NOT NULL PRIMARY KEY UNIQUE AUTO_INCREMENT COMMENT 'ID',
+            ${column}
+            file_id BIGINT NOT NULL COMMENT '文件id'
+        ) ENGINE = InnoDB
+          DEFAULT CHARSET = utf8
+    </update>
+
+
+    <select id="existTable" resultType="java.lang.Integer">
+        select count(1)
+        from ${tableName}
+    </select>
+
+
+    <insert id="insertBusinessData" parameterType="com.lego.framework.business.model.entity.BusinessTable"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT IGNORE INTO ${tableName}
+        <foreach collection="params.keys" item="key" open="(" close=")" separator=",">
+            ${key}
+        </foreach>
+        VALUES
+        <foreach collection="params.keys" item="key" open="(" close=")" separator=",">
+            #{params.${key}}
+        </foreach>
+    </insert>
+
+
+    <update id="updateByID" parameterType="com.lego.framework.business.model.entity.BusinessTable">
+        UPDATE ${tableName} set
+        <foreach item="value" index="key" collection="params" separator=",">
+            <if test="key != 'id'">
+                ${key} = #{value}
+            </if>
+        </foreach>
+        WHERE
+        id = #{id}
+    </update>
+
+
+    <select id="queryBusinessData" resultType="java.util.Map">
+        select * from ${tableName}
+        <where>
+            1=1
+            <if test="ew.sqlSegment != null">
+                and ${ew.sqlSegment}
+            </if>
+        </where>
+    </select>
+
+
+    <delete id="delBusinessData" parameterType="com.lego.framework.business.model.entity.BusinessTable">
+        DELETE ${tableName}
+        WHERE id = #{id}
+    </delete>
+
+</mapper>
