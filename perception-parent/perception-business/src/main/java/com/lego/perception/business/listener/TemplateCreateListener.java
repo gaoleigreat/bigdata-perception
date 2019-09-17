@@ -7,7 +7,7 @@ import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.event.template.TemplateSink;
 import com.lego.framework.event.template.TemplateSource;
 import com.lego.framework.template.model.entity.FormTemplate;
-import com.lego.perception.business.service.IBusinessService;
+import com.lego.perception.business.service.ICrudService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -30,13 +30,13 @@ import java.util.Map;
 public class TemplateCreateListener {
 
     @Autowired
-    @Qualifier(value = "mySqlBusinessServiceImpl")
-    private IBusinessService mySqlBusinessService;
+    @Qualifier(value = "crudServiceImpl")
+    private ICrudService mySqlBusinessService;
 
 
     @Autowired
     @Qualifier(value = "mongoBusinessServiceImpl")
-    private IBusinessService mongoBusinessService;
+    private ICrudService mongoBusinessService;
 
 
     @StreamListener(TemplateSink.CREATE_TEMPLATE)

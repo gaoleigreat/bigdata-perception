@@ -1,79 +1,49 @@
 package com.lego.perception.business.mapper;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.framework.mybatis.mapper.Mapper;
-import com.lego.framework.business.model.entity.BusinessTable;
-import org.apache.ibatis.annotations.Param;
+import com.lego.framework.business.model.entity.Business;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author : yanglf
  * @version : 1.0
  * @created IntelliJ IDEA.
- * @date : 2019/9/3 18:22
+ * @date : 2019/9/17 18:22
  * @desc :
  */
 @Repository
-public interface BusinessMapper extends Mapper<BusinessTable> {
+public interface BusinessMapper extends Mapper<Business> {
 
 
-    /**
-     * 创建业务数据表
-     *
-     * @param tableName
-     * @param column
-     */
-    Integer createBusinessTable(@Param(value = "tableName") String tableName,
-                                @Param(value = "column") String column);
+    Integer insertSelectiveIgnore(Business business);
 
 
-    /**
-     * 查询表是否存在
-     *
-     * @param tableName
-     * @return
-     */
-    Integer existTable(@Param(value = "tableName") String tableName);
+    Integer insertSelective(Business business);
 
 
-    /**
-     * 查询业务数据
-     *
-     * @param tableName
-     * @param wrapper
-     * @return
-     */
-    List<Map> queryBusinessData(@Param(value = "tableName") String tableName,
-                                @Param(value = "ew") QueryWrapper wrapper);
+    Integer updateByPrimaryKeySelective(Business business);
 
 
-    /**
-     * 新增数据
-     *
-     * @return
-     */
-    Integer insertBusinessData(BusinessTable businessTable);
+    Integer updateByPrimaryKey(Business business);
 
 
-    /**
-     * 根据id修改业务数据
-     *
-     * @param businessTable
-     * @return
-     */
-    Integer updateByID(BusinessTable businessTable);
+    Integer batchInsert(List<Business> list);
 
 
-    /**
-     * 删除业务数据
-     *
-     * @param businessTable
-     * @return
-     */
-    Integer delBusinessData(BusinessTable businessTable);
+    Integer batchUpdate(List<Business> list);
+
+    Integer upsert(Business business);
+
+
+    Integer upsertSelective(Business business);
+
+    List<Business> query(Business business);
+
+    Long queryTotal();
+
+    Integer deleteBatch(List<Long> list);
 
 
 }

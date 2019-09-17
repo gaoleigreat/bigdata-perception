@@ -48,9 +48,6 @@ public class MongoBusinessServiceImpl implements IBusinessService {
         if (CollectionUtils.isEmpty(data)) {
             return RespVOBuilder.success();
         }
-        for (Map<String, Object> datum : data) {
-            datum.put("fileId", fileId);
-        }
         String tableName = formTemplate.getDescription();
         mongoTemplate.insert(data, tableName);
         return RespVOBuilder.success();

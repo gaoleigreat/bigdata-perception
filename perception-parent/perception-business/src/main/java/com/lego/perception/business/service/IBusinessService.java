@@ -1,71 +1,62 @@
 package com.lego.perception.business.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
-import com.framework.common.sdto.RespDataVO;
-import com.framework.common.sdto.RespVO;
-import com.lego.framework.business.model.entity.BusinessTable;
-import com.lego.framework.template.model.entity.FormTemplate;
-import com.lego.framework.template.model.entity.SearchParam;
+import com.framework.common.page.Page;
+import com.framework.common.page.PagedResult;
+import com.lego.framework.business.model.entity.Business;
+import org.apache.ibatis.session.RowBounds;
 
 import java.util.List;
-import java.util.Map;
 
 /**
- * @author : yanglf
- * @version : 1.0
- * @created IntelliJ IDEA.
- * @date : 2019/9/3 18:05
- * @desc :
+ * service层
+ *
+ * @author itar
+ * @email wuhandzy@gmail.com
+ * @date 2019-09-17 10:04:50
+ * @since jdk 1.8
  */
 public interface IBusinessService {
 
-    /**
-     * 创建业务表
-     *
-     * @param formTemplate
-     * @return
-     */
-    RespVO createBusinessTable(FormTemplate formTemplate);
+    PagedResult<Business> selectPaged(Business business, Page page);
 
+    Business selectByPrimaryKey(Long id);
 
-    /**
-     * 新增业务数据
-     *
-     * @param formTemplate
-     * @param data
-     * @return
-     */
-    RespVO insertBusinessData(FormTemplate formTemplate, List<Map<String, Object>> data, Long fileId);
+    Integer deleteByPrimaryKey(Long id);
 
+    Integer insert(Business business);
 
-    /**
-     * 查询业务数据
-     *
-     * @param tableName
-     * @param params
-     * @return
-     */
-    RespVO<RespDataVO<Map>> queryBusinessData(String tableName, List<SearchParam> params);
+    Integer insertSelective(Business business);
 
+    Integer insertSelectiveIgnore(Business business);
+
+    Integer updateByPrimaryKeySelective(Business business);
+
+    Integer updateByPrimaryKey(Business business);
+
+    Integer batchInsert(List<Business> list);
+
+    Integer batchUpdate(List<Business> list);
 
     /**
-     * 更新业务数据
+     * 存在即更新
      *
-     * @param tableName
-     * @param data
+     * @param business
      * @return
      */
-    RespVO updateBusinessData(String tableName, Map<String, Object> data);
-
+    Integer upsert(Business business);
 
     /**
-     * 删除业务数据
+     * 存在即更新，可选择具体属性
      *
-     * @param tableName
-     * @param data
+     * @param business
      * @return
      */
-    RespVO delBusinessData(String tableName, Map<String, Object> data);
+    Integer upsertSelective(Business business);
 
+    List<Business> query(Business business);
+
+    Long queryTotal();
+
+    Integer deleteBatch(List<Long> list);
 
 }

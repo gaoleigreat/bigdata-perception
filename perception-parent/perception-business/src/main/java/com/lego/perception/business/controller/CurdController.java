@@ -8,13 +8,12 @@ import com.lego.framework.base.annotation.Resource;
 import com.lego.framework.template.feign.TemplateFeignClient;
 import com.lego.framework.template.model.entity.FormTemplate;
 import com.lego.framework.template.model.entity.SearchParam;
-import com.lego.perception.business.service.IBusinessService;
+import com.lego.perception.business.service.ICrudService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,7 +33,7 @@ import java.util.Map;
 public class CurdController {
 
     @Autowired
-    private IBusinessService mySqlBusinessService;
+    private ICrudService mySqlBusinessService;
 
     @Autowired
     private TemplateFeignClient templateFeignClient;
@@ -78,7 +77,7 @@ public class CurdController {
         if (formTemplate == null) {
             return RespVOBuilder.failure("找不到对应模板信息");
         }
-        return mySqlBusinessService.insertBusinessData(formTemplate, data, fileId);
+        return mySqlBusinessService.insertBusinessData(formTemplate, data);
     }
 
 
