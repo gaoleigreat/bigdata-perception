@@ -1,26 +1,26 @@
-package com.lego.perception.business.service.impl;
+package com.lego.perception.data.service.impl;
 
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.template.model.entity.FormTemplate;
-import com.lego.perception.business.service.IBusinessService;
-import com.mongodb.client.MongoCollection;
+import com.lego.framework.template.model.entity.SearchParam;
+import com.lego.perception.data.service.IBusinessService;
+import com.lego.perception.data.utils.QueryUtils;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.BulkOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author : yanglf
@@ -38,8 +38,6 @@ public class MongoBusinessServiceImpl implements IBusinessService {
 
     @Override
     public RespVO createBusinessTable(FormTemplate formTemplate) {
-        //  String tableName = formTemplate.getDescription();
-        // mongoTemplate.createCollection(tableName);
         return RespVOBuilder.success();
     }
 
@@ -60,14 +58,21 @@ public class MongoBusinessServiceImpl implements IBusinessService {
 
     @Override
     public RespVO<RespDataVO<Map>> queryBusinessData(String tableName,
-                                                     Map<String, Object> param) {
-        Query query = new Query();
+                                                     List<SearchParam> params) {
         Criteria criteria = new Criteria();
-        if (param != null) {
-            for (Map.Entry<String, Object> map : param.entrySet()) {
-                criteria.and(map.getKey()).is(map.getValue());
+        if (!CollectionUtils.isEmpty(params)) {
+            for (SearchParam param : params) {
+                String symbol = param.getSymbol();
+                String absoluteField = param.getAbsoluteField();
+                String value = param.getValue();
+                Integer dataType = param.getDataType();
+                if (null == symbol || null == absoluteField || null == value || null == dataType) {
+                    continue;
+                }
+                QueryUtils.addAdvancedCondition(criteria, symbol, absoluteField, value);
             }
         }
+        Query query = new Query();
         query.addCriteria(criteria);
         List<Map> mapList = mongoTemplate.find(query, Map.class, tableName);
         if (!CollectionUtils.isEmpty(mapList)) {

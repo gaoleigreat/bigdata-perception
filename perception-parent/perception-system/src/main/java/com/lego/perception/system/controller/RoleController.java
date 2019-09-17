@@ -1,5 +1,6 @@
 package com.lego.perception.system.controller;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespVO;
@@ -31,7 +32,6 @@ public class RoleController {
     @Operation(value="find", desc="查询")
     @ApiOperation("查询")
     public List<Role> findList(@ModelAttribute Role role){
-
         return roleService.findList(role);
     }
 
@@ -39,7 +39,6 @@ public class RoleController {
     @Operation(value="find", desc="查询")
     @ApiOperation("查询")
     public List<Role> findcadreList(@ModelAttribute Role role){
-
         return roleService.findcadreList(role);
     }
 

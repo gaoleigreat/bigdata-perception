@@ -1,4 +1,5 @@
 package com.lego.perception.system.service;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespVO;
@@ -6,10 +7,9 @@ import com.lego.framework.system.model.entity.Role;
 import java.util.List;
 
 /**
- * 角色服务
- * weihao 2018-08-15
+ * @author yanglf
  */
-public interface IRoleService {
+public interface IRoleService extends IService<Role> {
 
     /**
      * 查询角色列表

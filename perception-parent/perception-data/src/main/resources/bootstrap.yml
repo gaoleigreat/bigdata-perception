@@ -1,0 +1,13 @@
+server:
+  port: 18090
+  servlet:
+    context-path: /
+spring:
+  application:
+    name: data-service
+  profiles:
+    active: local
+
+
+application:
+  description: 数据服务

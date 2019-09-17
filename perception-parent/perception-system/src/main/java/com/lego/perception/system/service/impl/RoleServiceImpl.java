@@ -1,13 +1,9 @@
 package com.lego.perception.system.service.impl;
-
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
-import com.framework.mybatis.tool.WhereEntityTool;
 import com.framework.mybatis.utils.PageUtil;
 import com.lego.perception.system.mapper.RoleMapper;
 import com.lego.perception.system.service.IRoleService;
@@ -18,17 +14,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
-
+/**
+ * @author yanglf
+ */
 @Service
 @Slf4j
-public class RoleServiceImpl implements IRoleService {
+public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IRoleService {
 
     @Autowired
     private RoleMapper roleMapper;
 
     @Override
     public List<Role> findList(Role role) {
-
         return roleMapper.findList(role);
     }
 

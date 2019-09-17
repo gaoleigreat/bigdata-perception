@@ -41,10 +41,10 @@ public class TemplateCreateListener {
 
     @StreamListener(TemplateSink.CREATE_TEMPLATE)
     @SendTo(TemplateSource.CREATE_BUSINESS_TABLE)
-    public RespVO<Map<String, Object>> createTemplate(Message<String> message) {
+    public RespVO<Map> createTemplate(Message<String> message) {
         String payload = message.getPayload();
         log.info("接收到模板创建事件:{}", payload);
-        Map<String, Object> map = JSONObject.parseObject(payload, Map.class);
+        Map map = JSONObject.parseObject(payload, Map.class);
         Integer sourceType = (Integer) map.get("sourceType");
         FormTemplate formTemplate = (FormTemplate) map.get("formTemplate");
         RespVO respVO;

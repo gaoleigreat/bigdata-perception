@@ -1,4 +1,4 @@
-package com.lego.perception.business.service.impl;
+package com.lego.perception.data.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.framework.common.sdto.RespDataVO;
@@ -11,12 +11,13 @@ import com.lego.framework.business.model.entity.BusinessTable;
 import com.lego.framework.template.model.entity.FormTemplate;
 import com.lego.framework.template.model.entity.FormTemplateItem;
 import com.lego.framework.template.model.entity.SearchParam;
-import com.lego.perception.business.mapper.BusinessMapper;
-import com.lego.perception.business.service.IBusinessService;
+import com.lego.perception.data.mapper.BusinessMapper;
+import com.lego.perception.data.service.IBusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +28,7 @@ import java.util.Map;
  * @date : 2019/9/3 18:10
  * @desc :
  */
-@Service
+@Service(value = "mySqlBusinessServiceImpl")
 public class MySqlBusinessServiceImpl implements IBusinessService {
 
     @Autowired

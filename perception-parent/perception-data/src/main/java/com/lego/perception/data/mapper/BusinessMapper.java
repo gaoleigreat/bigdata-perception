@@ -1,4 +1,4 @@
-package com.lego.perception.business.mapper;
+package com.lego.perception.data.mapper;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.framework.mybatis.mapper.Mapper;
