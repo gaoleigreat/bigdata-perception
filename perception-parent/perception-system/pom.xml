@@ -184,7 +184,7 @@
 
 
             <!--此插件生成ASCIIDOC-->
-            <plugin>
+           <!-- <plugin>
                 <groupId>io.github.swagger2markup</groupId>
                 <artifactId>swagger2markup-maven-plugin</artifactId>
                 <version>${swagger2markup.version}</version>
@@ -201,11 +201,11 @@
                     </dependency>
                 </dependencies>
                 <configuration>
-                    <!--<swaggerInput>http://localhost:8080/v2/api-docs</swaggerInput>-->
+                    &lt;!&ndash;<swaggerInput>http://localhost:8080/v2/api-docs</swaggerInput>&ndash;&gt;
                     <swaggerInput>${swagger.input}</swaggerInput>
                     <outputDir>${generated.asciidoc.directory}</outputDir>
                     <config>
-                        <!-- 除了ASCIIDOC之外，还有MARKDOWN和CONFLUENCE_MARKUP可选 -->
+                        &lt;!&ndash; 除了ASCIIDOC之外，还有MARKDOWN和CONFLUENCE_MARKUP可选 &ndash;&gt;
                         <swagger2markup.markupLanguage>ASCIIDOC</swagger2markup.markupLanguage>
                         <swagger2markup.pathsGroupedBy>TAGS</swagger2markup.pathsGroupedBy>
                         <swagger2markup.extensions.dynamicOverview.contentPath>
@@ -236,7 +236,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--此插件生成HTML和PDF-->
+            &lt;!&ndash;此插件生成HTML和PDF&ndash;&gt;
             <plugin>
                 <groupId>org.asciidoctor</groupId>
                 <artifactId>asciidoctor-maven-plugin</artifactId>
@@ -296,7 +296,7 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
 
             <plugin>
                 <groupId>com.spotify</groupId>

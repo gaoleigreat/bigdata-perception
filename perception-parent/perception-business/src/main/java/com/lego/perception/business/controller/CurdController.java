@@ -1,6 +1,9 @@
 package com.lego.perception.business.controller;
 
 import com.framework.common.consts.RespConsts;
+import com.framework.common.page.Page;
+import com.framework.common.page.PagedResult;
+import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.base.annotation.Operation;
@@ -8,15 +11,15 @@ import com.lego.framework.base.annotation.Resource;
 import com.lego.framework.template.feign.TemplateFeignClient;
 import com.lego.framework.template.model.entity.FormTemplate;
 import com.lego.framework.template.model.entity.SearchParam;
-import com.lego.perception.business.service.IBusinessService;
+import com.lego.perception.business.service.ICrudService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +37,7 @@ import java.util.Map;
 public class CurdController {
 
     @Autowired
-    private IBusinessService mySqlBusinessService;
+    private ICrudService mySqlBusinessService;
 
     @Autowired
     private TemplateFeignClient templateFeignClient;
@@ -68,7 +71,6 @@ public class CurdController {
     @RequestMapping(value = "/insert", method = RequestMethod.POST)
     @Operation(value = "insert", desc = "新增业务数据")
     public RespVO insertBusinessData(@RequestParam String templateCode,
-                                     @RequestParam Long fileId,
                                      @RequestBody List<Map<String, Object>> data) {
         RespVO<FormTemplate> respVO = templateFeignClient.findFormTemplateByCode(templateCode);
         if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
@@ -78,7 +80,7 @@ public class CurdController {
         if (formTemplate == null) {
             return RespVOBuilder.failure("找不到对应模板信息");
         }
-        return mySqlBusinessService.insertBusinessData(formTemplate, data, fileId);
+        return mySqlBusinessService.insertBusinessData(formTemplate, data);
     }
 
 
@@ -88,8 +90,8 @@ public class CurdController {
     })
     @RequestMapping(value = "/query", method = RequestMethod.POST)
     @Operation(value = "query", desc = "查询业务数据")
-    public RespVO queryBusinessData(@RequestParam String templateCode,
-                                    @RequestBody List<SearchParam> searchParams) {
+    public RespVO<RespDataVO<Map>> queryBusinessData(@RequestParam String templateCode,
+                                                     @RequestBody List<SearchParam> searchParams) {
         RespVO<FormTemplate> respVO = templateFeignClient.findFormTemplateByCode(templateCode);
         if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
             return RespVOBuilder.failure("获取模板信息失败");
@@ -99,6 +101,27 @@ public class CurdController {
             return RespVOBuilder.failure("找不到对应模板信息");
         }
         return mySqlBusinessService.queryBusinessData(formTemplate.getDescription(), searchParams);
+    }
+
+
+    @ApiOperation(value = "查询业务数据", httpMethod = "POST")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "templateCode", value = "表单模板code", dataType = "String", required = true, paramType = "query"),
+    })
+    @RequestMapping(value = "/queryPaged/{pageSize}/{pageIndex}", method = RequestMethod.POST)
+    @Operation(value = "query", desc = "查询业务数据")
+    public RespVO<PagedResult<Map>> queryPaged(@RequestParam String templateCode,
+                                               @RequestBody List<SearchParam> searchParams,
+                                               @PathParam(value = "") Page page) {
+        RespVO<FormTemplate> respVO = templateFeignClient.findFormTemplateByCode(templateCode);
+        if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
+            return RespVOBuilder.failure("获取模板信息失败");
+        }
+        FormTemplate formTemplate = respVO.getInfo();
+        if (formTemplate == null) {
+            return RespVOBuilder.failure("找不到对应模板信息");
+        }
+        return mySqlBusinessService.queryBusinessDataPaged(formTemplate.getDescription(), searchParams,page);
     }
 
 

@@ -1,9 +1,13 @@
 package com.lego.perception.business.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.framework.common.page.Page;
+import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
+import com.framework.mybatis.utils.PageUtil;
 import com.framework.mybatis.utils.TableUtils;
 import com.framework.mybatis.utils.WrapperUtils;
 import com.lego.framework.base.exception.ExceptionBuilder;
@@ -11,12 +15,13 @@ import com.lego.framework.business.model.entity.BusinessTable;
 import com.lego.framework.template.model.entity.FormTemplate;
 import com.lego.framework.template.model.entity.FormTemplateItem;
 import com.lego.framework.template.model.entity.SearchParam;
-import com.lego.perception.business.mapper.BusinessMapper;
-import com.lego.perception.business.service.IBusinessService;
+import com.lego.perception.business.mapper.CrudMapper;
+import com.lego.perception.business.service.ICrudService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+
 import java.util.List;
 import java.util.Map;
 
@@ -28,10 +33,10 @@ import java.util.Map;
  * @desc :
  */
 @Service
-public class MySqlBusinessServiceImpl implements IBusinessService {
+public class CrudServiceImpl implements ICrudService {
 
     @Autowired
-    private BusinessMapper businessMapper;
+    private CrudMapper businessMapper;
 
     @Override
     public RespVO createBusinessTable(FormTemplate formTemplate) {
@@ -59,7 +64,6 @@ public class MySqlBusinessServiceImpl implements IBusinessService {
             sb.append(TableUtils.getComment(title));
             sb.append(",");
         }
-        sb.replace(sb.length() - 1, sb.length(), "");
         businessMapper.createBusinessTable(tableName, sb.toString());
         Integer existTable = businessMapper.existTable(tableName);
         if (existTable != null) {
@@ -72,12 +76,16 @@ public class MySqlBusinessServiceImpl implements IBusinessService {
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public RespVO insertBusinessData(FormTemplate formTemplate,
-                                     List<Map<String, Object>> data,
-                                     Long fileId) {
+                                     List<Map<String, Object>> data) {
         String tableName = formTemplate.getDescription();
         // 参数校验
         for (Map<String, Object> objectMap : data) {
-            objectMap.put("fileId", fileId);
+            if (!objectMap.containsKey("fileId")) {
+                ExceptionBuilder.operateFailException("文件id参数缺失");
+            }
+            Long fileId = (Long) objectMap.get("fileId");
+            objectMap.remove("fileId");
+            objectMap.put("file_id", fileId);
             BusinessTable businessTable = new BusinessTable(null, tableName, objectMap);
             Integer insertBusinessData = businessMapper.insertBusinessData(businessTable);
             if (insertBusinessData <= 0) {
@@ -110,6 +118,32 @@ public class MySqlBusinessServiceImpl implements IBusinessService {
             }
         }
         return RespVOBuilder.success(data);
+    }
+
+    @Override
+    public RespVO<PagedResult<Map>> queryBusinessDataPaged(String tableName, List<SearchParam> params, Page page) {
+        QueryWrapper wrapper = new QueryWrapper();
+        if (!CollectionUtils.isEmpty(params)) {
+            for (SearchParam param : params) {
+                String symbol = param.getSymbol();
+                String absoluteField = param.getAbsoluteField();
+                String value = param.getValue();
+                Integer dataType = param.getDataType();
+                if (null == symbol || null == absoluteField || null == value || null == dataType) {
+                    continue;
+                }
+                WrapperUtils.addAdvancedCondition(wrapper, symbol, absoluteField, value);
+            }
+        }
+
+        IPage iPage = PageUtil.page2IPage(page);
+        IPage<Map> data = businessMapper.queryBusinessData(tableName, wrapper, iPage);
+        if (!CollectionUtils.isEmpty(data.getRecords())) {
+            for (Map datum : data.getRecords()) {
+                datum.remove("fileId");
+            }
+        }
+        return RespVOBuilder.success(PageUtil.iPage2Result(data));
     }
 
     @Override

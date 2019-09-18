@@ -5,7 +5,7 @@ import com.framework.common.sdto.RespVO;
 import com.lego.framework.template.model.entity.FormTemplate;
 import com.lego.framework.template.model.entity.FormTemplateItem;
 import com.lego.framework.template.model.entity.SearchParam;
-import com.lego.perception.business.service.IBusinessService;
+import com.lego.perception.business.service.ICrudService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
@@ -31,8 +31,8 @@ public class BusinessServiceTest {
 
 
     @Autowired
-    @Qualifier(value = "mySqlBusinessServiceImpl")
-    private IBusinessService iBusinessService;
+    @Qualifier(value = "crudServiceImpl")
+    private ICrudService iBusinessService;
 
 
     @Test
@@ -81,7 +81,7 @@ public class BusinessServiceTest {
         mp1.put("creation_date", new Date());
         List<Map<String,Object>> maps=new ArrayList<>();
         maps.add(mp1);
-        RespVO respVO = iBusinessService.insertBusinessData(formTemplate, maps,1L);
+        RespVO respVO = iBusinessService.insertBusinessData(formTemplate, maps);
         log.info("respVO:{}", respVO);
         Assert.assertEquals(respVO.getRetCode(), RespConsts.SUCCESS_RESULT_CODE);
     }

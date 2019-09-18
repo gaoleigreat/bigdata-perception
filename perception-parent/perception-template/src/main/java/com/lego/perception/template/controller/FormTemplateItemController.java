@@ -36,7 +36,6 @@ public class FormTemplateItemController {
     @Operation(value = "find", desc = "查询")
     @ApiOperation("查询模板项列表")
     public RespVO<RespDataVO<FormTemplateItem>> findPagedList(@ModelAttribute FormTemplateItem item) {
-
         return RespVOBuilder.success(formTemplateItemService.findList(item));
     }
 

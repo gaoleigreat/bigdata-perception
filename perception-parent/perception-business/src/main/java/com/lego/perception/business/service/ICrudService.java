@@ -1,7 +1,11 @@
-package com.lego.perception.data.service;
+package com.lego.perception.business.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.framework.common.page.Page;
+import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
+import com.lego.framework.business.model.entity.BusinessTable;
 import com.lego.framework.template.model.entity.FormTemplate;
 import com.lego.framework.template.model.entity.SearchParam;
 
@@ -15,7 +19,7 @@ import java.util.Map;
  * @date : 2019/9/3 18:05
  * @desc :
  */
-public interface IBusinessService {
+public interface ICrudService {
 
     /**
      * 创建业务表
@@ -33,7 +37,7 @@ public interface IBusinessService {
      * @param data
      * @return
      */
-    RespVO insertBusinessData(FormTemplate formTemplate, List<Map<String, Object>> data,Long fileId);
+    RespVO insertBusinessData(FormTemplate formTemplate, List<Map<String, Object>> data);
 
 
     /**
@@ -44,6 +48,17 @@ public interface IBusinessService {
      * @return
      */
     RespVO<RespDataVO<Map>> queryBusinessData(String tableName, List<SearchParam> params);
+
+
+    /**
+     * 分页查询业务数据
+     *
+     * @param tableName
+     * @param params
+     * @param page
+     * @return
+     */
+    RespVO<PagedResult<Map>> queryBusinessDataPaged(String tableName, List<SearchParam> params, Page page);
 
 
     /**
