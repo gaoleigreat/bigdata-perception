@@ -41,6 +41,7 @@ public class SwaggerConfig {
             resources.add(createResource("用户服务", "user-service"));
             resources.add(createResource("模板服务", "template-service"));
             resources.add(createResource("业务服务", "business-service"));
+            resources.add(createResource("数据服务", "data-service"));
 
             return resources;
         };

@@ -35,7 +35,6 @@ public class TemplateCreateListener {
 
 
     @Autowired
-    @Qualifier(value = "mongoBusinessServiceImpl")
     private ICrudService mongoBusinessService;
 
 

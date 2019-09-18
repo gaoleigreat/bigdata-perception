@@ -1,11 +1,11 @@
 package com.lego.framework.base.utils;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 /**
  * @author : yanglf
@@ -14,9 +14,10 @@ import java.io.OutputStream;
  * @date : 2019/9/17 10:53
  * @desc :
  */
+@Slf4j
 public class FileUtils {
 
-    public static void inputStreamToFile(InputStream ins, File file) {
+    private static void inputStreamToFile(InputStream ins, File file) {
         try {
             OutputStream os = new FileOutputStream(file);
             int bytesRead;
@@ -32,10 +33,15 @@ public class FileUtils {
     }
 
 
+    /**
+     * MultipartFile 转  File
+     *
+     * @param file
+     * @return
+     */
     public static File multipartFileToFile(MultipartFile file) {
         File f = null;
         try {
-
             if (file != null && !file.isEmpty()) {
                 InputStream ins = file.getInputStream();
                 f = new File(file.getOriginalFilename());
@@ -46,6 +52,20 @@ public class FileUtils {
             e.printStackTrace();
             return f;
         }
+    }
+
+
+    /**
+     * File  转  MultipartFile
+     *
+     * @param file
+     * @return
+     * @throws Exception
+     */
+    public static MultipartFile toMultipartFile(File file) throws Exception {
+        FileInputStream fileInputStream = new FileInputStream(file);
+        return new MockMultipartFile(file.getName(), file.getName(),
+                MediaType.APPLICATION_OCTET_STREAM_VALUE, fileInputStream);
     }
 
 }

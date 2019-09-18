@@ -1,6 +1,7 @@
 package com.lego.perception.business.mapper;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.framework.mybatis.mapper.Mapper;
 import com.lego.framework.business.model.entity.BusinessTable;
 import org.apache.ibatis.annotations.Param;
@@ -48,6 +49,18 @@ public interface CrudMapper extends Mapper<BusinessTable> {
      */
     List<Map> queryBusinessData(@Param(value = "tableName") String tableName,
                                 @Param(value = "ew") QueryWrapper wrapper);
+
+
+    /**
+     * 分页查询业务数据
+     *
+     * @param tableName
+     * @param wrapper
+     * @param iPage
+     * @return
+     */
+    IPage<Map> queryBusinessData(@Param(value = "tableName") String tableName,
+                                 @Param(value = "ew") QueryWrapper wrapper, IPage iPage);
 
 
     /**

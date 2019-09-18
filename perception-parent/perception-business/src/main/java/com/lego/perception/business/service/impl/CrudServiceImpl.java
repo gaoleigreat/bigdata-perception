@@ -1,9 +1,13 @@
 package com.lego.perception.business.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.framework.common.page.Page;
+import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
+import com.framework.mybatis.utils.PageUtil;
 import com.framework.mybatis.utils.TableUtils;
 import com.framework.mybatis.utils.WrapperUtils;
 import com.lego.framework.base.exception.ExceptionBuilder;
@@ -114,6 +118,32 @@ public class CrudServiceImpl implements ICrudService {
             }
         }
         return RespVOBuilder.success(data);
+    }
+
+    @Override
+    public RespVO<PagedResult<Map>> queryBusinessDataPaged(String tableName, List<SearchParam> params, Page page) {
+        QueryWrapper wrapper = new QueryWrapper();
+        if (!CollectionUtils.isEmpty(params)) {
+            for (SearchParam param : params) {
+                String symbol = param.getSymbol();
+                String absoluteField = param.getAbsoluteField();
+                String value = param.getValue();
+                Integer dataType = param.getDataType();
+                if (null == symbol || null == absoluteField || null == value || null == dataType) {
+                    continue;
+                }
+                WrapperUtils.addAdvancedCondition(wrapper, symbol, absoluteField, value);
+            }
+        }
+
+        IPage iPage = PageUtil.page2IPage(page);
+        IPage<Map> data = businessMapper.queryBusinessData(tableName, wrapper, iPage);
+        if (!CollectionUtils.isEmpty(data.getRecords())) {
+            for (Map datum : data.getRecords()) {
+                datum.remove("fileId");
+            }
+        }
+        return RespVOBuilder.success(PageUtil.iPage2Result(data));
     }
 
     @Override

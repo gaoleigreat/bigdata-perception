@@ -2,9 +2,11 @@ package com.lego.framework.business.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.lego.framework.config.BaseModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.checkerframework.checker.units.qual.A;
 
 import java.util.Date;
 
@@ -20,8 +22,14 @@ import java.util.Date;
 @NoArgsConstructor
 @TableName(value = "tpl_business")
 public class Business extends BaseModel {
+    @ApiModelProperty("业务名称")
     private String name;
+    @ApiModelProperty("模板code")
     private String templateCode;
+    @ApiModelProperty("类型")
     private Integer type;
+    @ApiModelProperty("对应表名称")
     private String tableName;
+    @ApiModelProperty("是否删除(0-否;1-是)")
+    private Integer deletedFlag;
 }

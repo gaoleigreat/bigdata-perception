@@ -7,6 +7,7 @@ zuul:
     user-service: /user-service/**
     template-service: /template-service/**
     business-service: /business-service/**
+    data-service: /data-service/**
   ignored-services: '*'
 
 

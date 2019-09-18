@@ -1,6 +1,8 @@
 package com.lego.perception.business.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.framework.common.page.Page;
+import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.lego.framework.business.model.entity.BusinessTable;
@@ -46,6 +48,17 @@ public interface ICrudService {
      * @return
      */
     RespVO<RespDataVO<Map>> queryBusinessData(String tableName, List<SearchParam> params);
+
+
+    /**
+     * 分页查询业务数据
+     *
+     * @param tableName
+     * @param params
+     * @param page
+     * @return
+     */
+    RespVO<PagedResult<Map>> queryBusinessDataPaged(String tableName, List<SearchParam> params, Page page);
 
 
     /**
