@@ -97,8 +97,9 @@ public class DateFileController {
     @RequestMapping(value = "/insert", method = RequestMethod.POST)
     @Operation(value = "insert", desc = "新增")
     @ApiOperation("新增")
-    public RespVO insert(HttpServletRequest req, @RequestParam(required = false) Long projectId) {
-        List<MultipartFile> fileList = new ArrayList<>();
+    public RespVO<Long> insert(@RequestBody DataFile dataFile) {
+        return dataFileService.insert(dataFile);
+       /* List<MultipartFile> fileList = new ArrayList<>();
         if (req instanceof MultipartHttpServletRequest) {
             fileList = ((MultipartHttpServletRequest) req).getFiles("file");
         }
@@ -151,8 +152,8 @@ public class DateFileController {
             }
             dataFiles.add(dataFile);
 
-        });
-        return dataFileService.insertList(dataFiles);
+        });*/
+        //return dataFileService.insertList(dataFiles);
     }
 
     @RequestMapping(value = "/updateList", method = RequestMethod.POST)

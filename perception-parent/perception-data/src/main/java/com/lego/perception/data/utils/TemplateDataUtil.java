@@ -1,11 +1,12 @@
 package com.lego.perception.data.utils;
 
+
+import com.alibaba.fastjson.JSONObject;
 import com.framework.excel.utils.ExcelTemplateUtil;
 import com.lego.framework.base.exception.ExceptionBuilder;
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.json.XML;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,7 +28,7 @@ public class TemplateDataUtil {
      * @param file
      * @return
      * @throws IOException
-     * @throws JSONException
+     * @throws
      */
     public static List<Map<String, Object>> analyticalData(MultipartFile file, Long fileId) throws IOException, JSONException {
         if (StringUtils.isEmpty(file.getOriginalFilename())) {
@@ -38,6 +39,9 @@ public class TemplateDataUtil {
                 XSSFWorkbook xsf = new XSSFWorkbook(file.getInputStream());
                 ExcelTemplateUtil excelTemplateUtil = new ExcelTemplateUtil();
                 List<Map<String, Object>> sheetValue = excelTemplateUtil.getSheetValue(xsf.getSheetAt(0), null);
+                sheetValue.forEach(map -> {
+                    map.put("fileId", fileId);
+                });
                 return sheetValue;
             } catch (IOException e) {
                 ExceptionBuilder.operateFailException("文件异常");
@@ -46,19 +50,18 @@ public class TemplateDataUtil {
 
         } else if (file.getOriginalFilename().endsWith(".xml")) {
             String str = IOUtils.toString(file.getInputStream(), "utf-8");
-            JSONObject xmlJSONObj = XML.toJSONObject(str);
-            Map<String, Object> map = com.alibaba.fastjson.JSONObject.parseObject(xmlJSONObj.toString(), Map.class);
-            map.put("fileId", fileId);
+            org.json.JSONObject jsonObject = XML.toJSONObject(str);
+            Map<String, Object> map =jsonObject.toMap();
             List<Map<String, Object>> dataList = new ArrayList<>();
             dataList.add(map);
             return dataList;
-
         } else if (file.getOriginalFilename().endsWith(".json")) {
             String str = IOUtils.toString(file.getInputStream(), "utf-8");
-            Map<String, Object> map = com.alibaba.fastjson.JSONObject.parseObject(str, Map.class);
+            Map<String, Object> map = JSONObject.parseObject(str, Map.class);
             map.put("fileId", fileId);
             List<Map<String, Object>> resultList = new ArrayList<>();
             resultList.add(map);
+            return resultList;
 
         } else if (file.getOriginalFilename().endsWith(".csv")) {
             List<String> dataList = CSVUtils.importCsv(file.getInputStream());

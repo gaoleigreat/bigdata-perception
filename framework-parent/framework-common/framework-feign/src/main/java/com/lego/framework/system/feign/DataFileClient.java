@@ -32,6 +32,15 @@ public interface DataFileClient {
      */
     @RequestMapping(value = "/insertList", method = RequestMethod.POST)
     RespVO<RespDataVO<Long>> insertList(@RequestBody List<DataFile> dataFiles);
+
+    /**
+     * 添加文件
+     *
+     * @param dataFile
+     * @return
+     */
+    @RequestMapping(value = "/insert", method = RequestMethod.POST)
+    RespVO<Long> insert(@RequestBody DataFile dataFile);
 }
 
 @Component
@@ -40,6 +49,12 @@ class DataFileClientFallback implements DataFileClient {
 
     @Override
     public RespVO<RespDataVO<Long>> insertList(List<DataFile> dataFiles) {
+        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "system服务不可用");
+    }
+
+
+    @Override
+    public RespVO<Long> insert(DataFile dataFile) {
         return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "system服务不可用");
     }
 }

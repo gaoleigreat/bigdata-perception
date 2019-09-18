@@ -58,6 +58,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>android-json</artifactId>
+                    <groupId>com.vaadin.external.google</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!--JMX management-->
@@ -140,6 +146,11 @@
             <groupId>com.lego.event</groupId>
             <version>${service.version}</version>
             <artifactId>framework-event</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20180813</version>
         </dependency>
     </dependencies>
 

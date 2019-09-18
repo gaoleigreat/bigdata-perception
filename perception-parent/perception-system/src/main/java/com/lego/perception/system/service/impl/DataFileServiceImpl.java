@@ -44,13 +44,13 @@ public class DataFileServiceImpl implements IDataFileService {
     }
 
     @Override
-    public RespVO insert(DataFile dataFile) {
+    public RespVO<Long> insert(DataFile dataFile) {
         int result = 0;
         if (dataFile != null) {
             result = dataFileMapper.insert(dataFile);
         }
         if (result > 0) {
-            return RespVOBuilder.success();
+            return RespVOBuilder.success(dataFile.getId());
         }
         return RespVOBuilder.failure("插入失敗");
     }
