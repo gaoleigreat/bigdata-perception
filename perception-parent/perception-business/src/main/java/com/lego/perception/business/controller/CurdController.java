@@ -2,6 +2,7 @@ package com.lego.perception.business.controller;
 
 import com.framework.common.consts.RespConsts;
 import com.framework.common.page.Page;
+import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
@@ -109,9 +110,9 @@ public class CurdController {
     })
     @RequestMapping(value = "/queryPaged/{pageSize}/{pageIndex}", method = RequestMethod.POST)
     @Operation(value = "query", desc = "查询业务数据")
-    public RespVO<RespDataVO<Map>> queryPaged(@RequestParam String templateCode,
-                                              @RequestBody List<SearchParam> searchParams,
-                                              @PathParam(value = "") Page page) {
+    public RespVO<PagedResult<Map>> queryPaged(@RequestParam String templateCode,
+                                               @RequestBody List<SearchParam> searchParams,
+                                               @PathParam(value = "") Page page) {
         RespVO<FormTemplate> respVO = templateFeignClient.findFormTemplateByCode(templateCode);
         if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
             return RespVOBuilder.failure("获取模板信息失败");
