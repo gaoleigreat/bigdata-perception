@@ -2,9 +2,11 @@ package com.lego.framework.file.feign;
 
 
 import com.framework.common.consts.RespConsts;
+import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.file.model.UploadFile;
+import com.lego.framework.system.model.entity.DataFile;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -24,19 +26,17 @@ import java.util.Map;
 public interface FileClient {
 
     @PostMapping(value = "/uploads", headers = "content-type=multipart/form-data")
-    RespVO uploads(@RequestParam(value = "files", required = true) MultipartFile[] files,
-                   @RequestParam(value = "projectId", required = true) Long projectId,
-                   @RequestParam(value = "templateId", required = true) Long templateId,
-                   @RequestParam(value = "sourceType", required = true) int sourceType);
-
+    RespVO<RespDataVO<DataFile>> uploads(@RequestParam(value = "files", required = true) MultipartFile[] files,
+                                         @RequestParam(value = "projectId", required = true) Long projectId,
+                                         @RequestParam(value = "templateId", required = false) Long templateId,
+                                         @RequestParam(value = "sourceType", required = false) int sourceType);
 }
 
 @Component
 class FileClientFallback implements FileClient {
 
-
     @Override
-    public RespVO uploads(MultipartFile[] files, Long projectId, Long templateId, int sourceType) {
+    public RespVO<RespDataVO<DataFile>> uploads(MultipartFile[] files, Long projectId, Long templateId, int sourceType) {
         return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "file-system服务不可用");
     }
 }

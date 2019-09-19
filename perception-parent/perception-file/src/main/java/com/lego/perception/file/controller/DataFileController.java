@@ -2,17 +2,14 @@ package com.lego.perception.file.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.framework.common.consts.HttpConsts;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.base.annotation.Operation;
-import com.lego.framework.system.feign.DataFileClient;
 import com.lego.framework.system.model.entity.DataFile;
 import com.lego.perception.file.model.UploadFile;
 import com.lego.perception.file.service.IDataFileService;
 import com.lego.perception.file.service.IFdfsFileService;
-import com.lego.perception.file.util.FileUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -23,10 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -51,11 +45,11 @@ public class DataFileController {
 
     })
     @PostMapping(value = "/uploads", headers = "content-type=multipart/form-data")
-    public RespVO uploads(@RequestParam(value = "files", required = true) MultipartFile[] files,
-                          @RequestParam(value = "projectId", required = true) Long projectId,
-                          @RequestParam(value = "templateId", required = true) Long templateId,
-                          @RequestParam(value = "sourceType", required = true) int sourceType) {
-        List<Map<String, Object>> returnList = new ArrayList<>();
+    public RespVO<RespDataVO<DataFile>> uploads(@RequestParam(value = "files", required = true) MultipartFile[] files,
+                                                @RequestParam(value = "projectId", required = true) Long projectId,
+                                                @RequestParam(value = "templateId", required = true) Long templateId,
+                                                @RequestParam(value = "sourceType", required = true) int sourceType) {
+        List<DataFile> returnList = new ArrayList<>();
         List<DataFile> dataFiles = new ArrayList<>();
         Arrays.stream(files).forEach(f -> {
             try {
@@ -75,7 +69,7 @@ public class DataFileController {
                     fileMap.put("url", upload.getInfo().get("data"));
                     DataFile dataFile = new DataFile(uploadFile.getFileName(), uploadFile.getExt(), projectId, upload.getInfo().get("data").toString(), upload.getInfo().get("data").toString(), templateId, 0, sourceType, 0);
                     dataFiles.add(dataFile);
-                    returnList.add(fileMap);
+                    returnList.add(dataFile);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
