@@ -7,6 +7,7 @@ import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.framework.excel.ExcelService;
 import com.framework.excel.utils.ExcelUtil;
+import com.framework.mybatis.utils.TableUtils;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
 import com.lego.framework.base.exception.ExceptionBuilder;
@@ -123,6 +124,11 @@ public class FormTemplateController {
             ExceptionBuilder.operateFailException("模板没有字段");
         }
         for (FormTemplateItem templateItem : itemList) {
+            Integer category = templateItem.getCategory();
+            boolean columnType = TableUtils.isColumnType(category);
+            if (!columnType) {
+                continue;
+            }
             String title = templateItem.getTitle();
             fields.add(title);
         }

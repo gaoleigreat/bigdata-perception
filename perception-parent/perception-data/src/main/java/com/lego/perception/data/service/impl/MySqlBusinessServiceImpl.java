@@ -11,7 +11,7 @@ import com.lego.framework.business.model.entity.BusinessTable;
 import com.lego.framework.template.model.entity.FormTemplate;
 import com.lego.framework.template.model.entity.FormTemplateItem;
 import com.lego.framework.template.model.entity.SearchParam;
-import com.lego.perception.data.mapper.BusinessMapper;
+import com.lego.perception.data.mapper.DataMapper;
 import com.lego.perception.data.service.IBusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +32,7 @@ import java.util.Map;
 public class MySqlBusinessServiceImpl implements IBusinessService {
 
     @Autowired
-    private BusinessMapper businessMapper;
+    private DataMapper businessMapper;
 
     @Override
     public RespVO createBusinessTable(FormTemplate formTemplate) {

@@ -17,7 +17,7 @@ import java.util.Map;
  * @desc :
  */
 @Repository
-public interface BusinessMapper extends Mapper<BusinessTable> {
+public interface DataMapper extends Mapper<BusinessTable> {
 
 
     /**

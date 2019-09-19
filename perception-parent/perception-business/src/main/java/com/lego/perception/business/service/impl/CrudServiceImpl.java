@@ -50,7 +50,7 @@ public class CrudServiceImpl implements ICrudService {
         if (CollectionUtils.isEmpty(list)) {
             return RespVOBuilder.failure("字段不能为空");
         }
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(" id BIGINT NOT NULL PRIMARY KEY UNIQUE AUTO_INCREMENT COMMENT 'ID', ");
         for (FormTemplateItem templateItem : list) {
             // 字段名称
             String field = templateItem.getField();
@@ -62,13 +62,21 @@ public class CrudServiceImpl implements ICrudService {
             String defaultValue = templateItem.getDefaultValue();
             // 是否必填，1：是，2：否
             Integer isRequired = templateItem.getIsRequired();
+            String columnType = TableUtils.getColumnType(category);
+            if (null == columnType) {
+                continue;
+            }
             sb.append(field + " ");
-            sb.append(TableUtils.getColumnType(category) + " ");
-            sb.append(TableUtils.getIsNull(isRequired) + " ");
+            sb.append(columnType + " ");
+            String isNull = TableUtils.getIsNull(isRequired);
+            if (isNull != null) {
+                sb.append(isNull + " ");
+            }
             sb.append(TableUtils.getDefaultValue(defaultValue) + " ");
             sb.append(TableUtils.getComment(title));
             sb.append(",");
         }
+        sb.append(" file_id BIGINT NOT NULL COMMENT '文件id '");
         businessMapper.createBusinessTable(tableName, sb.toString());
         Integer existTable = businessMapper.existTable(tableName);
         if (existTable != null) {
