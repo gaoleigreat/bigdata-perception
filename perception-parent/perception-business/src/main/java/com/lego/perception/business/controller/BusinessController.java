@@ -91,11 +91,11 @@ public class BusinessController {
     public RespVO insert(@RequestBody Business business) {
         RespVO<FormTemplate> respVO = templateFeignClient.findFormTemplateByCode(business.getTemplateCode());
         if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
-            return RespVOBuilder.failure();
+            return respVO;
         }
         FormTemplate template = respVO.getInfo();
         if (template == null) {
-            return RespVOBuilder.failure();
+            return RespVOBuilder.failure("模板不存在");
         }
         business.setTableName(template.getDescription());
         Integer num = iBusinessService.insertSelective(business);
@@ -104,7 +104,7 @@ public class BusinessController {
         }
         RespVO vo = iCrudService.createBusinessTable(template);
         if (vo.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
-            return RespVOBuilder.failure();
+            return vo;
         }
         //TODO  处理菜单
         Sitemap sitemap = new Sitemap();
@@ -133,7 +133,7 @@ public class BusinessController {
      *
      * @return
      */
-    @ApiOperation(value = "查询业务", httpMethod = "PUT")
+    @ApiOperation(value = "查询业务", httpMethod = "GET")
     @RequestMapping(value = "/query_list", method = RequestMethod.GET)
     public RespVO<RespDataVO<Business>> queryByCondition(Business business) {
         List<Business> list = iBusinessService.query(business);

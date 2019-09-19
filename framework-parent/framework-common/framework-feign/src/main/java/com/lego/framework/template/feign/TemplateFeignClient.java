@@ -16,7 +16,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
-@FeignClient(value = "template", fallback = TemplateFallBack.class)
+@FeignClient(value = "template-service", fallback = TemplateFallBack.class)
 public interface TemplateFeignClient {
 
     /**
