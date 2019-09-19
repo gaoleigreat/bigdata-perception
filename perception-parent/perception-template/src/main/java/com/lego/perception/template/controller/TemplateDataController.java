@@ -1,18 +1,14 @@
 package com.lego.perception.template.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
-import com.framework.common.sdto.RespVOBuilder;
 import com.framework.excel.utils.ExcelTemplateUtil;
 import com.framework.word.util.WordTemplateUtil;
-import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
 import com.lego.framework.base.exception.ExceptionBuilder;
 import com.lego.framework.business.feign.BusinessClient;
 import com.lego.framework.file.feign.FileClient;
-import com.lego.framework.file.feign.model.UploadFile;
+import com.lego.framework.file.model.UploadFile;
 import com.lego.framework.system.feign.DataFileClient;
 import com.lego.framework.system.model.entity.DataFile;
 import com.lego.framework.template.model.entity.FormTemplate;
@@ -45,9 +41,7 @@ import org.xml.sax.SAXException;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 /**

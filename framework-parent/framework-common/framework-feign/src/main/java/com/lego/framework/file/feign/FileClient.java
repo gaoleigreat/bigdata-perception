@@ -4,7 +4,7 @@ package com.lego.framework.file.feign;
 import com.framework.common.consts.RespConsts;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
-import com.lego.framework.file.feign.model.UploadFile;
+import com.lego.framework.file.model.UploadFile;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;

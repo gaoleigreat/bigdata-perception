@@ -14,6 +14,9 @@ public class Template extends BaseModel {
     @ApiModelProperty("模板名称")
     private String description;
 
+    @ApiModelProperty("模板数据类型")
+    private Integer type;
+
     public String getTemplateName() {
         return templateName;
     }
@@ -36,5 +39,13 @@ public class Template extends BaseModel {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 }

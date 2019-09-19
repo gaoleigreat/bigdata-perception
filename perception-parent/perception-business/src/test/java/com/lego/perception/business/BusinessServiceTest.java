@@ -11,7 +11,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -31,9 +30,7 @@ public class BusinessServiceTest {
 
 
     @Autowired
-    @Qualifier(value = "crudServiceImpl")
     private ICrudService iBusinessService;
-
 
     @Test
     public void testCreateBusinessTable() {
@@ -79,7 +76,7 @@ public class BusinessServiceTest {
         mp1.put("type", 1);
         mp1.put("model", "dg-002");
         mp1.put("creation_date", new Date());
-        List<Map<String,Object>> maps=new ArrayList<>();
+        List<Map<String, Object>> maps = new ArrayList<>();
         maps.add(mp1);
         RespVO respVO = iBusinessService.insertBusinessData(formTemplate, maps);
         log.info("respVO:{}", respVO);
@@ -89,8 +86,8 @@ public class BusinessServiceTest {
 
     @Test
     public void testQuery() {
-        List<SearchParam> params=new ArrayList<>();
-        SearchParam param1=new SearchParam();
+        List<SearchParam> params = new ArrayList<>();
+        SearchParam param1 = new SearchParam();
         param1.setAbsoluteField("name");
         param1.setDataType(1);
         param1.setSymbol("=");
@@ -118,5 +115,6 @@ public class BusinessServiceTest {
         item.setDefaultValue(defaultValue);
         return item;
     }
+
 
 }

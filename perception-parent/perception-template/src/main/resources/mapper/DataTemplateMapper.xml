@@ -4,7 +4,11 @@
 
     <sql id="find_columns">
 		id as id, template_code as templateCode, template_name as templateName, description as description,
-		created_by as createdBy, creation_date as creationDate, last_update_date as lastUpdateDate, last_updated_by as last_updated_by
+		created_by as createdBy,
+		creation_date as creationDate,
+		 last_update_date as lastUpdateDate,
+		  last_updated_by as last_updated_by,
+		  `type` as `type`
 	</sql>
 
     <sql id="condition">
@@ -16,6 +20,9 @@
         </if>
         <if test="templateName != null and templateName != ''">
             and template_name = #{templateName, jdbcType=VARCHAR}
+        </if>
+        <if test="type!=null">
+            and type =#{type,jdbcType=INTEGER}
         </if>
     </sql>
 
@@ -29,10 +36,14 @@
         <if test="arg0.templateName != null and arg0.templateName != ''">
             and template_name = #{arg0.templateName, jdbcType=VARCHAR}
         </if>
+        <if test="arg0.type != null and arg0.type != ''">
+            and type = #{arg0.type, jdbcType=INTEGER}
+        </if>
     </sql>
 
     <select id="findPagedList" resultType="com.lego.framework.template.model.entity.DataTemplate">
-        select <include refid="find_columns"></include>
+        select
+        <include refid="find_columns"></include>
         from tpl_data_template_t
         <where>
             <include refid="page_condition"></include>
@@ -51,7 +62,8 @@
 
     <select id="findList" parameterType="com.lego.framework.template.model.entity.DataTemplate"
             resultType="com.lego.framework.template.model.entity.DataTemplate">
-        select <include refid="find_columns"></include>
+        select
+        <include refid="find_columns"></include>
         from tpl_data_template_t
         <where>
             <include refid="condition"></include>
@@ -61,16 +73,14 @@
     <insert id="save" useGeneratedKeys="true" keyProperty="id"
             parameterType="com.lego.framework.template.model.entity.DataTemplate">
         insert into tpl_data_template_t
-        (template_code, template_name, description, created_by, last_updated_by, last_update_date)
-        values
-        (
-         #{templateCode, jdbcType=VARCHAR},
-         #{templateName, jdbcType=VARCHAR},
-         #{description, jdbcType=VARCHAR},
-         #{createdBy, jdbcType=BIGINT},
-         #{lastUpdatedBy, jdbcType=BIGINT},
-         #{lastUpdateDate, jdbcType=TIMESTAMP}
-        )
+        (template_code, template_name, description, created_by, last_updated_by, last_update_date, type)
+        values (#{templateCode, jdbcType=VARCHAR},
+                #{templateName, jdbcType=VARCHAR},
+                #{description, jdbcType=VARCHAR},
+                #{createdBy, jdbcType=BIGINT},
+                #{lastUpdatedBy, jdbcType=BIGINT},
+                #{lastUpdateDate, jdbcType=TIMESTAMP},
+                #{type, jdbcType=INTEGER})
     </insert>
 
     <update id="update">
@@ -89,14 +99,18 @@
                 last_updated_by = #{lastUpdatedBy, jdbcType=VARCHAR},
             </if>
             <if test='lastUpdateDate != null'>
-                last_update_date = #{lastUpdateDate, jdbcType=TIMESTAMP}
+                last_update_date = #{lastUpdateDate, jdbcType=TIMESTAMP},
+            </if>
+            <if test="type!=null">
+                type =#{type,jdbcType=INTEGER}
             </if>
         </set>
         where id = #{id, jdbcType=BIGINT}
     </update>
 
     <delete id="delete">
-        delete from tpl_data_template_t
+        delete
+        from tpl_data_template_t
         where id = #{id, jdbcType=BIGINT}
     </delete>
 </mapper>

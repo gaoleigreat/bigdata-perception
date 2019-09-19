@@ -89,16 +89,17 @@ public class BusinessController {
     @ApiOperation(value = "新增业务", httpMethod = "POST")
     @RequestMapping(value = "/save_tplBusiness", method = RequestMethod.POST)
     public RespVO insert(@RequestBody Business business) {
-        Integer num = iBusinessService.insertSelective(business);
-        if (num <= 0) {
-            return RespVOBuilder.failure();
-        }
         RespVO<FormTemplate> respVO = templateFeignClient.findFormTemplateByCode(business.getTemplateCode());
         if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
             return RespVOBuilder.failure();
         }
         FormTemplate template = respVO.getInfo();
         if (template == null) {
+            return RespVOBuilder.failure();
+        }
+        business.setTableName(template.getDescription());
+        Integer num = iBusinessService.insertSelective(business);
+        if (num <= 0) {
             return RespVOBuilder.failure();
         }
         RespVO vo = iCrudService.createBusinessTable(template);

@@ -1,4 +1,4 @@
-package com.lego.framework.file.feign.model;
+package com.lego.framework.file.model;
 
 import java.io.InputStream;
 import java.io.Serializable;

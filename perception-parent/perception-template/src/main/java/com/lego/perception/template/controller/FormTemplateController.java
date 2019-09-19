@@ -5,9 +5,13 @@ import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
+import com.framework.excel.ExcelService;
+import com.framework.excel.utils.ExcelUtil;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
+import com.lego.framework.base.exception.ExceptionBuilder;
 import com.lego.framework.template.model.entity.FormTemplate;
+import com.lego.framework.template.model.entity.FormTemplateItem;
 import com.lego.perception.template.service.IFormTemplateService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -15,9 +19,13 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.websocket.server.PathParam;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -76,9 +84,8 @@ public class FormTemplateController {
     @RequestMapping(value = "/insert", method = RequestMethod.PUT)
     @Operation(value = "insert", desc = "新增")
     @ApiOperation("新增")
-    public RespVO insert(@RequestBody FormTemplate template,
-                         @RequestParam Integer sourceType) {
-        return formTemplateService.insert(template, sourceType);
+    public RespVO insert(@RequestBody FormTemplate template) {
+        return formTemplateService.insert(template);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
@@ -100,11 +107,32 @@ public class FormTemplateController {
     }
 
 
-    @RequestMapping(value = "/queryFields/{code}", method = RequestMethod.GET)
-    @Operation(value = "queryFields", desc = "查询模板字段")
-    @ApiOperation("查询模板字段")
-    public RespVO<List<String>> queryFields(@PathVariable String code) {
-        return formTemplateService.queryFields(code);
+    @RequestMapping(value = "/downloadTemplate/{code}", method = RequestMethod.GET)
+    @Operation(value = "downloadTemplate", desc = "下载模板")
+    @ApiOperation("下载模板")
+    public void downloadTemplate(@PathVariable String code,
+                                 HttpServletResponse response) {
+        FormTemplate template = new FormTemplate();
+        template.setTemplateCode(code);
+        FormTemplate formTemplate = formTemplateService.find(template);
+        String templateName = formTemplate.getTemplateName();
+        List<List<String>> list = new ArrayList<>();
+        List<String> fields = new ArrayList<>();
+        List<FormTemplateItem> itemList = formTemplate.getItems();
+        if (CollectionUtils.isEmpty(itemList)) {
+            ExceptionBuilder.operateFailException("模板没有字段");
+        }
+        for (FormTemplateItem templateItem : itemList) {
+            String title = templateItem.getTitle();
+            fields.add(title);
+        }
+        list.add(fields);
+        try {
+            ExcelUtil.excelWriter(list, "sheet1", templateName, 0, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
 
 }
