@@ -95,13 +95,14 @@ public class TemplateDataController {
             fileList = ((MultipartHttpServletRequest) req).getFiles("file");
         }
         Long fileId = 1L;
-        fileList.forEach(file -> {
+       /* fileList.forEach(file -> {
             try {
                 UploadFile uploadFile = new UploadFile();
                 uploadFile.setExt(file.getOriginalFilename().substring(0, file.getOriginalFilename().lastIndexOf(".") + 1));
                 uploadFile.setFileName(file.getOriginalFilename());
                 uploadFile.setContent(file.getBytes());
-                RespVO<Map<String, Object>> mapRespVO = fileClient.appUpload(uploadFile);
+                RespVO<Map<String, Object>> mapRespVO = ;
+               // RespVO<Map<String, Object>> mapRespVO = fileClient.appUpload(uploadFile);
                 if (mapRespVO.getRetCode() == 1) {
                     String url = mapRespVO.getInfo().get("data").toString();
                     DataFile dataFile = new DataFile();
@@ -119,7 +120,7 @@ public class TemplateDataController {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        });
+        });*/
         if (CollectionUtils.isEmpty(dataFiles)) {
             ExceptionBuilder.operateFailException("上传数据失败");
         }

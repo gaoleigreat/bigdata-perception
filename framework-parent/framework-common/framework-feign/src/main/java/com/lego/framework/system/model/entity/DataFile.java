@@ -15,8 +15,6 @@ import java.util.Date;
  * @since 2019/8/26
  **/
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @TableName("tpl_data_file")
 public class DataFile {
     @ApiModelProperty("id")
@@ -42,11 +40,11 @@ public class DataFile {
     private String previewUrl;
 
     @ApiModelProperty("模板ID")
-    private Long TemplateId;
+    private Long templateId;
 
 
     @ApiModelProperty("是否审核(0-待审核;1-审核通过;2-审核驳回")
-    private Long checkFlag;
+    private int checkFlag;
 
 
     @ApiModelProperty("审核时间")
@@ -56,7 +54,7 @@ public class DataFile {
     private Long checkBy;
 
     @ApiModelProperty("是否发布(0-未发布;1-发布")
-    private Long publishFlag;
+    private int publishFlag;
 
     @ApiModelProperty("发布时间")
     private Date publishDate;
@@ -91,5 +89,43 @@ public class DataFile {
 
     public void setUpdateInfo() {
         this.lastUpdateDate = new Date();
+    }
+
+    /**
+     *
+     * @param name
+     * @param fileType
+     * @param projectId
+     * @param fileUrl
+     * @param previewUrl
+     * @param templateId
+     * @param checkFlag
+     * @param dataType
+     * @param deleteFlag
+     * @param creationDate
+     */
+    public DataFile(String name, String fileType, Long projectId, String fileUrl, String previewUrl, Long templateId, int checkFlag, int dataType, Integer deleteFlag) {
+        Date currentTime = new Date();
+        this.name = name;
+        this.fileType = fileType;
+        this.projectId = projectId;
+        this.fileUrl = fileUrl;
+        this.previewUrl = previewUrl;
+        this.templateId = templateId;
+        this.checkFlag = checkFlag;
+        this.checkDate = currentTime;
+        this.checkBy = 1L;
+        this.publishFlag = 0;
+        this.publishDate = currentTime;
+        this.publishBy = 1L;
+        this.dataType = dataType;
+        this.deleteFlag = deleteFlag;
+        this.creationDate = currentTime;
+        this.createdBy = 1L;
+        this.lastUpdateDate = currentTime;
+        this.lastUpdatedBy = 1L;
+    }
+
+    public DataFile() {
     }
 }
