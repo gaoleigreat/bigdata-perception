@@ -6,9 +6,7 @@
     <update id="createBusinessTable">
         CREATE TABLE IF NOT EXISTS ${tableName}
         (
-            id BIGINT NOT NULL PRIMARY KEY UNIQUE AUTO_INCREMENT COMMENT 'ID',
             ${column}
-            file_id BIGINT NOT NULL COMMENT '文件id'
         ) ENGINE = InnoDB
           DEFAULT CHARSET = utf8
     </update>

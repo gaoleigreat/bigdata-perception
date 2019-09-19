@@ -7,6 +7,7 @@ import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.base.annotation.Resource;
+import com.lego.framework.base.exception.ExceptionBuilder;
 import com.lego.framework.business.model.entity.Business;
 import com.lego.framework.system.feign.SitemapClient;
 import com.lego.framework.system.model.entity.Sitemap;
@@ -17,6 +18,7 @@ import com.lego.perception.business.service.ICrudService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
@@ -88,23 +90,24 @@ public class BusinessController {
      */
     @ApiOperation(value = "新增业务", httpMethod = "POST")
     @RequestMapping(value = "/save_tplBusiness", method = RequestMethod.POST)
+    @Transactional(rollbackFor = RuntimeException.class)
     public RespVO insert(@RequestBody Business business) {
         RespVO<FormTemplate> respVO = templateFeignClient.findFormTemplateByCode(business.getTemplateCode());
         if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
-            return respVO;
+            ExceptionBuilder.operateFailException(respVO.getMsg());
         }
         FormTemplate template = respVO.getInfo();
         if (template == null) {
-            return RespVOBuilder.failure("模板不存在");
+            ExceptionBuilder.operateFailException("模板不存在");
         }
         business.setTableName(template.getDescription());
         Integer num = iBusinessService.insertSelective(business);
         if (num <= 0) {
-            return RespVOBuilder.failure();
+            ExceptionBuilder.operateFailException("业务表创建失败");
         }
         RespVO vo = iCrudService.createBusinessTable(template);
         if (vo.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
-            return vo;
+            ExceptionBuilder.operateFailException(vo.getMsg());
         }
         //TODO  处理菜单
         Sitemap sitemap = new Sitemap();
