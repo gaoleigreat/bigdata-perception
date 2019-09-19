@@ -6,6 +6,7 @@ import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
+import com.framework.excel.utils.ExcelUtil;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
 import com.lego.framework.template.feign.TemplateFeignClient;
@@ -18,8 +19,10 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.websocket.server.PathParam;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -121,7 +124,7 @@ public class CurdController {
         if (formTemplate == null) {
             return RespVOBuilder.failure("找不到对应模板信息");
         }
-        return mySqlBusinessService.queryBusinessDataPaged(formTemplate.getDescription(), searchParams,page);
+        return mySqlBusinessService.queryBusinessDataPaged(formTemplate.getDescription(), searchParams, page);
     }
 
 
@@ -165,5 +168,26 @@ public class CurdController {
         }
         return mySqlBusinessService.delBusinessData(formTemplate.getDescription(), data);
     }
+
+
+    @ApiOperation(value = "上传业务数据", httpMethod = "GET")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "templateCode", value = "表单模板code", dataType = "String", required = true, paramType = "query"),
+    })
+    @RequestMapping(value = "/upload", method = RequestMethod.DELETE)
+    @Operation(value = "upload", desc = "上传业务数据")
+    public RespVO uploadBusinessData(@RequestParam String templateCode,
+                                     @RequestParam MultipartFile file) {
+        RespVO<FormTemplate> respVO = templateFeignClient.findFormTemplateByCode(templateCode);
+        if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
+            return RespVOBuilder.failure("获取模板信息失败");
+        }
+        FormTemplate formTemplate = respVO.getInfo();
+        if (formTemplate == null) {
+            return RespVOBuilder.failure("找不到对应模板信息");
+        }
+        return mySqlBusinessService.uploadBusinessData(formTemplate, file);
+    }
+
 
 }

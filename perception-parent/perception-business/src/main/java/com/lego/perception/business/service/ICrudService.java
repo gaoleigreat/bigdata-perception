@@ -8,6 +8,7 @@ import com.framework.common.sdto.RespVO;
 import com.lego.framework.business.model.entity.BusinessTable;
 import com.lego.framework.template.model.entity.FormTemplate;
 import com.lego.framework.template.model.entity.SearchParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -81,4 +82,10 @@ public interface ICrudService {
     RespVO delBusinessData(String tableName, Map<String, Object> data);
 
 
+    /**
+     * @param formTemplate
+     * @param file
+     * @return
+     */
+    RespVO uploadBusinessData(FormTemplate formTemplate, MultipartFile file);
 }

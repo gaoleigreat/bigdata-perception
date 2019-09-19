@@ -68,4 +68,14 @@ public class FileUtils {
                 MediaType.APPLICATION_OCTET_STREAM_VALUE, fileInputStream);
     }
 
+
+
+    public static void main(String []args) throws Exception {
+        File file=new File("D:\\bilibili\\【伦桑】原创古风「遗剑赠山河」-唱完了一首诗.flv");
+        MultipartFile multipartFile = toMultipartFile(file);
+        String originalFilename = multipartFile.getOriginalFilename();
+        String type = originalFilename.lastIndexOf(".") > 0 ? originalFilename.substring(originalFilename.lastIndexOf(".") + 1) : "";
+        log.info(type);
+    }
+
 }

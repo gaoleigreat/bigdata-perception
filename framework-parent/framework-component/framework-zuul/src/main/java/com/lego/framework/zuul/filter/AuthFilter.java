@@ -150,6 +150,10 @@ public class AuthFilter extends ZuulFilter {
             } catch (UnsupportedEncodingException e) {
                 ctx.addZuulRequestHeader("name", currentVo.getName());
             }
+        } else {
+            // TODO 模拟 登录数据
+            ctx.addZuulRequestHeader(HttpConsts.USER_ID, 1 + "");
+            ctx.addZuulRequestHeader(HttpConsts.USER_NAME, "admin");
         }
     }
 

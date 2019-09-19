@@ -7,6 +7,7 @@ import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
+import com.framework.excel.utils.ExcelUtil;
 import com.framework.mybatis.utils.PageUtil;
 import com.framework.mybatis.utils.TableUtils;
 import com.framework.mybatis.utils.WrapperUtils;
@@ -21,7 +22,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -173,6 +178,52 @@ public class CrudServiceImpl implements ICrudService {
             return RespVOBuilder.success();
         }
         return RespVOBuilder.failure();
+    }
+
+    @Override
+    public RespVO uploadBusinessData(FormTemplate formTemplate, MultipartFile file) {
+        try {
+            InputStream inputStream = file.getInputStream();
+            String originalFilename = file.getOriginalFilename();
+            String type = originalFilename != null && originalFilename.lastIndexOf(".") > 0 ? originalFilename.substring(originalFilename.lastIndexOf(".") + 1) : "";
+            List<Map<String, Object>> list = ExcelUtil.excelReader(inputStream, type.equals("xlsx") ? 0 : 1, null, null);
+            Map<String, FormTemplateItem> itemMap = getTemplateItems(formTemplate);
+            if (CollectionUtils.isEmpty(itemMap)) {
+                return RespVOBuilder.failure("模板字段不存在");
+            }
+            if (CollectionUtils.isEmpty(list)) {
+                return RespVOBuilder.failure("上传文件字段缺失");
+            }
+            List<Map<String, Object>> fields = new ArrayList<>();
+            for (Map<String, Object> map : list) {
+                fields.add(setFields(itemMap, map));
+            }
+            return insertBusinessData(formTemplate, fields);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    private Map<String, Object> setFields(Map<String, FormTemplateItem> itemMap, Map<String, Object> map) {
+        Map<String, Object> field = new LinkedHashMap<>();
+        for (Map.Entry<String, Object> m : map.entrySet()) {
+            FormTemplateItem item = itemMap.get(m.getKey());
+            Integer category = item.getCategory();
+            String f = item.getField();
+            field.put(f, TableUtils.getColumnValue(category, m.getValue() + ""));
+        }
+        return field;
+    }
+
+    private Map<String, FormTemplateItem> getTemplateItems(FormTemplate formTemplate) {
+        Map<String, FormTemplateItem> itemMap = new LinkedHashMap<>();
+        List<FormTemplateItem> items = formTemplate.getItems();
+        for (FormTemplateItem item : items) {
+            itemMap.put(item.getTitle(), item);
+        }
+        return itemMap;
     }
 
 
