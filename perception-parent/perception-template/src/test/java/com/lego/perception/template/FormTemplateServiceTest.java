@@ -44,7 +44,7 @@ public class FormTemplateServiceTest {
         formTemplate.setTemplateCode("device_account");
         formTemplate.setTemplateName("设备台账信息");
         formTemplate.setDescription("tpl_device_account");
-        RespVO respVO = iFormTemplateService.insert(formTemplate, 0);
+        RespVO respVO = iFormTemplateService.insert(formTemplate);
         Assert.assertEquals(respVO.getRetCode(), RespConsts.SUCCESS_RESULT_CODE);
     }
 

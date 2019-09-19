@@ -1,10 +1,13 @@
 package com.lego.perception.template.service;
+
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespVO;
 import com.lego.framework.template.model.entity.FormTemplate;
+import com.lego.framework.template.model.entity.FormTemplateItem;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 数据模板
@@ -14,6 +17,7 @@ public interface IFormTemplateService {
 
     /**
      * 分页查询
+     *
      * @param template
      * @param page
      * @return
@@ -24,10 +28,11 @@ public interface IFormTemplateService {
     /**
      * @return
      */
-    List<FormTemplate>  findAll();
+    List<FormTemplate> findAll();
 
     /**
      * 查询列表
+     *
      * @param dataTemplate
      * @return
      */
@@ -35,6 +40,7 @@ public interface IFormTemplateService {
 
     /**
      * 查询详情
+     *
      * @param dataTemplate
      * @return
      */
@@ -42,13 +48,15 @@ public interface IFormTemplateService {
 
     /**
      * 新增
+     *
      * @param dataTemplate
      * @return
      */
-    RespVO insert(FormTemplate dataTemplate,Integer sourceType);
+    RespVO insert(FormTemplate dataTemplate);
 
     /**
      * 更新
+     *
      * @param dataTemplate
      * @return
      */
@@ -56,6 +64,7 @@ public interface IFormTemplateService {
 
     /**
      * 删除
+     *
      * @param id
      * @return
      */
@@ -69,8 +78,9 @@ public interface IFormTemplateService {
 
     /**
      * 查询模板字段
+     *
      * @param code
      * @return
      */
-    RespVO<List<String>> queryFields(String code);
+    Map<String, List<FormTemplateItem>> queryFields(String code);
 }

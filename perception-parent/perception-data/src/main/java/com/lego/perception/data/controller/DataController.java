@@ -1,12 +1,13 @@
 package com.lego.perception.data.controller;
 
-import com.alibaba.excel.write.ExcelBuilder;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
+import com.lego.framework.base.annotation.Operation;
+import com.lego.framework.base.annotation.Resource;
 import com.lego.framework.base.utils.UuidUtils;
 import com.lego.framework.file.feign.FileClient;
-import com.lego.framework.file.feign.model.UploadFile;
+import com.lego.framework.file.model.UploadFile;
 import com.lego.framework.system.feign.DataFileClient;
 import com.lego.framework.system.model.entity.DataFile;
 import com.lego.framework.template.model.entity.FormTemplate;
@@ -35,7 +36,8 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/data")
-@Api(value = "数据上传", tags = "数据上传")
+@Api(value = "data", description = "数据上传")
+@Resource(value = "data", desc = "数据上传")
 @Slf4j
 public class DataController {
     @Autowired
@@ -51,13 +53,14 @@ public class DataController {
     @Qualifier(value = "mongoBusinessServiceImpl")
     private IBusinessService mongoBusinessService;
 
-    @ApiOperation(value = "格式化文件上传", notes = "格式化文件上传")
+    @ApiOperation(value = "formatted", notes = "格式化文件上传")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "files", value = "格式化文件上传，", paramType = "formData", allowMultiple = true, required = true, dataType = "file"),
             @ApiImplicitParam(name = "templateId", value = "模板Id，", paramType = "query", required = true, dataType = "Long"),
             @ApiImplicitParam(name = "projectId", value = "工程Id，", paramType = "query", required = false, dataType = "Long"),
     })
     @PostMapping(value = "/upload/formatted", headers = "content-type=multipart/form-data")
+    @Operation(value = "formatted", desc = "格式化文件上传")
     public RespVO<RespDataVO<Long>> uplodeFormatted(HttpServletRequest request, @RequestParam(value = "templateId", required = true) Long templateId, @RequestParam(value = "projectId", required = false) String projectId, @RequestParam(value = "files", required = true) MultipartFile[] files) {
         if (files == null || files.length <= 0) {
             return RespVOBuilder.failure("上传文件为空");
@@ -125,6 +128,7 @@ public class DataController {
             @ApiImplicitParam(name = "projectId", value = "工程Id，", paramType = "query", required = false, dataType = "Long"),
     })
     @PostMapping(value = "/upload/unformatted", headers = "content-type=multipart/form-data")
+    @Operation(value = "unformatted", desc = "非格式化文件上传")
     public RespVO<RespDataVO<Long>> uplodeFormatted(@RequestParam(value = "projectId", required = false) String projectId, @RequestParam(value = "files", required = true) MultipartFile[] files) {
         if (files == null || files.length <= 0) {
             return RespVOBuilder.failure("上传文件有误");

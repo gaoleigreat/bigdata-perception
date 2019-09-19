@@ -113,7 +113,7 @@ public class FormTemplateServiceImpl implements IFormTemplateService {
     }
 
     @Override
-    public RespVO insert(FormTemplate template, Integer sourceType) {
+    public RespVO insert(FormTemplate template) {
         if (null == template) {
             return RespVOBuilder.failure("参数缺失");
         }
@@ -134,8 +134,6 @@ public class FormTemplateServiceImpl implements IFormTemplateService {
             if (r.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
                 return r;
             }
-            // TODO 发送成功事件
-            templateProcessorSender.sendTemplateCreateEvent(template, sourceType);
         }
 
         return RespVOBuilder.success();
@@ -219,17 +217,19 @@ public class FormTemplateServiceImpl implements IFormTemplateService {
     }
 
     @Override
-    public RespVO<List<String>> queryFields(String code) {
+    public Map<String, List<FormTemplateItem>> queryFields(String code) {
+        Map<String, List<FormTemplateItem>> map = new HashMap<>();
         FormTemplate queryTemplate = new FormTemplate();
         queryTemplate.setTemplateCode(code);
         FormTemplate template = find(queryTemplate);
         if (template == null) {
-            return RespVOBuilder.success();
+            return map;
         }
         List<FormTemplateItem> itemList = template.getItems();
         if (CollectionUtils.isEmpty(itemList)) {
-            return RespVOBuilder.success();
+            return map;
         }
-        return RespVOBuilder.success(formTemplateItemService.convertList2String(itemList));
+        map.put(template.getTemplateName(), itemList);
+        return map;
     }
 }
