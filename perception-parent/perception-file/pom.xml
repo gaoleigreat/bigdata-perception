@@ -141,6 +141,11 @@
             <version>27.0.1-jre</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.framework.mybatis</groupId>
+            <artifactId>framework-mybatis</artifactId>
+            <version>${service.version}</version>
+        </dependency>
     </dependencies>
 
 
