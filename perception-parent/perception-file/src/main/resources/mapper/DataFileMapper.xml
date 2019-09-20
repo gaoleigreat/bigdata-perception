@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.lego.perception.system.mapper.DataFileMapper">
+<mapper namespace="com.lego.perception.file.mapper.DataFileMapper">
 
     <sql id="find_columns">
-		id as id, name as name, file_type as fileType,  project_id as project_id,file_url as file_url, previewUrl as preview_url, creation_date as creationDate,
-		created_by as createdBy, last_update_date as lastUpdateDate, last_updated_by as lastUpdatedBy
+		id as id,
+		name as name,
+		file_type as fileType,
+		 project_id as project_id,
+		file_url as file_url,
+		previewUrl as preview_url,
+		remark as remark,
+		tags as tags,
+		creation_date as creationDate,
+		created_by as createdBy,
+		last_update_date as lastUpdateDate,
+		last_updated_by as lastUpdatedBy
 	</sql>
-
 
 
     <sql id="condition">
@@ -32,6 +41,12 @@
         <if test="deleteFlag != null">
             and delete_flag = #{deleteFlag, jdbcType=INTEGER}
         </if>
+        <if test="remark!=null">
+            and remark=#{remark,jdbcType=VARCHAR}
+        </if>
+        <if test="tag!=null">
+            and find_in_set(#{tags,jdbcType=VARCHAR},tags)
+        </if>
 
     </sql>
 
@@ -48,7 +63,16 @@
 
     <insert id="insertList">
         insert into tpl_data_file
-        (id, 'name', file_type, project_id,file_url,preview_url, creation_date, created_by, last_updated_by)
+        (id, 'name',
+        file_type,
+        project_id,
+        file_url,
+        preview_url,
+        remark,
+        tags
+        creation_date,
+        created_by,
+        last_updated_by)
         values
         <foreach collection="list" item="item" separator=",">
             (
@@ -58,6 +82,8 @@
             #{item.projectId, jdbcType=BIGINT},
             #{item.fileUrl, jdbcType=VARCHAR},
             #{item.previewUrl, jdbcType=VARCHAR},
+            #{item.remark, jdbcType=VARCHAR},
+            #{item.tags, jdbcType=VARCHAR},
             #{item.creationDate, jdbcType=TIMESTAMP},
             #{item.createdBy, jdbcType=VARCHAR},
             #{item.lastUpdatedBy, jdbcType=TIMESTAMP}
@@ -76,6 +102,8 @@
                 project_id = #{item.projectId, jdbcType=BIGINT},
                 file_url = #{item.fileUrl, jdbcType=VARCHAR},
                 preview_url = #{item.previewUrl, jdbcType=VARCHAR},
+                remark = #{item.remark, jdbcType=VARCHAR},
+                tags = #{item.tags, jdbcType=VARCHAR},
                 last_updated_by = #{item.lastUpdatedBy, jdbcType=VARCHAR}
 
             </set>
@@ -91,8 +119,6 @@
             #{item, jdbcType=BIGINT}
         </foreach>
     </update>
-
-
 
 
     <select id="queryList" resultType="com.lego.framework.system.model.entity.DataFile">

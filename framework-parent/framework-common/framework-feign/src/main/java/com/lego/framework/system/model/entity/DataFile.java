@@ -68,6 +68,12 @@ public class DataFile {
     @ApiModelProperty("是否删除(1-否;2-是)")
     private Integer deleteFlag;
 
+    @ApiModelProperty("文件说明")
+    private String remark;
+
+    @ApiModelProperty("文件标签")
+    private String tags;
+
     @ApiModelProperty("创建时间")
     private Date creationDate;
 
@@ -92,7 +98,6 @@ public class DataFile {
     }
 
     /**
-     *
      * @param name
      * @param fileType
      * @param projectId
@@ -102,7 +107,6 @@ public class DataFile {
      * @param checkFlag
      * @param dataType
      * @param deleteFlag
-     * @param creationDate
      */
     public DataFile(String name, String fileType, Long projectId, String fileUrl, String previewUrl, Long templateId, int checkFlag, int dataType, Integer deleteFlag) {
         Date currentTime = new Date();
@@ -127,5 +131,6 @@ public class DataFile {
     }
 
     public DataFile() {
+
     }
 }

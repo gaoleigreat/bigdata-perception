@@ -17,7 +17,7 @@ public interface DataFileMapper extends BaseMapper<DataFile> {
      * @param dataFile
      * @return
      */
-    List<Dictionary> findList(DataFile dataFile);
+    List<DataFile> findList(DataFile dataFile);
 
 
 

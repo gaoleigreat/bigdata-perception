@@ -1,6 +1,5 @@
 package com.lego.perception.data.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lego.framework.data.model.entity.Datasharedtable;
 import com.lego.perception.data.mapper.DatasharedtableMapper;
@@ -24,8 +23,8 @@ public class DatasharedtableServiceImpl extends ServiceImpl<DatasharedtableMappe
 
 
     @Override
-    public List<Datasharedtable> queryList() {
+    public List<Datasharedtable> queryList(Datasharedtable datasharedtable) {
 
-        return datasharedtableMapper.query(new Datasharedtable());
+        return datasharedtableMapper.query(datasharedtable);
     }
 }

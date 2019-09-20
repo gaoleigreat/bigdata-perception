@@ -1,9 +1,7 @@
 package com.lego.perception.data.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.github.pagehelper.Page;
 import com.lego.framework.data.model.entity.Datasharedtable;
-import org.apache.ibatis.session.RowBounds;
 
 import java.util.List;
 
@@ -18,5 +16,9 @@ import java.util.List;
 public interface IDatasharedtableService extends IService<Datasharedtable> {
 
 
-    List<Datasharedtable> queryList();
+    /**
+     * @param datasharedtable
+     * @return
+     */
+    List<Datasharedtable> queryList(Datasharedtable datasharedtable);
 }
