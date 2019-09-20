@@ -10,6 +10,7 @@ import com.lego.framework.file.feign.FileClient;
 import com.lego.framework.file.model.UploadFile;
 import com.lego.framework.system.feign.DataFileClient;
 import com.lego.framework.system.model.entity.DataFile;
+import com.lego.framework.template.feign.TemplateFeignClient;
 import com.lego.framework.template.model.entity.FormTemplate;
 import com.lego.perception.data.service.IBusinessService;
 import com.lego.perception.data.utils.TemplateDataUtil;
@@ -44,7 +45,8 @@ public class DataController {
     private FileClient fileClient;
 
     @Autowired
-    private DataFileClient dataFileClient;
+    private TemplateFeignClient templateFeignClient;
+
     @Autowired
     @Qualifier(value = "mySqlBusinessServiceImpl")
     private IBusinessService mySqlBusinessService;
@@ -61,7 +63,9 @@ public class DataController {
     })
     @PostMapping(value = "/upload/formatted", headers = "content-type=multipart/form-data")
     @Operation(value = "formatted", desc = "格式化文件上传")
-    public RespVO<RespDataVO<Long>> uplodeFormatted(HttpServletRequest request, @RequestParam(value = "templateId", required = true) Long templateId, @RequestParam(value = "projectId", required = false) String projectId, @RequestParam(value = "files", required = true) MultipartFile[] files) {
+    public RespVO uplodeFormatted(@RequestParam(value = "templateId", required = true) Long templateId,
+                                  @RequestParam(value = "projectId", required = false) Long projectId,
+                                  @RequestParam(value = "files", required = true) MultipartFile[] files) {
         if (files == null || files.length <= 0) {
             return RespVOBuilder.failure("上传文件为空");
         }
@@ -70,55 +74,36 @@ public class DataController {
         }
 
         // 1 根据模板id查寻模板
-        FormTemplate template = new FormTemplate();
-        template.setId(templateId);
-        //template = formTemplateService.find(template);
+        RespVO<FormTemplate> formTemplateById = templateFeignClient.findFormTemplateById(templateId);
+        FormTemplate template = formTemplateById.getInfo();
         if (template == null) {
             return RespVOBuilder.failure("所选模板不存在");
         }
-        List<Long> fileIds = new ArrayList<>();
+        RespVO<RespDataVO<DataFile>> uploads = fileClient.uploads(files, projectId, templateId, template.getType());
+        Set<DataFile> dataFileSet = new HashSet<>();
         Arrays.stream(files).forEach(mf -> {
 
-            log.error(mf.getOriginalFilename().substring(mf.getOriginalFilename().lastIndexOf(".") + 1));
-            UploadFile uploadFile = new UploadFile();
-            try {
-                uploadFile.setContent(mf.getBytes());
-                uploadFile.setExt(mf.getOriginalFilename().substring(mf.getOriginalFilename().lastIndexOf(".") + 1));
-                String fileName = UuidUtils.generateShortUuid();
-                String fileType = mf.getOriginalFilename().substring(mf.getOriginalFilename().lastIndexOf(".") + 1);
-                uploadFile.setFileName(UuidUtils.generateShortUuid());
-                // RespVO<Map<String, Object>> mapRespVO = fileClient.appUpload(uploadFile);
-                //String url = mapRespVO.getInfo().get("url").toString();
-                String url = new String();
-                DataFile dataFile = new DataFile();
-                dataFile.setName(fileName);
-                dataFile.setFileType(fileType);
-                dataFile.setFileUrl(url);
-                dataFile.setPreviewUrl(url);
-                dataFile.setCreateInfo();
-                RespVO<Long> insert = dataFileClient.insert(dataFile);
-                String sourceType = new String();
-                if (insert.getInfo() != null) {
-                    List<Map<String, Object>> maps = TemplateDataUtil.analyticalData(mf, insert.getInfo());
-                    if (sourceType.equals("mysql")) {
-                        mySqlBusinessService.insertBusinessData(template, maps, insert.getInfo());
-                    } else {
-                        mongoBusinessService.insertBusinessData(template, maps, insert.getInfo());
+            List<DataFile> dataFiles = uploads.getInfo().getList();
+
+            dataFiles.forEach(dataFile -> {
+                if (mf.getOriginalFilename().endsWith(dataFile.getName())) {
+                    dataFileSet.add(dataFile);
+                    try {
+                        List<Map<String, Object>> maps = TemplateDataUtil.analyticalData(mf, dataFile.getId());
+                        if (template.getType().equals("0")) {
+                            mySqlBusinessService.insertBusinessData(template, maps, dataFile.getId());
+                        } else {
+                            mongoBusinessService.insertBusinessData(template, maps, dataFile.getId());
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                    fileIds.add(insert.getInfo());
-                } else {
-                    fileIds.add(1L);
                 }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
+            });
 
         });
+        return RespVOBuilder.success(dataFileSet);
 
-
-        return RespVOBuilder.success(fileIds);
     }
 
 
@@ -129,16 +114,12 @@ public class DataController {
     })
     @PostMapping(value = "/upload/unformatted", headers = "content-type=multipart/form-data")
     @Operation(value = "unformatted", desc = "非格式化文件上传")
-    public RespVO<RespDataVO<Long>> uplodeFormatted(@RequestParam(value = "projectId", required = false) String projectId, @RequestParam(value = "files", required = true) MultipartFile[] files) {
+    public RespVO uplodeFormatted(@RequestParam(value = "projectId", required = false) Long projectId, @RequestParam(value = "files", required = true) MultipartFile[] files) {
         if (files == null || files.length <= 0) {
             return RespVOBuilder.failure("上传文件有误");
         }
-        List<Long> fileIds = new ArrayList<>();
-        Arrays.stream(files).forEach(f -> {
-            //进行文件上传
-            fileIds.add(f.getSize());
-        });
-        return RespVOBuilder.success(fileIds);
+        RespVO<RespDataVO<DataFile>> uploads = fileClient.uploads(files, projectId, null, -1);
+        return uploads;
 
     }
 }
