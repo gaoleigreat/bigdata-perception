@@ -93,12 +93,6 @@ public class CrudServiceImpl implements ICrudService {
         String tableName = formTemplate.getDescription();
         // 参数校验
         for (Map<String, Object> objectMap : data) {
-            if (!objectMap.containsKey("fileId")) {
-                ExceptionBuilder.operateFailException("文件id参数缺失");
-            }
-            Long fileId = (Long) objectMap.get("fileId");
-            objectMap.remove("fileId");
-            objectMap.put("file_id", fileId);
             BusinessTable businessTable = new BusinessTable(null, tableName, objectMap);
             Integer insertBusinessData = businessMapper.insertBusinessData(businessTable);
             if (insertBusinessData <= 0) {
@@ -216,11 +210,15 @@ public class CrudServiceImpl implements ICrudService {
 
     private Map<String, Object> setFields(Map<String, FormTemplateItem> itemMap, Map<String, Object> map) {
         Map<String, Object> field = new LinkedHashMap<>();
-        for (Map.Entry<String, Object> m : map.entrySet()) {
-            FormTemplateItem item = itemMap.get(m.getKey());
-            Integer category = item.getCategory();
-            String f = item.getField();
-            field.put(f, TableUtils.getColumnValue(category, m.getValue() + ""));
+        try {
+            for (Map.Entry<String, Object> m : map.entrySet()) {
+                FormTemplateItem item = itemMap.get(m.getKey());
+                Integer category = item.getCategory();
+                String f = item.getField();
+                field.put(f, TableUtils.getColumnValue(category, m.getValue() + ""));
+            }
+        } catch (Exception e) {
+            ExceptionBuilder.operateFailException("数据类型错误:" + e.getMessage());
         }
         return field;
     }

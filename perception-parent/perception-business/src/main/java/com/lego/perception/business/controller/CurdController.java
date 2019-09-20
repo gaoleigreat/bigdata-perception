@@ -170,11 +170,11 @@ public class CurdController {
     }
 
 
-    @ApiOperation(value = "上传业务数据", httpMethod = "GET")
+    @ApiOperation(value = "上传业务数据", httpMethod = "POST")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "templateCode", value = "表单模板code", dataType = "String", required = true, paramType = "query"),
     })
-    @RequestMapping(value = "/upload", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/upload", method = RequestMethod.POST)
     @Operation(value = "upload", desc = "上传业务数据")
     public RespVO uploadBusinessData(@RequestParam String templateCode,
                                      @RequestParam MultipartFile file) {
