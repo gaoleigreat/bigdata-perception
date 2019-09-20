@@ -4,6 +4,7 @@ import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.framework.mybatis.annotation.DB;
+import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
 import com.lego.framework.data.model.entity.Datasharedtable;
 import com.lego.perception.data.service.IDatasharedtableService;
@@ -33,46 +34,46 @@ public class DatasharedtableController {
     private IDatasharedtableService datasharedtableService;
 
 
-    @ApiOperation(value = "shareList", httpMethod = "GET",notes = "查询共享数据库数据")
+    @ApiOperation(value = "shareList", httpMethod = "GET", notes = "查询共享数据库数据")
     @RequestMapping(value = "/shareList", method = RequestMethod.GET)
-    @DB(value = "share")
+    @Operation(value = "shareList", desc = "查询共享数据库数据")
     public RespVO<RespDataVO<Datasharedtable>> shareList(@ModelAttribute Datasharedtable datasharedtable) {
-        List<Datasharedtable> list = datasharedtableService.queryList(datasharedtable);
+        List<Datasharedtable> list = datasharedtableService.queryShareList(datasharedtable);
         return RespVOBuilder.success(list);
     }
 
 
-    @ApiOperation(value = "shareSave", httpMethod = "POST",notes = "新增共享数据库数据")
+    @ApiOperation(value = "shareSave", httpMethod = "POST", notes = "新增共享数据库数据")
     @RequestMapping(value = "/shareSave", method = RequestMethod.POST)
-    @DB(value = "share")
+    @Operation(value = "shareSave", desc = "新增共享数据库数据")
     public RespVO<RespDataVO<Datasharedtable>> shareSave(@RequestBody Datasharedtable datasharedtable) {
-        boolean save = datasharedtableService.save(datasharedtable);
-        if (save) {
+        Integer save = datasharedtableService.saveShareData(datasharedtable);
+        if (save > 0) {
             return RespVOBuilder.success();
         }
         return RespVOBuilder.failure();
     }
 
 
-    @ApiOperation(value = "myList", httpMethod = "GET",notes = "查询本地共享数据")
+    @ApiOperation(value = "myList", httpMethod = "GET", notes = "查询本地共享数据")
     @RequestMapping(value = "/myList", method = RequestMethod.GET)
+    @Operation(value = "myList", desc = "查询本地共享数据")
     public RespVO<RespDataVO<Datasharedtable>> myList(@ModelAttribute Datasharedtable datasharedtable) {
-        List<Datasharedtable> list = datasharedtableService.queryList(datasharedtable);
+        List<Datasharedtable> list = datasharedtableService.queryMyList(datasharedtable);
         return RespVOBuilder.success(list);
     }
 
 
-
-    @ApiOperation(value = "myShareSave", httpMethod = "POST",notes = "新增本地共享数据")
+    @ApiOperation(value = "myShareSave", httpMethod = "POST", notes = "新增本地共享数据")
     @RequestMapping(value = "/myShareSave", method = RequestMethod.POST)
+    @Operation(value = "myShareSave", desc = "新增本地共享数据")
     public RespVO<RespDataVO<Datasharedtable>> myShareSave(@RequestBody Datasharedtable datasharedtable) {
-        boolean save = datasharedtableService.save(datasharedtable);
-        if (save) {
+        Integer save = datasharedtableService.saveMyData(datasharedtable);
+        if (save > 0) {
             return RespVOBuilder.success();
         }
         return RespVOBuilder.failure();
     }
-
 
 
 }

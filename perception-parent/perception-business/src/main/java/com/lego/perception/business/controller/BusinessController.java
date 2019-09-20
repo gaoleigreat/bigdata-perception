@@ -6,6 +6,7 @@ import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
+import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
 import com.lego.framework.base.exception.ExceptionBuilder;
 import com.lego.framework.business.model.entity.Business;
@@ -19,6 +20,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
@@ -52,6 +54,7 @@ public class BusinessController {
     /**
      * 分页查询数据
      */
+    @Operation(value = "select_paged", desc = "查询业务")
     @ApiOperation(value = "查询业务", httpMethod = "GET")
     @RequestMapping(value = "/select_paged/{pageSize}/{pageIndex}", method = RequestMethod.GET)
     public RespVO<PagedResult<Business>> selectPaged(@ModelAttribute Business business,
@@ -64,6 +67,7 @@ public class BusinessController {
      *
      * @return
      */
+    @Operation(value = "select_by_id", desc = "查询业务")
     @ApiOperation(value = "查询业务", httpMethod = "GET")
     @RequestMapping(value = "/select_by_id", method = RequestMethod.GET)
     public RespVO<Business> selectByPrimaryKey(@RequestParam Long id) {
@@ -76,6 +80,7 @@ public class BusinessController {
      *
      * @return
      */
+    @Operation(value = "delete_by_id", desc = "删除业务")
     @ApiOperation(value = "通过ID删除", httpMethod = "DELETE")
     @RequestMapping(value = "/delete_by_id", method = RequestMethod.DELETE)
     public RespVO deleteByPrimaryKey(Long id) {
@@ -88,6 +93,7 @@ public class BusinessController {
      *
      * @return
      */
+    @Operation(value = "save_tplBusiness", desc = "新增业务")
     @ApiOperation(value = "新增业务", httpMethod = "POST")
     @RequestMapping(value = "/save_tplBusiness", method = RequestMethod.POST)
     @Transactional(rollbackFor = RuntimeException.class)
@@ -110,10 +116,20 @@ public class BusinessController {
             ExceptionBuilder.operateFailException(vo.getMsg());
         }
         //TODO  处理菜单
+        Sitemap querySitemap = new Sitemap();
+        querySitemap.setUrl("businessManage");
+        querySitemap.setSubSystem("basicManage");
+        List<Sitemap> list = sitemapClient.list(querySitemap);
+        if (CollectionUtils.isEmpty(list)) {
+            // 创建业务菜单
+
+        }
+        querySitemap = list.get(0);
         Sitemap sitemap = new Sitemap();
         sitemap.setName(business.getName());
         sitemap.setType(2);
         sitemap.setStatus("1");
+        sitemap.setSubSystem(querySitemap.getName());
         sitemap.setUrl(business.getTemplateCode());
         return sitemapClient.insert(sitemap);
     }
@@ -123,6 +139,7 @@ public class BusinessController {
      *
      * @return
      */
+    @Operation(value = "update_tplBusiness", desc = "修改业务")
     @ApiOperation(value = "修改业务", httpMethod = "PUT")
     @RequestMapping(value = "/update_tplBusiness", method = RequestMethod.PUT)
     public RespVO updateByPrimaryKeySelective(Business business) {
@@ -136,6 +153,7 @@ public class BusinessController {
      *
      * @return
      */
+    @Operation(value = "query_list", desc = "查询业务")
     @ApiOperation(value = "查询业务", httpMethod = "GET")
     @RequestMapping(value = "/query_list", method = RequestMethod.GET)
     public RespVO<RespDataVO<Business>> queryByCondition(Business business) {

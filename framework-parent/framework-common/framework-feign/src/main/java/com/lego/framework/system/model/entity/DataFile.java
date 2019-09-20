@@ -2,6 +2,7 @@ package com.lego.framework.system.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.lego.framework.config.BaseModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,10 +17,7 @@ import java.util.Date;
  **/
 @Data
 @TableName("tpl_data_file")
-public class DataFile {
-    @ApiModelProperty("id")
-    @TableId
-    private Long id;
+public class DataFile extends BaseModel {
 
     @ApiModelProperty("文件名称")
     private String name;
@@ -74,29 +72,6 @@ public class DataFile {
     @ApiModelProperty("文件标签")
     private String tags;
 
-    @ApiModelProperty("创建时间")
-    private Date creationDate;
-
-    @ApiModelProperty("创建人")
-    private Long createdBy;
-
-    @ApiModelProperty("最后更新时间")
-    private Date lastUpdateDate;
-
-    @ApiModelProperty("最后更新人")
-    private Long lastUpdatedBy;
-
-
-    public void setCreateInfo() {
-        Date currentTime = new Date();
-        this.creationDate = currentTime;
-        this.lastUpdateDate = currentTime;
-    }
-
-    public void setUpdateInfo() {
-        this.lastUpdateDate = new Date();
-    }
-
     /**
      * @param name
      * @param fileType
@@ -124,10 +99,8 @@ public class DataFile {
         this.publishBy = 1L;
         this.dataType = dataType;
         this.deleteFlag = deleteFlag;
-        this.creationDate = currentTime;
-        this.createdBy = 1L;
-        this.lastUpdateDate = currentTime;
-        this.lastUpdatedBy = 1L;
+        super.setCreateInfo();
+        super.setUpdateInfo();
     }
 
     public DataFile() {

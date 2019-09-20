@@ -67,7 +67,7 @@
                 #{schema,jdbcType=VARCHAR},
             </if>
             <if test="desc != null">
-                #{desc,jdbcType=TEXT},
+                #{desc,jdbcType=VARCHAR},
             </if>
             <if test="serverType != null">
                 #{serverType,jdbcType=CHAR},
@@ -108,10 +108,10 @@
             and name = #{name,jdbcType=VARCHAR}
         </if>
         <if test="schema != null">
-            and schema = #{schema,jdbcType=VARCHAR}
+            and `schema` = #{schema,jdbcType=VARCHAR}
         </if>
         <if test="desc != null">
-            and desc = #{desc,jdbcType=TEXT}
+            and `desc` = #{desc,jdbcType=VARCHAR}
         </if>
         <if test="serverType != null">
             and server_type = #{serverType,jdbcType=CHAR}
@@ -148,7 +148,7 @@
                 schema = #{schema,jdbcType=VARCHAR},
             </if>
             <if test="desc != null">
-                desc = #{desc,jdbcType=TEXT},
+                desc = #{desc,jdbcType=VARCHAR},
             </if>
             <if test="serverType != null">
                 server_type = #{serverType,jdbcType=CHAR},
@@ -199,7 +199,7 @@
             #{schema,jdbcType=VARCHAR},
         </if>
         <if test="desc != null">
-            #{desc,jdbcType=TEXT},
+            #{desc,jdbcType=VARCHAR},
         </if>
         <if test="serverType != null">
             #{serverType,jdbcType=CHAR},
@@ -238,20 +238,19 @@
     </insert>
 
 
-
     <!--
       批量添加记录到数据库表中
     -->
     <insert id="batchInsert" parameterType="java.util.List">
         insert into datasharedtable
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            sharedtime, type, name, schema, desc, server_type, server_ip, server_port, username, pw
+            sharedtime, type, name, `schema`, `desc`, server_type, server_ip, server_port, username, pw
         </trim>
         values
         <foreach collection="list" index="index" item="item" separator=",">
             <trim prefix="(" suffix=")" suffixOverrides=",">
                 #{item.sharedtime,jdbcType=TIMESTAMP}, #{item.type,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR},
-                #{item.schema,jdbcType=VARCHAR}, #{item.desc,jdbcType=TEXT}, #{item.serverType,jdbcType=CHAR},
+                #{item.schema,jdbcType=VARCHAR}, #{item.desc,jdbcType=VARCHAR}, #{item.serverType,jdbcType=CHAR},
                 #{item.serverIp,jdbcType=CHAR}, #{item.serverPort,jdbcType=CHAR}, #{item.username,jdbcType=VARCHAR},
                 #{item.pw,jdbcType=VARCHAR}
             </trim>
@@ -276,10 +275,10 @@
                         name = #{item.name,jdbcType=VARCHAR},
                     </if>
                     <if test="item.schema != null">
-                        schema = #{item.schema,jdbcType=VARCHAR},
+                        `schema` = #{item.schema,jdbcType=VARCHAR},
                     </if>
                     <if test="item.desc != null">
-                        desc = #{item.desc,jdbcType=TEXT},
+                        `desc` = #{item.desc,jdbcType=VARCHAR},
                     </if>
                     <if test="item.serverType != null">
                         server_type = #{item.serverType,jdbcType=CHAR},
@@ -324,7 +323,7 @@
                 schema = #{schema,jdbcType=VARCHAR}
             </if>
             <if test="item == 'desc'">
-                desc = #{desc,jdbcType=TEXT}
+                desc = #{desc,jdbcType=VARCHAR}
             </if>
             <if test="item == 'serverType'">
                 server_type = #{serverType,jdbcType=CHAR}
@@ -355,13 +354,13 @@
         values
         <trim prefix="(" suffix=")" suffixOverrides=",">
             #{sharedtime,jdbcType=TIMESTAMP}, #{type,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
-            #{schema,jdbcType=VARCHAR}, #{desc,jdbcType=TEXT}, #{serverType,jdbcType=CHAR}, #{serverIp,jdbcType=CHAR},
+            #{schema,jdbcType=VARCHAR}, #{desc,jdbcType=VARCHAR}, #{serverType,jdbcType=CHAR}, #{serverIp,jdbcType=CHAR},
             #{serverPort,jdbcType=CHAR}, #{username,jdbcType=VARCHAR}, #{pw,jdbcType=VARCHAR}
         </trim>
         on duplicate key update
         <trim suffixOverrides=",">
             #{sharedtime,jdbcType=TIMESTAMP}, #{type,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
-            #{schema,jdbcType=VARCHAR}, #{desc,jdbcType=TEXT}, #{serverType,jdbcType=CHAR}, #{serverIp,jdbcType=CHAR},
+            #{schema,jdbcType=VARCHAR}, #{desc,jdbcType=VARCHAR}, #{serverType,jdbcType=CHAR}, #{serverIp,jdbcType=CHAR},
             #{serverPort,jdbcType=CHAR}, #{username,jdbcType=VARCHAR}, #{pw,jdbcType=VARCHAR}
         </trim>
     </update>
@@ -419,7 +418,7 @@
                 schema = #{schema,jdbcType=VARCHAR},
             </if>
             <if test="desc !=null ">
-                desc = #{desc,jdbcType=TEXT},
+                desc = #{desc,jdbcType=VARCHAR},
             </if>
             <if test="serverType !=null ">
                 server_type = #{serverType,jdbcType=CHAR},
@@ -452,7 +451,7 @@
                 schema = #{schema,jdbcType=VARCHAR},
             </if>
             <if test="desc !=null ">
-                desc = #{desc,jdbcType=TEXT},
+                desc = #{desc,jdbcType=VARCHAR},
             </if>
             <if test="serverType !=null ">
                 server_type = #{serverType,jdbcType=CHAR},
@@ -482,7 +481,8 @@
     </select>
 
     <select id="queryTotal" resultType="long">
-        select count(*) from datasharedtable
+        select count(*)
+        from datasharedtable
     </select>
 
 </mapper>

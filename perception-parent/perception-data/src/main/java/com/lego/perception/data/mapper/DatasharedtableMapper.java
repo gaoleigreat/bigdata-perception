@@ -1,6 +1,5 @@
 package com.lego.perception.data.mapper;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.framework.mybatis.mapper.Mapper;
 import com.lego.framework.data.model.entity.Datasharedtable;
 import org.springframework.stereotype.Repository;
@@ -17,4 +16,20 @@ public interface DatasharedtableMapper extends Mapper<Datasharedtable> {
 
 
     List<Datasharedtable> query(Datasharedtable datasharedtable);
+
+
+    Integer upsertSelective(Datasharedtable datasharedtable);
+
+
+    Integer upsert(Datasharedtable datasharedtable);
+
+    Integer batchUpdate(List<Datasharedtable> datasharedtables);
+
+    Integer batchInsert(List<Datasharedtable> datasharedtables);
+
+    Long insertSelectiveIgnore(Datasharedtable datasharedtable);
+
+    Long insertSelective (Datasharedtable datasharedtable);
+
+    int insert (Datasharedtable datasharedtable);
 }

@@ -20,5 +20,24 @@ public interface IDatasharedtableService extends IService<Datasharedtable> {
      * @param datasharedtable
      * @return
      */
-    List<Datasharedtable> queryList(Datasharedtable datasharedtable);
+    List<Datasharedtable> queryMyList(Datasharedtable datasharedtable);
+
+    /**
+     * @param datasharedtable
+     * @return
+     */
+    List<Datasharedtable> queryShareList(Datasharedtable datasharedtable);
+
+
+    /**
+     * @param datasharedtable
+     * @return
+     */
+    Integer saveShareData(Datasharedtable datasharedtable);
+
+    /**
+     * @param datasharedtable
+     * @return
+     */
+    Integer saveMyData(Datasharedtable datasharedtable);
 }

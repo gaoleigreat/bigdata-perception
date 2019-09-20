@@ -1,5 +1,4 @@
 package com.lego.framework.system.feign;
-
 import com.framework.common.consts.RespConsts;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
@@ -9,6 +8,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import java.util.List;
 
 /**
  * @author : yanglf
@@ -30,6 +31,17 @@ public interface SitemapClient {
     @RequestMapping(value = "/insert", method = RequestMethod.POST)
     RespVO insert(@RequestBody Sitemap sitemap);
 
+
+    /**
+     * 查询菜单信息
+     *
+     * @param sitemap
+     * @return
+     */
+    @RequestMapping(value = "/list", method = RequestMethod.POST)
+    List<Sitemap> list(@RequestBody Sitemap sitemap);
+
+
 }
 
 
@@ -39,5 +51,10 @@ class SitemapClientFallback implements SitemapClient {
     @Override
     public RespVO insert(Sitemap sitemap) {
         return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "system服务不可用");
+    }
+
+    @Override
+    public List<Sitemap> list(Sitemap sitemap) {
+        return null;
     }
 }
