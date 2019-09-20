@@ -1,5 +1,6 @@
 package com.lego.perception.data.mapper;
 
+import com.framework.mybatis.annotation.DB;
 import com.framework.mybatis.mapper.Mapper;
 import com.lego.framework.data.model.entity.Datasharedtable;
 import org.springframework.stereotype.Repository;
@@ -29,7 +30,13 @@ public interface DatasharedtableMapper extends Mapper<Datasharedtable> {
 
     Long insertSelectiveIgnore(Datasharedtable datasharedtable);
 
-    Long insertSelective (Datasharedtable datasharedtable);
+    Long insertSelective(Datasharedtable datasharedtable);
 
-    int insert (Datasharedtable datasharedtable);
+
+    @Override
+    int insert(Datasharedtable datasharedtable);
+
+
+    Integer deletedByObj(Datasharedtable datasharedtable);
+
 }

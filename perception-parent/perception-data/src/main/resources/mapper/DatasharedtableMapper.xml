@@ -354,13 +354,15 @@
         values
         <trim prefix="(" suffix=")" suffixOverrides=",">
             #{sharedtime,jdbcType=TIMESTAMP}, #{type,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
-            #{schema,jdbcType=VARCHAR}, #{desc,jdbcType=VARCHAR}, #{serverType,jdbcType=CHAR}, #{serverIp,jdbcType=CHAR},
+            #{schema,jdbcType=VARCHAR}, #{desc,jdbcType=VARCHAR}, #{serverType,jdbcType=CHAR},
+            #{serverIp,jdbcType=CHAR},
             #{serverPort,jdbcType=CHAR}, #{username,jdbcType=VARCHAR}, #{pw,jdbcType=VARCHAR}
         </trim>
         on duplicate key update
         <trim suffixOverrides=",">
             #{sharedtime,jdbcType=TIMESTAMP}, #{type,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
-            #{schema,jdbcType=VARCHAR}, #{desc,jdbcType=VARCHAR}, #{serverType,jdbcType=CHAR}, #{serverIp,jdbcType=CHAR},
+            #{schema,jdbcType=VARCHAR}, #{desc,jdbcType=VARCHAR}, #{serverType,jdbcType=CHAR},
+            #{serverIp,jdbcType=CHAR},
             #{serverPort,jdbcType=CHAR}, #{username,jdbcType=VARCHAR}, #{pw,jdbcType=VARCHAR}
         </trim>
     </update>
@@ -480,9 +482,11 @@
         </where>
     </select>
 
-    <select id="queryTotal" resultType="long">
-        select count(*)
-        from datasharedtable
-    </select>
+    <delete id="deletedByObj" parameterType="com.lego.framework.data.model.entity.Datasharedtable">
+        delete from datasharedtable
+        <where>
+            <include refid="Base_Query_Where"></include>
+        </where>
+    </delete>
 
 </mapper>

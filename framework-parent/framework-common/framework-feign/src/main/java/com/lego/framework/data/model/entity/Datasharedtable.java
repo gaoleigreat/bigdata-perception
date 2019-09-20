@@ -14,8 +14,6 @@ import java.util.Date;
  */
 @TableName(value = "datasharedtable")
 public class Datasharedtable implements Serializable {
-    private static final long serialVersionUID = 1L;
-
     /**
      * 共享时间戳
      */

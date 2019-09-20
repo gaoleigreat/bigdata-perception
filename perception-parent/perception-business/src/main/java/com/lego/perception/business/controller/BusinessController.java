@@ -115,14 +115,13 @@ public class BusinessController {
         if (vo.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
             ExceptionBuilder.operateFailException(vo.getMsg());
         }
-        //TODO  处理菜单
         Sitemap querySitemap = new Sitemap();
         querySitemap.setUrl("businessManage");
         querySitemap.setSubSystem("basicManage");
         List<Sitemap> list = sitemapClient.list(querySitemap);
         if (CollectionUtils.isEmpty(list)) {
             // 创建业务菜单
-
+            ExceptionBuilder.operateFailException("请先创建业务菜单");
         }
         querySitemap = list.get(0);
         Sitemap sitemap = new Sitemap();
