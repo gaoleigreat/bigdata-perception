@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.lego.perception.data.mapper.DatasharedtableMapper">
+<mapper namespace="com.lego.perception.data.mapper.LocalSharedDataMapper">
 
     <!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="com.lego.framework.data.model.entity.Datasharedtable" id="BaseResultMap">
+    <resultMap type="com.lego.framework.data.model.entity.LocalSharedData" id="BaseResultMap">
         <result property="sharedtime" column="sharedtime"/>
         <result property="type" column="type"/>
         <result property="name" column="name"/>
@@ -15,6 +15,8 @@
         <result property="serverPort" column="server_port"/>
         <result property="username" column="username"/>
         <result property="pw" column="pw"/>
+        <result property="id" column="id"/>
+        <result property="batchNum" column="batch_num"/>
     </resultMap>
 
     <!--
@@ -50,7 +52,10 @@
                 username,
             </if>
             <if test="pw != null">
-                pw
+                pw,
+            </if>
+            <if test="batchNum !=null">
+                batch_num
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -82,7 +87,10 @@
                 #{username,jdbcType=VARCHAR},
             </if>
             <if test="pw != null">
-                #{pw,jdbcType=VARCHAR}
+                #{pw,jdbcType=VARCHAR},
+            </if>
+            <if test="batchNum!=null">
+                #{batchNum,jdbcType=VARCHAR}
             </if>
         </trim>
     </sql>
@@ -91,7 +99,7 @@
       数据库表的基本查询列名集合
     -->
     <sql id="Base_Column_List">
-        sharedtime, `type`, `name`, `schema`, `desc`, server_type, server_ip, server_port, username, pw
+        sharedtime, `type`, `name`, `schema`, `desc`, server_type, server_ip, server_port, username, pw,batch_num
     </sql>
 
     <!--
@@ -128,6 +136,12 @@
         <if test="pw != null">
             and pw = #{pw,jdbcType=VARCHAR}
         </if>
+        <if test="batchNum !=null">
+            and batch_num = #{batchNum,jdbcType=VARCHAR}
+        </if>
+        <if test="id!=null">
+            and id = #{id,jdbcType=BIGINT}
+        </if>
     </sql>
 
     <!--
@@ -163,7 +177,10 @@
                 username = #{username,jdbcType=VARCHAR},
             </if>
             <if test="pw != null">
-                pw = #{pw,jdbcType=VARCHAR}
+                pw = #{pw,jdbcType=VARCHAR},
+            </if>
+            <if test="batchNum!=null">
+                batch_num =#{batchNum,jdbcType=VARCHAR}
             </if>
         </set>
     </sql>
@@ -174,7 +191,7 @@
     <select id="selectPaged" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from datasharedtable
+        from tpl_share_data
     </select>
 
 
@@ -182,8 +199,8 @@
       添加一条记录到数据库表中
     -->
     <insert id="insert" useGeneratedKeys="true" keyProperty="id"
-            parameterType="com.lego.framework.data.model.entity.Datasharedtable">
-        insert into datasharedtable
+            parameterType="com.lego.framework.data.model.entity.LocalSharedData">
+        insert into tpl_share_data
         (<include refid="Base_Column_List"/>)
         values (
         <if test="sharedtime != null">
@@ -214,7 +231,10 @@
             #{username,jdbcType=VARCHAR},
         </if>
         <if test="pw != null">
-            #{pw,jdbcType=VARCHAR}
+            #{pw,jdbcType=VARCHAR},
+        </if>
+        <if test="batchNum!=null">
+            #{batchNum,jdbcType=VARCHAR}
         </if>
         )
     </insert>
@@ -223,8 +243,8 @@
      有选择的添加一条记录到数据库表中
    -->
     <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id"
-            parameterType="com.lego.framework.data.model.entity.Datasharedtable">
-        insert into datasharedtable
+            parameterType="com.lego.framework.data.model.entity.LocalSharedData">
+        insert into tpl_share_data
         <include refid="Base_Insert_Selective"/>
     </insert>
 
@@ -232,8 +252,8 @@
       有选择的可忽略添加一条记录到数据库表中
     -->
     <insert id="insertSelectiveIgnore" useGeneratedKeys="true" keyProperty="id"
-            parameterType="com.lego.framework.data.model.entity.Datasharedtable">
-        insert ignore into datasharedtable
+            parameterType="com.lego.framework.data.model.entity.LocalSharedData">
+        insert ignore into tpl_share_data
         <include refid="Base_Insert_Selective"/>
     </insert>
 
@@ -242,9 +262,9 @@
       批量添加记录到数据库表中
     -->
     <insert id="batchInsert" parameterType="java.util.List">
-        insert into datasharedtable
+        insert into tpl_share_data
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            sharedtime, type, name, `schema`, `desc`, server_type, server_ip, server_port, username, pw
+            sharedtime, type, name, `schema`, `desc`, server_type, server_ip, server_port, username, pw,batch_num
         </trim>
         values
         <foreach collection="list" index="index" item="item" separator=",">
@@ -252,7 +272,8 @@
                 #{item.sharedtime,jdbcType=TIMESTAMP}, #{item.type,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR},
                 #{item.schema,jdbcType=VARCHAR}, #{item.desc,jdbcType=VARCHAR}, #{item.serverType,jdbcType=CHAR},
                 #{item.serverIp,jdbcType=CHAR}, #{item.serverPort,jdbcType=CHAR}, #{item.username,jdbcType=VARCHAR},
-                #{item.pw,jdbcType=VARCHAR}
+                #{item.pw,jdbcType=VARCHAR},
+                #{item.batchNum,jdbcType=VARCHAR}
             </trim>
         </foreach>
     </insert>
@@ -262,7 +283,7 @@
     -->
     <update id="batchUpdate" parameterType="java.util.List">
         <foreach collection="list" index="index" item="item" separator=";">
-            update datasharedtable
+            update tpl_share_data
             <set>
                 <trim suffixOverrides=",">
                     <if test="item.sharedtime != null">
@@ -294,6 +315,9 @@
                     </if>
                     <if test="item.pw != null">
                         pw = #{item.pw,jdbcType=VARCHAR}
+                    </if>
+                    <if test="item.batchNum != null">
+                        batch_num = #{item.batchNum,jdbcType=VARCHAR}
                     </if>
                 </trim>
             </set>
@@ -340,30 +364,38 @@
             <if test="item == 'pw'">
                 pw = #{pw,jdbcType=VARCHAR}
             </if>
+            <if test="item == 'id'">
+                id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="item!='batch_num'">
+                batch_num=#{batchNum,jdbcType=VARCHAR}
+            </if>
         </foreach>
     </sql>
 
     <!--
       存在即更新否则插入
     -->
-    <update id="upsert" parameterType="com.lego.framework.data.model.entity.Datasharedtable">
-        insert into datasharedtable
+    <update id="upsert" parameterType="com.lego.framework.data.model.entity.LocalSharedData">
+        insert into tpl_share_data
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            sharedtime, type, name, schema, desc, server_type, server_ip, server_port, username, pw
+            sharedtime, type, name, `schema`, `desc`, server_type, server_ip, server_port, username, pw,batch_num
         </trim>
         values
         <trim prefix="(" suffix=")" suffixOverrides=",">
             #{sharedtime,jdbcType=TIMESTAMP}, #{type,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
             #{schema,jdbcType=VARCHAR}, #{desc,jdbcType=VARCHAR}, #{serverType,jdbcType=CHAR},
             #{serverIp,jdbcType=CHAR},
-            #{serverPort,jdbcType=CHAR}, #{username,jdbcType=VARCHAR}, #{pw,jdbcType=VARCHAR}
+            #{serverPort,jdbcType=CHAR}, #{username,jdbcType=VARCHAR}, #{pw,jdbcType=VARCHAR},
+            #{batchNum,jdbcType=VARCHAR}
         </trim>
         on duplicate key update
         <trim suffixOverrides=",">
             #{sharedtime,jdbcType=TIMESTAMP}, #{type,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
             #{schema,jdbcType=VARCHAR}, #{desc,jdbcType=VARCHAR}, #{serverType,jdbcType=CHAR},
             #{serverIp,jdbcType=CHAR},
-            #{serverPort,jdbcType=CHAR}, #{username,jdbcType=VARCHAR}, #{pw,jdbcType=VARCHAR}
+            #{serverPort,jdbcType=CHAR}, #{username,jdbcType=VARCHAR}, #{pw,jdbcType=VARCHAR},
+            #{batchNum,jdbcType=VARCHAR}
         </trim>
     </update>
 
@@ -371,8 +403,8 @@
     <!--
       带有空值检查的存在即更新否则插入
     -->
-    <update id="upsertSelective" parameterType="com.lego.framework.data.model.entity.Datasharedtable">
-        insert into datasharedtable
+    <update id="upsertSelective" parameterType="com.lego.framework.data.model.entity.LocalSharedData">
+        insert into tpl_share_data
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="sharedtime !=null ">
                 sharedtime,
@@ -384,10 +416,10 @@
                 name,
             </if>
             <if test="schema !=null ">
-                schema,
+                `schema`,
             </if>
             <if test="desc !=null ">
-                desc,
+                `desc`,
             </if>
             <if test="serverType !=null ">
                 server_type,
@@ -402,7 +434,10 @@
                 username,
             </if>
             <if test="pw !=null ">
-                pw
+                pw,
+            </if>
+            <if test="batchNum!=null">
+                batch_num
             </if>
         </trim>
         values
@@ -437,6 +472,9 @@
             <if test="pw !=null ">
                 pw = #{pw,jdbcType=VARCHAR}
             </if>
+            <if test="batchNum !=null ">
+                batch_num = #{batchNum,jdbcType=VARCHAR}
+            </if>
         </trim>
         on duplicate key update
         <trim suffixOverrides=",">
@@ -450,10 +488,10 @@
                 name = #{name,jdbcType=VARCHAR},
             </if>
             <if test="schema !=null ">
-                schema = #{schema,jdbcType=VARCHAR},
+                `schema` = #{schema,jdbcType=VARCHAR},
             </if>
             <if test="desc !=null ">
-                desc = #{desc,jdbcType=VARCHAR},
+                `desc` = #{desc,jdbcType=VARCHAR},
             </if>
             <if test="serverType !=null ">
                 server_type = #{serverType,jdbcType=CHAR},
@@ -470,20 +508,23 @@
             <if test="pw !=null ">
                 pw = #{pw,jdbcType=VARCHAR}
             </if>
+            <if test="batchNum !=null ">
+                batch_num = #{batchNum,jdbcType=VARCHAR}
+            </if>
         </trim>
     </update>
 
-    <select id="query" resultMap="BaseResultMap" parameterType="com.lego.framework.data.model.entity.Datasharedtable">
+    <select id="query" resultMap="BaseResultMap" parameterType="com.lego.framework.data.model.entity.LocalSharedData">
         select
         <include refid="Base_Column_List"/>
-        from datasharedtable
+        from tpl_share_data
         <where>
             <include refid="Base_Query_Where"></include>
         </where>
     </select>
 
-    <delete id="deletedByObj" parameterType="com.lego.framework.data.model.entity.Datasharedtable">
-        delete from datasharedtable
+    <delete id="deletedByObj" parameterType="com.lego.framework.data.model.entity.LocalSharedData">
+        delete from tpl_share_data
         <where>
             <include refid="Base_Query_Where"></include>
         </where>

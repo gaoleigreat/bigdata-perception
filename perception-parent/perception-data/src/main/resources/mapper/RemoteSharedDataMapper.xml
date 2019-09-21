@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lego.perception.data.mapper.RemoteSharedDataMapper">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.lego.framework.data.model.entity.RemoteSharedData" id="BaseResultMap">
+        <result property="sharedtime" column="sharedtime"/>
+        <result property="type" column="type"/>
+        <result property="name" column="name"/>
+        <result property="schema" column="schema"/>
+        <result property="desc" column="desc"/>
+        <result property="serverType" column="server_type"/>
+        <result property="serverIp" column="server_ip"/>
+        <result property="serverPort" column="server_port"/>
+        <result property="username" column="username"/>
+        <result property="pw" column="pw"/>
+    </resultMap>
+
+    <!--
+          选择性插入
+        -->
+    <sql id="Base_Insert_Selective">
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sharedtime != null">
+                sharedtime,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="schema != null">
+                schema,
+            </if>
+            <if test="desc != null">
+                desc,
+            </if>
+            <if test="serverType != null">
+                server_type,
+            </if>
+            <if test="serverIp != null">
+                server_ip,
+            </if>
+            <if test="serverPort != null">
+                server_port,
+            </if>
+            <if test="username != null">
+                username,
+            </if>
+            <if test="pw != null">
+                pw
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sharedtime != null">
+                #{sharedtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="schema != null">
+                #{schema,jdbcType=VARCHAR},
+            </if>
+            <if test="desc != null">
+                #{desc,jdbcType=VARCHAR},
+            </if>
+            <if test="serverType != null">
+                #{serverType,jdbcType=CHAR},
+            </if>
+            <if test="serverIp != null">
+                #{serverIp,jdbcType=CHAR},
+            </if>
+            <if test="serverPort != null">
+                #{serverPort,jdbcType=CHAR},
+            </if>
+            <if test="username != null">
+                #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="pw != null">
+                #{pw,jdbcType=VARCHAR}
+            </if>
+        </trim>
+    </sql>
+
+    <!--
+      数据库表的基本查询列名集合
+    -->
+    <sql id="Base_Column_List">
+        sharedtime, `type`, `name`, `schema`, `desc`, server_type, server_ip, server_port, username, pw
+    </sql>
+
+    <!--
+        Where子句
+      -->
+    <sql id="Base_Query_Where">
+        <if test="sharedtime != null">
+            and sharedtime = #{sharedtime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="type != null">
+            and type = #{type,jdbcType=VARCHAR}
+        </if>
+        <if test="name != null">
+            and name = #{name,jdbcType=VARCHAR}
+        </if>
+        <if test="schema != null">
+            and `schema` = #{schema,jdbcType=VARCHAR}
+        </if>
+        <if test="desc != null">
+            and `desc` = #{desc,jdbcType=VARCHAR}
+        </if>
+        <if test="serverType != null">
+            and server_type = #{serverType,jdbcType=CHAR}
+        </if>
+        <if test="serverIp != null">
+            and server_ip = #{serverIp,jdbcType=CHAR}
+        </if>
+        <if test="serverPort != null">
+            and server_port = #{serverPort,jdbcType=CHAR}
+        </if>
+        <if test="username != null">
+            and username = #{username,jdbcType=VARCHAR}
+        </if>
+        <if test="pw != null">
+            and pw = #{pw,jdbcType=VARCHAR}
+        </if>
+    </sql>
+
+    <!--
+        基本更新字段
+    -->
+    <sql id="Base_Update_Column">
+        <set>
+            <if test="sharedtime != null">
+                sharedtime = #{sharedtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="schema != null">
+                schema = #{schema,jdbcType=VARCHAR},
+            </if>
+            <if test="desc != null">
+                desc = #{desc,jdbcType=VARCHAR},
+            </if>
+            <if test="serverType != null">
+                server_type = #{serverType,jdbcType=CHAR},
+            </if>
+            <if test="serverIp != null">
+                server_ip = #{serverIp,jdbcType=CHAR},
+            </if>
+            <if test="serverPort != null">
+                server_port = #{serverPort,jdbcType=CHAR},
+            </if>
+            <if test="username != null">
+                username = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="pw != null">
+                pw = #{pw,jdbcType=VARCHAR},
+            </if>
+        </set>
+    </sql>
+
+    <!--
+        分页查询数据库表
+      -->
+    <select id="selectPaged" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from datasharedtable
+    </select>
+
+
+    <!--
+      添加一条记录到数据库表中
+    -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.lego.framework.data.model.entity.RemoteSharedData">
+        insert into datasharedtable
+        (<include refid="Base_Column_List"/>)
+        values (
+        <if test="sharedtime != null">
+            #{sharedtime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="type != null">
+            #{type,jdbcType=VARCHAR},
+        </if>
+        <if test="name != null">
+            #{name,jdbcType=VARCHAR},
+        </if>
+        <if test="schema != null">
+            #{schema,jdbcType=VARCHAR},
+        </if>
+        <if test="desc != null">
+            #{desc,jdbcType=VARCHAR},
+        </if>
+        <if test="serverType != null">
+            #{serverType,jdbcType=CHAR},
+        </if>
+        <if test="serverIp != null">
+            #{serverIp,jdbcType=CHAR},
+        </if>
+        <if test="serverPort != null">
+            #{serverPort,jdbcType=CHAR},
+        </if>
+        <if test="username != null">
+            #{username,jdbcType=VARCHAR},
+        </if>
+        <if test="pw != null">
+            #{pw,jdbcType=VARCHAR}
+        </if>
+        )
+    </insert>
+
+    <!--
+     有选择的添加一条记录到数据库表中
+   -->
+    <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.lego.framework.data.model.entity.RemoteSharedData">
+        insert into datasharedtable
+        <include refid="Base_Insert_Selective"/>
+    </insert>
+
+    <!--
+      有选择的可忽略添加一条记录到数据库表中
+    -->
+    <insert id="insertSelectiveIgnore" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.lego.framework.data.model.entity.RemoteSharedData">
+        insert ignore into datasharedtable
+        <include refid="Base_Insert_Selective"/>
+    </insert>
+
+
+    <!--
+      批量添加记录到数据库表中
+    -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into datasharedtable
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            sharedtime, type, name, `schema`, `desc`, server_type, server_ip, server_port, username, pw
+        </trim>
+        values
+        <foreach collection="list" index="index" item="item" separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{item.sharedtime,jdbcType=TIMESTAMP}, #{item.type,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR},
+                #{item.schema,jdbcType=VARCHAR}, #{item.desc,jdbcType=VARCHAR}, #{item.serverType,jdbcType=CHAR},
+                #{item.serverIp,jdbcType=CHAR}, #{item.serverPort,jdbcType=CHAR}, #{item.username,jdbcType=VARCHAR},
+                #{item.pw,jdbcType=VARCHAR}
+            </trim>
+        </foreach>
+    </insert>
+
+    <!--
+      根据主键批量更新数据库表中的记录
+    -->
+    <update id="batchUpdate" parameterType="java.util.List">
+        <foreach collection="list" index="index" item="item" separator=";">
+            update datasharedtable
+            <set>
+                <trim suffixOverrides=",">
+                    <if test="item.sharedtime != null">
+                        sharedtime = #{item.sharedtime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.type != null">
+                        type = #{item.type,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.name != null">
+                        name = #{item.name,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.schema != null">
+                        `schema` = #{item.schema,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.desc != null">
+                        `desc` = #{item.desc,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.serverType != null">
+                        server_type = #{item.serverType,jdbcType=CHAR},
+                    </if>
+                    <if test="item.serverIp != null">
+                        server_ip = #{item.serverIp,jdbcType=CHAR},
+                    </if>
+                    <if test="item.serverPort != null">
+                        server_port = #{item.serverPort,jdbcType=CHAR},
+                    </if>
+                    <if test="item.username != null">
+                        username = #{item.username,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.pw != null">
+                        pw = #{item.pw,jdbcType=VARCHAR}
+                    </if>
+                </trim>
+            </set>
+            <where>
+                <trim suffixOverrides=",">
+                    where ${pk.columnName} = #{${pk.attrLittleName},jdbcType=${pk.dataType}}
+                </trim>
+            </where>
+        </foreach>
+    </update>
+
+    <!--
+     使用给定的字段名定义Where子句
+   -->
+    <sql id="Identifiers_Array_Conditions">
+        <foreach collection="array" index="index" item="item" separator=" and ">
+            <if test="item == 'sharedtime'">
+                sharedtime = #{sharedtime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="item == 'type'">
+                type = #{type,jdbcType=VARCHAR}
+            </if>
+            <if test="item == 'name'">
+                name = #{name,jdbcType=VARCHAR}
+            </if>
+            <if test="item == 'schema'">
+                schema = #{schema,jdbcType=VARCHAR}
+            </if>
+            <if test="item == 'desc'">
+                desc = #{desc,jdbcType=VARCHAR}
+            </if>
+            <if test="item == 'serverType'">
+                server_type = #{serverType,jdbcType=CHAR}
+            </if>
+            <if test="item == 'serverIp'">
+                server_ip = #{serverIp,jdbcType=CHAR}
+            </if>
+            <if test="item == 'serverPort'">
+                server_port = #{serverPort,jdbcType=CHAR}
+            </if>
+            <if test="item == 'username'">
+                username = #{username,jdbcType=VARCHAR}
+            </if>
+            <if test="item == 'pw'">
+                pw = #{pw,jdbcType=VARCHAR}
+            </if>
+            <if test="item == 'id'">
+                id = #{id,jdbcType=BIGINT}
+            </if>
+        </foreach>
+    </sql>
+
+    <!--
+      存在即更新否则插入
+    -->
+    <update id="upsert" parameterType="com.lego.framework.data.model.entity.RemoteSharedData">
+        insert into datasharedtable
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            sharedtime, type, name, schema, desc, server_type, server_ip, server_port, username, pw
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{sharedtime,jdbcType=TIMESTAMP}, #{type,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+            #{schema,jdbcType=VARCHAR}, #{desc,jdbcType=VARCHAR}, #{serverType,jdbcType=CHAR},
+            #{serverIp,jdbcType=CHAR},
+            #{serverPort,jdbcType=CHAR}, #{username,jdbcType=VARCHAR}, #{pw,jdbcType=VARCHAR}
+        </trim>
+        on duplicate key update
+        <trim suffixOverrides=",">
+            #{sharedtime,jdbcType=TIMESTAMP}, #{type,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+            #{schema,jdbcType=VARCHAR}, #{desc,jdbcType=VARCHAR}, #{serverType,jdbcType=CHAR},
+            #{serverIp,jdbcType=CHAR},
+            #{serverPort,jdbcType=CHAR}, #{username,jdbcType=VARCHAR}, #{pw,jdbcType=VARCHAR}
+        </trim>
+    </update>
+
+
+    <!--
+      带有空值检查的存在即更新否则插入
+    -->
+    <update id="upsertSelective" parameterType="com.lego.framework.data.model.entity.RemoteSharedData">
+        insert into datasharedtable
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sharedtime !=null ">
+                sharedtime,
+            </if>
+            <if test="type !=null ">
+                type,
+            </if>
+            <if test="name !=null ">
+                name,
+            </if>
+            <if test="schema !=null ">
+                `schema`,
+            </if>
+            <if test="desc !=null ">
+                `desc`,
+            </if>
+            <if test="serverType !=null ">
+                server_type,
+            </if>
+            <if test="serverIp !=null ">
+                server_ip,
+            </if>
+            <if test="serverPort !=null ">
+                server_port,
+            </if>
+            <if test="username !=null ">
+                username,
+            </if>
+            <if test="pw !=null ">
+                pw
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sharedtime !=null ">
+                sharedtime = #{sharedtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="type !=null ">
+                type = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="name !=null ">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="schema !=null ">
+                schema = #{schema,jdbcType=VARCHAR},
+            </if>
+            <if test="desc !=null ">
+                desc = #{desc,jdbcType=VARCHAR},
+            </if>
+            <if test="serverType !=null ">
+                server_type = #{serverType,jdbcType=CHAR},
+            </if>
+            <if test="serverIp !=null ">
+                server_ip = #{serverIp,jdbcType=CHAR},
+            </if>
+            <if test="serverPort !=null ">
+                server_port = #{serverPort,jdbcType=CHAR},
+            </if>
+            <if test="username !=null ">
+                username = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="pw !=null ">
+                pw = #{pw,jdbcType=VARCHAR}
+            </if>
+        </trim>
+        on duplicate key update
+        <trim suffixOverrides=",">
+            <if test="sharedtime !=null ">
+                sharedtime = #{sharedtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="type !=null ">
+                type = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="name !=null ">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="schema !=null ">
+                `schema` = #{schema,jdbcType=VARCHAR},
+            </if>
+            <if test="desc !=null ">
+                `desc` = #{desc,jdbcType=VARCHAR},
+            </if>
+            <if test="serverType !=null ">
+                server_type = #{serverType,jdbcType=CHAR},
+            </if>
+            <if test="serverIp !=null ">
+                server_ip = #{serverIp,jdbcType=CHAR},
+            </if>
+            <if test="serverPort !=null ">
+                server_port = #{serverPort,jdbcType=CHAR},
+            </if>
+            <if test="username !=null ">
+                username = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="pw !=null ">
+                pw = #{pw,jdbcType=VARCHAR}
+            </if>
+        </trim>
+    </update>
+
+    <select id="query" resultMap="BaseResultMap" parameterType="com.lego.framework.data.model.entity.RemoteSharedData">
+        select
+        <include refid="Base_Column_List"/>
+        from datasharedtable
+        <where>
+            <include refid="Base_Query_Where"></include>
+        </where>
+    </select>
+
+    <delete id="deletedByObj" parameterType="com.lego.framework.data.model.entity.RemoteSharedData">
+        delete from datasharedtable
+        <where>
+            <include refid="Base_Query_Where"></include>
+        </where>
+    </delete>
+
+</mapper>
