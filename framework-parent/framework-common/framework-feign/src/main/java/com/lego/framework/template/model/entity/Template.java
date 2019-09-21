@@ -14,8 +14,12 @@ public class Template extends BaseModel {
     @ApiModelProperty("模板名称")
     private String description;
 
-    @ApiModelProperty("模板数据类型")
+    @ApiModelProperty("数据源类型")
     private Integer type;
+
+
+    @ApiModelProperty("数据类型")
+    private Integer dataType;
 
     public String getTemplateName() {
         return templateName;
@@ -47,5 +51,13 @@ public class Template extends BaseModel {
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public Integer getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(Integer dataType) {
+        this.dataType = dataType;
     }
 }

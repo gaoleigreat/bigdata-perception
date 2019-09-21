@@ -109,4 +109,6 @@ public class DataFile extends BaseModel {
         super.setUpdateInfo();
     }
 
+    public DataFile() {
+    }
 }

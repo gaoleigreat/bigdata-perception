@@ -8,7 +8,8 @@
 		creation_date as creationDate,
 		 last_update_date as lastUpdateDate,
 		  last_updated_by as last_updated_by,
-		  `type` as `type`
+		  `type` as `type`,
+		  data_type as dataType
 	</sql>
 
     <sql id="condition">
@@ -24,6 +25,9 @@
         <if test="type!=null">
             and type =#{type,jdbcType=INTEGER}
         </if>
+        <if test="dataType!=null">
+            and data_type =#{dataType,jdbcType=INTEGER}
+        </if>
     </sql>
 
     <sql id="page_condition">
@@ -38,6 +42,9 @@
         </if>
         <if test="arg0.type != null and arg0.type != ''">
             and type = #{arg0.type, jdbcType=INTEGER}
+        </if>
+        <if test="arg0.dataType!=null">
+            and data_type = #{arg0.dataType, jdbcType=INTEGER}
         </if>
     </sql>
 
@@ -73,14 +80,15 @@
     <insert id="save" useGeneratedKeys="true" keyProperty="id"
             parameterType="com.lego.framework.template.model.entity.DataTemplate">
         insert into tpl_data_template_t
-        (template_code, template_name, description, created_by, last_updated_by, last_update_date, type)
+        (template_code, template_name, description, created_by, last_updated_by, last_update_date, type, data_type)
         values (#{templateCode, jdbcType=VARCHAR},
                 #{templateName, jdbcType=VARCHAR},
                 #{description, jdbcType=VARCHAR},
                 #{createdBy, jdbcType=BIGINT},
                 #{lastUpdatedBy, jdbcType=BIGINT},
                 #{lastUpdateDate, jdbcType=TIMESTAMP},
-                #{type, jdbcType=INTEGER})
+                #{type, jdbcType=INTEGER},
+                #{dataType, jdbcType=INTEGER})
     </insert>
 
     <update id="update">
@@ -102,8 +110,12 @@
                 last_update_date = #{lastUpdateDate, jdbcType=TIMESTAMP},
             </if>
             <if test="type!=null">
-                type =#{type,jdbcType=INTEGER}
+                type =#{type,jdbcType=INTEGER},
             </if>
+            <if test="dataType!=null">
+                data_type =#{dataType,jdbcType=INTEGER}
+            </if>
+
         </set>
         where id = #{id, jdbcType=BIGINT}
     </update>
