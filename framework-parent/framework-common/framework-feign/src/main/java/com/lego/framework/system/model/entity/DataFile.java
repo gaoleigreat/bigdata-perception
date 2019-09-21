@@ -14,8 +14,6 @@ import java.util.Date;
 @Data
 @TableName("tpl_data_file")
 public class DataFile extends BaseModel {
-    public DataFile() {
-    }
 
     @ApiModelProperty("文件名称")
     private String name;
