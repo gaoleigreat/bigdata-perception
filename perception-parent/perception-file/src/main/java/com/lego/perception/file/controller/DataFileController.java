@@ -6,6 +6,7 @@ import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.base.annotation.Operation;
+import com.lego.framework.base.utils.UuidUtils;
 import com.lego.framework.system.model.entity.DataFile;
 import com.lego.perception.file.model.UploadFile;
 import com.lego.perception.file.service.IDataFileService;
@@ -41,14 +42,22 @@ public class DataFileController {
             @ApiImplicitParam(name = "files", value = "多个文件，", paramType = "formData", allowMultiple = true, required = true, dataType = "file"),
             @ApiImplicitParam(name = "projectId", value = "projectId，", paramType = "query", allowMultiple = true, required = true, dataType = "Long"),
             @ApiImplicitParam(name = "templateId", value = "templateId，", paramType = "query", allowMultiple = true, required = true, dataType = "Long"),
-            @ApiImplicitParam(name = "sourceType", value = "sourceType，", paramType = "query", allowMultiple = true, required = true, dataType = "int")
+            @ApiImplicitParam(name = "sourceType", value = "sourceType，", paramType = "query", allowMultiple = true, required = true, dataType = "int"),
+            @ApiImplicitParam(name = "sourceType", value = "remark，", paramType = "query", allowMultiple = true, required = true, dataType = "String"),
+            @ApiImplicitParam(name = "sourceType", value = "tags，", paramType = "query", allowMultiple = true, required = true, dataType = "String")
 
     })
     @PostMapping(value = "/uploads", headers = "content-type=multipart/form-data")
     public RespVO<RespDataVO<DataFile>> uploads(@RequestParam(value = "files", required = true) MultipartFile[] files,
                                                 @RequestParam(value = "projectId", required = true) Long projectId,
                                                 @RequestParam(value = "templateId", required = true) Long templateId,
-                                                @RequestParam(value = "sourceType", required = true) int sourceType) {
+                                                @RequestParam(value = "sourceType", required = true) int sourceType,
+                                                @RequestParam(value = "remark", required = false) String remark,
+                                                @RequestParam(value = "tags", required = false) String tags
+
+    ) {
+        String batchNum = UuidUtils.generate16Uuid();
+
         List<DataFile> returnList = new ArrayList<>();
         List<DataFile> dataFiles = new ArrayList<>();
         Arrays.stream(files).forEach(f -> {
@@ -67,7 +76,7 @@ public class DataFileController {
                     Map<String, Object> fileMap = new HashMap<>(2);
                     fileMap.put("fileName", f.getOriginalFilename());
                     fileMap.put("url", upload.getInfo().get("data"));
-                    DataFile dataFile = new DataFile(uploadFile.getFileName(), uploadFile.getExt(), projectId, upload.getInfo().get("data").toString(), upload.getInfo().get("data").toString(), templateId, 0, sourceType, 0);
+                    DataFile dataFile = new DataFile(uploadFile.getFileName(), uploadFile.getExt(), projectId, upload.getInfo().get("data").toString(), upload.getInfo().get("data").toString(), templateId, 0, sourceType, 0, remark, tags, batchNum);
                     dataFiles.add(dataFile);
                     returnList.add(dataFile);
                 }
@@ -94,9 +103,9 @@ public class DataFileController {
         return RespVOBuilder.failure("文件不存在");
     }
 
+    @ApiOperation(value = "分页查询", notes = "分页查询")
     @RequestMapping(value = "/findList", method = RequestMethod.GET)
     @Operation(value = "find", desc = "查询")
-    @ApiOperation(value = "查询列表，详情", httpMethod = "GET")
     public RespVO<RespDataVO<DataFile>> findList(@ModelAttribute DataFile dataFile) {
         List<DataFile> dataFiles = dataFileService.findList(dataFile);
         if (CollectionUtils.isNotEmpty(dataFiles)) {
@@ -107,46 +116,68 @@ public class DataFileController {
 
     }
 
-
+    @ApiOperation(value = "分页查询", notes = "分页查询")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageIndex", value = "pageIndex，", paramType = "query", required = true, dataType = "int"),
+            @ApiImplicitParam(name = "pageSize", value = "pageSize，", paramType = "query", required = true, dataType = "int"),
+    })
     @RequestMapping(value = "/findPagedList", method = RequestMethod.GET)
     @Operation(value = "find", desc = "查询")
-    @ApiOperation("分页查询")
     public RespVO<IPage<DataFile>> findPagedList(@ModelAttribute DataFile dataFile, @RequestParam(value = "pageIndex") int pageIndex,
                                                  @RequestParam(required = false, defaultValue = "10") int pageSize) {
         Page<DataFile> page = new Page<>(pageIndex, pageSize);
         return RespVOBuilder.success(dataFileService.findPagedList(dataFile, page));
     }
 
+    @ApiOperation(value = "批量新增", notes = "批量新增")
+    @ApiImplicitParams({
+    })
     @RequestMapping(value = "/insertList", method = RequestMethod.POST)
-    @Operation(value = "insert", desc = "新增")
-    @ApiOperation("批量新增")
+    @Operation(value = "insert", desc = "批量新增")
     public RespVO<RespDataVO<Long>> insertList(@RequestBody List<DataFile> dataFiles) {
 
         return dataFileService.insertList(dataFiles);
     }
 
-
+    @ApiOperation(value = "更新", notes = "更新")
+    @ApiImplicitParams({
+    })
     @RequestMapping(value = "/updateList", method = RequestMethod.POST)
     @Operation(value = "update", desc = "更新")
-    @ApiOperation("更新")
     public RespVO updateList(@RequestBody List<DataFile> dataFiles) {
 
         return dataFileService.updateList(dataFiles);
     }
 
+    @ApiOperation(value = "删除", notes = "删除")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "id，", paramType = "query", required = true, dataType = "String")
+    })
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
     @Operation(value = "delete", desc = "删除")
-    @ApiOperation("删除")
     public RespVO deleteList(@RequestParam Long id) {
 
         return dataFileService.delete(id);
     }
 
-
+    @ApiOperation(value = "批量删除", notes = "批量删除")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ids", value = "ids", paramType = "query", required = true, dataType = "String")
+    })
     @RequestMapping(value = "/deleteList", method = RequestMethod.POST)
-    @Operation(value = "delete", desc = "删除")
+    @Operation(value = "delete", desc = "批量删除")
     public RespVO deleteList(@RequestBody List<Long> ids) {
         return dataFileService.deleteList(ids);
+    }
+
+    @ApiOperation(value = "通过批次号查询", notes = "通过批次号查询")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "batchNums", value = "批次号，", paramType = "query", required = true, dataType = "String")
+    })
+    @GetMapping(value = "/selectByBatchNums")
+    @Operation(value = "select", desc = "通过批次号查询")
+    public RespVO selectByBatchNums(@RequestBody List<String> batchNums) {
+        return dataFileService.selectBybatchNums(batchNums);
     }
 
 }

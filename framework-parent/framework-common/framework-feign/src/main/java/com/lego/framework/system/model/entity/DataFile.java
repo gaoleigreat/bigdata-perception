@@ -1,13 +1,9 @@
 package com.lego.framework.system.model.entity;
 
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.lego.framework.config.BaseModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.util.Date;
 
 /**
@@ -16,10 +12,10 @@ import java.util.Date;
  * @since 2019/8/26
  **/
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @TableName("tpl_data_file")
 public class DataFile extends BaseModel {
+    public DataFile() {
+    }
 
     @ApiModelProperty("文件名称")
     private String name;
@@ -90,7 +86,7 @@ public class DataFile extends BaseModel {
      * @param dataType
      * @param deleteFlag
      */
-    public DataFile(String name, String fileType, Long projectId, String fileUrl, String previewUrl, Long templateId, int checkFlag, int dataType, Integer deleteFlag) {
+    public DataFile(String name, String fileType, Long projectId, String fileUrl, String previewUrl, Long templateId, int checkFlag, int dataType, Integer deleteFlag,String remark,String tags,String batchNum) {
         Date currentTime = new Date();
         this.name = name;
         this.fileType = fileType;
@@ -106,6 +102,9 @@ public class DataFile extends BaseModel {
         this.publishBy = 1L;
         this.dataType = dataType;
         this.deleteFlag = deleteFlag;
+        this.remark = remark;
+        this.tags = tags;
+        this.batchNum = batchNum;
         super.setCreateInfo();
         super.setUpdateInfo();
     }

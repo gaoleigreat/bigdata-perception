@@ -21,10 +21,8 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -60,12 +58,16 @@ public class DataController {
             @ApiImplicitParam(name = "files", value = "格式化文件上传，", paramType = "formData", allowMultiple = true, required = true, dataType = "file"),
             @ApiImplicitParam(name = "templateId", value = "模板Id，", paramType = "query", required = true, dataType = "Long"),
             @ApiImplicitParam(name = "projectId", value = "工程Id，", paramType = "query", required = false, dataType = "Long"),
+            @ApiImplicitParam(name = "projectId", value = "说明，", paramType = "query", required = false, dataType = "String"),
+            @ApiImplicitParam(name = "projectId", value = "标签，", paramType = "query", required = false, dataType = "String"),
     })
     @PostMapping(value = "/upload/formatted", headers = "content-type=multipart/form-data")
     @Operation(value = "formatted", desc = "格式化文件上传")
     public RespVO uplodeFormatted(@RequestParam(value = "templateId", required = true) Long templateId,
+                                  @RequestParam(value = "files", required = true) MultipartFile[] files,
                                   @RequestParam(value = "projectId", required = false) Long projectId,
-                                  @RequestParam(value = "files", required = true) MultipartFile[] files) {
+                                  @RequestParam(value = "remark", required = false) String remark,
+                                  @RequestParam(value = "tags", required = false) String tags) {
         if (files == null || files.length <= 0) {
             return RespVOBuilder.failure("上传文件为空");
         }
@@ -79,7 +81,7 @@ public class DataController {
         if (template == null) {
             return RespVOBuilder.failure("所选模板不存在");
         }
-        RespVO<RespDataVO<DataFile>> uploads = fileClient.uploads(files, projectId, templateId, template.getType());
+        RespVO<RespDataVO<DataFile>> uploads = fileClient.uploads(files, projectId, templateId, template.getType(),remark,tags);
         Set<DataFile> dataFileSet = new HashSet<>();
         Arrays.stream(files).forEach(mf -> {
 
@@ -89,7 +91,7 @@ public class DataController {
                 if (mf.getOriginalFilename().endsWith(dataFile.getName())) {
                     dataFileSet.add(dataFile);
                     try {
-                        List<Map<String, Object>> maps = TemplateDataUtil.analyticalData(mf, dataFile.getId());
+                        List<Map<String, Object>> maps = TemplateDataUtil.analyticalData(mf, dataFile.getId(), template);
                         if (template.getType().equals("0")) {
                             mySqlBusinessService.insertBusinessData(template, maps, dataFile.getId());
                         } else {
@@ -109,17 +111,26 @@ public class DataController {
 
     @ApiOperation(value = "非格式化文件上传", notes = "非格式化文件上传")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "files", value = "非格式化文件上传，", paramType = "formData", allowMultiple = true, required = true, dataType = "file"),
+            @ApiImplicitParam(name = "files", value = "格式化文件上传，", paramType = "formData", allowMultiple = true, required = true, dataType = "file"),
             @ApiImplicitParam(name = "projectId", value = "工程Id，", paramType = "query", required = false, dataType = "Long"),
+            @ApiImplicitParam(name = "projectId", value = "说明，", paramType = "query", required = false, dataType = "String"),
+            @ApiImplicitParam(name = "projectId", value = "标签，", paramType = "query", required = false, dataType = "String"),
     })
     @PostMapping(value = "/upload/unformatted", headers = "content-type=multipart/form-data")
     @Operation(value = "unformatted", desc = "非格式化文件上传")
-    public RespVO uplodeFormatted(@RequestParam(value = "projectId", required = false) Long projectId, @RequestParam(value = "files", required = true) MultipartFile[] files) {
+    public RespVO uplodeFormatted(@RequestParam(value = "projectId", required = false) Long projectId,
+                                  @RequestParam(value = "files", required = true) MultipartFile[] files,
+                                  @RequestParam(value = "remark", required = false) String remark,
+                                  @RequestParam(value = "tags", required = false) String tags) {
         if (files == null || files.length <= 0) {
             return RespVOBuilder.failure("上传文件有误");
         }
-        RespVO<RespDataVO<DataFile>> uploads = fileClient.uploads(files, projectId, null, -1);
+        RespVO<RespDataVO<DataFile>> uploads = fileClient.uploads(files, projectId, null, -1,remark,tags);
         return uploads;
 
     }
+
+
+
+
 }

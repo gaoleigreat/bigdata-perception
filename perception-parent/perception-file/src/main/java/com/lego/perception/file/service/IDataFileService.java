@@ -87,4 +87,12 @@ public interface IDataFileService {
      * @return
      */
     RespVO deleteList(List<Long> ids);
+
+    /**
+     * 通过batchIda批量查询
+     *
+     * @param batchNums
+     * @return
+     */
+    RespVO selectBybatchNums(List<String> batchNums);
 }

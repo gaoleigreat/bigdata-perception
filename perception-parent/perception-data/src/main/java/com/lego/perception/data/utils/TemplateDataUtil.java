@@ -1,9 +1,11 @@
 package com.lego.perception.data.utils;
 
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.framework.excel.utils.ExcelTemplateUtil;
 import com.lego.framework.base.exception.ExceptionBuilder;
+import com.lego.framework.template.model.entity.FormTemplate;
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.JSONException;
@@ -30,19 +32,16 @@ public class TemplateDataUtil {
      * @throws IOException
      * @throws
      */
-    public static List<Map<String, Object>> analyticalData(MultipartFile file, Long fileId) throws IOException, JSONException {
+    public static List<Map<String, Object>> analyticalData(MultipartFile file, Long fileId, FormTemplate formTemplate) throws IOException, JSONException {
         if (StringUtils.isEmpty(file.getOriginalFilename())) {
             ExceptionBuilder.operateFailException("文件名异常");
         }
+        List<Map<String, Object>> mapArrayList = new ArrayList<>();
         if (file.getOriginalFilename().endsWith(".xlsx")) {
             try {
                 XSSFWorkbook xsf = new XSSFWorkbook(file.getInputStream());
                 ExcelTemplateUtil excelTemplateUtil = new ExcelTemplateUtil();
-                List<Map<String, Object>> sheetValue = excelTemplateUtil.getSheetValue(xsf.getSheetAt(0), null);
-                sheetValue.forEach(map -> {
-                    map.put("fileId", fileId);
-                });
-                return sheetValue;
+                mapArrayList = excelTemplateUtil.getSheetValue(xsf.getSheetAt(0), null);
             } catch (IOException e) {
                 ExceptionBuilder.operateFailException("文件异常");
             }
@@ -51,17 +50,12 @@ public class TemplateDataUtil {
         } else if (file.getOriginalFilename().endsWith(".xml")) {
             String str = IOUtils.toString(file.getInputStream(), "utf-8");
             org.json.JSONObject jsonObject = XML.toJSONObject(str);
-            Map<String, Object> map =jsonObject.toMap();
-            List<Map<String, Object>> dataList = new ArrayList<>();
-            dataList.add(map);
-            return dataList;
+            Map<String, Object> map = jsonObject.toMap();
+            mapArrayList.add(map);
         } else if (file.getOriginalFilename().endsWith(".json")) {
             String str = IOUtils.toString(file.getInputStream(), "utf-8");
             Map<String, Object> map = JSONObject.parseObject(str, Map.class);
-            map.put("fileId", fileId);
-            List<Map<String, Object>> resultList = new ArrayList<>();
-            resultList.add(map);
-            return resultList;
+            mapArrayList.add(map);
 
         } else if (file.getOriginalFilename().endsWith(".csv")) {
             List<String> dataList = CSVUtils.importCsv(file.getInputStream());
@@ -76,23 +70,28 @@ public class TemplateDataUtil {
                         String[] as = s.split(",");
                         Map<String, Object> map = new HashMap<>();
                         for (int j = 0; j < as.length; j++) {
-
                             map.put(headers[j], as[j]);
-                            if (j == as.length - 1) {
-                                map.put("fileId", fileId);
-                            }
-
                         }
-                        resultList.add(map);
+                        mapArrayList.add(map);
 
                     }
                 }
             }
-            return resultList;
         }
+        List<JSONObject> jsonObjects = new ArrayList<>();
 
-
-        return null;
+        mapArrayList.forEach(map -> {
+            JSONObject jsonObject = new JSONObject(map);
+            jsonObject = TemplateDataValidataUtil.transformFormDataItem(formTemplate, jsonObject);
+            jsonObject.put("fileId", fileId);
+            jsonObjects.add(jsonObject);
+        });
+        List<Map<String, Object>> mapArrayListResult = new ArrayList<>();
+        jsonObjects.forEach(jsonObject -> {
+             Map map = JSON.parseObject(jsonObject.toJSONString(), Map.class);
+            mapArrayListResult.add(map);
+        });
+        return mapArrayListResult;
 
     }
 }

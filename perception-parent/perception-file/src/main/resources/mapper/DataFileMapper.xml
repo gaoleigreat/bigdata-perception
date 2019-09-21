@@ -9,7 +9,16 @@
 		 project_id as project_id,
 		file_url as file_url,
 		previewUrl as preview_url,
-		remark as remark,
+        template_id as template_id
+        check_flag as check_flag,
+        check_date as check_date,
+        check_by as  check_by,
+        publish_flag as publish_flag,
+        publish_date as publish_date,
+        publish_by as  publish_by,
+        data_type as  data_type,
+        delet_flag as delet_flag,
+        remark as remark,
 		tags as tags,
 		batch_num as batchNum,
 		creation_date as creationDate,
@@ -23,22 +32,49 @@
         <if test='id != null'>
             and id = #{id, jdbcType=BIGINT}
         </if>
-        <if test='code != null and code != ""'>
+        <if test='name != null'>
             and name = #{name, jdbcType=VARCHAR}
         </if>
 
-        <if test='type != null and code != ""'>
+        <if test='type != null'>
             and file_type = #{fileType, jdbcType=VARCHAR}
         </if>
-        <if test='projectId != null and parentCode != ""'>
+        <if test='projectId != null'>
             and project_id = #{projectId, jdbcType=BIGINT}
         </if>
-        <if test='fileUrl != null and parentCode != ""'>
+        <if test='fileUrl != null'>
             and file_url = #{fileUrl, jdbcType=VARCHAR}
         </if>
-        <if test='previewUrl != null and parentCode != ""'>
+        <if test='previewUrl != null'>
             and preview_url = #{previewUrl, jdbcType=VARCHAR}
         </if>
+
+
+        <if test='templateId != null'>
+            and template_id = #{TemplateId, jdbcType=BIGINT}
+        </if>
+        <if test='checkFlag != null'>
+            and check_flag = #{checkFlag, jdbcType=int}
+        </if>
+
+
+        <if test='checkBy != null'>
+            and check_by = #{checkBy, jdbcType=BIGINT}
+        </if>
+
+        <if test='publishFlag != null'>
+            and publish_flag = #{publish_flag, jdbcType=int}
+        </if>
+
+        <if test='publishBy != null'>
+            and publish_by = #{publishBy, jdbcType=BIGINT}
+        </if>
+
+        <if test='dataType != null'>
+            and data_type = #{dataType, jdbcType=int}
+        </if>
+
+
         <if test="deleteFlag != null">
             and delete_flag = #{deleteFlag, jdbcType=INTEGER}
         </if>
@@ -67,11 +103,13 @@
 
     <insert id="insertList">
         insert into tpl_data_file
-        (id, 'name',
+        ('name',
         file_type,
         project_id,
         file_url,
         preview_url,
+        template_id ,
+        data_type ,
         remark,
         tags,
         batch_num,
@@ -81,12 +119,13 @@
         values
         <foreach collection="list" item="item" separator=",">
             (
-            #{item.id, jdbcType=BIGINT},
             #{item.name, jdbcType=VARCHAR},
             #{item.fileType, jdbcType=VARCHAR},
             #{item.projectId, jdbcType=BIGINT},
             #{item.fileUrl, jdbcType=VARCHAR},
             #{item.previewUrl, jdbcType=VARCHAR},
+            #{item.templateId, jdbcType=BIGINT},
+            #{item.dataType, jdbcType=BIGINT},
             #{item.remark, jdbcType=VARCHAR},
             #{item.tags, jdbcType=VARCHAR},
             #{item.batchNum, jdbcType=VARCHAR},
@@ -102,18 +141,124 @@
         <foreach collection="list" item="item">
             update tpl_data_file
             <set>
-                id = #{item.id, jdbcType=BIGINT},
-                'name' = #{item.name, jdbcType=VARCHAR},
-                file_type= #{item.fileType, jdbcType=VARCHAR},
-                project_id = #{item.projectId, jdbcType=BIGINT},
-                file_url = #{item.fileUrl, jdbcType=VARCHAR},
-                preview_url = #{item.previewUrl, jdbcType=VARCHAR},
-                remark = #{item.remark, jdbcType=VARCHAR},
-                tags = #{item.tags, jdbcType=VARCHAR},
-                batch_num =#{item.batchNum,jdbcType=VARCHAR},
-                last_updated_by = #{item.lastUpdatedBy, jdbcType=VARCHAR}
+                <if test='name != null and name != ""'>
+                     name = #{name, jdbcType=VARCHAR},
+                </if>
+
+                <if test='fileType != null and fileType != ""'>
+                     file_type = #{fileType, jdbcType=VARCHAR},
+                </if>
+                <if test='projectId != null and projectId != ""'>
+                     project_id = #{projectId, jdbcType=BIGINT},
+                </if>
+                <if test='fileUrl != null and fileUrl != ""'>
+                     file_url = #{fileUrl, jdbcType=VARCHAR},
+                </if>
+                <if test='previewUrl != null and previewUrl != ""'>
+                     preview_url = #{previewUrl, jdbcType=VARCHAR},
+                </if>
+
+
+                <if test='templateId != null and templateId != ""'>
+                     template_id = #{TemplateId, jdbcType=BIGINT},
+                </if>
+                <if test='checkFlag != null and checkFlag != ""'>
+                     check_flag = #{checkFlag, jdbcType=int},
+                </if>
+
+
+                <if test='checkBy != null and checkBy != ""'>
+                     check_by = #{checkBy, jdbcType=BIGINT},
+                </if>
+
+                <if test='publishFlag != null and publishFlag != ""'>
+                     publish_flag = #{publish_flag, jdbcType=int},
+                </if>
+
+                <if test='publishBy != null and publishBy != ""'>
+                     publish_by = #{publishBy, jdbcType=BIGINT},
+                </if>
+
+                <if test='dataType != null and dataType != ""'>
+                     data_type = #{dataType, jdbcType=int},
+                </if>
+
+
+                <if test="deleteFlag != null">
+                     delete_flag = #{deleteFlag, jdbcType=INTEGER},
+                </if>
+                <if test="remark!=null">
+                     remark=#{remark,jdbcType=VARCHAR},
+                </if>
+                <if test="tags!=null">
+                    tags=#{tags,jdbcType=VARCHAR},
+                </if>
+                <if test="batchNum!=null">
+                    and batch_num =#{batchNum,jdbcType=VARCHAR}
+                </if>
+                last_updated_by = #{item.lastUpdatedBy, jdbcType=VARCHAR},
             </set>
-            where id = #{item.id, jdbcType=BIGINT};
+            <where>
+                <if test='item.id != null'>
+                    and id = #{item.id, jdbcType=BIGINT}
+                </if>
+                <if test='item.name != null '>
+                    and name = #{item.name, jdbcType=VARCHAR}
+                </if>
+
+                <if test='item.FileType != null'>
+                    and file_type = #{item..fileType, jdbcType=VARCHAR}
+                </if>
+                <if test='item.projectId != null'>
+                    and project_id = #{item.projectId, jdbcType=BIGINT}
+                </if>
+                <if test='item.fileUrl != null'>
+                    and file_url = #{item.fileUrl, jdbcType=VARCHAR}
+                </if>
+                <if test='previewUrl != null'>
+                    and preview_url = #{item.previewUrl, jdbcType=VARCHAR}
+                </if>
+
+
+                <if test='item.templateId != null and item.templateId != ""'>
+                    and template_id = #{item.templateId, jdbcType=BIGINT}
+                </if>
+                <if test='item.checkFlag != null and item.checkFlag != ""'>
+                    and check_flag = #{item.checkFlag, jdbcType=int}
+                </if>
+
+
+                <if test='item.checkBy != null and item.checkBy != ""'>
+                    and check_by = #{item.checkBy, jdbcType=BIGINT}
+                </if>
+
+                <if test='item.publishFlag != null and item.publishFlag != ""'>
+                    and publish_flag = #{item.publish_flag, jdbcType=int}
+                </if>
+
+                <if test='item.publishBy != null and item.publishBy != ""'>
+                    and publish_by = #{item.publishBy, jdbcType=BIGINT}
+                </if>
+
+                <if test='item.dataType != null and item.dataType != ""'>
+                    and data_type = #{item.dataType, jdbcType=int}
+                </if>
+
+
+                <if test="item.deleteFlag != null">
+                    and delete_flag = #{item.deleteFlag, jdbcType=INTEGER}
+                </if>
+                <if test="item.remark!=null">
+                    and remark=#{item.remark,jdbcType=VARCHAR}
+                </if>
+                <if test="item.tag!=null">
+                    and find_in_set(#{tags,jdbcType=VARCHAR},tags)
+                </if>
+                <if test="item.batchNum!=null">
+                    and batch_num =#{item.batchNum,jdbcType=VARCHAR}
+                </if>
+            </where>
+
         </foreach>
     </update>
 

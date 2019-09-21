@@ -26,7 +26,7 @@ public class DataFileServiceImpl implements IDataFileService {
 
     @Override
     public DataFile findById(Long id) {
-        return  dataFileMapper.selectById(id);
+        return dataFileMapper.selectById(id);
     }
 
     @Override
@@ -116,6 +116,17 @@ public class DataFileServiceImpl implements IDataFileService {
             return RespVOBuilder.success();
         }
         return RespVOBuilder.failure("删除失败");
+    }
+
+    @Override
+    public RespVO selectBybatchNums(List<String> batchNums) {
+        QueryWrapper<DataFile> wrapper = Wrappers.query();
+        if (CollectionUtils.isEmpty(batchNums)) {
+            return RespVOBuilder.failure("批次号为空");
+        }
+        wrapper.in("batch_num", batchNums);
+        List<DataFile> dataFiles = dataFileMapper.selectList(wrapper);
+        return RespVOBuilder.success(dataFiles);
     }
 
 
