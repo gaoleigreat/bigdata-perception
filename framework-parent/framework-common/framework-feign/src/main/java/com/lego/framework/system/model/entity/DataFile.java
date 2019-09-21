@@ -1,10 +1,8 @@
 package com.lego.framework.system.model.entity;
 
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.lego.framework.config.BaseModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,8 +14,6 @@ import java.util.Date;
  * @since 2019/8/26
  **/
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @TableName("tpl_data_file")
 public class DataFile extends BaseModel {
 
@@ -110,4 +106,6 @@ public class DataFile extends BaseModel {
         super.setUpdateInfo();
     }
 
+    public DataFile() {
+    }
 }
