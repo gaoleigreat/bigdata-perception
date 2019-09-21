@@ -16,6 +16,8 @@ import java.util.Date;
  * @since 2019/8/26
  **/
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @TableName("tpl_data_file")
 public class DataFile extends BaseModel {
 
@@ -72,6 +74,11 @@ public class DataFile extends BaseModel {
     @ApiModelProperty("文件标签")
     private String tags;
 
+
+    @ApiModelProperty("批次号")
+    private String batchNum;
+
+
     /**
      * @param name
      * @param fileType
@@ -103,7 +110,4 @@ public class DataFile extends BaseModel {
         super.setUpdateInfo();
     }
 
-    public DataFile() {
-
-    }
 }

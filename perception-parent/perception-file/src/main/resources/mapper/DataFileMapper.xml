@@ -11,6 +11,7 @@
 		previewUrl as preview_url,
 		remark as remark,
 		tags as tags,
+		batch_num as batchNum,
 		creation_date as creationDate,
 		created_by as createdBy,
 		last_update_date as lastUpdateDate,
@@ -47,6 +48,9 @@
         <if test="tag!=null">
             and find_in_set(#{tags,jdbcType=VARCHAR},tags)
         </if>
+        <if test="batchNum!=null">
+            and batch_num =#{batchNum,jdbcType=VARCHAR}
+        </if>
 
     </sql>
 
@@ -69,7 +73,8 @@
         file_url,
         preview_url,
         remark,
-        tags
+        tags,
+        batch_num,
         creation_date,
         created_by,
         last_updated_by)
@@ -84,6 +89,7 @@
             #{item.previewUrl, jdbcType=VARCHAR},
             #{item.remark, jdbcType=VARCHAR},
             #{item.tags, jdbcType=VARCHAR},
+            #{item.batchNum, jdbcType=VARCHAR},
             #{item.creationDate, jdbcType=TIMESTAMP},
             #{item.createdBy, jdbcType=VARCHAR},
             #{item.lastUpdatedBy, jdbcType=TIMESTAMP}
@@ -104,8 +110,8 @@
                 preview_url = #{item.previewUrl, jdbcType=VARCHAR},
                 remark = #{item.remark, jdbcType=VARCHAR},
                 tags = #{item.tags, jdbcType=VARCHAR},
+                batch_num =#{item.batchNum,jdbcType=VARCHAR},
                 last_updated_by = #{item.lastUpdatedBy, jdbcType=VARCHAR}
-
             </set>
             where id = #{item.id, jdbcType=BIGINT};
         </foreach>
