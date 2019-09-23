@@ -172,11 +172,11 @@ public class DataFileController {
 
     @ApiOperation(value = "通过批次号查询", notes = "通过批次号查询")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "batchNums", value = "批次号，", paramType = "query", required = true, dataType = "String")
+            @ApiImplicitParam(name = "batchNums", value = "批次号，", paramType = "query", allowMultiple = true, required = true, dataType = "String")
     })
-    @GetMapping(value = "/selectByBatchNums")
+    @RequestMapping(value = "/selectByBatchNums", method = RequestMethod.GET)
     @Operation(value = "select", desc = "通过批次号查询")
-    public RespVO selectByBatchNums(@RequestBody List<String> batchNums) {
+    public RespVO selectByBatchNums(@RequestParam(value = "bathNums") List<String> batchNums) {
         return dataFileService.selectBybatchNums(batchNums);
     }
 

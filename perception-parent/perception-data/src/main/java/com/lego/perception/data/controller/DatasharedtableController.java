@@ -10,7 +10,6 @@ import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
 import com.lego.framework.data.model.entity.LocalSharedData;
 import com.lego.framework.data.model.entity.RemoteSharedData;
-import com.lego.framework.data.model.entity.ShareData;
 import com.lego.framework.file.feign.FileClient;
 import com.lego.framework.system.model.entity.DataFile;
 import com.lego.framework.template.feign.TemplateFeignClient;
@@ -115,12 +114,15 @@ public class DatasharedtableController {
 
 
     @ApiOperation(value = "共享数据", httpMethod = "POST")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "batchNums", value = "批次号", paramType = "query", allowMultiple = true, required = true, dataType = "String"),
+    })
     @RequestMapping(value = "/shareData", method = RequestMethod.POST)
     @Operation(value = "shareData", desc = "共享数据")
-    public RespVO shareData(@RequestBody List<String> batchNums) {
+    public RespVO shareData(@RequestParam List<String> batchNums) {
         //  获取所属数据源
         RespVO<RespDataVO<DataFile>> respDataVORespVO = fileClient.selectByBatchNums(batchNums);
-        if(respDataVORespVO.getRetCode()!=RespConsts.SUCCESS_RESULT_CODE){
+        if (respDataVORespVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
             return RespVOBuilder.failure();
         }
         List<DataFile> dataFiles = respDataVORespVO.getInfo().getList();
@@ -159,6 +161,13 @@ public class DatasharedtableController {
             String templateName = info.getTemplateName();
             String remark = dataFile.getRemark();
             RemoteSharedData remoteSharedData = getShareData(dataType, remark, templateName, sourcesType);
+            if ("文件夹类型".equals(dataType)) {
+                remoteSharedData.setSchema(dataFile.getFileUrl());
+            }
+            List<RemoteSharedData> remoteList = iRemoteShareDataService.queryRemoteList(remoteSharedData);
+            if (!CollectionUtils.isEmpty(remoteList)) {
+                continue;
+            }
             remoteSharedDataList.add(remoteSharedData);
             LocalSharedData localSharedData = remoteSharedData.remote2LocalSharedData();
             localSharedData.setBatchNum(batchNum);
@@ -187,7 +196,7 @@ public class DatasharedtableController {
         remoteSharedData.setType(dataType);
         remoteSharedData.setSharedtime(new Date());
         if (sourcesType == null) {
-            getDbProperties(remoteSharedData, hdfsProperties.getSchema(), hdfsProperties.getServerIp(), hdfsProperties.getServerPort(), hdfsProperties.getServerType(), hdfsProperties.getPw(), hdfsProperties.getUsername());
+            getDbProperties(remoteSharedData, null, hdfsProperties.getServerIp(), hdfsProperties.getServerPort(), hdfsProperties.getServerType(), hdfsProperties.getPw(), hdfsProperties.getUsername());
         } else if (sourcesType == 0) {
             getDbProperties(remoteSharedData, mysqlProperties.getSchema(), mysqlProperties.getServerIp(), mysqlProperties.getServerPort(), mysqlProperties.getServerType(), mysqlProperties.getPw(), mysqlProperties.getUsername());
         } else {

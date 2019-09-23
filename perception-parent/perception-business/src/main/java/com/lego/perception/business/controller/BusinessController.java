@@ -85,7 +85,10 @@ public class BusinessController {
     @RequestMapping(value = "/delete_by_id", method = RequestMethod.DELETE)
     public RespVO deleteByPrimaryKey(Long id) {
         Integer num = iBusinessService.deleteByPrimaryKey(id);
-        return RespVOBuilder.success();
+        if (num > 0) {
+            return RespVOBuilder.success();
+        }
+        return RespVOBuilder.failure();
     }
 
     /**
@@ -143,7 +146,10 @@ public class BusinessController {
     @RequestMapping(value = "/update_tplBusiness", method = RequestMethod.PUT)
     public RespVO updateByPrimaryKeySelective(Business business) {
         Integer num = iBusinessService.updateByPrimaryKeySelective(business);
-        return RespVOBuilder.success();
+        if (num > 0) {
+            return RespVOBuilder.success();
+        }
+        return RespVOBuilder.failure();
     }
 
 

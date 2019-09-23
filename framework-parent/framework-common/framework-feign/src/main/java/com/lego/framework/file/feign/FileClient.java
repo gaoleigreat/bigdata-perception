@@ -27,13 +27,13 @@ public interface FileClient {
 
     @PostMapping(value = "/uploads", headers = "content-type=multipart/form-data")
     RespVO<RespDataVO<DataFile>> uploads(@RequestParam(value = "files", required = true) MultipartFile[] files,
-                                         @RequestParam(value = "projectId", required = true) Long projectId,
-                                         @RequestParam(value = "templateId", required = true) Long templateId,
+                                         @RequestParam(value = "projectId", required = false) Long projectId,
+                                         @RequestParam(value = "templateId", required = false) Long templateId,
                                          @RequestParam(value = "sourceType", required = true) int sourceType,
                                          @RequestParam(value = "remark", required = false) String remark,
                                          @RequestParam(value = "tags", required = false) String tags);
 
-    @GetMapping(value = "/selectByBatchNums")
+    @RequestMapping(value = "/selectByBatchNums", method = RequestMethod.GET)
     RespVO<RespDataVO<DataFile>> selectByBatchNums(@RequestParam(value = "bathNums") List<String> bathNums);
 }
 
@@ -43,12 +43,12 @@ class FileClientFallback implements FileClient {
 
     @Override
     public RespVO<RespDataVO<DataFile>> uploads(MultipartFile[] files, Long projectId, Long templateId, int sourceType, String remark, String tags) {
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "file-system服务不可用");
+        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "file服务不可用");
     }
 
     @Override
     public RespVO<RespDataVO<DataFile>> selectByBatchNums(List<String> bathNums) {
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "file-system服务不可用");
+        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "file服务不可用");
     }
 }
 
