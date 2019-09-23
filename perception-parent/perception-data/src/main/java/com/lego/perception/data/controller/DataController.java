@@ -104,7 +104,10 @@ public class DataController {
             });
 
         });
-        return RespVOBuilder.success(dataFileSet);
+        if (dataFileSet.size() != files.length){
+            return RespVOBuilder.failure("上传文件失败");
+        }
+        return RespVOBuilder.success(uploads.getInfo().getList().get(0).getBatchNum());
 
     }
 
@@ -126,7 +129,13 @@ public class DataController {
             return RespVOBuilder.failure("上传文件有误");
         }
         RespVO<RespDataVO<DataFile>> uploads = fileClient.uploads(files, projectId, null, -1,remark,tags);
-        return uploads;
+       if (uploads.getRetCode() !=1){
+           return RespVOBuilder.failure("上传文件失败");
+       }
+       if (uploads.getInfo().getList().size() <=0 ){
+           return RespVOBuilder.failure("上传文件失败");
+       }
+        return RespVOBuilder.success(uploads.getInfo().getList().get(0).getBatchNum());
 
     }
 

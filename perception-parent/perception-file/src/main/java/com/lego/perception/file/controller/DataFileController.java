@@ -48,7 +48,7 @@ public class DataFileController {
 
     })
     @PostMapping(value = "/uploads", headers = "content-type=multipart/form-data")
-    public RespVO<RespDataVO<DataFile>> uploads(@RequestParam(value = "files", required = true) MultipartFile[] files,
+    public RespVO uploads(@RequestParam(value = "files", required = true) MultipartFile[] files,
                                                 @RequestParam(value = "projectId", required = true) Long projectId,
                                                 @RequestParam(value = "templateId", required = true) Long templateId,
                                                 @RequestParam(value = "sourceType", required = true) int sourceType,
