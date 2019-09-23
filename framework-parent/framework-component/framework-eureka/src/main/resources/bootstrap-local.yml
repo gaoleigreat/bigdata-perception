@@ -23,6 +23,6 @@ eureka:
     fetch-registry: false
     register-with-eureka: false
     service-url:
-      defaultZone: http://${spring.security.user.name}:${spring.security.user.password}@192.168.101.52:48010/eureka/
+      defaultZone: http://${spring.security.user.name}:${spring.security.user.password}@192.168.101.52:18010/eureka/
     #backup-registry-impl: BackupServerRegistry
     #filter-only-up-instances: true

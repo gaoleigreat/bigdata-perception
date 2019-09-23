@@ -99,7 +99,7 @@
       数据库表的基本查询列名集合
     -->
     <sql id="Base_Column_List">
-        sharedtime, `type`, `name`, `schema`, `desc`, server_type, server_ip, server_port, username, pw,batch_num
+        sharedtime, `type`, `name`, `schema`, `desc`, server_type, server_ip, server_port, username, pw,batch_num,id
     </sql>
 
     <!--

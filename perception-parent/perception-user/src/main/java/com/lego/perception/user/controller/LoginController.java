@@ -9,10 +9,12 @@ import com.framework.common.sdto.HeaderVo;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.framework.common.sdto.TokenVo;
+import com.framework.common.utils.HttpUtils;
 import com.lego.framework.auth.feign.AuthClient;
 import com.lego.framework.base.annotation.Resource;
 import com.lego.framework.base.utils.HeaderUtils;
 import com.lego.framework.base.utils.SecurityUtils;
+import com.lego.framework.event.log.LogSender;
 import com.lego.framework.sso.SsoClient;
 import com.lego.framework.system.feign.UserClient;
 import com.lego.framework.system.model.entity.User;
@@ -26,7 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,6 +35,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -44,7 +46,7 @@ import java.util.UUID;
 @Validated
 @Controller
 @RequestMapping(DictConstant.Path.USER)
-@Api(value = "UserController", description = "用户管理")
+@Api(value = "LoginController", description = "用户管理")
 @Resource(value = "user", desc = "用户管理")
 @Slf4j
 public class LoginController {
@@ -57,6 +59,9 @@ public class LoginController {
 
     @Autowired
     private UserClient userClient;
+
+    @Autowired
+    private LogSender logSender;
 
 
     @ApiOperation(value = "用户登录", httpMethod = "POST", notes = "用户登录")
@@ -130,7 +135,8 @@ public class LoginController {
     @RequestMapping(value = {"/mock_login"}, method = RequestMethod.POST)
     @ResponseBody
     public RespVO mockLogin(@NotBlank(message = "用户名不能为空") @RequestParam String userName,
-                            @NotBlank(message = "密码不能为空") @Size(min = 6, max = 32, message = "密码长度为6-23位") @RequestParam String password) throws IOException {
+                            @NotBlank(message = "密码不能为空") @Size(min = 6, max = 32, message = "密码长度为6-23位") @RequestParam String password,
+                            HttpServletRequest request) throws IOException {
         User user = new User();
         user.setPassword(SecurityUtils.encryptionWithMd5(password));
         user.setUsername(userName);
@@ -146,6 +152,7 @@ public class LoginController {
         if (tokenVo.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
             return RespVOBuilder.failure("登录失败");
         }
+        logSender.sendLogEvent(HttpUtils.getClientIp(request),1L,"用户登录","user login","user-service","LOGIN","BUSINESS",new Date(),"admin",1L);
         return tokenVo;
     }
 

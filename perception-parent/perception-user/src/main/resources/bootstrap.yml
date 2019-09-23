@@ -7,6 +7,12 @@ spring:
     name: user-service
   profiles:
     active: local
+  cloud:
+    stream:
+      bindings:
+        output_log:
+          destination: printLog
+          content-type: application/json
 
 
 application:
