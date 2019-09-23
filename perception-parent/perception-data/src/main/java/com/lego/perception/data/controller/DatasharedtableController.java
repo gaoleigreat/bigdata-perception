@@ -10,7 +10,6 @@ import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
 import com.lego.framework.data.model.entity.LocalSharedData;
 import com.lego.framework.data.model.entity.RemoteSharedData;
-import com.lego.framework.data.model.entity.ShareData;
 import com.lego.framework.file.feign.FileClient;
 import com.lego.framework.system.model.entity.DataFile;
 import com.lego.framework.template.feign.TemplateFeignClient;
@@ -164,6 +163,10 @@ public class DatasharedtableController {
             RemoteSharedData remoteSharedData = getShareData(dataType, remark, templateName, sourcesType);
             if ("文件夹类型".equals(dataType)) {
                 remoteSharedData.setSchema(dataFile.getFileUrl());
+            }
+            List<RemoteSharedData> remoteList = iRemoteShareDataService.queryRemoteList(remoteSharedData);
+            if (!CollectionUtils.isEmpty(remoteList)) {
+                continue;
             }
             remoteSharedDataList.add(remoteSharedData);
             LocalSharedData localSharedData = remoteSharedData.remote2LocalSharedData();

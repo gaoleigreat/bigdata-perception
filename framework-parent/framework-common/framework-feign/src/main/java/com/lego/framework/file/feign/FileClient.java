@@ -43,12 +43,12 @@ class FileClientFallback implements FileClient {
 
     @Override
     public RespVO<RespDataVO<DataFile>> uploads(MultipartFile[] files, Long projectId, Long templateId, int sourceType, String remark, String tags) {
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "file-system服务不可用");
+        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "file服务不可用");
     }
 
     @Override
     public RespVO<RespDataVO<DataFile>> selectByBatchNums(List<String> bathNums) {
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "file-system服务不可用");
+        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "file服务不可用");
     }
 }
 

@@ -41,7 +41,7 @@ public class MySqlBusinessServiceImpl implements IBusinessService {
         if (CollectionUtils.isEmpty(list)) {
             return RespVOBuilder.failure("字段不能为空");
         }
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(" id BIGINT NOT NULL PRIMARY KEY UNIQUE AUTO_INCREMENT COMMENT 'ID', ");
         for (FormTemplateItem templateItem : list) {
             // 字段名称
             String field = templateItem.getField();
@@ -60,6 +60,7 @@ public class MySqlBusinessServiceImpl implements IBusinessService {
             sb.append(TableUtils.getComment(title));
             sb.append(",");
         }
+        sb.append(" file_id BIGINT NOT NULL COMMENT '文件id '");
         sb.replace(sb.length() - 1, sb.length(), "");
         businessMapper.createBusinessTable(tableName, sb.toString());
         Integer existTable = businessMapper.existTable(tableName);
