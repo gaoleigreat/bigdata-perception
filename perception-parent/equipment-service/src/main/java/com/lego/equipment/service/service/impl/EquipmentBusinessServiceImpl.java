@@ -5,9 +5,12 @@ import com.framework.common.page.PagedResult;
 import com.framework.mybatis.utils.PageUtil;
 import com.lego.equipment.service.mapper.EquipmentBusinessMapper;
 import com.lego.equipment.service.service.EquipmentBusinessService;
+import com.lego.framework.config.BaseModel;
 import com.lego.framework.equipment.model.entity.EquipmentBusiness;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
 import java.util.List;
 
 /**
@@ -41,36 +44,53 @@ public class EquipmentBusinessServiceImpl implements EquipmentBusinessService {
 
     @Override
     public Integer insert(EquipmentBusiness equipmentBusiness) {
+        equipmentBusiness.setCreateInfo();
+        equipmentBusiness.setUpdateInfo();
         return equipmentBusinessMapper.insert(equipmentBusiness);
     }
 
     @Override
     public Integer insertSelective(EquipmentBusiness equipmentBusiness) {
+        equipmentBusiness.setCreateInfo();
+        equipmentBusiness.setUpdateInfo();
         return equipmentBusinessMapper.insertSelective(equipmentBusiness);
     }
 
     @Override
     public Integer insertSelectiveIgnore(EquipmentBusiness equipmentBusiness) {
+        equipmentBusiness.setCreateInfo();
+        equipmentBusiness.setUpdateInfo();
         return equipmentBusinessMapper.insertSelectiveIgnore(equipmentBusiness);
     }
 
     @Override
     public Integer updateByPrimaryKeySelective(EquipmentBusiness equipmentBusiness) {
+        equipmentBusiness.setUpdateInfo();
         return equipmentBusinessMapper.updateByPrimaryKeySelective(equipmentBusiness);
     }
 
     @Override
     public Integer updateByPrimaryKey(EquipmentBusiness equipmentBusiness) {
+        equipmentBusiness.setUpdateInfo();
         return equipmentBusinessMapper.updateByPrimaryKey(equipmentBusiness);
     }
 
     @Override
     public Integer batchInsert(List<EquipmentBusiness> list) {
+        if (!CollectionUtils.isEmpty(list)) {
+            list.forEach(l -> {
+                l.setCreateInfo();
+                l.setUpdateInfo();
+            });
+        }
         return equipmentBusinessMapper.batchInsert(list);
     }
 
     @Override
     public Integer batchUpdate(List<EquipmentBusiness> list) {
+        if (!CollectionUtils.isEmpty(list)) {
+            list.forEach(BaseModel::setUpdateInfo);
+        }
         return equipmentBusinessMapper.batchUpdate(list);
     }
 

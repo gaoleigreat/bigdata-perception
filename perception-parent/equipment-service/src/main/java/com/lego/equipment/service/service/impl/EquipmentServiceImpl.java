@@ -5,9 +5,11 @@ import com.framework.common.page.PagedResult;
 import com.framework.mybatis.utils.PageUtil;
 import com.lego.equipment.service.mapper.EquipmentMapper;
 import com.lego.equipment.service.service.IEquipmentService;
+import com.lego.framework.config.BaseModel;
 import com.lego.framework.equipment.model.entity.Equipment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -20,7 +22,6 @@ import java.util.List;
  */
 @Service
 public class EquipmentServiceImpl implements IEquipmentService {
-    /*<AUTOGEN--BEGIN>*/
 
     @Autowired
     public EquipmentMapper equipmentMapper;
@@ -28,7 +29,7 @@ public class EquipmentServiceImpl implements IEquipmentService {
 
     @Override
     public PagedResult<Equipment> selectPaged(Equipment equipment, Page page) {
-        return PageUtil.queryPaged(page,equipment,equipmentMapper);
+        return PageUtil.queryPaged(page, equipment, equipmentMapper);
     }
 
     @Override
@@ -43,36 +44,53 @@ public class EquipmentServiceImpl implements IEquipmentService {
 
     @Override
     public Integer insert(Equipment tplEquipment) {
+        tplEquipment.setCreateInfo();
+        tplEquipment.setUpdateInfo();
         return equipmentMapper.insert(tplEquipment);
     }
 
     @Override
     public Integer insertSelective(Equipment equipment) {
+        equipment.setCreateInfo();
+        equipment.setUpdateInfo();
         return equipmentMapper.insertSelective(equipment);
     }
 
     @Override
     public Integer insertSelectiveIgnore(Equipment tplEquipment) {
+        tplEquipment.setCreateInfo();
+        tplEquipment.setUpdateInfo();
         return equipmentMapper.insertSelectiveIgnore(tplEquipment);
     }
 
     @Override
     public Integer updateByPrimaryKeySelective(Equipment tplEquipment) {
+        tplEquipment.setUpdateInfo();
         return equipmentMapper.updateByPrimaryKeySelective(tplEquipment);
     }
 
     @Override
     public Integer updateByPrimaryKey(Equipment tplEquipment) {
+        tplEquipment.setUpdateInfo();
         return equipmentMapper.updateByPrimaryKey(tplEquipment);
     }
 
     @Override
     public Integer batchInsert(List<Equipment> list) {
+        if (!CollectionUtils.isEmpty(list)) {
+            list.forEach(l -> {
+                l.setCreateInfo();
+                l.setUpdateInfo();
+            });
+        }
         return equipmentMapper.batchInsert(list);
     }
 
     @Override
     public Integer batchUpdate(List<Equipment> list) {
+        if (!CollectionUtils.isEmpty(list)) {
+            list.forEach(BaseModel::setUpdateInfo);
+        }
         return equipmentMapper.batchUpdate(list);
     }
 
