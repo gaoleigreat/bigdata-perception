@@ -77,7 +77,11 @@ public class EquipmentBusinessController {
     @RequestMapping(value = "/delete_by_id",method = RequestMethod.DELETE)
     public RespVO deleteByPrimaryKey(Long id) {
         Integer num = equipmentBusinessService.deleteByPrimaryKey(id);
-        return RespVOBuilder.success();
+        if(num>0){
+            return RespVOBuilder.success();
+        }
+        return RespVOBuilder.failure();
+
     }
 
     /**
@@ -92,7 +96,10 @@ public class EquipmentBusinessController {
     @RequestMapping(value = "/save_equipmentBusiness", method = RequestMethod.POST)
     public RespVO insert(@RequestBody EquipmentBusiness equipmentBusiness) {
         Integer num = equipmentBusinessService.insertSelective(equipmentBusiness);
-        return RespVOBuilder.success();
+        if(num>0){
+            return RespVOBuilder.success();
+        }
+        return RespVOBuilder.failure();
     }
 
     /**
@@ -108,7 +115,10 @@ public class EquipmentBusinessController {
     @RequestMapping(value = "/update_equipmentBusiness",method = RequestMethod.PUT)
     public RespVO updateByPrimaryKeySelective(@RequestBody EquipmentBusiness equipmentBusiness) {
         Integer num = equipmentBusinessService.updateByPrimaryKeySelective(equipmentBusiness);
-        return RespVOBuilder.success();
+        if(num>0){
+            return RespVOBuilder.success();
+        }
+        return RespVOBuilder.failure();
     }
 
 

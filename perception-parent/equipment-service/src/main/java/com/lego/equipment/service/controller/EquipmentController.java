@@ -25,10 +25,10 @@ import java.util.List;
  * @date 2019-09-24 07:43:07
  * @since jdk 1.8
  */
-@Api(value = "tplequipment", description = "设备管理")
+@Api(value = "equipment", description = "设备管理")
 @RestController
-@RequestMapping("/tplequipment")
-@Resource(value = "tplequipment", desc = "设备管理")
+@RequestMapping("/equipment")
+@Resource(value = "equipment", desc = "设备管理")
 public class EquipmentController {
 
 
@@ -79,7 +79,10 @@ public class EquipmentController {
     @RequestMapping(value = "/delete_by_id", method = RequestMethod.DELETE)
     public RespVO<Integer> deleteByPrimaryKey(Long id) {
         Integer num = iEquipmentService.deleteByPrimaryKey(id);
-        return RespVOBuilder.success();
+        if(num>0){
+            return RespVOBuilder.success();
+        }
+        return RespVOBuilder.failure();
     }
 
     /**
@@ -94,7 +97,10 @@ public class EquipmentController {
     @RequestMapping(value = "/save_tplEquipment", method = RequestMethod.POST)
     public RespVO<Integer> insert(@RequestBody Equipment tplEquipment) {
         Integer num = iEquipmentService.insertSelective(tplEquipment);
-        return RespVOBuilder.success();
+        if(num>0){
+            return RespVOBuilder.success();
+        }
+        return RespVOBuilder.failure();
     }
 
     /**
@@ -110,7 +116,10 @@ public class EquipmentController {
     @RequestMapping(value = "/update_tplEquipment", method = RequestMethod.PUT)
     public RespVO<Integer> updateByPrimaryKeySelective(@RequestBody Equipment tplEquipment) {
         Integer num = iEquipmentService.updateByPrimaryKeySelective(tplEquipment);
-        return RespVOBuilder.success();
+        if(num>0){
+            return RespVOBuilder.success();
+        }
+        return RespVOBuilder.failure();
     }
 
 
