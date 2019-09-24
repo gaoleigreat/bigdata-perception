@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.lego.equipment.service.mapper.EquipmentMapper">
+<mapper namespace="com.lego.equipment.service.mapper.EquipmentBusinessMapper">
+
     <!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="com.lego.framework.equipment.model.entity.Equipment" id="BaseResultMap">
+    <resultMap type="com.lego.framework.equipment.model.entity.EquipmentBusiness" id="BaseResultMap">
         <result property="id" column="id"/>
-        <result property="name" column="name"/>
-        <result property="code" column="code"/>
-        <result property="description" column="description"/>
-        <result property="type" column="type"/>
+        <result property="equipmentId" column="equipment_id"/>
+        <result property="businessId" column="business_id"/>
+        <result property="operationType" column="operation_type"/>
         <result property="creationDate" column="creation_date"/>
         <result property="createdBy" column="created_by"/>
         <result property="lastUpdateDate" column="last_update_date"/>
@@ -23,17 +23,14 @@
             <if test="id != null">
                 id,
             </if>
-            <if test="name != null">
-                name,
+            <if test="equipmentId != null">
+                equipment_id,
             </if>
-            <if test="code != null">
-                code,
+            <if test="businessId != null">
+                business_id,
             </if>
-            <if test="description != null">
-                description,
-            </if>
-            <if test="type != null">
-                type,
+            <if test="operationType != null">
+                operation_type,
             </if>
             <if test="creationDate != null">
                 creation_date,
@@ -52,17 +49,14 @@
             <if test="id != null">
                 #{id,jdbcType=BIGINT},
             </if>
-            <if test="name != null">
-                #{name,jdbcType=VARCHAR},
+            <if test="equipmentId != null">
+                #{equipmentId,jdbcType=BIGINT},
             </if>
-            <if test="code != null">
-                #{code,jdbcType=VARCHAR},
+            <if test="businessId != null">
+                #{businessId,jdbcType=BIGINT},
             </if>
-            <if test="description != null">
-                #{description,jdbcType=VARCHAR},
-            </if>
-            <if test="type != null">
-                #{type,jdbcType=VARCHAR},
+            <if test="operationType != null">
+                #{operationType,jdbcType=VARCHAR},
             </if>
             <if test="creationDate != null">
                 #{creationDate,jdbcType=TIMESTAMP},
@@ -83,7 +77,7 @@
       数据库表的基本查询列名集合
     -->
     <sql id="Base_Column_List">
-        id, name, code, description, type, creation_date, created_by, last_update_date, last_updated_by
+        id, equipment_id, business_id, operation_type, creation_date, created_by, last_update_date, last_updated_by
     </sql>
 
     <!--
@@ -93,17 +87,14 @@
         <if test="id != null">
             and id = #{id,jdbcType=BIGINT}
         </if>
-        <if test="name != null">
-            and name = #{name,jdbcType=VARCHAR}
+        <if test="equipmentId != null">
+            and equipment_id = #{equipmentId,jdbcType=BIGINT}
         </if>
-        <if test="code != null">
-            and code = #{code,jdbcType=VARCHAR}
+        <if test="businessId != null">
+            and business_id = #{businessId,jdbcType=BIGINT}
         </if>
-        <if test="description != null">
-            and description = #{description,jdbcType=VARCHAR}
-        </if>
-        <if test="type != null">
-            and type = #{type,jdbcType=VARCHAR}
+        <if test="operationType != null">
+            and operation_type = #{operationType,jdbcType=VARCHAR}
         </if>
         <if test="creationDate != null">
             and creation_date = #{creationDate,jdbcType=TIMESTAMP}
@@ -127,17 +118,14 @@
             <if test="id != null">
                 id = #{id,jdbcType=BIGINT},
             </if>
-            <if test="name != null">
-                name = #{name,jdbcType=VARCHAR},
+            <if test="equipmentId != null">
+                equipment_id = #{equipmentId,jdbcType=BIGINT},
             </if>
-            <if test="code != null">
-                code = #{code,jdbcType=VARCHAR},
+            <if test="businessId != null">
+                business_id = #{businessId,jdbcType=BIGINT},
             </if>
-            <if test="description != null">
-                description = #{description,jdbcType=VARCHAR},
-            </if>
-            <if test="type != null">
-                type = #{type,jdbcType=VARCHAR},
+            <if test="operationType != null">
+                operation_type = #{operationType,jdbcType=VARCHAR},
             </if>
             <if test="creationDate != null">
                 creation_date = #{creationDate,jdbcType=TIMESTAMP},
@@ -160,7 +148,7 @@
     <select id="selectPaged" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from tpl_equipment
+        from tpl_equipment_business
     </select>
 
     <!--
@@ -169,7 +157,7 @@
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from tpl_equipment
+        from tpl_equipment_business
         where id = #{id,jdbcType=BIGINT}
     </select>
 
@@ -178,7 +166,7 @@
       根据主键删除数据库表中的记录
     -->
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-        delete FROM tpl_equipment
+        delete FROM tpl_equipment_business
         where id = #{id,jdbcType=BIGINT}
     </delete>
 
@@ -186,24 +174,21 @@
       添加一条记录到数据库表中
     -->
     <insert id="insert" useGeneratedKeys="true" keyProperty="id"
-            parameterType="com.lego.framework.equipment.model.entity.Equipment">
-        insert into tpl_equipment
+            parameterType="com.lego.framework.equipment.model.entity.EquipmentBusiness">
+        insert into tpl_equipment_business
         (<include refid="Base_Column_List"/>)
         values (
         <if test="id != null">
             #{id,jdbcType=BIGINT},
         </if>
-        <if test="name != null">
-            #{name,jdbcType=VARCHAR},
+        <if test="equipmentId != null">
+            #{equipmentId,jdbcType=BIGINT},
         </if>
-        <if test="code != null">
-            #{code,jdbcType=VARCHAR},
+        <if test="businessId != null">
+            #{businessId,jdbcType=BIGINT},
         </if>
-        <if test="description != null">
-            #{description,jdbcType=VARCHAR},
-        </if>
-        <if test="type != null">
-            #{type,jdbcType=VARCHAR},
+        <if test="operationType != null">
+            #{operationType,jdbcType=VARCHAR},
         </if>
         <if test="creationDate != null">
             #{creationDate,jdbcType=TIMESTAMP},
@@ -224,8 +209,8 @@
      有选择的添加一条记录到数据库表中
    -->
     <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id"
-            parameterType="com.lego.framework.equipment.model.entity.Equipment">
-        insert into tpl_equipment
+            parameterType="com.lego.framework.equipment.model.entity.EquipmentBusiness">
+        insert into tpl_equipment_business
         <include refid="Base_Insert_Selective"/>
     </insert>
 
@@ -233,16 +218,16 @@
       有选择的可忽略添加一条记录到数据库表中
     -->
     <insert id="insertSelectiveIgnore" useGeneratedKeys="true" keyProperty="id"
-            parameterType="com.lego.framework.equipment.model.entity.Equipment">
-        insert ignore into tpl_equipment
+            parameterType="com.lego.framework.equipment.model.entity.EquipmentBusiness">
+        insert ignore into tpl_equipment_business
         <include refid="Base_Insert_Selective"/>
     </insert>
 
     <!--
       根据主键有选择的更新数据库表
     -->
-    <update id="updateByPrimaryKeySelective" parameterType="com.lego.framework.equipment.model.entity.Equipment">
-        update tpl_equipment
+    <update id="updateByPrimaryKeySelective" parameterType="com.lego.framework.equipment.model.entity.EquipmentBusiness">
+        update tpl_equipment_business
         <include refid="Base_Update_Column"></include>
         where id = #{id,jdbcType=BIGINT}
     </update>
@@ -251,23 +236,20 @@
     <!--
       根据主键更新数据库表
     -->
-    <update id="updateByPrimaryKey" parameterType="com.lego.framework.equipment.model.entity.Equipment">
-        update tpl_equipment
+    <update id="updateByPrimaryKey" parameterType="com.lego.framework.equipment.model.entity.EquipmentBusiness">
+        update tpl_equipment_business
         <set>
             <if test="id != null">
                 id = #{id,jdbcType=BIGINT},
             </if>
-            <if test="name != null">
-                name = #{name,jdbcType=VARCHAR},
+            <if test="equipmentId != null">
+                equipment_id = #{equipmentId,jdbcType=BIGINT},
             </if>
-            <if test="code != null">
-                code = #{code,jdbcType=VARCHAR},
+            <if test="businessId != null">
+                business_id = #{businessId,jdbcType=BIGINT},
             </if>
-            <if test="description != null">
-                description = #{description,jdbcType=VARCHAR},
-            </if>
-            <if test="type != null">
-                type = #{type,jdbcType=VARCHAR},
+            <if test="operationType != null">
+                operation_type = #{operationType,jdbcType=VARCHAR},
             </if>
             <if test="creationDate != null">
                 creation_date = #{creationDate,jdbcType=TIMESTAMP},
@@ -289,17 +271,17 @@
       批量添加记录到数据库表中
     -->
     <insert id="batchInsert" parameterType="java.util.List">
-        insert into tpl_equipment
+        insert into tpl_equipment_business
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            id, name, code, description, type, creation_date, created_by, last_update_date, last_updated_by
+            id, equipment_id, business_id, operation_type, creation_date, created_by, last_update_date, last_updated_by
         </trim>
         values
         <foreach collection="list" index="index" item="item" separator=",">
             <trim prefix="(" suffix=")" suffixOverrides=",">
-                #{item.id,jdbcType=BIGINT}, #{item.name,jdbcType=VARCHAR}, #{item.code,jdbcType=VARCHAR},
-                #{item.description,jdbcType=VARCHAR}, #{item.type,jdbcType=VARCHAR},
-                #{item.creationDate,jdbcType=TIMESTAMP}, #{item.createdBy,jdbcType=BIGINT},
-                #{item.lastUpdateDate,jdbcType=TIMESTAMP}, #{item.lastUpdatedBy,jdbcType=BIGINT}
+                #{item.id,jdbcType=BIGINT}, #{item.equipmentId,jdbcType=BIGINT}, #{item.businessId,jdbcType=BIGINT},
+                #{item.operationType,jdbcType=VARCHAR}, #{item.creationDate,jdbcType=TIMESTAMP},
+                #{item.createdBy,jdbcType=BIGINT}, #{item.lastUpdateDate,jdbcType=TIMESTAMP},
+                #{item.lastUpdatedBy,jdbcType=BIGINT}
             </trim>
         </foreach>
     </insert>
@@ -309,23 +291,20 @@
     -->
     <update id="batchUpdate" parameterType="java.util.List">
         <foreach collection="list" index="index" item="item" separator=";">
-            update tpl_equipment
+            update tpl_equipment_business
             <set>
                 <trim suffixOverrides=",">
                     <if test="item.id != null">
                         id = #{item.id,jdbcType=BIGINT},
                     </if>
-                    <if test="item.name != null">
-                        name = #{item.name,jdbcType=VARCHAR},
+                    <if test="item.equipmentId != null">
+                        equipment_id = #{item.equipmentId,jdbcType=BIGINT},
                     </if>
-                    <if test="item.code != null">
-                        code = #{item.code,jdbcType=VARCHAR},
+                    <if test="item.businessId != null">
+                        business_id = #{item.businessId,jdbcType=BIGINT},
                     </if>
-                    <if test="item.description != null">
-                        description = #{item.description,jdbcType=VARCHAR},
-                    </if>
-                    <if test="item.type != null">
-                        type = #{item.type,jdbcType=VARCHAR},
+                    <if test="item.operationType != null">
+                        operation_type = #{item.operationType,jdbcType=VARCHAR},
                     </if>
                     <if test="item.creationDate != null">
                         creation_date = #{item.creationDate,jdbcType=TIMESTAMP},
@@ -343,7 +322,7 @@
             </set>
             <where>
                 <trim suffixOverrides=",">
-                    where id = #{id,jdbcType=BIGINT}
+                    where id = #{item.id,jdbcType=BIGINT}
                 </trim>
             </where>
         </foreach>
@@ -357,17 +336,14 @@
             <if test="item == 'id'">
                 id = #{id,jdbcType=BIGINT}
             </if>
-            <if test="item == 'name'">
-                name = #{name,jdbcType=VARCHAR}
+            <if test="item == 'equipmentId'">
+                equipment_id = #{equipmentId,jdbcType=BIGINT}
             </if>
-            <if test="item == 'code'">
-                code = #{code,jdbcType=VARCHAR}
+            <if test="item == 'businessId'">
+                business_id = #{businessId,jdbcType=BIGINT}
             </if>
-            <if test="item == 'description'">
-                description = #{description,jdbcType=VARCHAR}
-            </if>
-            <if test="item == 'type'">
-                type = #{type,jdbcType=VARCHAR}
+            <if test="item == 'operationType'">
+                operation_type = #{operationType,jdbcType=VARCHAR}
             </if>
             <if test="item == 'creationDate'">
                 creation_date = #{creationDate,jdbcType=TIMESTAMP}
@@ -387,21 +363,21 @@
     <!--
       存在即更新否则插入
     -->
-    <update id="upsert" parameterType="com.lego.framework.equipment.model.entity.Equipment">
-        insert into tpl_equipment
+    <update id="upsert" parameterType="com.lego.framework.equipment.model.entity.EquipmentBusiness">
+        insert into tpl_equipment_business
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            id, name, code, description, type, creation_date, created_by, last_update_date, last_updated_by
+            id, equipment_id, business_id, operation_type, creation_date, created_by, last_update_date, last_updated_by
         </trim>
         values
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            #{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR},
-            #{type,jdbcType=VARCHAR}, #{creationDate,jdbcType=TIMESTAMP}, #{createdBy,jdbcType=BIGINT},
+            #{id,jdbcType=BIGINT}, #{equipmentId,jdbcType=BIGINT}, #{businessId,jdbcType=BIGINT},
+            #{operationType,jdbcType=VARCHAR}, #{creationDate,jdbcType=TIMESTAMP}, #{createdBy,jdbcType=BIGINT},
             #{lastUpdateDate,jdbcType=TIMESTAMP}, #{lastUpdatedBy,jdbcType=BIGINT}
         </trim>
         on duplicate key update
         <trim suffixOverrides=",">
-            #{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR},
-            #{type,jdbcType=VARCHAR}, #{creationDate,jdbcType=TIMESTAMP}, #{createdBy,jdbcType=BIGINT},
+            #{id,jdbcType=BIGINT}, #{equipmentId,jdbcType=BIGINT}, #{businessId,jdbcType=BIGINT},
+            #{operationType,jdbcType=VARCHAR}, #{creationDate,jdbcType=TIMESTAMP}, #{createdBy,jdbcType=BIGINT},
             #{lastUpdateDate,jdbcType=TIMESTAMP}, #{lastUpdatedBy,jdbcType=BIGINT}
         </trim>
     </update>
@@ -410,23 +386,20 @@
     <!--
       带有空值检查的存在即更新否则插入
     -->
-    <update id="upsertSelective" parameterType="com.lego.framework.equipment.model.entity.Equipment">
-        insert into tpl_equipment
+    <update id="upsertSelective" parameterType="com.lego.framework.equipment.model.entity.EquipmentBusiness">
+        insert into tpl_equipment_business
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id !=null ">
                 id,
             </if>
-            <if test="name !=null ">
-                name,
+            <if test="equipmentId !=null ">
+                equipment_id,
             </if>
-            <if test="code !=null ">
-                code,
+            <if test="businessId !=null ">
+                business_id,
             </if>
-            <if test="description !=null ">
-                description,
-            </if>
-            <if test="type !=null ">
-                type,
+            <if test="operationType !=null ">
+                operation_type,
             </if>
             <if test="creationDate !=null ">
                 creation_date,
@@ -446,17 +419,14 @@
             <if test="id !=null ">
                 id = #{id,jdbcType=BIGINT},
             </if>
-            <if test="name !=null ">
-                name = #{name,jdbcType=VARCHAR},
+            <if test="equipmentId !=null ">
+                equipment_id = #{equipmentId,jdbcType=BIGINT},
             </if>
-            <if test="code !=null ">
-                code = #{code,jdbcType=VARCHAR},
+            <if test="businessId !=null ">
+                business_id = #{businessId,jdbcType=BIGINT},
             </if>
-            <if test="description !=null ">
-                description = #{description,jdbcType=VARCHAR},
-            </if>
-            <if test="type !=null ">
-                type = #{type,jdbcType=VARCHAR},
+            <if test="operationType !=null ">
+                operation_type = #{operationType,jdbcType=VARCHAR},
             </if>
             <if test="creationDate !=null ">
                 creation_date = #{creationDate,jdbcType=TIMESTAMP},
@@ -476,17 +446,14 @@
             <if test="id !=null ">
                 id = #{id,jdbcType=BIGINT},
             </if>
-            <if test="name !=null ">
-                name = #{name,jdbcType=VARCHAR},
+            <if test="equipmentId !=null ">
+                equipment_id = #{equipmentId,jdbcType=BIGINT},
             </if>
-            <if test="code !=null ">
-                code = #{code,jdbcType=VARCHAR},
+            <if test="businessId !=null ">
+                business_id = #{businessId,jdbcType=BIGINT},
             </if>
-            <if test="description !=null ">
-                description = #{description,jdbcType=VARCHAR},
-            </if>
-            <if test="type !=null ">
-                type = #{type,jdbcType=VARCHAR},
+            <if test="operationType !=null ">
+                operation_type = #{operationType,jdbcType=VARCHAR},
             </if>
             <if test="creationDate !=null ">
                 creation_date = #{creationDate,jdbcType=TIMESTAMP},
@@ -503,26 +470,25 @@
         </trim>
     </update>
 
-    <select id="query" resultMap="BaseResultMap" parameterType="com.lego.framework.equipment.model.entity.Equipment">
+    <select id="query" resultMap="BaseResultMap" parameterType="com.lego.framework.equipment.model.entity.EquipmentBusiness">
         select
         <include refid="Base_Column_List"/>
-        from tpl_equipment
+        from tpl_equipment_business
         <where>
             <include refid="Base_Query_Where"></include>
         </where>
     </select>
 
     <select id="queryTotal" resultType="long">
-        select count(*) from tpl_equipment
+        select count(*) from tpl_equipment_business
     </select>
 
 
     <delete id="deleteBatch">
-        delete from tpl_equipment where id in
+        delete from tpl_equipment_business where id in
         <foreach item="id" collection="list" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-
 
 </mapper>

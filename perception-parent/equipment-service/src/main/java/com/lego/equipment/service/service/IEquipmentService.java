@@ -1,26 +1,30 @@
-package com.lego.equipment.service.mapper;
-import com.framework.mybatis.mapper.Mapper;
+package com.lego.equipment.service.service;
+
+import com.framework.common.page.Page;
+import com.framework.common.page.PagedResult;
 import com.lego.framework.equipment.model.entity.Equipment;
-import org.springframework.stereotype.Repository;
+import org.apache.ibatis.session.RowBounds;
 
 import java.util.List;
 
 /**
- * @author : yanglf
- * @version : 1.0
- * @created IntelliJ IDEA.
- * @date : 2019/9/24 10:40
- * @desc :
+ * service层
+ *
+ * @author itar
+ * @email wuhandzy@gmail.com
+ * @date 2019-09-24 07:43:07
+ * @since jdk 1.8
  */
-@Repository
-public interface EquipmentMapper extends Mapper<Equipment> {
+public interface IEquipmentService {
+
+
+    PagedResult<Equipment> selectPaged(Equipment equipment, Page page);
 
     Equipment selectByPrimaryKey(Long id);
 
     Integer deleteByPrimaryKey(Long id);
 
-
-    int insert(Equipment tplEquipment);
+    Integer insert(Equipment tplEquipment);
 
     Integer insertSelective(Equipment tplEquipment);
 
@@ -36,14 +40,12 @@ public interface EquipmentMapper extends Mapper<Equipment> {
 
     /**
      * 存在即更新
-     *
      * @return
      */
     Integer upsert(Equipment tplEquipment);
 
     /**
      * 存在即更新，可选择具体属性
-     *
      * @return
      */
     Integer upsertSelective(Equipment tplEquipment);
@@ -53,5 +55,6 @@ public interface EquipmentMapper extends Mapper<Equipment> {
     Long queryTotal();
 
     Integer deleteBatch(List<Long> list);
+
 
 }
