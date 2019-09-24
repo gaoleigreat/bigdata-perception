@@ -117,7 +117,7 @@ public class DataController {
             @ApiImplicitParam(name = "files", value = "格式化文件上传，", paramType = "formData", allowMultiple = true, required = true, dataType = "file"),
             @ApiImplicitParam(name = "projectId", value = "工程Id，", paramType = "query", required = false, dataType = "long"),
             @ApiImplicitParam(name = "remark", value = "说明", paramType = "query", required = false, dataType = "String"),
-            @ApiImplicitParam(name = "tags", value = "标签", paramType = "query", required = false, dataType = "String"),
+            @ApiImplicitParam(name = "tags", value = "标签", paramType = "query", required = false, dataType = "String",example = "文件,设备,建筑"),
     })
     @PostMapping(value = "/upload/unformatted", headers = "content-type=multipart/form-data")
     @Operation(value = "unformatted", desc = "非格式化文件上传")

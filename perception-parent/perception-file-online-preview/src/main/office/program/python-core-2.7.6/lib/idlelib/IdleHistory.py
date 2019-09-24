@@ -1,31 +1,31 @@
-"Implement Idle Shell history mechanism with History class"
+"Implement Idle Shell service mechanism with History class"
 
 from idlelib.configHandler import idleConf
 
 class History:
-    ''' Implement Idle Shell history mechanism.
+    ''' Implement Idle Shell service mechanism.
 
     store - Store source statement (called from PyShell.resetoutput).
     fetch - Fetch stored statement matching prefix already entered.
-    history_next - Bound to <<history-next>> event (default Alt-N).
-    history_prev - Bound to <<history-prev>> event (default Alt-P).
+    history_next - Bound to <<service-next>> event (default Alt-N).
+    history_prev - Bound to <<service-prev>> event (default Alt-P).
     '''
     def __init__(self, text):
         '''Initialize data attributes and bind event methods.
 
         .text - Idle wrapper of tk Text widget, with .bell().
-        .history - source statements, possibly with multiple lines.
-        .prefix - source already entered at prompt; filters history list.
-        .pointer - index into history.
-        .cyclic - wrap around history list (or not).
+        .service - source statements, possibly with multiple lines.
+        .prefix - source already entered at prompt; filters service list.
+        .pointer - index into service.
+        .cyclic - wrap around service list (or not).
         '''
         self.text = text
         self.history = []
         self.prefix = None
         self.pointer = None
         self.cyclic = idleConf.GetOption("main", "History", "cyclic", 1, "bool")
-        text.bind("<<history-previous>>", self.history_prev)
-        text.bind("<<history-next>>", self.history_next)
+        text.bind("<<service-previous>>", self.history_prev)
+        text.bind("<<service-next>>", self.history_next)
 
     def history_next(self, event):
         "Fetch later statement; start with ealiest if cyclic."
@@ -87,7 +87,7 @@ class History:
         self.prefix = prefix
 
     def store(self, source):
-        "Store Shell input statement into history list."
+        "Store Shell input statement into service list."
         source = source.strip()
         if len(source) > 2:
             # avoid duplicates

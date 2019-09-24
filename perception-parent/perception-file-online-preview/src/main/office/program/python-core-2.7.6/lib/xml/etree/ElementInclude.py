@@ -4,7 +4,7 @@
 #
 # limited xinclude support for element trees
 #
-# history:
+# service:
 # 2003-08-15 fl   created
 # 2003-11-14 fl   fixed default loader
 #

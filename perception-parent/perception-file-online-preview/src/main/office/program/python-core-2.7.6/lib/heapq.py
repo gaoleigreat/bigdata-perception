@@ -59,7 +59,7 @@ In the tree above, each cell `k' is topping `2*k+1' and `2*k+2'.  In
 an usual binary tournament we see in sports, each cell is the winner
 over the two cells it tops, and we can trace the winner down the tree
 to see all opponents s/he had.  However, in many computer applications
-of such tournaments, we do not need to trace the history of a winner.
+of such tournaments, we do not need to trace the service of a winner.
 To be more memory efficient, when a winner is promoted, we try to
 replace it by something else at a lower level, and the rule becomes
 that a cell and the two cells it tops contain three different items,

@@ -120,7 +120,7 @@ def fallback_getpass(prompt='Password: ', stream=None):
 
 def _raw_input(prompt="", stream=None, input=None):
     # A raw_input() replacement that doesn't save the string in the
-    # GNU readline history.
+    # GNU readline service.
     if not stream:
         stream = sys.stderr
     if not input:

@@ -22,6 +22,7 @@
         <module>perception-template</module>
         <module>perception-business</module>
         <module>perception-data</module>
+        <module>equipment-service</module>
     </modules>
 
 </project>

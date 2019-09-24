@@ -42,7 +42,7 @@ listings of documented functions, miscellaneous topics, and undocumented
 functions respectively.
 
 These interpreters use raw_input; thus, if the readline module is loaded,
-they automatically support Emacs-like command history and editing features.
+they automatically support Emacs-like command service and editing features.
 """
 
 import string

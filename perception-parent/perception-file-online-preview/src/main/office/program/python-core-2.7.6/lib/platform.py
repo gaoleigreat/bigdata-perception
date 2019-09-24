@@ -32,7 +32,7 @@
 #
 #    History:
 #
-#    <see CVS and SVN checkin messages for history>
+#    <see CVS and SVN checkin messages for service>
 #
 #    1.0.7 - added DEV_NULL
 #    1.0.6 - added linux_distribution()

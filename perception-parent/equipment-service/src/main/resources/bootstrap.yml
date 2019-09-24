@@ -1,0 +1,13 @@
+server:
+  port: 38010
+  servlet:
+    context-path: /
+spring:
+  application:
+    name: equipment-service
+  profiles:
+    active: local
+
+
+application:
+  description: 设备服务

@@ -20,6 +20,10 @@ define:
       url: jdbc:mysql://192.168.101.52:3306/share?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
       username: share_master
       password: share_master
+    equipment:
+      url: jdbc:mysql://192.168.101.52:3306/perception_equipment?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+      username: equipment_master
+      password: equipment_master
 eureka:
   client:
     fetch-registry: true

@@ -40,7 +40,7 @@ what's tested is actually `z in y'.
 
 """
 
-# Code history:
+# Code service:
 #
 # - Greg V. Wilson wrote the first version, using a different approach
 #   to the mutable/immutable problem, and inheriting from dict.

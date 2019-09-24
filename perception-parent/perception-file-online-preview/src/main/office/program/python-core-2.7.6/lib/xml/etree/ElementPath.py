@@ -4,7 +4,7 @@
 #
 # limited xpath support for element trees
 #
-# history:
+# service:
 # 2003-05-23 fl   created
 # 2003-05-28 fl   added support for // etc
 # 2003-08-27 fl   fixed parsing of periods in element names

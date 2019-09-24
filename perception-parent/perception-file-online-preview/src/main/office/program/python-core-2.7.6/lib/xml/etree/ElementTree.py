@@ -4,7 +4,7 @@
 #
 # light-weight XML support for Python 2.3 and later.
 #
-# history (since 1.2.6):
+# service (since 1.2.6):
 # 2005-11-12 fl   added tostringlist/fromstringlist helpers
 # 2006-07-05 fl   merged in selected changes from the 1.3 sandbox
 # 2006-07-05 fl   removed support for 2.1 and earlier
