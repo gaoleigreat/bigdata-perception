@@ -47,7 +47,7 @@ public interface CrudMapper extends Mapper<BusinessTable> {
      * @param wrapper
      * @return
      */
-    List<Map> queryBusinessData(@Param(value = "tableName") String tableName,
+    List<Map<String,Object>> queryBusinessData(@Param(value = "tableName") String tableName,
                                 @Param(value = "ew") QueryWrapper wrapper);
 
 

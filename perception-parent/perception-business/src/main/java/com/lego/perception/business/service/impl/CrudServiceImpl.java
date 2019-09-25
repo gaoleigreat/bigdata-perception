@@ -2,6 +2,7 @@ package com.lego.perception.business.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.framework.common.consts.RespConsts;
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
@@ -24,11 +25,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author : yanglf
@@ -104,7 +103,7 @@ public class CrudServiceImpl implements ICrudService {
 
 
     @Override
-    public RespVO<RespDataVO<Map>> queryBusinessData(String tableName, List<SearchParam> params) {
+    public RespVO<RespDataVO<Map<String, Object>>> queryBusinessData(String tableName, List<SearchParam> params) {
         QueryWrapper wrapper = new QueryWrapper();
         if (!CollectionUtils.isEmpty(params)) {
             for (SearchParam param : params) {
@@ -118,7 +117,7 @@ public class CrudServiceImpl implements ICrudService {
                 WrapperUtils.addAdvancedCondition(wrapper, symbol, absoluteField, value);
             }
         }
-        List<Map> data = businessMapper.queryBusinessData(tableName, wrapper);
+        List<Map<String, Object>> data = businessMapper.queryBusinessData(tableName, wrapper);
         if (!CollectionUtils.isEmpty(data)) {
             for (Map datum : data) {
                 datum.remove("fileId");
@@ -206,6 +205,53 @@ public class CrudServiceImpl implements ICrudService {
         }
 
         return null;
+    }
+
+    @Override
+    public RespVO downloadBusinessData(FormTemplate formTemplate,
+                                       List<SearchParam> searchParams,
+                                       HttpServletResponse response) {
+        String tableName = formTemplate.getDescription();
+        RespVO<RespDataVO<Map<String, Object>>> respVO = queryBusinessData(tableName, searchParams);
+        if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
+            return RespVOBuilder.failure();
+        }
+        Map<String, String> templateItems = getTemplateItemsFields(formTemplate);
+        List<Map<String, Object>> mapList = respVO.getInfo().getList();
+        List<Map<String, String>> dataList = getItemsStrData(mapList, formTemplate);
+        try {
+            ExcelUtil.excelWriter(dataList, templateItems, "sheet", formTemplate.getTemplateName(), 0, response);
+            return RespVOBuilder.success();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return RespVOBuilder.failure();
+    }
+
+    private List<Map<String, String>> getItemsStrData(List<Map<String, Object>> mapList, FormTemplate formTemplate) {
+        List<Map<String, String>> dataList = new ArrayList<>();
+        List<FormTemplateItem> items = formTemplate.getItems();
+        for (Map<String, Object> map : mapList) {
+            Map<String, String> fieldMap = new HashMap<>(16);
+            for (FormTemplateItem templateItem : items) {
+                String field = templateItem.getField();
+                Integer category = templateItem.getCategory();
+                String columnValueStr = TableUtils.getColumnValueStr(category, map.get(field));
+                fieldMap.put(field, columnValueStr);
+            }
+            dataList.add(fieldMap);
+        }
+
+        return dataList;
+    }
+
+    private Map<String, String> getTemplateItemsFields(FormTemplate formTemplate) {
+        Map<String, String> itemMap = new LinkedHashMap<>();
+        List<FormTemplateItem> items = formTemplate.getItems();
+        for (FormTemplateItem item : items) {
+            itemMap.put(item.getField(), item.getTitle());
+        }
+        return itemMap;
     }
 
     private Map<String, Object> setFields(Map<String, FormTemplateItem> itemMap, Map<String, Object> map) {
