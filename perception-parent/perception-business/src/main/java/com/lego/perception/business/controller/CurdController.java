@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.websocket.server.PathParam;
 import java.io.InputStream;
 import java.util.List;
@@ -93,8 +94,8 @@ public class CurdController {
     })
     @RequestMapping(value = "/query", method = RequestMethod.POST)
     @Operation(value = "query", desc = "查询业务数据")
-    public RespVO<RespDataVO<Map>> queryBusinessData(@RequestParam String templateCode,
-                                                     @RequestBody List<SearchParam> searchParams) {
+    public RespVO<RespDataVO<Map<String, Object>>> queryBusinessData(@RequestParam String templateCode,
+                                                                     @RequestBody List<SearchParam> searchParams) {
         RespVO<FormTemplate> respVO = templateFeignClient.findFormTemplateByCode(templateCode);
         if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
             return RespVOBuilder.failure("获取模板信息失败");
@@ -187,6 +188,27 @@ public class CurdController {
             return RespVOBuilder.failure("找不到对应模板信息");
         }
         return mySqlBusinessService.uploadBusinessData(formTemplate, file);
+    }
+
+
+    @ApiOperation(value = "下载业务数据", httpMethod = "POST")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "templateCode", value = "表单模板code", dataType = "String", required = true, paramType = "query"),
+    })
+    @RequestMapping(value = "/download", method = RequestMethod.POST)
+    @Operation(value = "download", desc = "下载业务数据")
+    public RespVO downloadBusinessData(@RequestParam String templateCode,
+                                       @RequestBody List<SearchParam> searchParams,
+                                       HttpServletResponse response) {
+        RespVO<FormTemplate> respVO = templateFeignClient.findFormTemplateByCode(templateCode);
+        if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
+            return RespVOBuilder.failure("获取模板信息失败");
+        }
+        FormTemplate formTemplate = respVO.getInfo();
+        if (formTemplate == null) {
+            return RespVOBuilder.failure("找不到对应模板信息");
+        }
+        return mySqlBusinessService.downloadBusinessData(formTemplate, searchParams, response);
     }
 
 

@@ -104,15 +104,6 @@ public interface TemplateFeignClient {
     @RequestMapping(value="/formTemplate/v1/findByCode/{code}", method=RequestMethod.GET)
     RespVO<FormTemplate> findFormTemplateByCode(@PathVariable(value = "code") String code);
 
-    /**
-     * 获取家庭成员模板
-     * @param code
-     * @return
-     */
-    @RequestMapping(value="/formTemplate/v1/findFamilyTemplate/{code}", method=RequestMethod.GET)
-    RespVO<FormTemplate> findFamilyTemplate(@PathVariable(value = "code") String code);
-
-
 }
 
 @Component
@@ -172,11 +163,6 @@ class TemplateFallBack implements TemplateFeignClient {
     @Override
     public RespVO<FormTemplate> findFormTemplateByCode(String code) {
 
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "template服务不可用");
-    }
-
-    @Override
-    public RespVO<FormTemplate> findFamilyTemplate(String code) {
         return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "template服务不可用");
     }
 }
