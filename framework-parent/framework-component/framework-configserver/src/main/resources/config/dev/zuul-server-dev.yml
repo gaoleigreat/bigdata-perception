@@ -8,6 +8,7 @@ zuul:
     template-service: /template-service/**
     business-service: /business-service/**
     data-service: /data-service/**
+    equipment-service: /equipment-service/**
   ignored-services: '*'
 
 

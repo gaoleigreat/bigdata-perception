@@ -1,4 +1,5 @@
 package com.lego.equipment.service.controller;
+
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
@@ -25,11 +26,12 @@ import java.util.List;
  * @date 2019-09-24 10:07:49
  * @since jdk 1.8
  */
-@Api(value = "equipmentBusiness",description = "设备业务管理")
+@Api(value = "equipmentBusiness", description = "设备业务管理")
 @Resource(value = "equipmentBusiness", desc = "设备业务管理")
 @RestController
 @RequestMapping("/equipmentBusiness")
 public class EquipmentBusinessController {
+
     @Autowired
     private EquipmentBusinessService equipmentBusinessService;
 
@@ -74,10 +76,10 @@ public class EquipmentBusinessController {
             @ApiImplicitParam(name = "id", value = "设备信息id", dataType = "long", required = true, paramType = "query"),
     })
     @Operation(value = "delete_by_id", desc = "删除设备业务信息")
-    @RequestMapping(value = "/delete_by_id",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delete_by_id", method = RequestMethod.DELETE)
     public RespVO deleteByPrimaryKey(Long id) {
         Integer num = equipmentBusinessService.deleteByPrimaryKey(id);
-        if(num>0){
+        if (num > 0) {
             return RespVOBuilder.success();
         }
         return RespVOBuilder.failure();
@@ -96,7 +98,7 @@ public class EquipmentBusinessController {
     @RequestMapping(value = "/save_equipmentBusiness", method = RequestMethod.POST)
     public RespVO insert(@RequestBody EquipmentBusiness equipmentBusiness) {
         Integer num = equipmentBusinessService.insertSelective(equipmentBusiness);
-        if(num>0){
+        if (num > 0) {
             return RespVOBuilder.success();
         }
         return RespVOBuilder.failure();
@@ -112,10 +114,10 @@ public class EquipmentBusinessController {
 
     })
     @Operation(value = "update_equipmentBusiness", desc = "修改设备业务信息")
-    @RequestMapping(value = "/update_equipmentBusiness",method = RequestMethod.PUT)
+    @RequestMapping(value = "/update_equipmentBusiness", method = RequestMethod.PUT)
     public RespVO updateByPrimaryKeySelective(@RequestBody EquipmentBusiness equipmentBusiness) {
         Integer num = equipmentBusinessService.updateByPrimaryKeySelective(equipmentBusiness);
-        if(num>0){
+        if (num > 0) {
             return RespVOBuilder.success();
         }
         return RespVOBuilder.failure();
