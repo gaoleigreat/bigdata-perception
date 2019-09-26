@@ -46,10 +46,7 @@
     <select id="queryBusinessData" resultType="java.util.Map">
         select * from ${tableName}
         <where>
-            1=1
-            <if test="ew.sqlSegment != null">
-                and ${ew.sqlSegment}
-            </if>
+            ${ew.sqlSegment}
         </where>
     </select>
 

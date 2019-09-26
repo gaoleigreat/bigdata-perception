@@ -1,7 +1,5 @@
 package com.lego.framework.business.feign;
-
 import com.framework.common.consts.RespConsts;
-import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
@@ -9,14 +7,8 @@ import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.template.model.entity.SearchParam;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.websocket.server.PathParam;
 import java.util.List;
 import java.util.Map;
 
@@ -27,10 +19,12 @@ import java.util.Map;
  * @date : 2019/9/25 19:43
  * @desc :
  */
-@FeignClient(value = "business-service", path = "/curd", fallback = CrudClientFallback.class)
-public interface CrudClient {
+@FeignClient(value = "business-service", path = "/curd", fallback = CurdClientFallback.class)
+public interface CurdClient {
 
     /**
+     * 创建业务表
+     *
      * @param templateCode
      * @return
      */
@@ -39,6 +33,8 @@ public interface CrudClient {
 
 
     /**
+     * 新增业务数据
+     *
      * @param templateCode
      * @param data
      * @return
@@ -49,6 +45,8 @@ public interface CrudClient {
 
 
     /**
+     * 查询业务数据
+     *
      * @param templateCode
      * @param searchParams
      * @return
@@ -59,18 +57,24 @@ public interface CrudClient {
 
 
     /**
+     * 分页查询业务数据
+     *
      * @param templateCode
      * @param searchParams
-     * @param page
+     * @param pageSize
+     * @param pageIndex
      * @return
      */
-    @RequestMapping(value = "/queryPaged/{pageSize}/{pageIndex}", method = RequestMethod.POST)
-    RespVO<PagedResult<Map>> queryPaged(@RequestParam(value = "templateCode") String templateCode,
-                                        @RequestBody List<SearchParam> searchParams,
-                                        @PathParam(value = "") Page page);
+    @RequestMapping(value = "/queryDataPaged/{pageSize}/{pageIndex}", method = RequestMethod.POST)
+    RespVO<PagedResult<Map<String, Object>>> queryDataPaged(@RequestParam(value ="templateCode") String templateCode,
+                                            @RequestBody List<SearchParam> searchParams,
+                                            @PathVariable(value = "pageSize") Integer pageSize,
+                                            @PathVariable(value = "pageIndex") Integer pageIndex);
 
 
     /**
+     * 更新业务数据
+     *
      * @param templateCode
      * @param data
      * @return
@@ -81,6 +85,8 @@ public interface CrudClient {
 
 
     /**
+     * 删除业务数据
+     *
      * @param templateCode
      * @param data
      * @return
@@ -91,6 +97,8 @@ public interface CrudClient {
 
 
     /**
+     * 上传业务数据
+     *
      * @param templateCode
      * @param file
      * @return
@@ -101,20 +109,22 @@ public interface CrudClient {
 
 
     /**
+     * 下载业务数据
+     *
      * @param templateCode
      * @param searchParams
      * @param response
      * @return
      */
-    @RequestMapping(value = "/download", method = RequestMethod.POST)
+/*    @RequestMapping(value = "/download", method = RequestMethod.POST)
     RespVO downloadBusinessData(@RequestParam(value = "templateCode") String templateCode,
                                 @RequestBody List<SearchParam> searchParams,
-                                HttpServletResponse response);
+                                HttpServletResponse response);*/
 
 }
 
 @Component
-class CrudClientFallback implements CrudClient {
+class CurdClientFallback implements CurdClient {
 
     @Override
     public RespVO createBusiness(String templateCode) {
@@ -132,9 +142,10 @@ class CrudClientFallback implements CrudClient {
     }
 
     @Override
-    public RespVO<PagedResult<Map>> queryPaged(String templateCode, List<SearchParam> searchParams, Page page) {
+    public RespVO<PagedResult<Map<String, Object>>> queryDataPaged(String templateCode, List<SearchParam> searchParams, Integer pageSize, Integer pageIndex) {
         return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
     }
+
 
     @Override
     public RespVO updateBusinessData(String templateCode, Map<String, Object> data) {
@@ -151,8 +162,8 @@ class CrudClientFallback implements CrudClient {
         return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
     }
 
-    @Override
+    /*@Override
     public RespVO downloadBusinessData(String templateCode, List<SearchParam> searchParams, HttpServletResponse response) {
         return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
-    }
+    }*/
 }
