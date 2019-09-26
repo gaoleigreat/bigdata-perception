@@ -5,7 +5,6 @@ import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
-import com.framework.excel.ExcelService;
 import com.framework.excel.utils.ExcelUtil;
 import com.framework.mybatis.utils.TableUtils;
 import com.lego.framework.base.annotation.Operation;
@@ -25,10 +24,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.websocket.server.PathParam;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/formTemplate/v1")
@@ -140,5 +137,14 @@ public class FormTemplateController {
         }
     }
 
+    @RequestMapping(value = "/findByDataType/{dataType}", method = RequestMethod.GET)
+    @Operation(value = "find", desc = "根据dataType查询")
+    @ApiOperation("根据dataType查询")
+    public RespVO<RespDataVO<FormTemplate>> findfindByDataType(@PathVariable Integer dataType) {
+        FormTemplate template = new FormTemplate();
+        template.setDataType(dataType);
+        List<FormTemplate> formTemplates = formTemplateService.findList(template);
 
+        return RespVOBuilder.success(formTemplates);
+    }
 }
