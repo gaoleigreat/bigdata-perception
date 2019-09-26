@@ -1,5 +1,6 @@
 package com.lego.equipment.service.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.mybatis.utils.PageUtil;
@@ -29,12 +30,20 @@ public class EquipmentBusinessServiceImpl implements EquipmentBusinessService {
 
     @Override
     public PagedResult<EquipmentBusiness> selectPaged(EquipmentBusiness equipmentBusiness, Page page) {
-        return PageUtil.queryPaged(page,equipmentBusiness,equipmentBusinessMapper);
+        return PageUtil.queryPaged(page, equipmentBusiness, equipmentBusinessMapper);
     }
 
     @Override
     public EquipmentBusiness selectByPrimaryKey(Long id) {
         return equipmentBusinessMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public List<EquipmentBusiness> selectByEquipmentid(Long equipmentId) {
+        QueryWrapper<EquipmentBusiness> wrapper = new QueryWrapper<>();
+        wrapper.eq("equipment_id", equipmentId);
+        List<EquipmentBusiness> equipmentBusinesses = equipmentBusinessMapper.selectList(wrapper);
+        return equipmentBusinesses;
     }
 
     @Override

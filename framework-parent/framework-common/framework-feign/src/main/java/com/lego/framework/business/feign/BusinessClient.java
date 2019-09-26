@@ -3,6 +3,7 @@ package com.lego.framework.business.feign;
 import com.framework.common.consts.RespConsts;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
+import com.lego.framework.business.model.entity.Business;
 import com.lego.framework.template.model.entity.FormTemplate;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -22,9 +23,15 @@ import java.util.Map;
  * @date : 2019/9/10 10:19
  * @desc :
  */
-@FeignClient(value = "business-service", path = "/business",fallback = BusinessClientFallback.class)
+@FeignClient(value = "business-service", path = "/business", fallback = BusinessClientFallback.class)
 public interface BusinessClient {
 
+    /**
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/select_by_id", method = RequestMethod.GET)
+    RespVO<Business> selectById(@RequestParam(value = "id") Long id);
 
     /**
      * @param formTemplate
@@ -38,6 +45,7 @@ public interface BusinessClient {
 
     /**
      * 新增業務數據
+     *
      * @param formTemplate
      * @param fileId
      * @param data
@@ -53,6 +61,7 @@ public interface BusinessClient {
 
     /**
      * 查詢業務員數據
+     *
      * @param formTemplate
      * @param data
      * @param sourceType
@@ -65,7 +74,6 @@ public interface BusinessClient {
 
 
     /**
-     *
      * @param formTemplate
      * @param data
      * @param sourceType
@@ -92,30 +100,35 @@ public interface BusinessClient {
 }
 
 @Component
-class BusinessClientFallback  implements BusinessClient{
+class BusinessClientFallback implements BusinessClient {
+
+    @Override
+    public RespVO<Business> selectById(Long id) {
+        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
+    }
 
     @Override
     public RespVO createBusiness(FormTemplate formTemplate, Integer sourceType) {
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE,"business服务不可用");
+        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
     }
 
     @Override
     public RespVO insertBusinessData(FormTemplate formTemplate, Long fileId, List<Map<String, Object>> data, Integer sourceType) {
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE,"business服务不可用");
+        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
     }
 
     @Override
     public RespVO queryBusinessData(FormTemplate formTemplate, Map<String, Object> data, Integer sourceType) {
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE,"business服务不可用");
+        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
     }
 
     @Override
     public RespVO updateBusinessData(FormTemplate formTemplate, Map<String, Object> data, Integer sourceType) {
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE,"business服务不可用");
+        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
     }
 
     @Override
     public RespVO delBusinessData(FormTemplate formTemplate, Map<String, Object> data, Integer sourceType) {
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE,"business服务不可用");
+        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
     }
 }

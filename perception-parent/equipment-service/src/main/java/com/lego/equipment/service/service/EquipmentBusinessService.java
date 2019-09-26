@@ -3,7 +3,9 @@ package com.lego.equipment.service.service;
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.lego.framework.equipment.model.entity.EquipmentBusiness;
+
 import java.util.List;
+
 /**
  * service层
  *
@@ -18,6 +20,8 @@ public interface EquipmentBusinessService {
     PagedResult<EquipmentBusiness> selectPaged(EquipmentBusiness equipmentBusiness, Page page);
 
     EquipmentBusiness selectByPrimaryKey(Long id);
+
+    List<EquipmentBusiness> selectByEquipmentid(Long equipmentId);
 
     Integer deleteByPrimaryKey(Long id);
 
