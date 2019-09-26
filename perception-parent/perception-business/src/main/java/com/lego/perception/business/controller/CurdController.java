@@ -114,7 +114,7 @@ public class CurdController {
     })
     @RequestMapping(value = "/queryPaged/{pageSize}/{pageIndex}", method = RequestMethod.POST)
     @Operation(value = "query", desc = "查询业务数据")
-    public RespVO<PagedResult<Map>> queryPaged(@RequestParam String templateCode,
+    public RespVO<PagedResult<Map<String, Object>>> queryPaged(@RequestParam String templateCode,
                                                @RequestBody List<SearchParam> searchParams,
                                                @PathParam(value = "") Page page) {
         RespVO<FormTemplate> respVO = templateFeignClient.findFormTemplateByCode(templateCode);
@@ -125,6 +125,31 @@ public class CurdController {
         if (formTemplate == null) {
             return RespVOBuilder.failure("找不到对应模板信息");
         }
+        return mySqlBusinessService.queryBusinessDataPaged(formTemplate.getDescription(), searchParams, page);
+    }
+
+
+    @ApiOperation(value = "查询业务数据", httpMethod = "POST")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "templateCode", value = "表单模板code", dataType = "String", required = true, paramType = "query"),
+    })
+    @RequestMapping(value = "/queryDataPaged/{pageSize}/{pageIndex}", method = RequestMethod.POST)
+    @Operation(value = "query", desc = "查询业务数据")
+    public RespVO<PagedResult<Map<String, Object>>> queryDataPaged(@RequestParam String templateCode,
+                                                   @RequestBody List<SearchParam> searchParams,
+                                                   @PathVariable(value = "pageSize") Integer pageSize,
+                                                   @PathVariable(value = "pageIndex") Integer pageIndex) {
+        RespVO<FormTemplate> respVO = templateFeignClient.findFormTemplateByCode(templateCode);
+        if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
+            return RespVOBuilder.failure("获取模板信息失败");
+        }
+        FormTemplate formTemplate = respVO.getInfo();
+        if (formTemplate == null) {
+            return RespVOBuilder.failure("找不到对应模板信息");
+        }
+        Page page = new Page();
+        page.setPageSize(pageSize);
+        page.setPageIndex(pageIndex);
         return mySqlBusinessService.queryBusinessDataPaged(formTemplate.getDescription(), searchParams, page);
     }
 

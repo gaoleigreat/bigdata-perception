@@ -75,7 +75,7 @@ public class CrudServiceImpl implements ICrudService {
             sb.append(TableUtils.getComment(title));
             sb.append(",");
         }
-        sb.append(" equipment_id BIGINT NOT NULL COMMENT '设备id '");
+        sb.replace(sb.length() - 1, sb.length(), "");
         businessMapper.createBusinessTable(tableName, sb.toString());
         Integer existTable = businessMapper.existTable(tableName);
         if (existTable != null) {
@@ -127,7 +127,7 @@ public class CrudServiceImpl implements ICrudService {
     }
 
     @Override
-    public RespVO<PagedResult<Map>> queryBusinessDataPaged(String tableName, List<SearchParam> params, Page page) {
+    public RespVO<PagedResult<Map<String, Object>>> queryBusinessDataPaged(String tableName, List<SearchParam> params, Page page) {
         QueryWrapper wrapper = new QueryWrapper();
         if (!CollectionUtils.isEmpty(params)) {
             for (SearchParam param : params) {
@@ -143,7 +143,7 @@ public class CrudServiceImpl implements ICrudService {
         }
 
         IPage iPage = PageUtil.page2IPage(page);
-        IPage<Map> data = businessMapper.queryBusinessData(tableName, wrapper, iPage);
+        IPage<Map<String, Object>> data = businessMapper.queryBusinessData(iPage,tableName, wrapper);
         if (!CollectionUtils.isEmpty(data.getRecords())) {
             for (Map datum : data.getRecords()) {
                 datum.remove("fileId");

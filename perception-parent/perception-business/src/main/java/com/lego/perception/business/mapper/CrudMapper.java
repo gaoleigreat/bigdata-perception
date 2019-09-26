@@ -47,8 +47,8 @@ public interface CrudMapper extends Mapper<BusinessTable> {
      * @param wrapper
      * @return
      */
-    List<Map<String,Object>> queryBusinessData(@Param(value = "tableName") String tableName,
-                                @Param(value = "ew") QueryWrapper wrapper);
+    List<Map<String, Object>> queryBusinessData(@Param(value = "tableName") String tableName,
+                                                @Param(value = "ew") QueryWrapper wrapper);
 
 
     /**
@@ -59,8 +59,8 @@ public interface CrudMapper extends Mapper<BusinessTable> {
      * @param iPage
      * @return
      */
-    IPage<Map> queryBusinessData(@Param(value = "tableName") String tableName,
-                                 @Param(value = "ew") QueryWrapper wrapper, IPage iPage);
+    IPage<Map<String, Object>> queryBusinessData(IPage iPage, @Param(value = "tableName") String tableName,
+                                                 @Param(value = "ew") QueryWrapper wrapper);
 
 
     /**

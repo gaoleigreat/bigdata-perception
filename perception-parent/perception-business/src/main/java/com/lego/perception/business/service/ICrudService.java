@@ -60,7 +60,7 @@ public interface ICrudService {
      * @param page
      * @return
      */
-    RespVO<PagedResult<Map>> queryBusinessDataPaged(String tableName, List<SearchParam> params, Page page);
+    RespVO<PagedResult<Map<String, Object>>> queryBusinessDataPaged(String tableName, List<SearchParam> params, Page page);
 
 
     /**
