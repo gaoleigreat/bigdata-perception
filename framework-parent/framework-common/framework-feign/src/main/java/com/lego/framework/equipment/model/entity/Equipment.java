@@ -30,5 +30,5 @@ public class Equipment extends BaseModel {
     @ApiModelProperty("设备描述")
     private String description;
     @ApiModelProperty("业务模板类型")
-    private String type;
+    private Integer type;
 }

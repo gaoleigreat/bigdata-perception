@@ -75,7 +75,7 @@ public class CrudServiceImpl implements ICrudService {
             sb.append(TableUtils.getComment(title));
             sb.append(",");
         }
-        sb.append(" file_id BIGINT NOT NULL COMMENT '文件id '");
+        sb.append(" equipment_id BIGINT NOT NULL COMMENT '设备id '");
         businessMapper.createBusinessTable(tableName, sb.toString());
         Integer existTable = businessMapper.existTable(tableName);
         if (existTable != null) {
