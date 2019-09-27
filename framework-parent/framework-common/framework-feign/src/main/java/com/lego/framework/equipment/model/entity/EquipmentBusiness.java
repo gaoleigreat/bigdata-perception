@@ -1,5 +1,6 @@
 package com.lego.framework.equipment.model.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.lego.framework.config.BaseModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -38,4 +39,8 @@ public class EquipmentBusiness extends BaseModel {
      */
     @ApiModelProperty(value = "操作类型((1-新增;2-删除;3-更新;4-查询;5-导入;6-导出))", example = "1,2,3")
     private String operationType;
+
+    @TableField(exist = false)
+    @ApiModelProperty("业务名称")
+    private String name;
 }

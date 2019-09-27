@@ -1,11 +1,15 @@
 package com.lego.equipment.service.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.framework.common.consts.RespConsts;
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
+import com.framework.common.sdto.RespVO;
 import com.framework.mybatis.utils.PageUtil;
 import com.lego.equipment.service.mapper.EquipmentBusinessMapper;
 import com.lego.equipment.service.service.EquipmentBusinessService;
+import com.lego.framework.business.feign.BusinessClient;
+import com.lego.framework.business.model.entity.Business;
 import com.lego.framework.config.BaseModel;
 import com.lego.framework.equipment.model.entity.EquipmentBusiness;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +31,18 @@ public class EquipmentBusinessServiceImpl implements EquipmentBusinessService {
     @Autowired
     public EquipmentBusinessMapper equipmentBusinessMapper;
 
+    @Autowired
+    private BusinessClient businessClient;
+
 
     @Override
     public PagedResult<EquipmentBusiness> selectPaged(EquipmentBusiness equipmentBusiness, Page page) {
-        return PageUtil.queryPaged(page, equipmentBusiness, equipmentBusinessMapper);
+        PagedResult pagedResult = PageUtil.queryPaged(page, equipmentBusiness, equipmentBusinessMapper);
+        if (!CollectionUtils.isEmpty(pagedResult.getResultList())) {
+            List<EquipmentBusiness> resultList = pagedResult.getResultList();
+            resultList.forEach(res -> setName(res));
+        }
+        return pagedResult;
     }
 
     @Override
@@ -125,7 +137,11 @@ public class EquipmentBusinessServiceImpl implements EquipmentBusinessService {
 
     @Override
     public List<EquipmentBusiness> query(EquipmentBusiness equipmentBusiness) {
-        return equipmentBusinessMapper.query(equipmentBusiness);
+        List<EquipmentBusiness> list = equipmentBusinessMapper.query(equipmentBusiness);
+        if (!CollectionUtils.isEmpty(list)) {
+            list.forEach(l -> setName(l));
+        }
+        return list;
     }
 
     @Override
