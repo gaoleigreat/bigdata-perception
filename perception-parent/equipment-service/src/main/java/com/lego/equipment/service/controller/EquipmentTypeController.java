@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author itar
@@ -44,9 +45,6 @@ public class EquipmentTypeController {
     @Autowired
     private IEquipmentTypeService iEquipmentTypeService;
 
-
-    @Autowired
-    private CurdClient curdClient;
     @Autowired
     private TemplateFeignClient templateFeignClient;
 
@@ -61,8 +59,6 @@ public class EquipmentTypeController {
     @RequestMapping(value = "/select_paged/{pageSize}/{pageIndex}", method = RequestMethod.GET)
     public RespVO<PagedResult<EquipmentType>> selectPaged(@PathParam(value = "") Page page,
                                                           @ModelAttribute EquipmentType equipmentType) {
-        RespVO<PagedResult<Map<String, Object>>> paged = curdClient.queryDataPaged("xnhjbxx", new ArrayList<>(), page.getPageSize(), page.getPageIndex());
-        log.info("paged:{}", paged);
         PagedResult<EquipmentType> pagedResult = iEquipmentTypeService.selectPaged(equipmentType, page);
         List<EquipmentType> resultList = pagedResult.getResultList();
         resultList.forEach(equipmentType1 -> {
