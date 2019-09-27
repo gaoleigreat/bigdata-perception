@@ -30,7 +30,7 @@ public class FeignOkHttpConfig {
                 .retryOnConnectionFailure(false)
                 // .addInterceptor(new HttpHeaderInterceptor())
                 // .addNetworkInterceptor(new NetworkInterceptor())
-                .addInterceptor(new LoggingInterceptor())
+                // .addInterceptor(new LoggingInterceptor())
                 .connectionPool(new ConnectionPool())
                 .build();
     }
