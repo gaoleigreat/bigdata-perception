@@ -105,3 +105,6 @@ hs_err_pid*
 .idea/sonarlint/
 .idea
 /.idea/inspectionProfiles/Project_Default.xml
+
+*.html
+*.pdf
