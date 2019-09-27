@@ -8,7 +8,6 @@ import com.framework.common.sdto.RespVOBuilder;
 import com.lego.equipment.service.service.IEquipmentTypeService;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
-import com.lego.framework.business.feign.CurdClient;
 import com.lego.framework.equipment.model.entity.EquipmentType;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -38,11 +37,6 @@ public class EquipmentTypeController {
     @Autowired
     private IEquipmentTypeService iEquipmentTypeService;
 
-
-    @Autowired
-    private CurdClient curdClient;
-
-
     /**
      * 分页查询数据
      */
@@ -54,8 +48,6 @@ public class EquipmentTypeController {
     @RequestMapping(value = "/select_paged/{pageSize}/{pageIndex}", method = RequestMethod.GET)
     public RespVO<PagedResult<EquipmentType>> selectPaged(@PathParam(value = "") Page page,
                                                           @ModelAttribute EquipmentType equipmentType) {
-        RespVO<PagedResult<Map<String, Object>>> paged = curdClient.queryDataPaged("xnhjbxx", new ArrayList<>(), page.getPageSize(), page.getPageIndex());
-        log.info("paged:{}", paged);
         PagedResult<EquipmentType> pagedResult = iEquipmentTypeService.selectPaged(equipmentType, page);
         return RespVOBuilder.success(pagedResult);
     }
