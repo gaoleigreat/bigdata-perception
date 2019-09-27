@@ -1,5 +1,6 @@
 package com.lego.framework.equipment.model.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.lego.framework.config.BaseModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -31,4 +32,7 @@ public class EquipmentType extends BaseModel {
     private String description;
     @ApiModelProperty("业务类型对应表单模板")
     private Integer type;
+    @ApiModelProperty("模板code")
+    @TableField(exist = false)
+    private String templateCode;
 }

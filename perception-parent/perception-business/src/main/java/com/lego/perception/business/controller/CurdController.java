@@ -18,6 +18,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -95,7 +96,7 @@ public class CurdController {
     @RequestMapping(value = "/query", method = RequestMethod.POST)
     @Operation(value = "query", desc = "查询业务数据")
     public RespVO<RespDataVO<Map<String, Object>>> queryBusinessData(@RequestParam String templateCode,
-                                                                     @RequestBody List<SearchParam> searchParams) {
+                                                                     @RequestBody(required = false) List<SearchParam> searchParams) {
         RespVO<FormTemplate> respVO = templateFeignClient.findFormTemplateByCode(templateCode);
         if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
             return RespVOBuilder.failure("获取模板信息失败");

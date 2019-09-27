@@ -1,5 +1,8 @@
 package com.lego.equipment.service.controller;
-import	java.util.ArrayList;
+
+import java.util.ArrayList;
+
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
@@ -8,7 +11,11 @@ import com.framework.common.sdto.RespVOBuilder;
 import com.lego.equipment.service.service.IEquipmentTypeService;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
+import com.lego.framework.base.exception.ExceptionBuilder;
+import com.lego.framework.business.feign.CurdClient;
 import com.lego.framework.equipment.model.entity.EquipmentType;
+import com.lego.framework.template.feign.TemplateFeignClient;
+import com.lego.framework.template.model.entity.FormTemplate;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -16,6 +23,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import javax.websocket.server.PathParam;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +45,12 @@ public class EquipmentTypeController {
     @Autowired
     private IEquipmentTypeService iEquipmentTypeService;
 
+
+    @Autowired
+    private CurdClient curdClient;
+    @Autowired
+    private TemplateFeignClient templateFeignClient;
+
     /**
      * 分页查询数据
      */
@@ -48,7 +62,27 @@ public class EquipmentTypeController {
     @RequestMapping(value = "/select_paged/{pageSize}/{pageIndex}", method = RequestMethod.GET)
     public RespVO<PagedResult<EquipmentType>> selectPaged(@PathParam(value = "") Page page,
                                                           @ModelAttribute EquipmentType equipmentType) {
+        RespVO<PagedResult<Map<String, Object>>> paged = curdClient.queryDataPaged("xnhjbxx", new ArrayList<>(), page.getPageSize(), page.getPageIndex());
+        log.info("paged:{}", paged);
         PagedResult<EquipmentType> pagedResult = iEquipmentTypeService.selectPaged(equipmentType, page);
+        List<EquipmentType> resultList = pagedResult.getResultList();
+        resultList.forEach(equipmentType1 -> {
+            RespVO<RespDataVO<FormTemplate>> respDataVORespVO = templateFeignClient.findByDataType(Integer.valueOf(equipmentType1.getType()));
+
+            if (respDataVORespVO == null) {
+                ExceptionBuilder.operateFailException("模板服务不可用");
+            }
+            if (respDataVORespVO.getRetCode() != 1) {
+                ExceptionBuilder.operateFailException("获取模板失败");
+            }
+            List<FormTemplate> formTemplates = respDataVORespVO.getInfo().getList();
+            if (CollectionUtils.isEmpty(formTemplates)) {
+                ExceptionBuilder.operateFailException("没有对应的表单模板");
+            }
+            FormTemplate formTemplateGet = formTemplates.get(0);
+            equipmentType1.setTemplateCode(formTemplateGet.getTemplateCode());
+        });
+        pagedResult.setResultList(resultList);
         return RespVOBuilder.success(pagedResult);
     }
 
@@ -65,6 +99,21 @@ public class EquipmentTypeController {
     @RequestMapping(value = "/select_by_id", method = RequestMethod.GET)
     public RespVO<EquipmentType> selectByPrimaryKey(@RequestParam(value = "id") Long id) {
         EquipmentType po = iEquipmentTypeService.selectByPrimaryKey(id);
+
+        RespVO<RespDataVO<FormTemplate>> respDataVORespVO = templateFeignClient.findByDataType(Integer.valueOf(po.getType()));
+
+        if (respDataVORespVO == null) {
+            ExceptionBuilder.operateFailException("模板服务不可用");
+        }
+        if (respDataVORespVO.getRetCode() != 1) {
+            ExceptionBuilder.operateFailException("获取模板失败");
+        }
+        List<FormTemplate> formTemplates = respDataVORespVO.getInfo().getList();
+        if (CollectionUtils.isEmpty(formTemplates)) {
+            ExceptionBuilder.operateFailException("没有对应的表单模板");
+        }
+        FormTemplate formTemplateGet = formTemplates.get(0);
+       po.setTemplateCode(formTemplateGet.getTemplateCode());
         return RespVOBuilder.success(po);
     }
 

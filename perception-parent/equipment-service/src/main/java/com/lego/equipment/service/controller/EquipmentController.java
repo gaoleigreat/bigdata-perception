@@ -14,12 +14,14 @@ import com.lego.framework.business.model.entity.Business;
 import com.lego.framework.equipment.model.entity.EquipmentBusiness;
 import com.lego.framework.template.feign.TemplateFeignClient;
 import com.lego.framework.template.model.entity.FormTemplate;
+import com.sun.org.apache.regexp.internal.RE;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -101,7 +103,8 @@ public class EquipmentController {
             ExceptionBuilder.operateFailException("没有对应的表单模板");
         }
         FormTemplate formTemplateGet = formTemplates.get(0);
-        return curdClient.queryBusinessData(formTemplateGet.getTemplateCode(), null);
+        RespVO<RespDataVO<Map<String, Object>>> respDataVORespVO1 = curdClient.queryBusinessData(formTemplateGet.getTemplateCode(), new ArrayList<>());
+        return respDataVORespVO1;
     }
 
 
