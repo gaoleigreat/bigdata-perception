@@ -11,3 +11,13 @@ spring:
 
 application:
   description: 业务服务
+
+
+logging:
+  level:
+    com:
+      lego:
+        framework:
+          template:
+            feign:
+              TemplateFeignClient: debug

@@ -13,7 +13,7 @@ import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
 import com.lego.framework.base.exception.ExceptionBuilder;
 import com.lego.framework.business.feign.BusinessClient;
-import com.lego.framework.business.feign.CrudClient;
+import com.lego.framework.business.feign.CurdClient;
 import com.lego.framework.business.model.entity.Business;
 import com.lego.framework.equipment.model.entity.Equipment;
 import com.lego.framework.equipment.model.entity.EquipmentBusiness;
@@ -49,7 +49,7 @@ public class EquipmentTypeController {
     private TemplateFeignClient templateFeignClient;
 
     @Autowired
-    private CrudClient crudClient;
+    private CurdClient curdClient;
 
     @Autowired
     private EquipmentBusinessService equipmentBusinessService;
@@ -108,7 +108,7 @@ public class EquipmentTypeController {
             ExceptionBuilder.operateFailException("没有对应的表单模板");
         }
         FormTemplate formTemplateGet = formTemplates.get(0);
-        return crudClient.queryBusinessData(formTemplateGet.getTemplateCode(), null);
+        return curdClient.queryBusinessData(formTemplateGet.getTemplateCode(), null);
     }
 
 
