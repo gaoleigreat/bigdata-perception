@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.lego.equipment.service.mapper.EquipmentMapper">
+<mapper namespace="com.lego.equipment.service.mapper.EquipmentTypeMapper">
     <!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="com.lego.framework.equipment.model.entity.Equipment" id="BaseResultMap">
+    <resultMap type="com.lego.framework.equipment.model.entity.EquipmentType" id="BaseResultMap">
         <result property="id" column="id"/>
         <result property="name" column="name"/>
         <result property="code" column="code"/>
@@ -160,7 +160,7 @@
     <select id="selectPaged" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from tpl_equipment
+        from tpl_equipment_type
     </select>
 
     <!--
@@ -169,7 +169,7 @@
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from tpl_equipment
+        from tpl_equipment_type
         where id = #{id,jdbcType=BIGINT}
     </select>
 
@@ -178,7 +178,7 @@
       根据主键删除数据库表中的记录
     -->
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-        delete FROM tpl_equipment
+        delete FROM tpl_equipment_type
         where id = #{id,jdbcType=BIGINT}
     </delete>
 
@@ -186,8 +186,8 @@
       添加一条记录到数据库表中
     -->
     <insert id="insert" useGeneratedKeys="true" keyProperty="id"
-            parameterType="com.lego.framework.equipment.model.entity.Equipment">
-        insert into tpl_equipment
+            parameterType="com.lego.framework.equipment.model.entity.EquipmentType">
+        insert into tpl_equipment_type
         (<include refid="Base_Column_List"/>)
         values (
         <if test="id != null">
@@ -224,8 +224,8 @@
      有选择的添加一条记录到数据库表中
    -->
     <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id"
-            parameterType="com.lego.framework.equipment.model.entity.Equipment">
-        insert into tpl_equipment
+            parameterType="com.lego.framework.equipment.model.entity.EquipmentType">
+        insert into tpl_equipment_type
         <include refid="Base_Insert_Selective"/>
     </insert>
 
@@ -233,16 +233,16 @@
       有选择的可忽略添加一条记录到数据库表中
     -->
     <insert id="insertSelectiveIgnore" useGeneratedKeys="true" keyProperty="id"
-            parameterType="com.lego.framework.equipment.model.entity.Equipment">
-        insert ignore into tpl_equipment
+            parameterType="com.lego.framework.equipment.model.entity.EquipmentType">
+        insert ignore into tpl_equipment_type
         <include refid="Base_Insert_Selective"/>
     </insert>
 
     <!--
       根据主键有选择的更新数据库表
     -->
-    <update id="updateByPrimaryKeySelective" parameterType="com.lego.framework.equipment.model.entity.Equipment">
-        update tpl_equipment
+    <update id="updateByPrimaryKeySelective" parameterType="com.lego.framework.equipment.model.entity.EquipmentType">
+        update tpl_equipment_type
         <include refid="Base_Update_Column"></include>
         where id = #{id,jdbcType=BIGINT}
     </update>
@@ -251,8 +251,8 @@
     <!--
       根据主键更新数据库表
     -->
-    <update id="updateByPrimaryKey" parameterType="com.lego.framework.equipment.model.entity.Equipment">
-        update tpl_equipment
+    <update id="updateByPrimaryKey" parameterType="com.lego.framework.equipment.model.entity.EquipmentType">
+        update tpl_equipment_type
         <set>
             <if test="id != null">
                 id = #{id,jdbcType=BIGINT},
@@ -289,7 +289,7 @@
       批量添加记录到数据库表中
     -->
     <insert id="batchInsert" parameterType="java.util.List">
-        insert into tpl_equipment
+        insert into tpl_equipment_type
         <trim prefix="(" suffix=")" suffixOverrides=",">
             id, name, code, description, type, creation_date, created_by, last_update_date, last_updated_by
         </trim>
@@ -309,7 +309,7 @@
     -->
     <update id="batchUpdate" parameterType="java.util.List">
         <foreach collection="list" index="index" item="item" separator=";">
-            update tpl_equipment
+            update tpl_equipment_type
             <set>
                 <trim suffixOverrides=",">
                     <if test="item.id != null">
@@ -387,8 +387,8 @@
     <!--
       存在即更新否则插入
     -->
-    <update id="upsert" parameterType="com.lego.framework.equipment.model.entity.Equipment">
-        insert into tpl_equipment
+    <update id="upsert" parameterType="com.lego.framework.equipment.model.entity.EquipmentType">
+        insert into tpl_equipment_type
         <trim prefix="(" suffix=")" suffixOverrides=",">
             id, name, code, description, type, creation_date, created_by, last_update_date, last_updated_by
         </trim>
@@ -410,8 +410,8 @@
     <!--
       带有空值检查的存在即更新否则插入
     -->
-    <update id="upsertSelective" parameterType="com.lego.framework.equipment.model.entity.Equipment">
-        insert into tpl_equipment
+    <update id="upsertSelective" parameterType="com.lego.framework.equipment.model.entity.EquipmentType">
+        insert into tpl_equipment_type
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id !=null ">
                 id,
@@ -503,22 +503,22 @@
         </trim>
     </update>
 
-    <select id="query" resultMap="BaseResultMap" parameterType="com.lego.framework.equipment.model.entity.Equipment">
+    <select id="query" resultMap="BaseResultMap" parameterType="com.lego.framework.equipment.model.entity.EquipmentType">
         select
         <include refid="Base_Column_List"/>
-        from tpl_equipment
+        from tpl_equipment_type
         <where>
             <include refid="Base_Query_Where"></include>
         </where>
     </select>
 
     <select id="queryTotal" resultType="long">
-        select count(*) from tpl_equipment
+        select count(*) from tpl_equipment_type
     </select>
 
 
     <delete id="deleteBatch">
-        delete from tpl_equipment where id in
+        delete from tpl_equipment_type where id in
         <foreach item="id" collection="list" open="(" separator="," close=")">
             #{id}
         </foreach>

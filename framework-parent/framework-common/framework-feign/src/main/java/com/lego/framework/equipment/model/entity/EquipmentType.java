@@ -19,16 +19,16 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName(value = "tpl_equipment")
-public class Equipment extends BaseModel {
-    @ApiModelProperty("设备id")
+@TableName(value = "tpl_equipment_type")
+public class EquipmentType extends BaseModel {
+    @ApiModelProperty("设备类型id")
     private Long id;
-    @ApiModelProperty("设备名称")
+    @ApiModelProperty("设备类型名称")
     private String name;
-    @ApiModelProperty("设备编码")
+    @ApiModelProperty("设备类型编码")
     private String code;
-    @ApiModelProperty("设备描述")
+    @ApiModelProperty("设备类型描述")
     private String description;
-    @ApiModelProperty("业务模板类型")
+    @ApiModelProperty("业务类型对应表单模板")
     private Integer type;
 }
