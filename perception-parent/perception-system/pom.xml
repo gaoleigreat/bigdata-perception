@@ -10,6 +10,10 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>perception-system</artifactId>
 
+    <properties>
+        <swagger2markup.version>1.2.0</swagger2markup.version>
+    </properties>
+
     <dependencies>
         <!--  spring cloud -->
         <dependency>
@@ -184,7 +188,7 @@
 
 
             <!--此插件生成ASCIIDOC-->
-           <!-- <plugin>
+            <plugin>
                 <groupId>io.github.swagger2markup</groupId>
                 <artifactId>swagger2markup-maven-plugin</artifactId>
                 <version>${swagger2markup.version}</version>
@@ -201,11 +205,11 @@
                     </dependency>
                 </dependencies>
                 <configuration>
-                    &lt;!&ndash;<swaggerInput>http://localhost:8080/v2/api-docs</swaggerInput>&ndash;&gt;
+                    <swaggerInput>http://localhost:8080/v2/api-docs</swaggerInput>
                     <swaggerInput>${swagger.input}</swaggerInput>
                     <outputDir>${generated.asciidoc.directory}</outputDir>
                     <config>
-                        &lt;!&ndash; 除了ASCIIDOC之外，还有MARKDOWN和CONFLUENCE_MARKUP可选 &ndash;&gt;
+                         <!--除了ASCIIDOC之外，还有MARKDOWN和CONFLUENCE_MARKUP可选-->
                         <swagger2markup.markupLanguage>ASCIIDOC</swagger2markup.markupLanguage>
                         <swagger2markup.pathsGroupedBy>TAGS</swagger2markup.pathsGroupedBy>
                         <swagger2markup.extensions.dynamicOverview.contentPath>
@@ -236,7 +240,7 @@
                     </execution>
                 </executions>
             </plugin>
-            &lt;!&ndash;此插件生成HTML和PDF&ndash;&gt;
+            <!--此插件生成HTML和PDF-->
             <plugin>
                 <groupId>org.asciidoctor</groupId>
                 <artifactId>asciidoctor-maven-plugin</artifactId>
@@ -264,10 +268,6 @@
                         <doctype>book</doctype>
                         <toc>left</toc>
                         <toclevels>3</toclevels>
-                        <numbered></numbered>
-                        <hardbreaks></hardbreaks>
-                        <sectlinks></sectlinks>
-                        <sectanchors></sectanchors>
                         <generated>${generated.asciidoc.directory}</generated>
                     </attributes>
                 </configuration>
@@ -296,7 +296,7 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>-->
+            </plugin>
 
             <plugin>
                 <groupId>com.spotify</groupId>
@@ -317,6 +317,7 @@
                     </resources>
                 </configuration>
             </plugin>
+
         </plugins>
     </build>
 
