@@ -23,7 +23,6 @@
         <module>perception-business</module>
         <module>perception-data</module>
         <module>equipment-service</module>
-        <module>knowledge-service</module>
     </modules>
 
 </project>

@@ -16,12 +16,12 @@ public class LoggingInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
-
         long startTime = System.nanoTime();
         log.debug(String.format("Sending request %s on %s%n%s",
                 request.url(), chain.connection(), request.headers()));
 
         Response response = chain.proceed(request);
+        log.info("response code:{}",response.code());
         long entTime = System.nanoTime();
         log.debug(String.format("Received response for %s in %.1fms%n%s",
                 response.request().url(), (entTime - startTime) / 1e6d, response.headers()));

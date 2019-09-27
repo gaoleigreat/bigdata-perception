@@ -1,12 +1,12 @@
 package com.lego.framework.config;
-
 /**
  * @auther xiaodao
  * @date 2019/9/18 16:47
  */
 
-import feign.Feign;
 import feign.Logger;
+import feign.RequestInterceptor;
+import feign.RequestTemplate;
 import feign.codec.Encoder;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +27,21 @@ public class MultipartSupportConfig {
     }
 
 
-    @Bean
+    /*@Bean
     public Logger.Level log() {
         return Logger.Level.FULL;
-    }
+    }*/
 
+    @Bean
+    public FeignBasicAuthRequestInterceptor feignBasicAuthRequestInterceptor() {
+        return new FeignBasicAuthRequestInterceptor();
+    }
+}
+
+class FeignBasicAuthRequestInterceptor implements RequestInterceptor {
+
+    @Override
+    public void apply(RequestTemplate requestTemplate) {
+        requestTemplate.header("Connection", "close");
+    }
 }

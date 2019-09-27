@@ -10,8 +10,6 @@ import com.lego.framework.template.model.entity.FormTemplate;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
-
-import java.text.SimpleDateFormat;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;

@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.cloud.openfeign.FeignAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -27,9 +28,9 @@ public class FeignOkHttpConfig {
                 .connectTimeout(60, TimeUnit.SECONDS)
                 .writeTimeout(120, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(false)
-                //.addInterceptor(new HttpHeaderInterceptor())
-               // .addNetworkInterceptor(new NetworkInterceptor())
-               // .addInterceptor(new LoggingInterceptor())
+                // .addInterceptor(new HttpHeaderInterceptor())
+                // .addNetworkInterceptor(new NetworkInterceptor())
+                .addInterceptor(new LoggingInterceptor())
                 .connectionPool(new ConnectionPool())
                 .build();
     }
