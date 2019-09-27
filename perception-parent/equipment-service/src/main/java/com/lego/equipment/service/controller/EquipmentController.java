@@ -58,11 +58,11 @@ public class EquipmentController {
      */
     @ApiOperation(value = "查询设备类型下面的业务", httpMethod = "GET")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "type", value = "设备类型", dataType = "String", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "id", value = "设备类型", dataType = "String", required = true, paramType = "query"),
     })
     @Operation(value = "selectBusinessById", desc = "查询设备类型下面的业务")
     @RequestMapping(value = "/selectBusinessById", method = RequestMethod.GET)
-    public RespVO selectBusinessById(@RequestParam(value = "type") Long id) {
+    public RespVO selectBusinessById(@RequestParam(value = "id") Long id) {
         List<EquipmentBusiness> equipmentBusinesses = equipmentBusinessService.selectByEquipmentid(id);
         if (CollectionUtils.isEmpty(equipmentBusinesses)) {
             return RespVOBuilder.failure("对应设备不存在");
