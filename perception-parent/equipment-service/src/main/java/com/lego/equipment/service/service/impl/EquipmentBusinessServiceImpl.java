@@ -47,7 +47,21 @@ public class EquipmentBusinessServiceImpl implements EquipmentBusinessService {
 
     @Override
     public EquipmentBusiness selectByPrimaryKey(Long id) {
-        return equipmentBusinessMapper.selectByPrimaryKey(id);
+        EquipmentBusiness equipmentBusiness = equipmentBusinessMapper.selectByPrimaryKey(id);
+        setName(equipmentBusiness);
+        return equipmentBusiness;
+    }
+
+    private void setName(EquipmentBusiness equipmentBusiness) {
+        if (equipmentBusiness != null) {
+            RespVO<Business> businessRespVO = businessClient.selectById(equipmentBusiness.getBusinessId());
+            if (businessRespVO.getRetCode() == RespConsts.SUCCESS_RESULT_CODE) {
+                Business info = businessRespVO.getInfo();
+                if (info != null) {
+                    equipmentBusiness.setName(info.getName());
+                }
+            }
+        }
     }
 
     @Override
