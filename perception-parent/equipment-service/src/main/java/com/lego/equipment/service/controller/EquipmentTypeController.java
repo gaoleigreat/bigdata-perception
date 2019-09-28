@@ -141,7 +141,7 @@ public class EquipmentTypeController {
     })
     @Operation(value = "save", desc = "新增设备类型信息")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public RespVO<Integer> insert(@RequestBody EquipmentType equipmentType) {
+    public RespVO insert(@RequestBody EquipmentType equipmentType) {
         Integer num = iEquipmentTypeService.insertSelective(equipmentType);
         if (num > 0) {
             return RespVOBuilder.success();
@@ -160,7 +160,7 @@ public class EquipmentTypeController {
     })
     @Operation(value = "update", desc = "修改设备类型信息")
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
-    public RespVO<Integer> updateByPrimaryKeySelective(@RequestBody EquipmentType equipmentType) {
+    public RespVO updateByPrimaryKeySelective(@RequestBody EquipmentType equipmentType) {
         Integer num = iEquipmentTypeService.updateByPrimaryKeySelective(equipmentType);
         if (num > 0) {
             return RespVOBuilder.success();

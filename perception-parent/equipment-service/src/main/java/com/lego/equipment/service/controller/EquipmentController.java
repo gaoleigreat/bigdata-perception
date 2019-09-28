@@ -14,7 +14,6 @@ import com.lego.framework.business.model.entity.Business;
 import com.lego.framework.equipment.model.entity.EquipmentBusiness;
 import com.lego.framework.template.feign.TemplateFeignClient;
 import com.lego.framework.template.model.entity.FormTemplate;
-import com.sun.org.apache.regexp.internal.RE;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -60,7 +59,7 @@ public class EquipmentController {
      */
     @ApiOperation(value = "查询设备类型下面的业务", httpMethod = "GET")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "设备类型", dataType = "String", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "id", value = "设备ID", dataType = "String", required = true, paramType = "query"),
     })
     @Operation(value = "selectBusinessById", desc = "查询设备类型下面的业务")
     @RequestMapping(value = "/selectBusinessById", method = RequestMethod.GET)
