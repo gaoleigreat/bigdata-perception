@@ -142,11 +142,6 @@ public class EquipmentBusinessController {
         }
         Integer num = equipmentBusinessService.insertSelective(equipmentBusiness);
         if (num > 0) {
-            RespVO vo = crudClient.createBusiness(templateCode);
-            if (vo.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
-                log.error("创建业务表失败:{}", equipmentBusiness);
-                ExceptionBuilder.operateFailException("创建业务表失败:" + vo.getMsg());
-            }
             return RespVOBuilder.success();
         }
         return RespVOBuilder.failure();
