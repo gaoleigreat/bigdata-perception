@@ -19,8 +19,8 @@ import java.util.Map;
  * @date : 2019/9/25 19:43
  * @desc :
  */
-@FeignClient(value = "business-service", path = "/curd", fallback = CurdClientFallback.class)
-public interface CurdClient {
+@FeignClient(value = "business-service", path = "/crud", fallback = CrudClientFallback.class)
+public interface CrudClient {
 
     /**
      * 创建业务表
@@ -124,7 +124,7 @@ public interface CurdClient {
 }
 
 @Component
-class CurdClientFallback implements CurdClient {
+class CrudClientFallback implements CrudClient {
 
     @Override
     public RespVO createBusiness(String templateCode) {

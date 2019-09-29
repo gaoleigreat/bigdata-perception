@@ -1,6 +1,10 @@
 package com.lego.perception.business;
 
+import com.lego.framework.event.equipment.EquipmentBusinessSink;
+import com.lego.framework.event.equipment.EquipmentTypeSink;
+import com.lego.framework.event.log.LogSink;
 import com.lego.framework.event.log.LogSource;
+import com.lego.framework.event.template.TemplateSink;
 import com.lego.framework.event.template.TemplateSource;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,7 +23,7 @@ import org.springframework.cloud.stream.annotation.EnableBinding;
 @EnableEurekaClient
 @EnableFeignClients(basePackages = "com.lego")
 @SpringBootApplication(scanBasePackages = {"com.lego", "com.framework"})
-@EnableBinding(value = {LogSource.class,TemplateSource.class})
+@EnableBinding(value = {LogSink.class, TemplateSink.class, EquipmentBusinessSink.class, EquipmentTypeSink.class})
 public class BusinessServiceApplication {
 
     public static void main(String[] args) {

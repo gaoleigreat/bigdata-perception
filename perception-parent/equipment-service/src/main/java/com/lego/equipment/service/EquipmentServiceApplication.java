@@ -1,5 +1,7 @@
 package com.lego.equipment.service;
 
+import com.lego.framework.event.equipment.EquipmentBusinessSource;
+import com.lego.framework.event.equipment.EquipmentTypeSource;
 import com.lego.framework.event.log.LogSource;
 import com.lego.framework.event.template.TemplateSource;
 import org.springframework.boot.SpringApplication;
@@ -18,7 +20,7 @@ import org.springframework.cloud.stream.annotation.EnableBinding;
 @EnableEurekaClient
 @EnableFeignClients(basePackages = "com.lego")
 @SpringBootApplication(scanBasePackages = {"com.lego", "com.framework"})
-@EnableBinding({LogSource.class, TemplateSource.class})
+@EnableBinding({LogSource.class, TemplateSource.class, EquipmentTypeSource.class, EquipmentBusinessSource.class})
 public class EquipmentServiceApplication {
 
     public static void main(String[] args) {

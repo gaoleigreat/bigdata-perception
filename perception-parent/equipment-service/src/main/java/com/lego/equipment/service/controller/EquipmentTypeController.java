@@ -1,8 +1,7 @@
 package com.lego.equipment.service.controller;
 
-import java.util.ArrayList;
-
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.framework.common.consts.RespConsts;
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
@@ -12,7 +11,7 @@ import com.lego.equipment.service.service.IEquipmentTypeService;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
 import com.lego.framework.base.exception.ExceptionBuilder;
-import com.lego.framework.business.feign.CurdClient;
+import com.lego.framework.business.feign.CrudClient;
 import com.lego.framework.equipment.model.entity.EquipmentType;
 import com.lego.framework.template.feign.TemplateFeignClient;
 import com.lego.framework.template.model.entity.FormTemplate;
@@ -22,11 +21,11 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author itar
@@ -47,6 +46,9 @@ public class EquipmentTypeController {
 
     @Autowired
     private TemplateFeignClient templateFeignClient;
+
+    @Autowired
+    private CrudClient crudClient;
 
     /**
      * 分页查询数据
@@ -108,7 +110,7 @@ public class EquipmentTypeController {
             ExceptionBuilder.operateFailException("没有对应的表单模板");
         }
         FormTemplate formTemplateGet = formTemplates.get(0);
-       po.setTemplateCode(formTemplateGet.getTemplateCode());
+        po.setTemplateCode(formTemplateGet.getTemplateCode());
         return RespVOBuilder.success(po);
     }
 
@@ -141,9 +143,16 @@ public class EquipmentTypeController {
     })
     @Operation(value = "save", desc = "新增设备类型信息")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @Transactional(rollbackFor = RuntimeException.class)
     public RespVO insert(@RequestBody EquipmentType equipmentType) {
         Integer num = iEquipmentTypeService.insertSelective(equipmentType);
         if (num > 0) {
+            String templateCode = equipmentType.getTemplateCode();
+            RespVO respVO = crudClient.createBusiness(templateCode);
+            if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
+                log.error("设备表创建失败:{}", equipmentType);
+                ExceptionBuilder.operateFailException("创建设备表失败:" + respVO.getMsg());
+            }
             return RespVOBuilder.success();
         }
         return RespVOBuilder.failure();

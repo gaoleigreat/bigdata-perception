@@ -14,3 +14,4 @@ spring:
         output_log:
           destination: printLog
           content-type: application/json
+

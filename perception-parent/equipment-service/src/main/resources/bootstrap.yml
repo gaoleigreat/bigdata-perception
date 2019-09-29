@@ -11,13 +11,3 @@ spring:
 
 application:
   description: 设备服务
-
-
-logging:
-  level:
-    com:
-      lego:
-        framework:
-          business:
-            feign:
-              CurdClient: debug
