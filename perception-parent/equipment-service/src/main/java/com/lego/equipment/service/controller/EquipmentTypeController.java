@@ -13,7 +13,7 @@ import com.lego.equipment.service.service.IEquipmentTypeService;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
 import com.lego.framework.base.exception.ExceptionBuilder;
-import com.lego.framework.business.feign.CurdClient;
+import com.lego.framework.business.feign.CrudClient;
 import com.lego.framework.equipment.model.entity.EquipmentType;
 import com.lego.framework.template.feign.TemplateFeignClient;
 import com.lego.framework.template.model.entity.FormTemplate;
@@ -23,6 +23,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
@@ -44,10 +45,13 @@ public class EquipmentTypeController {
 
 
     @Autowired
-    private IEquipmentTypeService equipmentTypeService;
+    private IEquipmentTypeService iEquipmentTypeService;
 
     @Autowired
     private TemplateFeignClient templateFeignClient;
+
+    @Autowired
+    private CrudClient crudClient;
 
     /**
      * 分页查询数据
@@ -60,7 +64,7 @@ public class EquipmentTypeController {
     @RequestMapping(value = "/select_paged/{pageSize}/{pageIndex}", method = RequestMethod.GET)
     public RespVO<PagedResult<EquipmentType>> selectPaged(@PathParam(value = "") Page page,
                                                           @ModelAttribute EquipmentType equipmentType) {
-        PagedResult<EquipmentType> pagedResult = equipmentTypeService.selectPaged(equipmentType, page);
+        PagedResult<EquipmentType> pagedResult = iEquipmentTypeService.selectPaged(equipmentType, page);
         List<EquipmentType> resultList = pagedResult.getResultList();
         resultList.forEach(equipmentType1 -> {
             RespVO<RespDataVO<FormTemplate>> respDataVORespVO = templateFeignClient.findByDataType(Integer.valueOf(equipmentType1.getType()));
@@ -94,7 +98,7 @@ public class EquipmentTypeController {
     @Operation(value = "select_by_id", desc = "查询设备类型信息")
     @RequestMapping(value = "/select_by_id", method = RequestMethod.GET)
     public RespVO<EquipmentType> selectByPrimaryKey(@RequestParam(value = "id") Long id) {
-        EquipmentType po = equipmentTypeService.selectByPrimaryKey(id);
+        EquipmentType po = iEquipmentTypeService.selectByPrimaryKey(id);
 
         RespVO<RespDataVO<FormTemplate>> respDataVORespVO = templateFeignClient.findByDataType(Integer.valueOf(po.getType()));
 
@@ -125,7 +129,7 @@ public class EquipmentTypeController {
     @Operation(value = "delete_by_id", desc = "删除设备信息")
     @RequestMapping(value = "/delete_by_id", method = RequestMethod.DELETE)
     public RespVO<Integer> deleteByPrimaryKey(Long id) {
-        Integer num = equipmentTypeService.deleteByPrimaryKey(id);
+        Integer num = iEquipmentTypeService.deleteByPrimaryKey(id);
         if (num > 0) {
             return RespVOBuilder.success();
         }
@@ -142,6 +146,7 @@ public class EquipmentTypeController {
     })
     @Operation(value = "save", desc = "新增设备类型信息")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @Transactional(rollbackFor = RuntimeException.class)
     public RespVO<Integer> insert(@RequestBody EquipmentType equipmentType) {
         if (equipmentType == null) {
             return RespVOBuilder.failure("模板类型不能为空");
@@ -173,22 +178,27 @@ public class EquipmentTypeController {
         }
         EquipmentType equipmentTypeSelect = new EquipmentType();
         equipmentTypeSelect.setType(dataType);
-        List<EquipmentType> equipmentTypes = equipmentTypeService.query(equipmentTypeSelect);
+        List<EquipmentType> equipmentTypes = iEquipmentTypeService.query(equipmentTypeSelect);
         if (CollectionUtils.isNotEmpty(equipmentTypes)) {
             return RespVOBuilder.failure("模板对应设备已经存在");
         }
 
         equipmentType.setType(dataType);
-        Integer num = equipmentTypeService.insertSelective(equipmentType);
+        Integer num = iEquipmentTypeService.insertSelective(equipmentType);
 
 
-        if (num !=null && num >0){
-
-        }
         if (num > 0) {
+            RespVO respVO = crudClient.createBusiness(templateCode);
+            if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
+                log.error("设备表创建失败:{}", equipmentType);
+                ExceptionBuilder.operateFailException("创建设备表失败:" + respVO.getMsg());
+            }
             return RespVOBuilder.success();
         }
         return RespVOBuilder.failure();
+
+
+
     }
 
     /**
@@ -203,7 +213,7 @@ public class EquipmentTypeController {
     @Operation(value = "update", desc = "修改设备类型信息")
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
     public RespVO<Integer> updateByPrimaryKeySelective(@RequestBody EquipmentType equipmentType) {
-        Integer num = equipmentTypeService.updateByPrimaryKeySelective(equipmentType);
+        Integer num = iEquipmentTypeService.updateByPrimaryKeySelective(equipmentType);
         if (num > 0) {
             return RespVOBuilder.success();
         }
@@ -223,7 +233,7 @@ public class EquipmentTypeController {
     @Operation(value = "query_list", desc = "查询设备类型信息")
     @RequestMapping(value = "/query_list", method = RequestMethod.GET)
     public RespVO<RespDataVO<EquipmentType>> queryByCondition(@ModelAttribute EquipmentType equipmentType) {
-        List<EquipmentType> list = equipmentTypeService.query(equipmentType);
+        List<EquipmentType> list = iEquipmentTypeService.query(equipmentType);
         return RespVOBuilder.success(list);
     }
 

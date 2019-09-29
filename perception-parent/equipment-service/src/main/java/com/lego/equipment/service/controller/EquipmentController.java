@@ -9,12 +9,11 @@ import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
 import com.lego.framework.base.exception.ExceptionBuilder;
 import com.lego.framework.business.feign.BusinessClient;
-import com.lego.framework.business.feign.CurdClient;
+import com.lego.framework.business.feign.CrudClient;
 import com.lego.framework.business.model.entity.Business;
 import com.lego.framework.equipment.model.entity.EquipmentBusiness;
 import com.lego.framework.template.feign.TemplateFeignClient;
 import com.lego.framework.template.model.entity.FormTemplate;
-import com.sun.org.apache.regexp.internal.RE;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -44,7 +43,7 @@ public class EquipmentController {
     private TemplateFeignClient templateFeignClient;
 
     @Autowired
-    private CurdClient curdClient;
+    private CrudClient crudClient;
 
     @Autowired
     private EquipmentBusinessService equipmentBusinessService;
@@ -60,7 +59,7 @@ public class EquipmentController {
      */
     @ApiOperation(value = "查询设备类型下面的业务", httpMethod = "GET")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "设备类型", dataType = "String", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "id", value = "设备ID", dataType = "String", required = true, paramType = "query"),
     })
     @Operation(value = "selectBusinessById", desc = "查询设备类型下面的业务")
     @RequestMapping(value = "/selectBusinessById", method = RequestMethod.GET)
@@ -103,7 +102,7 @@ public class EquipmentController {
             ExceptionBuilder.operateFailException("没有对应的表单模板");
         }
         FormTemplate formTemplateGet = formTemplates.get(0);
-        RespVO<RespDataVO<Map<String, Object>>> respDataVORespVO1 = curdClient.queryBusinessData(formTemplateGet.getTemplateCode(), new ArrayList<>());
+        RespVO<RespDataVO<Map<String, Object>>> respDataVORespVO1 = crudClient.queryBusinessData(formTemplateGet.getTemplateCode(), new ArrayList<>());
         return respDataVORespVO1;
     }
 

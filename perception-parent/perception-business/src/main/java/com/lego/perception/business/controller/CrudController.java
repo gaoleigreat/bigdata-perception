@@ -36,10 +36,10 @@ import java.util.Map;
  * @desc :
  */
 @RestController
-@RequestMapping("/curd")
-@Api(value = "curd", description = "业务操作管理")
-@Resource(value = "curd", desc = "业务操作管理")
-public class CurdController {
+@RequestMapping("/crud")
+@Api(value = "crud", description = "业务操作管理")
+@Resource(value = "crud", desc = "业务操作管理")
+public class CrudController {
 
     @Autowired
     private ICrudService mySqlBusinessService;

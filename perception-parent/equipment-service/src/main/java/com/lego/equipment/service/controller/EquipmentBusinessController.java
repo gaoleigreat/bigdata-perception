@@ -1,5 +1,6 @@
 package com.lego.equipment.service.controller;
 
+import com.framework.common.consts.RespConsts;
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
@@ -8,12 +9,18 @@ import com.framework.common.sdto.RespVOBuilder;
 import com.lego.equipment.service.service.EquipmentBusinessService;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
+import com.lego.framework.base.exception.ExceptionBuilder;
+import com.lego.framework.business.feign.BusinessClient;
+import com.lego.framework.business.feign.CrudClient;
+import com.lego.framework.business.model.entity.Business;
 import com.lego.framework.equipment.model.entity.EquipmentBusiness;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
@@ -30,10 +37,17 @@ import java.util.List;
 @Resource(value = "equipmentBusiness", desc = "设备业务管理")
 @RestController
 @RequestMapping("/equipmentBusiness")
+@Slf4j
 public class EquipmentBusinessController {
 
     @Autowired
     private EquipmentBusinessService equipmentBusinessService;
+
+    @Autowired
+    private CrudClient crudClient;
+
+    @Autowired
+    private BusinessClient businessClient;
 
     /**
      * 分页查询数据
@@ -96,9 +110,25 @@ public class EquipmentBusinessController {
     })
     @Operation(value = "save_equipmentBusiness", desc = "新增设备业务信息")
     @RequestMapping(value = "/save_equipmentBusiness", method = RequestMethod.POST)
+    @Transactional(rollbackFor = RuntimeException.class)
     public RespVO insert(@RequestBody EquipmentBusiness equipmentBusiness) {
+        Long businessId = equipmentBusiness.getBusinessId();
+        RespVO<Business> respVO = businessClient.selectById(businessId);
+        if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
+            return RespVOBuilder.failure("获取业务失败");
+        }
+        Business info = respVO.getInfo();
+        if (info == null) {
+            return RespVOBuilder.failure("获取业务失败");
+        }
+        String templateCode = info.getTemplateCode();
         Integer num = equipmentBusinessService.insertSelective(equipmentBusiness);
         if (num > 0) {
+            RespVO vo = crudClient.createBusiness(templateCode);
+            if (vo.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
+                log.error("创建业务表失败:{}", equipmentBusiness);
+                ExceptionBuilder.operateFailException("创建业务表失败:" + vo.getMsg());
+            }
             return RespVOBuilder.success();
         }
         return RespVOBuilder.failure();
