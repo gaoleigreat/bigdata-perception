@@ -1,8 +1,9 @@
 package com.lego.equipment.service.controller;
 
-import java.util.ArrayList;
 
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.framework.common.consts.RespConsts;
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
@@ -43,7 +44,7 @@ public class EquipmentTypeController {
 
 
     @Autowired
-    private IEquipmentTypeService iEquipmentTypeService;
+    private IEquipmentTypeService equipmentTypeService;
 
     @Autowired
     private TemplateFeignClient templateFeignClient;
@@ -59,7 +60,7 @@ public class EquipmentTypeController {
     @RequestMapping(value = "/select_paged/{pageSize}/{pageIndex}", method = RequestMethod.GET)
     public RespVO<PagedResult<EquipmentType>> selectPaged(@PathParam(value = "") Page page,
                                                           @ModelAttribute EquipmentType equipmentType) {
-        PagedResult<EquipmentType> pagedResult = iEquipmentTypeService.selectPaged(equipmentType, page);
+        PagedResult<EquipmentType> pagedResult = equipmentTypeService.selectPaged(equipmentType, page);
         List<EquipmentType> resultList = pagedResult.getResultList();
         resultList.forEach(equipmentType1 -> {
             RespVO<RespDataVO<FormTemplate>> respDataVORespVO = templateFeignClient.findByDataType(Integer.valueOf(equipmentType1.getType()));
@@ -93,7 +94,7 @@ public class EquipmentTypeController {
     @Operation(value = "select_by_id", desc = "查询设备类型信息")
     @RequestMapping(value = "/select_by_id", method = RequestMethod.GET)
     public RespVO<EquipmentType> selectByPrimaryKey(@RequestParam(value = "id") Long id) {
-        EquipmentType po = iEquipmentTypeService.selectByPrimaryKey(id);
+        EquipmentType po = equipmentTypeService.selectByPrimaryKey(id);
 
         RespVO<RespDataVO<FormTemplate>> respDataVORespVO = templateFeignClient.findByDataType(Integer.valueOf(po.getType()));
 
@@ -108,7 +109,7 @@ public class EquipmentTypeController {
             ExceptionBuilder.operateFailException("没有对应的表单模板");
         }
         FormTemplate formTemplateGet = formTemplates.get(0);
-       po.setTemplateCode(formTemplateGet.getTemplateCode());
+        po.setTemplateCode(formTemplateGet.getTemplateCode());
         return RespVOBuilder.success(po);
     }
 
@@ -124,7 +125,7 @@ public class EquipmentTypeController {
     @Operation(value = "delete_by_id", desc = "删除设备信息")
     @RequestMapping(value = "/delete_by_id", method = RequestMethod.DELETE)
     public RespVO<Integer> deleteByPrimaryKey(Long id) {
-        Integer num = iEquipmentTypeService.deleteByPrimaryKey(id);
+        Integer num = equipmentTypeService.deleteByPrimaryKey(id);
         if (num > 0) {
             return RespVOBuilder.success();
         }
@@ -142,7 +143,48 @@ public class EquipmentTypeController {
     @Operation(value = "save", desc = "新增设备类型信息")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public RespVO<Integer> insert(@RequestBody EquipmentType equipmentType) {
-        Integer num = iEquipmentTypeService.insertSelective(equipmentType);
+        if (equipmentType == null) {
+            return RespVOBuilder.failure("模板类型不能为空");
+        }
+
+
+        String templateCode = equipmentType.getTemplateCode();
+        if (StringUtils.isEmpty(templateCode)) {
+            return RespVOBuilder.failure("模板code不能为空");
+        }
+        RespVO<FormTemplate> formTemplateRespVO = templateFeignClient.findFormTemplateByCode(templateCode);
+
+        if (formTemplateRespVO == null) {
+            return RespVOBuilder.failure("模板服务报错");
+        }
+        if (formTemplateRespVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
+            return RespVOBuilder.failure("模板服务报错");
+        }
+        FormTemplate formTemplate = formTemplateRespVO.getInfo();
+
+        if (formTemplate == null) {
+            return RespVOBuilder.failure("模板不存在");
+        }
+
+        Integer dataType = formTemplate.getDataType();
+
+        if (dataType == null) {
+            return RespVOBuilder.failure("模板对应数据有误，请联系运维人员进行处理");
+        }
+        EquipmentType equipmentTypeSelect = new EquipmentType();
+        equipmentTypeSelect.setType(dataType);
+        List<EquipmentType> equipmentTypes = equipmentTypeService.query(equipmentTypeSelect);
+        if (CollectionUtils.isNotEmpty(equipmentTypes)) {
+            return RespVOBuilder.failure("模板对应设备已经存在");
+        }
+
+        equipmentType.setType(dataType);
+        Integer num = equipmentTypeService.insertSelective(equipmentType);
+
+
+        if (num !=null && num >0){
+
+        }
         if (num > 0) {
             return RespVOBuilder.success();
         }
@@ -161,7 +203,7 @@ public class EquipmentTypeController {
     @Operation(value = "update", desc = "修改设备类型信息")
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
     public RespVO<Integer> updateByPrimaryKeySelective(@RequestBody EquipmentType equipmentType) {
-        Integer num = iEquipmentTypeService.updateByPrimaryKeySelective(equipmentType);
+        Integer num = equipmentTypeService.updateByPrimaryKeySelective(equipmentType);
         if (num > 0) {
             return RespVOBuilder.success();
         }
@@ -181,7 +223,7 @@ public class EquipmentTypeController {
     @Operation(value = "query_list", desc = "查询设备类型信息")
     @RequestMapping(value = "/query_list", method = RequestMethod.GET)
     public RespVO<RespDataVO<EquipmentType>> queryByCondition(@ModelAttribute EquipmentType equipmentType) {
-        List<EquipmentType> list = iEquipmentTypeService.query(equipmentType);
+        List<EquipmentType> list = equipmentTypeService.query(equipmentType);
         return RespVOBuilder.success(list);
     }
 
