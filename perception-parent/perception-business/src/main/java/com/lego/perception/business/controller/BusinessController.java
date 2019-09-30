@@ -119,20 +119,22 @@ public class BusinessController {
             ExceptionBuilder.operateFailException(vo.getMsg());
         }
         Sitemap querySitemap = new Sitemap();
-        querySitemap.setUrl("businessManage");
+        querySitemap.setName("业务管理");
         querySitemap.setSubSystem("basicManage");
+        querySitemap.setType(1);
         List<Sitemap> list = sitemapClient.list(querySitemap);
         if (CollectionUtils.isEmpty(list)) {
             // 创建业务菜单
-            ExceptionBuilder.operateFailException("请先创建业务菜单");
+            ExceptionBuilder.operateFailException("请先创建业务管理菜单");
         }
         querySitemap = list.get(0);
         Sitemap sitemap = new Sitemap();
         sitemap.setName(business.getName());
         sitemap.setType(2);
         sitemap.setStatus("1");
+        sitemap.setParentId(querySitemap.getId());
         sitemap.setSubSystem(querySitemap.getName());
-        sitemap.setUrl(business.getTemplateCode());
+        sitemap.setUrl("templatePage" + "？" + business.getTemplateCode());
         return sitemapClient.insert(sitemap);
     }
 
