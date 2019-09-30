@@ -19,6 +19,7 @@ import com.lego.framework.template.model.entity.FormTemplateItem;
 import com.lego.framework.template.model.entity.SearchParam;
 import com.lego.perception.business.mapper.CrudMapper;
 import com.lego.perception.business.service.ICrudService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +38,7 @@ import java.util.*;
  * @desc :
  */
 @Service
+@Slf4j
 public class CrudServiceImpl implements ICrudService {
 
     @Autowired
@@ -143,7 +145,7 @@ public class CrudServiceImpl implements ICrudService {
         }
 
         IPage iPage = PageUtil.page2IPage(page);
-        IPage<Map<String, Object>> data = businessMapper.queryBusinessData(iPage,tableName, wrapper);
+        IPage<Map<String, Object>> data = businessMapper.queryBusinessData(iPage, tableName, wrapper);
         if (!CollectionUtils.isEmpty(data.getRecords())) {
             for (Map datum : data.getRecords()) {
                 datum.remove("fileId");
@@ -154,12 +156,13 @@ public class CrudServiceImpl implements ICrudService {
 
     @Override
     public RespVO updateBusinessData(String tableName, Map<String, Object> data) {
+        log.info("data:{},tableName:{}", data, tableName);
         if (!data.containsKey("id")) {
             // 防止数据全部删除
             return RespVOBuilder.failure("修改条件缺失");
         }
-        Long id = (Long) data.get("id");
-        BusinessTable business = new BusinessTable(id, tableName, null);
+        Long id = Long.valueOf(data.get("id") + "");
+        BusinessTable business = new BusinessTable(id, tableName, data);
         Integer update = businessMapper.updateByID(business);
         if (update > 0) {
             return RespVOBuilder.success();
@@ -208,24 +211,23 @@ public class CrudServiceImpl implements ICrudService {
     }
 
     @Override
-    public RespVO downloadBusinessData(FormTemplate formTemplate,
+    public void downloadBusinessData(FormTemplate formTemplate,
                                        List<SearchParam> searchParams,
                                        HttpServletResponse response) {
         String tableName = formTemplate.getDescription();
         RespVO<RespDataVO<Map<String, Object>>> respVO = queryBusinessData(tableName, searchParams);
         if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
-            return RespVOBuilder.failure();
+           ExceptionBuilder.operateFailException("下载失败");
         }
         Map<String, String> templateItems = getTemplateItemsFields(formTemplate);
         List<Map<String, Object>> mapList = respVO.getInfo().getList();
         List<Map<String, String>> dataList = getItemsStrData(mapList, formTemplate);
         try {
             ExcelUtil.excelWriter(dataList, templateItems, "sheet", formTemplate.getTemplateName(), 0, response);
-            return RespVOBuilder.success();
         } catch (Exception e) {
             e.printStackTrace();
+            ExceptionBuilder.operateFailException("下载失败");
         }
-        return RespVOBuilder.failure();
     }
 
     private List<Map<String, String>> getItemsStrData(List<Map<String, Object>> mapList, FormTemplate formTemplate) {

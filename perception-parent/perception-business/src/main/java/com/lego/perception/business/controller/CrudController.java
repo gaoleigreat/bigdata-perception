@@ -9,6 +9,7 @@ import com.framework.common.sdto.RespVOBuilder;
 import com.framework.excel.utils.ExcelUtil;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
+import com.lego.framework.base.exception.ExceptionBuilder;
 import com.lego.framework.template.feign.TemplateFeignClient;
 import com.lego.framework.template.model.entity.FormTemplate;
 import com.lego.framework.template.model.entity.SearchParam;
@@ -25,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import javax.websocket.server.PathParam;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -116,8 +118,8 @@ public class CrudController {
     @RequestMapping(value = "/queryPaged/{pageSize}/{pageIndex}", method = RequestMethod.POST)
     @Operation(value = "query", desc = "查询业务数据")
     public RespVO<PagedResult<Map<String, Object>>> queryPaged(@RequestParam String templateCode,
-                                               @RequestBody List<SearchParam> searchParams,
-                                               @PathParam(value = "") Page page) {
+                                                               @RequestBody List<SearchParam> searchParams,
+                                                               @PathParam(value = "") Page page) {
         RespVO<FormTemplate> respVO = templateFeignClient.findFormTemplateByCode(templateCode);
         if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
             return RespVOBuilder.failure("获取模板信息失败");
@@ -137,9 +139,9 @@ public class CrudController {
     @RequestMapping(value = "/queryDataPaged/{pageSize}/{pageIndex}", method = RequestMethod.POST)
     @Operation(value = "query", desc = "查询业务数据")
     public RespVO<PagedResult<Map<String, Object>>> queryDataPaged(@RequestParam String templateCode,
-                                                   @RequestBody List<SearchParam> searchParams,
-                                                   @PathVariable(value = "pageSize") Integer pageSize,
-                                                   @PathVariable(value = "pageIndex") Integer pageIndex) {
+                                                                   @RequestBody List<SearchParam> searchParams,
+                                                                   @PathVariable(value = "pageSize") Integer pageSize,
+                                                                   @PathVariable(value = "pageIndex") Integer pageIndex) {
         RespVO<FormTemplate> respVO = templateFeignClient.findFormTemplateByCode(templateCode);
         if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
             return RespVOBuilder.failure("获取模板信息失败");
@@ -223,18 +225,18 @@ public class CrudController {
     })
     @RequestMapping(value = "/download", method = RequestMethod.POST)
     @Operation(value = "download", desc = "下载业务数据")
-    public RespVO downloadBusinessData(@RequestParam String templateCode,
-                                       @RequestBody List<SearchParam> searchParams,
-                                       HttpServletResponse response) {
+    public void downloadBusinessData(@RequestParam String templateCode,
+                                     @RequestBody List<SearchParam> searchParams,
+                                     HttpServletResponse response) {
         RespVO<FormTemplate> respVO = templateFeignClient.findFormTemplateByCode(templateCode);
         if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
-            return RespVOBuilder.failure("获取模板信息失败");
+            ExceptionBuilder.operateFailException("获取模板信息失败");
         }
         FormTemplate formTemplate = respVO.getInfo();
         if (formTemplate == null) {
-            return RespVOBuilder.failure("找不到对应模板信息");
+           ExceptionBuilder.operateFailException("找不到对应模板信息");
         }
-        return mySqlBusinessService.downloadBusinessData(formTemplate, searchParams, response);
+        mySqlBusinessService.downloadBusinessData(formTemplate, searchParams, response);
     }
 
 

@@ -99,5 +99,5 @@ public interface ICrudService {
      * @param searchParams
      * @return
      */
-    RespVO downloadBusinessData(FormTemplate formTemplate, List<SearchParam> searchParams, HttpServletResponse response);
+    void downloadBusinessData(FormTemplate formTemplate, List<SearchParam> searchParams, HttpServletResponse response);
 }
