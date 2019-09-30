@@ -14,6 +14,8 @@ import com.lego.framework.business.feign.BusinessClient;
 import com.lego.framework.business.feign.CrudClient;
 import com.lego.framework.business.model.entity.Business;
 import com.lego.framework.equipment.model.entity.EquipmentBusiness;
+import com.lego.framework.template.feign.TemplateFeignClient;
+import com.lego.framework.template.model.entity.FormTemplate;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -48,6 +50,9 @@ public class EquipmentBusinessController {
 
     @Autowired
     private BusinessClient businessClient;
+
+    @Autowired
+    private TemplateFeignClient templateFeignClient;
 
     /**
      * 分页查询数据
@@ -122,13 +127,21 @@ public class EquipmentBusinessController {
             return RespVOBuilder.failure("获取业务失败");
         }
         String templateCode = info.getTemplateCode();
+        RespVO<FormTemplate> formTemplateRespVO = templateFeignClient.findFormTemplateByCode(templateCode);
+
+        if (formTemplateRespVO == null) {
+            return RespVOBuilder.failure("模板服务报错");
+        }
+        if (formTemplateRespVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
+            return RespVOBuilder.failure("模板服务报错");
+        }
+        FormTemplate formTemplate = formTemplateRespVO.getInfo();
+
+        if (formTemplate == null) {
+            return RespVOBuilder.failure("模板不存在");
+        }
         Integer num = equipmentBusinessService.insertSelective(equipmentBusiness);
         if (num > 0) {
-            RespVO vo = crudClient.createBusiness(templateCode);
-            if (vo.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
-                log.error("创建业务表失败:{}", equipmentBusiness);
-                ExceptionBuilder.operateFailException("创建业务表失败:" + vo.getMsg());
-            }
             return RespVOBuilder.success();
         }
         return RespVOBuilder.failure();
