@@ -6,6 +6,8 @@ import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.system.model.entity.DataFile;
 import com.lego.framework.system.model.entity.Permission;
+import feign.hystrix.FallbackFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +22,7 @@ import java.util.List;
  * @description
  * @since 2019/8/23
  **/
-@FeignClient(value = "system-service", path = "/dataFile/v1", fallback = DataFileClientFallback.class)
+@FeignClient(value = "system-service", path = "/dataFile/v1", fallbackFactory = DataFileClientFallbackFactory.class)
 public interface DataFileClient {
 
 
@@ -44,17 +46,23 @@ public interface DataFileClient {
 }
 
 @Component
-class DataFileClientFallback implements DataFileClient {
-
-
-    @Override
-    public RespVO<RespDataVO<Long>> insertList(List<DataFile> dataFiles) {
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "system服务不可用");
-    }
-
+@Slf4j
+class DataFileClientFallbackFactory implements FallbackFactory<DataFileClient> {
 
     @Override
-    public RespVO<Long> insert(DataFile dataFile) {
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "system服务不可用");
+    public DataFileClient create(Throwable throwable) {
+        return new DataFileClient() {
+            @Override
+            public RespVO<RespDataVO<Long>> insertList(List<DataFile> dataFiles) {
+                log.error("fallback; reason was:", throwable);
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "system服务不可用");
+            }
+
+            @Override
+            public RespVO<Long> insert(DataFile dataFile) {
+                log.error("fallback; reason was:", throwable);
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "system服务不可用");
+            }
+        };
     }
 }

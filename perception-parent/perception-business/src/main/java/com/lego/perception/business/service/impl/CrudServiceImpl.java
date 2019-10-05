@@ -14,6 +14,8 @@ import com.framework.mybatis.utils.TableUtils;
 import com.framework.mybatis.utils.WrapperUtils;
 import com.lego.framework.base.exception.ExceptionBuilder;
 import com.lego.framework.business.model.entity.BusinessTable;
+import com.lego.framework.template.feign.TemplateFeignClient;
+import com.lego.framework.template.model.entity.EnumerationItem;
 import com.lego.framework.template.model.entity.FormTemplate;
 import com.lego.framework.template.model.entity.FormTemplateItem;
 import com.lego.framework.template.model.entity.SearchParam;
@@ -43,6 +45,9 @@ public class CrudServiceImpl implements ICrudService {
 
     @Autowired
     private CrudMapper businessMapper;
+
+    @Autowired
+    private TemplateFeignClient templateFeignClient;
 
     @Override
     public RespVO createBusinessTable(FormTemplate formTemplate) {
@@ -212,12 +217,12 @@ public class CrudServiceImpl implements ICrudService {
 
     @Override
     public void downloadBusinessData(FormTemplate formTemplate,
-                                       List<SearchParam> searchParams,
-                                       HttpServletResponse response) {
+                                     List<SearchParam> searchParams,
+                                     HttpServletResponse response) {
         String tableName = formTemplate.getDescription();
         RespVO<RespDataVO<Map<String, Object>>> respVO = queryBusinessData(tableName, searchParams);
         if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
-           ExceptionBuilder.operateFailException("下载失败");
+            ExceptionBuilder.operateFailException("下载失败");
         }
         Map<String, String> templateItems = getTemplateItemsFields(formTemplate);
         List<Map<String, Object>> mapList = respVO.getInfo().getList();
@@ -238,7 +243,26 @@ public class CrudServiceImpl implements ICrudService {
             for (FormTemplateItem templateItem : items) {
                 String field = templateItem.getField();
                 Integer category = templateItem.getCategory();
-                String columnValueStr = TableUtils.getColumnValueStr(category, map.get(field));
+                Object o = map.get(field);
+                if (o == null) {
+                    fieldMap.put(field, null);
+                    continue;
+                }
+                String columnValueStr;
+                if (category == 6) {
+                    Long enumId = templateItem.getEnumId();
+                    RespVO<EnumerationItem> respVO = templateFeignClient.findItem(enumId, Integer.valueOf(o + ""));
+                    if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
+                        continue;
+                    }
+                    EnumerationItem info = respVO.getInfo();
+                    if (null == info) {
+                        continue;
+                    }
+                    columnValueStr = info.getLabel();
+                } else {
+                    columnValueStr = TableUtils.getColumnValueStr(category, o);
+                }
                 fieldMap.put(field, columnValueStr);
             }
             dataList.add(fieldMap);

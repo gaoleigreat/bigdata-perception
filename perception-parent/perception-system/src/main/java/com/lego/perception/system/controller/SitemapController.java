@@ -46,7 +46,7 @@ public class SitemapController {
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @Operation(value = "find", desc = "查询")
     public List<Sitemap> list(@RequestBody Sitemap sitemap) {
-        return sitemapService.findList(sitemap);
+        return sitemapService.findAllList(sitemap);
     }
 
 

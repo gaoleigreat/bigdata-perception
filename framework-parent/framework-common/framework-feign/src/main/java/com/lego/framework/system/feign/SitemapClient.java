@@ -18,7 +18,7 @@ import java.util.List;
  * @date : 2019/9/18 14:46
  * @desc :
  */
-@FeignClient(value = "system-service", path = "sitemap", fallback = SitemapClientFallback.class)
+@FeignClient(value = "system-service", path = "/sitemap", fallback = SitemapClientFallback.class)
 public interface SitemapClient {
 
 

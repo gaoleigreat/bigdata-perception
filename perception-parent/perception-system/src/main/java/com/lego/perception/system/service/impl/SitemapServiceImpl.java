@@ -167,4 +167,9 @@ public class SitemapServiceImpl implements ISitemapService {
         sitemapMapper.deleteList(ids);
         return RespVOBuilder.success();
     }
+
+    @Override
+    public List<Sitemap> findAllList(Sitemap sitemap) {
+        return sitemapMapper.findList(sitemap);
+    }
 }

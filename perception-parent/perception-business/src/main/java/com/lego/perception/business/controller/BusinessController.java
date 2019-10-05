@@ -135,7 +135,7 @@ public class BusinessController {
         sitemap.setStatus("1");
         sitemap.setParentId(querySitemap.getId());
         sitemap.setSubSystem(querySitemap.getName());
-        sitemap.setUrl("templatePage" + "？" + business.getTemplateCode());
+        sitemap.setUrl("templatePage" + "?" + business.getTemplateCode());
         return sitemapClient.insert(sitemap);
     }
 

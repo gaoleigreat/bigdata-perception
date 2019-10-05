@@ -71,4 +71,10 @@ public interface ISitemapService {
      * @return
      */
     RespVO deleteList(List<Long> ids);
+
+    /**
+     * @param sitemap
+     * @return
+     */
+    List<Sitemap> findAllList(Sitemap sitemap);
 }

@@ -7,14 +7,20 @@ import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.template.model.entity.DataTemplate;
 import com.lego.framework.template.model.entity.EnumerationItem;
 import com.lego.framework.template.model.entity.FormTemplate;
+import feign.hystrix.FallbackFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
-@FeignClient(value = "template-service", fallback = TemplateFallBack.class)
+/**
+ * @author yanglf
+ */
+@FeignClient(value = "template-service", fallbackFactory = TemplateFallBackFactory.class)
 public interface TemplateFeignClient {
 
     /**
@@ -122,69 +128,79 @@ public interface TemplateFeignClient {
 
 }
 
+@Slf4j
 @Component
-class TemplateFallBack implements TemplateFeignClient {
+class TemplateFallBackFactory implements FallbackFactory<TemplateFeignClient> {
 
     @Override
-    public RespVO<Enumeration> findEnumerationById(String code) {
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "template服务不可用");
+    public TemplateFeignClient create(Throwable throwable) {
+        return new TemplateFeignClient() {
+            @Override
+            public RespVO<Enumeration> findEnumerationById(String code) {
+                log.error("fallback; reason was:", throwable);
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "template服务不可用");
+            }
+
+            @Override
+            public RespVO<EnumerationItem> findItem(Long enumId, Integer value) {
+                log.error("fallback; reason was:", throwable);
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "template服务不可用");
+            }
+
+            @Override
+            public RespVO<List<EnumerationItem>> findItemList(EnumerationItem enumerationItem) {
+                log.error("fallback; reason was:", throwable);
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "template服务不可用");
+            }
+
+            @Override
+            public RespVO<EnumerationItem> findItemLable(Long enumId, String label) {
+                log.error("fallback; reason was:", throwable);
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "template服务不可用");
+            }
+
+            @Override
+            public RespVO<Map<Long, String>> findEnumerationList(Map<Long, Integer> map) {
+                log.error("fallback; reason was:", throwable);
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "template服务不可用");
+            }
+
+            @Override
+            public RespVO<Enumeration> findEnumerationByCode(String code) {
+                log.error("fallback; reason was:", throwable);
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "template服务不可用");
+            }
+
+            @Override
+            public RespVO<DataTemplate> findDataTemplateById(Long id) {
+                log.error("fallback; reason was:", throwable);
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "template服务不可用");
+            }
+
+            @Override
+            public RespVO<DataTemplate> findDataTemplateByCode(String code) {
+                log.error("fallback; reason was:", throwable);
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "template服务不可用");
+            }
+
+            @Override
+            public RespVO<FormTemplate> findFormTemplateById(Long id) {
+                log.error("fallback; reason was:", throwable);
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "template服务不可用");
+            }
+
+            @Override
+            public RespVO<FormTemplate> findFormTemplateByCode(String code) {
+                log.error("fallback; reason was:", throwable);
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "template服务不可用");
+            }
+
+            @Override
+            public RespVO<RespDataVO<FormTemplate>> findByDataType(Integer dataType) {
+                log.error("fallback; reason was:", throwable);
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "template服务不可用");
+            }
+        };
     }
-
-    @Override
-    public RespVO<EnumerationItem> findItem(Long enumId, Integer value) {
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "template服务不可用");
-    }
-
-    @Override
-    public RespVO<List<EnumerationItem>> findItemList(EnumerationItem enumerationItem) {
-
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "template服务不可用");
-    }
-
-    @Override
-    public RespVO<EnumerationItem> findItemLable(Long enumId, String label) {
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "template服务不可用");
-    }
-
-    @Override
-    public RespVO<Map<Long, String>> findEnumerationList(Map<Long, Integer> map) {
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "template服务不可用");
-    }
-
-    @Override
-    public RespVO<Enumeration> findEnumerationByCode(String code) {
-
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "template服务不可用");
-    }
-
-    @Override
-    public RespVO<DataTemplate> findDataTemplateById(Long id) {
-
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "template服务不可用");
-    }
-
-    @Override
-    public RespVO<DataTemplate> findDataTemplateByCode(String code) {
-
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "template服务不可用");
-    }
-
-    @Override
-    public RespVO<FormTemplate> findFormTemplateById(Long id) {
-
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "template服务不可用");
-    }
-
-    @Override
-    public RespVO<FormTemplate> findFormTemplateByCode(String code) {
-
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "template服务不可用");
-    }
-
-    @Override
-    public RespVO<RespDataVO<FormTemplate>> findByDataType(Integer dataType) {
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "template服务不可用");
-    }
-
-
 }
+

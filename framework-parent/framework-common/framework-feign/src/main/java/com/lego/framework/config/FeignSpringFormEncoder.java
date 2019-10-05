@@ -42,7 +42,6 @@ public class FeignSpringFormEncoder extends FormEncoder {
     }
 
     @Override
-
     public void encode(Object object, Type bodyType, RequestTemplate template) throws EncodeException {
         if (bodyType.equals(MultipartFile.class)) {
             MultipartFile file = (MultipartFile) object;

@@ -15,7 +15,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @since 2019/8/27
  **/
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = {AuthServiceApplication.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = {AuthServiceApplication.class})
 public class AuthServiceTest {
 
     @Autowired
