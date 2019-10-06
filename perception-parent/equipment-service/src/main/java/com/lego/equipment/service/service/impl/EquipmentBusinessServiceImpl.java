@@ -7,7 +7,7 @@ import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespVO;
 import com.framework.mybatis.utils.PageUtil;
 import com.lego.equipment.service.mapper.EquipmentBusinessMapper;
-import com.lego.equipment.service.service.EquipmentBusinessService;
+import com.lego.equipment.service.service.IEquipmentBusinessService;
 import com.lego.framework.business.feign.BusinessClient;
 import com.lego.framework.business.model.entity.Business;
 import com.lego.framework.config.BaseModel;
@@ -25,7 +25,7 @@ import java.util.List;
  * @since jdk 1.8
  */
 @Service
-public class EquipmentBusinessServiceImpl implements EquipmentBusinessService {
+public class EquipmentBusinessServiceImpl implements IEquipmentBusinessService {
     /*<AUTOGEN--BEGIN>*/
 
     @Autowired

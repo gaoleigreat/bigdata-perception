@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
-import com.lego.equipment.service.service.EquipmentBusinessService;
+import com.lego.equipment.service.service.IEquipmentBusinessService;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
 import com.lego.framework.base.exception.ExceptionBuilder;
@@ -46,7 +46,7 @@ public class EquipmentController {
     private CrudClient crudClient;
 
     @Autowired
-    private EquipmentBusinessService equipmentBusinessService;
+    private IEquipmentBusinessService equipmentBusinessService;
 
     @Autowired
     private BusinessClient businessClient;
@@ -102,8 +102,7 @@ public class EquipmentController {
             ExceptionBuilder.operateFailException("没有对应的表单模板");
         }
         FormTemplate formTemplateGet = formTemplates.get(0);
-        RespVO<RespDataVO<Map<String, Object>>> respDataVORespVO1 = crudClient.queryBusinessData(formTemplateGet.getTemplateCode(), new ArrayList<>());
-        return respDataVORespVO1;
+        return crudClient.queryBusinessData(formTemplateGet.getTemplateCode(), new ArrayList<>());
     }
 
 

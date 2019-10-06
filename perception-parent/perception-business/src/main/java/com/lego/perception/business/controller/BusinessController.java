@@ -101,7 +101,14 @@ public class BusinessController {
     @RequestMapping(value = "/save_tplBusiness", method = RequestMethod.POST)
     @Transactional(rollbackFor = RuntimeException.class)
     public RespVO insert(@RequestBody Business business) {
-        RespVO<FormTemplate> respVO = templateFeignClient.findFormTemplateByCode(business.getTemplateCode());
+        String templateCode = business.getTemplateCode();
+        Business queryBusiness = new Business();
+        queryBusiness.setTemplateCode(templateCode);
+        List<Business> queryBusinessList = iBusinessService.query(queryBusiness);
+        if (!CollectionUtils.isEmpty(queryBusinessList)) {
+            return RespVOBuilder.failure("模板对应业务已经存在");
+        }
+        RespVO<FormTemplate> respVO = templateFeignClient.findFormTemplateByCode(templateCode);
         if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
             ExceptionBuilder.operateFailException(respVO.getMsg());
         }

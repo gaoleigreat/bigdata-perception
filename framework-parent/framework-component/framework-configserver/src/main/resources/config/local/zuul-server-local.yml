@@ -9,6 +9,7 @@ zuul:
     business-service: /business-service/**
     data-service: /data-service/**
     equipment-service: /equipment-service/**
+    knowledge-service: /knowledge-service/**
   ignored-services: '*'
 
 

@@ -14,7 +14,7 @@ import java.util.List;
  * @date 2019-09-24 10:07:49
  * @since jdk 1.8
  */
-public interface EquipmentBusinessService {
+public interface IEquipmentBusinessService {
 
 
     PagedResult<EquipmentBusiness> selectPaged(EquipmentBusiness equipmentBusiness, Page page);
