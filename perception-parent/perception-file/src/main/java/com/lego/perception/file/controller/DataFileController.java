@@ -41,10 +41,12 @@ public class DataFileController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "files", value = "多个文件，", paramType = "formData", allowMultiple = true, required = true, dataType = "file"),
             @ApiImplicitParam(name = "projectId", value = "projectId，", paramType = "query", allowMultiple = true, required = true, dataType = "Long"),
-            @ApiImplicitParam(name = "templateId", value = "templateId，", paramType = "query", allowMultiple = true, required = true, dataType = "Long"),
+            @ApiImplicitParam(name = "templateId", value = "templateId，", paramType = "query", allowMultiple = true, required = false, dataType = "Long"),
             @ApiImplicitParam(name = "sourceType", value = "sourceType，", paramType = "query", allowMultiple = true, required = true, dataType = "int"),
-            @ApiImplicitParam(name = "sourceType", value = "remark，", paramType = "query", allowMultiple = true, required = true, dataType = "String"),
-            @ApiImplicitParam(name = "sourceType", value = "tags，", paramType = "query", allowMultiple = true, required = true, dataType = "String")
+            @ApiImplicitParam(name = "remark", value = "remark，", paramType = "query", allowMultiple = true, required = false, dataType = "String"),
+            @ApiImplicitParam(name = "tags", value = "tags，", paramType = "query", allowMultiple = true, required = false, dataType = "String"),
+            @ApiImplicitParam(name = "equipmentId", value = "equipmentId，", paramType = "query", allowMultiple = true, required = false, dataType = "Long"),
+            @ApiImplicitParam(name = "tags", value = "equipmentCode，", paramType = "equipmentCode", allowMultiple = true, required = false, dataType = "String")
 
     })
     @PostMapping(value = "/uploads", headers = "content-type=multipart/form-data")
@@ -53,7 +55,9 @@ public class DataFileController {
                                                 @RequestParam(value = "templateId", required = true) Long templateId,
                                                 @RequestParam(value = "sourceType", required = true) int sourceType,
                                                 @RequestParam(value = "remark", required = false) String remark,
-                                                @RequestParam(value = "tags", required = false) String tags
+                                                @RequestParam(value = "tags", required = false) String tags,
+                                                @RequestParam(value = "equipmentId", required = false) Long equipmentId,
+                                                @RequestParam(value = "equipmentCode", required = false) String equipmentCode
 
     ) {
         String batchNum = UuidUtils.generate16Uuid();
@@ -67,6 +71,7 @@ public class DataFileController {
                 uploadFile.setContent(f.getBytes());
                 if (!StringUtils.isEmpty(f.getOriginalFilename())) {
                     int pos = f.getOriginalFilename().lastIndexOf(".");
+
                     if (pos > -1 && pos + 1 < f.getOriginalFilename().length()) {
                         uploadFile.setExt(f.getOriginalFilename().substring(pos + 1));
                     }
@@ -77,6 +82,12 @@ public class DataFileController {
                     fileMap.put("fileName", f.getOriginalFilename());
                     fileMap.put("url", upload.getInfo().get("data"));
                     DataFile dataFile = new DataFile(uploadFile.getFileName(), uploadFile.getExt(), projectId, upload.getInfo().get("data").toString(), upload.getInfo().get("data").toString(), templateId, 0, sourceType, 0, remark, tags, batchNum);
+                    if (null == equipmentId){
+                        dataFile.setEquipmentId(equipmentId);
+                       if (!StringUtils.isEmpty(equipmentCode)) {
+                           dataFile.setEquipmentCode(equipmentCode);
+                       }
+                    }
                     dataFiles.add(dataFile);
                     returnList.add(dataFile);
                 }

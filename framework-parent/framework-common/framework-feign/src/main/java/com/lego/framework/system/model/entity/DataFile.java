@@ -73,6 +73,12 @@ public class DataFile extends BaseModel {
     private String batchNum;
 
 
+    @ApiModelProperty("设备类型Id")
+    private Long equipmentId;
+
+    @ApiModelProperty("设备编号")
+    private String equipmentCode;
+
     /**
      * @param name
      * @param fileType
