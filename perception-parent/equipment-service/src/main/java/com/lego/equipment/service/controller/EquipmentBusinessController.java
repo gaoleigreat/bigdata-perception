@@ -6,10 +6,9 @@ import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
-import com.lego.equipment.service.service.EquipmentBusinessService;
+import com.lego.equipment.service.service.IEquipmentBusinessService;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
-import com.lego.framework.base.exception.ExceptionBuilder;
 import com.lego.framework.business.feign.BusinessClient;
 import com.lego.framework.business.feign.CrudClient;
 import com.lego.framework.business.model.entity.Business;
@@ -23,6 +22,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
@@ -43,7 +43,7 @@ import java.util.List;
 public class EquipmentBusinessController {
 
     @Autowired
-    private EquipmentBusinessService equipmentBusinessService;
+    private IEquipmentBusinessService equipmentBusinessService;
 
     @Autowired
     private CrudClient crudClient;
@@ -118,6 +118,14 @@ public class EquipmentBusinessController {
     @Transactional(rollbackFor = RuntimeException.class)
     public RespVO insert(@RequestBody EquipmentBusiness equipmentBusiness) {
         Long businessId = equipmentBusiness.getBusinessId();
+        Long equipmentId = equipmentBusiness.getEquipmentId();
+        EquipmentBusiness queryEquipmentBusiness = new EquipmentBusiness();
+        queryEquipmentBusiness.setBusinessId(businessId);
+        queryEquipmentBusiness.setEquipmentId(equipmentId);
+        List<EquipmentBusiness> query = equipmentBusinessService.query(queryEquipmentBusiness);
+        if (!CollectionUtils.isEmpty(query)) {
+            return RespVOBuilder.failure("设备业务信息已经存在");
+        }
         RespVO<Business> respVO = businessClient.selectById(businessId);
         if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
             return RespVOBuilder.failure("获取业务失败");
