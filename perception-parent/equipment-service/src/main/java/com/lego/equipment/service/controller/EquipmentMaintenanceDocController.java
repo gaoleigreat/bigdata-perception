@@ -163,7 +163,7 @@ public class EquipmentMaintenanceDocController {
             String originalFilename = multipartFile.getOriginalFilename();
             if (!StringUtils.isEmpty(originalFilename)) {
                 InputStream inputStream = multipartFile.getInputStream();
-                excelService.readExcel(originalFilename, docExcelReadListener, inputStream, EquipmentMaintenanceDocVo.class, 0);
+                excelService.readExcel(originalFilename, docExcelReadListener, inputStream, EquipmentMaintenanceDocVo.class, 1);
                 return RespVOBuilder.success();
             }
         } catch (Exception e) {

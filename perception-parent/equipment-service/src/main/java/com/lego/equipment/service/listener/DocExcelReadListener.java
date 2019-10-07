@@ -1,7 +1,6 @@
 package com.lego.equipment.service.listener;
 
 import com.alibaba.excel.context.AnalysisContext;
-import com.framework.common.consts.DictConstant;
 import com.framework.excel.listener.ExcelReadListener;
 import com.lego.equipment.service.service.IEquipmentMaintenanceDocService;
 import com.lego.equipment.service.service.IEquipmentTypeService;

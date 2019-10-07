@@ -109,7 +109,7 @@
             and id = #{id,jdbcType=BIGINT}
         </if>
         <if test="equipmentId != null">
-            and equipment_id = #{id,jdbcType=BIGINT}
+            and equipment_id = #{equipmentId,jdbcType=BIGINT}
         </if>
         <if test="fileId != null">
             and file_id = #{fileId,jdbcType=BIGINT}
@@ -332,16 +332,20 @@
     <insert id="batchInsert" parameterType="java.util.List">
         insert into tpl_equipment_maintenance_doc
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            id, file_id, sys, part, method, excipient, cycle, type, creation_date, creation_by
+            equipment_id,file_id, sys, part, method, excipient, cycle, type, creation_date, creation_by
         </trim>
         values
         <foreach collection="list" index="index" item="item" separator=",">
             <trim prefix="(" suffix=")" suffixOverrides=",">
-                #{item.id,jdbcType=BIGINT},
                 #{item.equipmentId,jdbcType=BIGINT},
-                #{item.fileId,jdbcType=BIGINT}, #{item.sys,jdbcType=VARCHAR},
-                #{item.part,jdbcType=VARCHAR}, #{item.method,jdbcType=VARCHAR}, #{item.excipient,jdbcType=VARCHAR},
-                #{item.cycle,jdbcType=VARCHAR}, #{item.type,jdbcType=TINYINT}, #{item.creationDate,jdbcType=TIMESTAMP},
+                #{item.fileId,jdbcType=BIGINT},
+                #{item.sys,jdbcType=VARCHAR},
+                #{item.part,jdbcType=VARCHAR},
+               #{item.method,jdbcType=VARCHAR},
+               #{item.excipient,jdbcType=VARCHAR},
+                #{item.cycle,jdbcType=VARCHAR},
+               #{item.type,jdbcType=TINYINT},
+               #{item.creationDate,jdbcType=TIMESTAMP},
                 #{item.creationBy,jdbcType=BIGINT}
             </trim>
         </foreach>

@@ -29,7 +29,6 @@ public class EquipmentMaintenanceDocVo extends BaseRowModel{
     @ApiModelProperty("设备类型id")
     private Long equipmentId;
 
-    @TableField(exist = false)
     @ApiModelProperty("设备类型编码")
     @ExcelProperty(value = "设备类型编码", index = 0)
     private String typeCode;
@@ -72,7 +71,6 @@ public class EquipmentMaintenanceDocVo extends BaseRowModel{
      * 保养分类(1-初保;2-日保；3-周保；4-月保)
      */
     @ApiModelProperty("保养分类(1-初保;2-日保；3-周保；4-月保)")
-    @TableField(exist = false)
     @ExcelProperty(value = "保养分类(1-初保;2-日保；3-周保；4-月保)", index = 6)
     private String typeStr;
     /**
