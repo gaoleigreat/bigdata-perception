@@ -11,15 +11,18 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.query.QueryStringQueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.SearchQuery;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
  * @author : yanglf
@@ -28,15 +31,18 @@ import java.util.List;
  * @date : 2019/9/30 15:14
  * @desc :
  */
-@Api(value = "knowledge", description = "设备类型管理")
+@Api(value = "knowledge", description = "知识库管理")
 @RestController
 @RequestMapping("/knowledge")
-@Resource(value = "knowledge", desc = "设备类型管理")
+@Resource(value = "knowledge", desc = "知识库管理")
 @Slf4j
 public class KnowledgeController {
 
     @Autowired
     private KnowledgeRepository knowledgeRepository;
+
+    @Autowired
+    private ElasticsearchTemplate elasticsearchTemplate;
 
 
     @ApiOperation(value = "新增知识库信息", httpMethod = "POST")
@@ -57,15 +63,13 @@ public class KnowledgeController {
     })
     @Operation(value = "search", desc = "检索知识库信息")
     @RequestMapping(value = "/search/{q}", method = RequestMethod.GET)
-    public RespVO<RespDataVO<Knowledge>> search(@PathVariable String q) {
-        QueryStringQueryBuilder builder = new QueryStringQueryBuilder(q);
-        Iterable<Knowledge> searchResult = knowledgeRepository.search(builder);
-        Iterator<Knowledge> iterator = searchResult.iterator();
-        List<Knowledge> list = new ArrayList<>();
-        while (iterator.hasNext()) {
-            list.add(iterator.next());
-        }
-        return RespVOBuilder.success(list);
+    public RespVO<RespDataVO<Knowledge>> search(@PathVariable String q, @PageableDefault() Pageable pageable) {
+        SearchQuery builder = new NativeSearchQueryBuilder()
+                .withQuery(queryStringQuery(q))
+                .withPageable(pageable)
+                .build();
+        List<Knowledge> knowles = elasticsearchTemplate.queryForList(builder, Knowledge.class);
+        return RespVOBuilder.success(knowles);
     }
 
 
@@ -76,13 +80,15 @@ public class KnowledgeController {
     @Operation(value = "searchTag", desc = "根据标签检索知识库内容")
     @RequestMapping(value = "/searchTag/{q}", method = RequestMethod.GET)
     public RespVO<RespDataVO<Knowledge>> searchTag(@PathVariable String q, String tag) {
-        QueryBuilder whereQb = QueryBuilders.fuzzyQuery("askContent", q);
-        BoolQueryBuilder qb = QueryBuilders.boolQuery().must(whereQb);
+        NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
+        //  matchQuery  分词检索
+        //  matchPhraseQuery  短语检索
+        //  termsQuery   精准匹配
+        queryBuilder.withQuery(matchPhraseQuery("ask.askBody", q).slop(2));
         if (tag != null) {
-            QueryBuilder tagQb = QueryBuilders.multiMatchQuery("tags",tag);
-            qb.must(tagQb);
+            queryBuilder.withQuery(termsQuery("tags", tag));
         }
-        Iterable<Knowledge> searchResult = knowledgeRepository.search(qb);
+        Iterable<Knowledge> searchResult = knowledgeRepository.search(queryBuilder.build());
         Iterator<Knowledge> iterator = searchResult.iterator();
         List<Knowledge> list = new ArrayList<>();
         while (iterator.hasNext()) {

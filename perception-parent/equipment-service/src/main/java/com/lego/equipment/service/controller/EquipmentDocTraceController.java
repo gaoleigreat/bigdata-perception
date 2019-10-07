@@ -54,7 +54,7 @@ public class EquipmentDocTraceController {
      */
     @ApiOperation(value = "查询设备文档轨迹", httpMethod = "GET")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "设备ID", dataType = "String", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "id", value = "轨迹ID", dataType = "String", required = true, paramType = "query"),
     })
     @Operation(value = "select_by_id", desc = "查询设备文档轨迹")
     @RequestMapping(value = "/select_by_id", method = RequestMethod.GET)
@@ -70,7 +70,7 @@ public class EquipmentDocTraceController {
      */
     @ApiOperation(value = "删除设备文档轨迹", httpMethod = "DELETE")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "设备ID", dataType = "String", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "id", value = "轨迹ID", dataType = "String", required = true, paramType = "query"),
     })
     @Operation(value = "delete_by_id", desc = "删除设备文档轨迹")
     @RequestMapping(value = "/delete_by_id", method = RequestMethod.DELETE)
