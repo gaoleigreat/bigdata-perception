@@ -11,6 +11,7 @@ import com.lego.equipment.service.service.IEquipmentMaintenanceDocService;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
 import com.lego.framework.equipment.model.entity.EquipmentMaintenanceDoc;
+import com.lego.framework.equipment.model.vo.EquipmentMaintenanceDocVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -162,7 +163,7 @@ public class EquipmentMaintenanceDocController {
             String originalFilename = multipartFile.getOriginalFilename();
             if (!StringUtils.isEmpty(originalFilename)) {
                 InputStream inputStream = multipartFile.getInputStream();
-                excelService.readExcel(originalFilename, docExcelReadListener, inputStream, EquipmentMaintenanceDoc.class, 0);
+                excelService.readExcel(originalFilename, docExcelReadListener, inputStream, EquipmentMaintenanceDocVo.class, 0);
                 return RespVOBuilder.success();
             }
         } catch (Exception e) {

@@ -8,7 +8,9 @@ import com.lego.equipment.service.service.IEquipmentTypeService;
 import com.lego.framework.base.exception.ExceptionBuilder;
 import com.lego.framework.equipment.model.entity.EquipmentMaintenanceDoc;
 import com.lego.framework.equipment.model.entity.EquipmentType;
+import com.lego.framework.equipment.model.vo.EquipmentMaintenanceDocVo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -22,7 +24,7 @@ import java.util.List;
  **/
 @Component
 @Slf4j
-public class DocExcelReadListener extends ExcelReadListener<EquipmentMaintenanceDoc> {
+public class DocExcelReadListener extends ExcelReadListener<EquipmentMaintenanceDocVo> {
 
     private List<EquipmentMaintenanceDoc> equipmentMaintenanceDocList = new ArrayList<>();
 
@@ -33,10 +35,12 @@ public class DocExcelReadListener extends ExcelReadListener<EquipmentMaintenance
     private IEquipmentTypeService iEquipmentTypeService;
 
     @Override
-    public void invoke(EquipmentMaintenanceDoc equipmentMaintenanceDoc, AnalysisContext analysisContext) {
+    public void invoke(EquipmentMaintenanceDocVo equipmentMaintenanceDocVo, AnalysisContext analysisContext) {
         Integer currentRowNum = analysisContext.getCurrentRowNum();
         Integer totalCount = analysisContext.getTotalCount();
-        log.info("read line :{},currentRowNum:{},totalCount:{}", equipmentMaintenanceDoc, currentRowNum, totalCount);
+        log.info("read line :{},currentRowNum:{},totalCount:{}", equipmentMaintenanceDocVo, currentRowNum, totalCount);
+        EquipmentMaintenanceDoc equipmentMaintenanceDoc=new EquipmentMaintenanceDoc();
+        BeanUtils.copyProperties(equipmentMaintenanceDocVo,equipmentMaintenanceDoc);
         equipmentMaintenanceDocList.add(equipmentMaintenanceDoc);
     }
 
