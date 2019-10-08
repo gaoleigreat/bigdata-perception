@@ -13,9 +13,11 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 /**
  * @author yanglf
  * @description
@@ -33,13 +35,18 @@ public class DocExcelReadListener extends ExcelReadListener<EquipmentMaintenance
     @Autowired
     private IEquipmentTypeService iEquipmentTypeService;
 
+
+    private Long createBy;
+
+    private Long fileId;
+
     @Override
     public void invoke(EquipmentMaintenanceDocVo equipmentMaintenanceDocVo, AnalysisContext analysisContext) {
         Integer currentRowNum = analysisContext.getCurrentRowNum();
         Integer totalCount = analysisContext.getTotalCount();
         log.info("read line :{},currentRowNum:{},totalCount:{}", equipmentMaintenanceDocVo, currentRowNum, totalCount);
-        EquipmentMaintenanceDoc equipmentMaintenanceDoc=new EquipmentMaintenanceDoc();
-        BeanUtils.copyProperties(equipmentMaintenanceDocVo,equipmentMaintenanceDoc);
+        EquipmentMaintenanceDoc equipmentMaintenanceDoc = new EquipmentMaintenanceDoc();
+        BeanUtils.copyProperties(equipmentMaintenanceDocVo, equipmentMaintenanceDoc);
         equipmentMaintenanceDocList.add(equipmentMaintenanceDoc);
     }
 
@@ -63,6 +70,8 @@ public class DocExcelReadListener extends ExcelReadListener<EquipmentMaintenance
                 equipmentMaintenanceDoc.setCreationDate(currentDate);
                 equipmentMaintenanceDoc.setType(getType(equipmentMaintenanceDoc.getTypeStr()));
                 equipmentMaintenanceDoc.setEquipmentId(typeId);
+                equipmentMaintenanceDoc.setFileId(fileId);
+                equipmentMaintenanceDoc.setCreationBy(createBy);
             }
             iEquipmentMaintenanceDocService.batchInsert(equipmentMaintenanceDocList);
         } finally {
@@ -83,5 +92,12 @@ public class DocExcelReadListener extends ExcelReadListener<EquipmentMaintenance
             default:
                 return 0;
         }
+    }
+
+
+    public void setCreateByAndFileId(Long fileId, Long createBy) {
+        this.createBy = createBy;
+        this.fileId = fileId;
+
     }
 }

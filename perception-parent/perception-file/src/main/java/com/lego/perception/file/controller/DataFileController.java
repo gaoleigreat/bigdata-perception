@@ -41,8 +41,8 @@ public class DataFileController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "files", value = "多个文件，", paramType = "formData", allowMultiple = true, required = true, dataType = "file"),
             @ApiImplicitParam(name = "projectId", value = "projectId，", paramType = "query", allowMultiple = true, required = true, dataType = "Long"),
-            @ApiImplicitParam(name = "templateId", value = "templateId，", paramType = "query", allowMultiple = true, required = false, dataType = "Long"),
-            @ApiImplicitParam(name = "sourceType", value = "sourceType，", paramType = "query", allowMultiple = true, required = true, dataType = "int"),
+            @ApiImplicitParam(name = "templateId", value = "templateId，", paramType = "query", allowMultiple = false, required = false, dataType = "Long"),
+            @ApiImplicitParam(name = "sourceType", value = "sourceType，", paramType = "query", allowMultiple = false, required = true, dataType = "int"),
             @ApiImplicitParam(name = "remark", value = "remark，", paramType = "query", allowMultiple = true, required = false, dataType = "String"),
             @ApiImplicitParam(name = "tags", value = "tags，", paramType = "query", allowMultiple = true, required = false, dataType = "String"),
             @ApiImplicitParam(name = "equipmentId", value = "equipmentId，", paramType = "query", allowMultiple = true, required = false, dataType = "Long"),
@@ -52,7 +52,7 @@ public class DataFileController {
     @PostMapping(value = "/uploads", headers = "content-type=multipart/form-data")
     public RespVO uploads(@RequestParam(value = "files", required = true) MultipartFile[] files,
                                                 @RequestParam(value = "projectId", required = true) Long projectId,
-                                                @RequestParam(value = "templateId", required = true) Long templateId,
+                                                @RequestParam(value = "templateId", required = false) Long templateId,
                                                 @RequestParam(value = "sourceType", required = true) int sourceType,
                                                 @RequestParam(value = "remark", required = false) String remark,
                                                 @RequestParam(value = "tags", required = false) String tags,

@@ -10,6 +10,7 @@ import com.lego.equipment.service.listener.DocExcelReadListener;
 import com.lego.equipment.service.service.IEquipmentMaintenanceDocService;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
+import com.lego.framework.base.context.RequestContext;
 import com.lego.framework.equipment.model.entity.EquipmentMaintenanceDoc;
 import com.lego.framework.equipment.model.vo.EquipmentMaintenanceDocVo;
 import io.swagger.annotations.Api;
@@ -158,11 +159,12 @@ public class EquipmentMaintenanceDocController {
     })
     @Operation(value = "upload", desc = "导入保养手册项")
     @RequestMapping(value = "/upload", method = RequestMethod.POST, headers = "content-type=multipart/form-data")
-    public RespVO upload(@RequestParam MultipartFile multipartFile) {
+    public RespVO upload(@RequestParam MultipartFile multipartFile,@RequestParam(value = "fileId" ) Long fileId) {
         try {
             String originalFilename = multipartFile.getOriginalFilename();
             if (!StringUtils.isEmpty(originalFilename)) {
                 InputStream inputStream = multipartFile.getInputStream();
+                docExcelReadListener.setCreateByAndFileId(fileId, RequestContext.getCurrent().getUserId());
                 excelService.readExcel(originalFilename, docExcelReadListener, inputStream, EquipmentMaintenanceDocVo.class, 1);
                 return RespVOBuilder.success();
             }
