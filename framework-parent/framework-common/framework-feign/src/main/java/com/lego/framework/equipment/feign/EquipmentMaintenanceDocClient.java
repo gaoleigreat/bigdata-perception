@@ -22,8 +22,14 @@ import org.springframework.web.multipart.MultipartFile;
 @FeignClient(value = "equipment-service", path = "/equipmentMaintenanceDoc", fallbackFactory = EquipmentMaintenanceDocClientFallbackFactory.class)
 public interface EquipmentMaintenanceDocClient {
 
+    /**
+     * 上传设备保养手册结构化文件
+     *
+     * @param multipartFile
+     * @return
+     */
     @RequestMapping(value = "/upload", method = RequestMethod.POST, headers = "content-type=multipart/form-data")
-    RespVO upload(@RequestParam(value = "multipartFile") MultipartFile multipartFile, @RequestParam(value = "fileId") Long fileId);
+    RespVO upload(@RequestParam(value = "multipartFile") MultipartFile multipartFile,@RequestParam(value = "fileId") Long fileId);
 
 }
 
@@ -33,6 +39,7 @@ class EquipmentMaintenanceDocClientFallbackFactory implements FallbackFactory<Eq
 
     @Override
     public EquipmentMaintenanceDocClient create(Throwable throwable) {
+
         return (multipartFile, fileId) -> {
             log.error("fallback; reason was:", throwable);
             return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "equipment服务不可用");

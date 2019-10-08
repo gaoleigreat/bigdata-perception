@@ -5,7 +5,9 @@ import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.business.model.entity.Business;
 import com.lego.framework.template.model.entity.FormTemplate;
+import feign.hystrix.FallbackFactory;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +25,7 @@ import java.util.Map;
  * @date : 2019/9/10 10:19
  * @desc :
  */
-@FeignClient(value = "business-service", path = "/business", fallback = BusinessClientFallback.class)
+@FeignClient(value = "business-service", path = "/business", fallbackFactory = BusinessClientFallbackFactory.class)
 public interface BusinessClient {
 
     /**
@@ -99,36 +101,43 @@ public interface BusinessClient {
 
 }
 
+
+@Slf4j
 @Component
-class BusinessClientFallback implements BusinessClient {
-
+class BusinessClientFallbackFactory implements FallbackFactory<BusinessClient> {
     @Override
-    public RespVO<Business> selectById(Long id) {
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
-    }
+    public BusinessClient create(Throwable throwable) {
+        log.error("fallback; reason was:{}", throwable);
+        return new BusinessClient() {
+            @Override
+            public RespVO<Business> selectById(Long id) {
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
+            }
 
-    @Override
-    public RespVO createBusiness(FormTemplate formTemplate, Integer sourceType) {
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
-    }
+            @Override
+            public RespVO createBusiness(FormTemplate formTemplate, Integer sourceType) {
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
+            }
 
-    @Override
-    public RespVO insertBusinessData(FormTemplate formTemplate, Long fileId, List<Map<String, Object>> data, Integer sourceType) {
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
-    }
+            @Override
+            public RespVO insertBusinessData(FormTemplate formTemplate, Long fileId, List<Map<String, Object>> data, Integer sourceType) {
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
+            }
 
-    @Override
-    public RespVO queryBusinessData(FormTemplate formTemplate, Map<String, Object> data, Integer sourceType) {
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
-    }
+            @Override
+            public RespVO queryBusinessData(FormTemplate formTemplate, Map<String, Object> data, Integer sourceType) {
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
+            }
 
-    @Override
-    public RespVO updateBusinessData(FormTemplate formTemplate, Map<String, Object> data, Integer sourceType) {
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
-    }
+            @Override
+            public RespVO updateBusinessData(FormTemplate formTemplate, Map<String, Object> data, Integer sourceType) {
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
+            }
 
-    @Override
-    public RespVO delBusinessData(FormTemplate formTemplate, Map<String, Object> data, Integer sourceType) {
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
+            @Override
+            public RespVO delBusinessData(FormTemplate formTemplate, Map<String, Object> data, Integer sourceType) {
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
+            }
+        };
     }
 }

@@ -69,7 +69,7 @@ public class EquipmentMaintenanceDocController {
      */
     @ApiOperation(value = "查询保养手册项", httpMethod = "GET")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "保养手册项ID", dataType = "String", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "id", value = "保养手册项ID", dataType = "long", required = true, paramType = "query"),
     })
     @Operation(value = "select_by_id", desc = "查询保养手册项")
     @RequestMapping(value = "/select_by_id", method = RequestMethod.GET)
@@ -85,7 +85,7 @@ public class EquipmentMaintenanceDocController {
      */
     @ApiOperation(value = "删除保养手册项", httpMethod = "DELETE")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "保养手册项ID", dataType = "String", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "id", value = "保养手册项ID", dataType = "long", required = true, paramType = "query"),
     })
     @Operation(value = "delete_by_id", desc = "删除保养手册项")
     @RequestMapping(value = "/delete_by_id", method = RequestMethod.DELETE)

@@ -7,7 +7,7 @@ spring:
     elasticsearch:
       repositories:
         enabled: true
-      cluster-name: elasticsearch
+      cluster-name: equipment
       cluster-nodes: 192.168.101.52:9300
   application:
     name: knowledge-service

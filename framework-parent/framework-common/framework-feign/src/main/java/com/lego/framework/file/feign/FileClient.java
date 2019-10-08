@@ -7,6 +7,8 @@ import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.file.model.UploadFile;
 import com.lego.framework.system.model.entity.DataFile;
+import feign.hystrix.FallbackFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -22,7 +24,7 @@ import java.util.Map;
  * @description
  * @since 2019/8/27
  **/
-@FeignClient(value = "file-service", path = "/datefile/v1", fallback = FileClientFallback.class)
+@FeignClient(value = "file-service", path = "/datefile/v1", fallbackFactory = FileClientFallbackFactory.class)
 public interface FileClient {
 
     @PostMapping(value = "/uploads", headers = "content-type=multipart/form-data")
@@ -37,18 +39,24 @@ public interface FileClient {
     RespVO<RespDataVO<DataFile>> selectByBatchNums(@RequestParam(value = "bathNums") List<String> bathNums);
 }
 
+@Slf4j
 @Component
-class FileClientFallback implements FileClient {
-
-
-    @Override
-    public RespVO<RespDataVO<DataFile>> uploads(MultipartFile[] files, Long projectId, Long templateId, int sourceType, String remark, String tags) {
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "file服务不可用");
-    }
+class FileClientFallbackFactory implements FallbackFactory<FileClient> {
 
     @Override
-    public RespVO<RespDataVO<DataFile>> selectByBatchNums(List<String> bathNums) {
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "file服务不可用");
+    public FileClient create(Throwable throwable) {
+        log.error("fallback; reason was:{}", throwable);
+        return new FileClient() {
+            @Override
+            public RespVO<RespDataVO<DataFile>> uploads(MultipartFile[] files, Long projectId, Long templateId, int sourceType, String remark, String tags) {
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "file服务不可用");
+            }
+
+            @Override
+            public RespVO<RespDataVO<DataFile>> selectByBatchNums(List<String> bathNums) {
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "file服务不可用");
+            }
+        };
     }
 }
 

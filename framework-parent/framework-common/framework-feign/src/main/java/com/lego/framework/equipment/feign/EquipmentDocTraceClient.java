@@ -61,22 +61,20 @@ class EquipmentDocTraceClientFallbackFactory implements FallbackFactory<Equipmen
 
     @Override
     public EquipmentDocTraceClient create(Throwable throwable) {
+        log.error("fallback; reason was:", throwable);
         return new EquipmentDocTraceClient() {
             @Override
             public RespVO<EquipmentDocTrace> selectByPrimaryKey(Long id) {
-                log.error("fallback; reason was:", throwable);
                 return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "equipment服务不可用");
             }
 
             @Override
             public RespVO insert(EquipmentDocTrace equipmentDocTrace) {
-                log.error("fallback; reason was:", throwable);
                 return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "equipment服务不可用");
             }
 
             @Override
             public RespVO<RespDataVO<EquipmentDocTrace>> queryByCondition(EquipmentDocTrace equipmentDocTrace) {
-                log.error("fallback; reason was:", throwable);
                 return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "equipment服务不可用");
             }
         };

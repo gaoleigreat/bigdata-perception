@@ -134,70 +134,60 @@ class TemplateFallBackFactory implements FallbackFactory<TemplateFeignClient> {
 
     @Override
     public TemplateFeignClient create(Throwable throwable) {
+        log.error("fallback; reason was:", throwable);
         return new TemplateFeignClient() {
             @Override
             public RespVO<Enumeration> findEnumerationById(String code) {
-                log.error("fallback; reason was:", throwable);
                 return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "template服务不可用");
             }
 
             @Override
             public RespVO<EnumerationItem> findItem(Long enumId, Integer value) {
-                log.error("fallback; reason was:", throwable);
                 return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "template服务不可用");
             }
 
             @Override
             public RespVO<List<EnumerationItem>> findItemList(EnumerationItem enumerationItem) {
-                log.error("fallback; reason was:", throwable);
                 return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "template服务不可用");
             }
 
             @Override
             public RespVO<EnumerationItem> findItemLable(Long enumId, String label) {
-                log.error("fallback; reason was:", throwable);
                 return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "template服务不可用");
             }
 
             @Override
             public RespVO<Map<Long, String>> findEnumerationList(Map<Long, Integer> map) {
-                log.error("fallback; reason was:", throwable);
                 return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "template服务不可用");
             }
 
             @Override
             public RespVO<Enumeration> findEnumerationByCode(String code) {
-                log.error("fallback; reason was:", throwable);
                 return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "template服务不可用");
             }
 
             @Override
             public RespVO<DataTemplate> findDataTemplateById(Long id) {
-                log.error("fallback; reason was:", throwable);
                 return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "template服务不可用");
             }
 
             @Override
             public RespVO<DataTemplate> findDataTemplateByCode(String code) {
-                log.error("fallback; reason was:", throwable);
                 return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "template服务不可用");
             }
 
             @Override
             public RespVO<FormTemplate> findFormTemplateById(Long id) {
-                log.error("fallback; reason was:", throwable);
                 return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "template服务不可用");
             }
 
             @Override
             public RespVO<FormTemplate> findFormTemplateByCode(String code) {
-                log.error("fallback; reason was:", throwable);
                 return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "template服务不可用");
             }
 
             @Override
             public RespVO<RespDataVO<FormTemplate>> findByDataType(Integer dataType) {
-                log.error("fallback; reason was:", throwable);
                 return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "template服务不可用");
             }
         };

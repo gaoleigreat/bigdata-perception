@@ -1,8 +1,11 @@
 package com.lego.framework.auth.feign;
+
 import com.framework.common.consts.DictConstant;
 import com.framework.common.consts.RespConsts;
 import com.framework.common.sdto.*;
 import com.lego.framework.system.model.entity.User;
+import feign.hystrix.FallbackFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @descript
  * @since 2018/12/20
  **/
-@FeignClient(value = DictConstant.Service.AUTH,path = DictConstant.Path.AUTH, fallback = AuthClientFallback.class)
+@FeignClient(value = DictConstant.Service.AUTH, path = DictConstant.Path.AUTH, fallbackFactory = AuthClientFallbackFactory.class)
 public interface AuthClient {
 
     /**
@@ -90,37 +93,45 @@ public interface AuthClient {
 
 }
 
+@Slf4j
 @Component
-class AuthClientFallback implements AuthClient {
+class AuthClientFallbackFactory implements FallbackFactory<AuthClient> {
+
 
     @Override
-    public RespVO<TokenVo> generate(User user, String deviceType) {
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "auth服务不可用");
-    }
+    public AuthClient create(Throwable throwable) {
+        log.error("fallback; reason was:{}", throwable);
+        return new AuthClient() {
+            @Override
+            public RespVO<TokenVo> generate(User user, String deviceType) {
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "auth服务不可用");
+            }
 
-    @Override
-    public RespVO<CurrentVo> parseUserToken(String token, String deviceType) {
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "auth服务不可用");
-    }
+            @Override
+            public RespVO<CurrentVo> parseUserToken(String token, String deviceType) {
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "auth服务不可用");
+            }
 
-    @Override
-    public RespVO<TokenVo> delete(String token, String deviceType) {
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "auth服务不可用");
-    }
+            @Override
+            public RespVO<TokenVo> delete(String token, String deviceType) {
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "auth服务不可用");
+            }
 
-    @Override
-    public String loginToken(String userId, String deviceType) {
-        return null;
-    }
+            @Override
+            public String loginToken(String userId, String deviceType) {
+                return null;
+            }
 
-    @Override
-    public CurrentVo getAuthVo(HeaderVo headerVo) {
-        return null;
-    }
+            @Override
+            public CurrentVo getAuthVo(HeaderVo headerVo) {
+                return null;
+            }
 
-    @Override
-    public RespVO setAuthVo(String userId, String deviceType, String token) {
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "auth服务不可用");
+            @Override
+            public RespVO setAuthVo(String userId, String deviceType, String token) {
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "auth服务不可用");
+            }
+        };
     }
 }
 

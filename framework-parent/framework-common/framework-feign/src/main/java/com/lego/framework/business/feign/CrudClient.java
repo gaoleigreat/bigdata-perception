@@ -1,10 +1,13 @@
 package com.lego.framework.business.feign;
+
 import com.framework.common.consts.RespConsts;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.template.model.entity.SearchParam;
+import feign.hystrix.FallbackFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +22,7 @@ import java.util.Map;
  * @date : 2019/9/25 19:43
  * @desc :
  */
-@FeignClient(value = "business-service", path = "/crud", fallback = CrudClientFallback.class)
+@FeignClient(value = "business-service", path = "/crud", fallbackFactory = CrudClientFallbackFactory.class)
 public interface CrudClient {
 
     /**
@@ -66,10 +69,10 @@ public interface CrudClient {
      * @return
      */
     @RequestMapping(value = "/queryDataPaged/{pageSize}/{pageIndex}", method = RequestMethod.POST)
-    RespVO<PagedResult<Map<String, Object>>> queryDataPaged(@RequestParam(value ="templateCode") String templateCode,
-                                            @RequestBody List<SearchParam> searchParams,
-                                            @PathVariable(value = "pageSize") Integer pageSize,
-                                            @PathVariable(value = "pageIndex") Integer pageIndex);
+    RespVO<PagedResult<Map<String, Object>>> queryDataPaged(@RequestParam(value = "templateCode") String templateCode,
+                                                            @RequestBody List<SearchParam> searchParams,
+                                                            @PathVariable(value = "pageSize") Integer pageSize,
+                                                            @PathVariable(value = "pageIndex") Integer pageIndex);
 
 
     /**
@@ -107,63 +110,50 @@ public interface CrudClient {
     RespVO uploadBusinessData(@RequestParam(value = "templateCode") String templateCode,
                               @RequestParam(value = "file") MultipartFile file);
 
-
-    /**
-     * 下载业务数据
-     *
-     * @param templateCode
-     * @param searchParams
-     * @param response
-     * @return
-     */
-/*    @RequestMapping(value = "/download", method = RequestMethod.POST)
-    RespVO downloadBusinessData(@RequestParam(value = "templateCode") String templateCode,
-                                @RequestBody List<SearchParam> searchParams,
-                                HttpServletResponse response);*/
-
 }
 
+@Slf4j
 @Component
-class CrudClientFallback implements CrudClient {
+class CrudClientFallbackFactory implements FallbackFactory<CrudClient> {
 
     @Override
-    public RespVO createBusiness(String templateCode) {
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
+    public CrudClient create(Throwable throwable) {
+        log.error("fallback; reason was:{}", throwable);
+        return new CrudClient() {
+            @Override
+            public RespVO createBusiness(String templateCode) {
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
+            }
+
+            @Override
+            public RespVO insertBusinessData(String templateCode, List<Map<String, Object>> data) {
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
+            }
+
+            @Override
+            public RespVO<RespDataVO<Map<String, Object>>> queryBusinessData(String templateCode, List<SearchParam> searchParams) {
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
+            }
+
+            @Override
+            public RespVO<PagedResult<Map<String, Object>>> queryDataPaged(String templateCode, List<SearchParam> searchParams, Integer pageSize, Integer pageIndex) {
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
+            }
+
+            @Override
+            public RespVO updateBusinessData(String templateCode, Map<String, Object> data) {
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
+            }
+
+            @Override
+            public RespVO delBusinessData(String templateCode, Map<String, Object> data) {
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
+            }
+
+            @Override
+            public RespVO uploadBusinessData(String templateCode, MultipartFile file) {
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
+            }
+        };
     }
-
-    @Override
-    public RespVO insertBusinessData(String templateCode, List<Map<String, Object>> data) {
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
-    }
-
-    @Override
-    public RespVO<RespDataVO<Map<String, Object>>> queryBusinessData(String templateCode, List<SearchParam> searchParams) {
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
-    }
-
-    @Override
-    public RespVO<PagedResult<Map<String, Object>>> queryDataPaged(String templateCode, List<SearchParam> searchParams, Integer pageSize, Integer pageIndex) {
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
-    }
-
-
-    @Override
-    public RespVO updateBusinessData(String templateCode, Map<String, Object> data) {
-        return null;
-    }
-
-    @Override
-    public RespVO delBusinessData(String templateCode, Map<String, Object> data) {
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
-    }
-
-    @Override
-    public RespVO uploadBusinessData(String templateCode, MultipartFile file) {
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
-    }
-
-    /*@Override
-    public RespVO downloadBusinessData(String templateCode, List<SearchParam> searchParams, HttpServletResponse response) {
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
-    }*/
 }

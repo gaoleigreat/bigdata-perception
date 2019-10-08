@@ -51,16 +51,15 @@ class DataFileClientFallbackFactory implements FallbackFactory<DataFileClient> {
 
     @Override
     public DataFileClient create(Throwable throwable) {
+        log.error("fallback; reason was:", throwable);
         return new DataFileClient() {
             @Override
             public RespVO<RespDataVO<Long>> insertList(List<DataFile> dataFiles) {
-                log.error("fallback; reason was:", throwable);
                 return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "system服务不可用");
             }
 
             @Override
             public RespVO<Long> insert(DataFile dataFile) {
-                log.error("fallback; reason was:", throwable);
                 return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "system服务不可用");
             }
         };

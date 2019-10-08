@@ -1,6 +1,8 @@
 package com.lego.framework.sso;
 
 import feign.Headers;
+import feign.hystrix.FallbackFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @description
  * @since 2019/8/31
  **/
-@FeignClient(name = "sso", url = "http://www.baidu.com}", fallback = SsoClientFallback.class)
+@FeignClient(name = "sso", url = "http://www.baidu.com}", fallbackFactory = SsoClientFallbackFactory.class)
 public interface SsoClient {
 
     /**
@@ -27,11 +29,13 @@ public interface SsoClient {
 
 }
 
+@Slf4j
 @Component
-class SsoClientFallback implements SsoClient {
+class SsoClientFallbackFactory implements FallbackFactory<SsoClient> {
 
     @Override
-    public String redirectSsoService(String cityCode) {
-        return null;
+    public SsoClient create(Throwable throwable) {
+        log.error("fallback; reason was:{}", throwable);
+        return cityCode -> null;
     }
 }

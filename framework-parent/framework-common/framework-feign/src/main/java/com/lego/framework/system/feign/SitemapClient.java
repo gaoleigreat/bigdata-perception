@@ -3,6 +3,8 @@ import com.framework.common.consts.RespConsts;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.system.model.entity.Sitemap;
+import feign.hystrix.FallbackFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +20,7 @@ import java.util.List;
  * @date : 2019/9/18 14:46
  * @desc :
  */
-@FeignClient(value = "system-service", path = "/sitemap", fallback = SitemapClientFallback.class)
+@FeignClient(value = "system-service", path = "/sitemap", fallbackFactory = SitemapClientFallbackFactory.class)
 public interface SitemapClient {
 
 
@@ -44,17 +46,24 @@ public interface SitemapClient {
 
 }
 
-
+@Slf4j
 @Component
-class SitemapClientFallback implements SitemapClient {
+class SitemapClientFallbackFactory implements FallbackFactory<SitemapClient> {
+
 
     @Override
-    public RespVO insert(Sitemap sitemap) {
-        return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "system服务不可用");
-    }
+    public SitemapClient create(Throwable throwable) {
+        log.error("fallback; reason was:{}", throwable);
+        return new SitemapClient() {
+            @Override
+            public RespVO insert(Sitemap sitemap) {
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "system服务不可用");
+            }
 
-    @Override
-    public List<Sitemap> list(Sitemap sitemap) {
-        return null;
+            @Override
+            public List<Sitemap> list(Sitemap sitemap) {
+                return null;
+            }
+        };
     }
 }

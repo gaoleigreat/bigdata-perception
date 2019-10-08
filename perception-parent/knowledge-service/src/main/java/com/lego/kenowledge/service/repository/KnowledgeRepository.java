@@ -1,5 +1,7 @@
 package com.lego.kenowledge.service.repository;
-import com.lego.kenowledge.service.model.Knowledge;
+
+import com.lego.kenowledge.service.model.entity.Knowledge;
+import org.springframework.data.elasticsearch.annotations.Query;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,6 +13,33 @@ import org.springframework.stereotype.Repository;
  * @desc :
  */
 @Repository
-public interface KnowledgeRepository extends ElasticsearchRepository<Knowledge, Long> {
+public interface KnowledgeRepository extends ElasticsearchRepository<Knowledge, String> {
+
+
+    /**
+     * 根据id查询
+     *
+     * @param id
+     * @return
+     */
+    Knowledge findKnowledgeById(String id);
+
+
+    /**
+     * 通过提问id获取提问信息
+     *
+     * @param askId
+     * @return
+     */
+    Knowledge findKnowledgeByAskId(String askId);
+
+
+    /**
+     * 通过回复id获取知识库信息
+     *
+     * @param answerId
+     * @return
+     */
+    Knowledge findKnowledgeByAnswersId(String answerId);
 
 }
