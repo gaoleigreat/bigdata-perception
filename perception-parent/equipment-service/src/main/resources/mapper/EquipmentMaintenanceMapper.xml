@@ -1,0 +1,637 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lego.equipment.service.mapper.EquipmentMaintenanceMapper">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.lego.framework.equipment.model.entity.EquipmentMaintenance" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="project" column="project"/>
+        <result property="operateDate" column="operate_date"/>
+        <result property="operateBy" column="operate_by"/>
+        <result property="projectId" column="project_id"/>
+        <result property="supervisor" column="supervisor"/>
+        <result property="completeStatus" column="complete_status"/>
+        <result property="remark" column="remark"/>
+        <result property="equipmentId" column="equipment_id"/>
+        <result property="equipmentCode" column="equipment_code"/>
+        <result property="creationDate" column="creation_date"/>
+        <result property="createdBy" column="created_by"/>
+    </resultMap>
+
+    <!--
+          选择性插入
+        -->
+    <sql id="Base_Insert_Selective">
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="project != null">
+                project,
+            </if>
+            <if test="operateDate != null">
+                operate_date,
+            </if>
+            <if test="operateBy != null">
+                operate_by,
+            </if>
+            <if test="projectId != null">
+                project_id,
+            </if>
+            <if test="supervisor != null">
+                supervisor,
+            </if>
+            <if test="completeStatus != null">
+                complete_status,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="equipmentId != null">
+                equipment_id,
+            </if>
+            <if test="equipmentCode != null">
+                equipment_code,
+            </if>
+            <if test="creationDate != null">
+                creation_date,
+            </if>
+            <if test="createdBy != null">
+                created_by
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="project != null">
+                #{project,jdbcType=VARCHAR},
+            </if>
+            <if test="operateDate != null">
+                #{operateDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="operateBy != null">
+                #{operateBy,jdbcType=BIGINT},
+            </if>
+            <if test="projectId != null">
+                #{projectId,jdbcType=BIGINT},
+            </if>
+            <if test="supervisor != null">
+                #{supervisor,jdbcType=VARCHAR},
+            </if>
+            <if test="completeStatus != null">
+                #{completeStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="equipmentId != null">
+                #{equipmentId,jdbcType=BIGINT},
+            </if>
+            <if test="equipmentCode != null">
+                #{equipmentCode,jdbcType=VARCHAR},
+            </if>
+            <if test="creationDate != null">
+                #{creationDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createdBy != null">
+                #{createdBy,jdbcType=BIGINT}
+            </if>
+        </trim>
+    </sql>
+
+    <!--
+      数据库表的基本查询列名集合
+    -->
+    <sql id="Base_Column_List">
+        id, project, operate_date, operate_by, project_id, supervisor, complete_status, remark, equipment_id,
+        equipment_code, creation_date, created_by
+    </sql>
+
+    <!--
+        Where子句
+      -->
+    <sql id="Base_Query_Where">
+        <if test="id != null">
+            and id = #{id,jdbcType=BIGINT}
+        </if>
+        <if test="project != null">
+            and project = #{project,jdbcType=VARCHAR}
+        </if>
+        <if test="operateDate != null">
+            and operate_date = #{operateDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="operateBy != null">
+            and operate_by = #{operateBy,jdbcType=BIGINT}
+        </if>
+        <if test="projectId != null">
+            and project_id = #{projectId,jdbcType=BIGINT}
+        </if>
+        <if test="supervisor != null">
+            and supervisor = #{supervisor,jdbcType=VARCHAR}
+        </if>
+        <if test="completeStatus != null">
+            and complete_status = #{completeStatus,jdbcType=VARCHAR}
+        </if>
+        <if test="remark != null">
+            and remark = #{remark,jdbcType=VARCHAR}
+        </if>
+        <if test="equipmentId != null">
+            and equipment_id = #{equipmentId,jdbcType=BIGINT}
+        </if>
+        <if test="equipmentCode != null">
+            and equipment_code = #{equipmentCode,jdbcType=VARCHAR}
+        </if>
+        <if test="creationDate != null">
+            and creation_date = #{creationDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="createdBy != null">
+            and created_by = #{createdBy,jdbcType=BIGINT}
+        </if>
+    </sql>
+
+    <!--
+        基本更新字段
+    -->
+    <sql id="Base_Update_Column">
+        <set>
+            <if test="id != null">
+                id = #{id,jdbcType=BIGINT},
+            </if>
+            <if test="project != null">
+                project = #{project,jdbcType=VARCHAR},
+            </if>
+            <if test="operateDate != null">
+                operate_date = #{operateDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="operateBy != null">
+                operate_by = #{operateBy,jdbcType=BIGINT},
+            </if>
+            <if test="projectId != null">
+                project_id = #{projectId,jdbcType=BIGINT},
+            </if>
+            <if test="supervisor != null">
+                supervisor = #{supervisor,jdbcType=VARCHAR},
+            </if>
+            <if test="completeStatus != null">
+                complete_status = #{completeStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="equipmentId != null">
+                equipment_id = #{equipmentId,jdbcType=BIGINT},
+            </if>
+            <if test="equipmentCode != null">
+                equipment_code = #{equipmentCode,jdbcType=VARCHAR},
+            </if>
+            <if test="creationDate != null">
+                creation_date = #{creationDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createdBy != null">
+                created_by = #{createdBy,jdbcType=BIGINT}
+            </if>
+        </set>
+    </sql>
+
+    <!--
+        分页查询数据库表
+      -->
+    <select id="selectPaged" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tpl_equipment_maintenance
+    </select>
+
+    <!--
+      根据主键查询数据库表
+    -->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tpl_equipment_maintenance
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+
+    <!--
+      根据主键删除数据库表中的记录
+    -->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete FROM tpl_equipment_maintenance
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <!--
+      添加一条记录到数据库表中
+    -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.lego.framework.equipment.model.entity.EquipmentMaintenance">
+        insert into tpl_equipment_maintenance
+        (<include refid="Base_Column_List"/>)
+        values (
+        <if test="id != null">
+            #{id,jdbcType=BIGINT},
+        </if>
+        <if test="project != null">
+            #{project,jdbcType=VARCHAR},
+        </if>
+        <if test="operateDate != null">
+            #{operateDate,jdbcType=TIMESTAMP},
+        </if>
+        <if test="operateBy != null">
+            #{operateBy,jdbcType=BIGINT},
+        </if>
+        <if test="projectId != null">
+            #{projectId,jdbcType=BIGINT},
+        </if>
+        <if test="supervisor != null">
+            #{supervisor,jdbcType=VARCHAR},
+        </if>
+        <if test="completeStatus != null">
+            #{completeStatus,jdbcType=VARCHAR},
+        </if>
+        <if test="remark != null">
+            #{remark,jdbcType=VARCHAR},
+        </if>
+        <if test="equipmentId != null">
+            #{equipmentId,jdbcType=BIGINT},
+        </if>
+        <if test="equipmentCode != null">
+            #{equipmentCode,jdbcType=VARCHAR},
+        </if>
+        <if test="creationDate != null">
+            #{creationDate,jdbcType=TIMESTAMP},
+        </if>
+        <if test="createdBy != null">
+            #{createdBy,jdbcType=BIGINT}
+        </if>
+        )
+    </insert>
+
+    <!--
+     有选择的添加一条记录到数据库表中
+   -->
+    <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.lego.framework.equipment.model.entity.EquipmentMaintenance">
+        insert into tpl_equipment_maintenance
+        <include refid="Base_Insert_Selective"/>
+    </insert>
+
+    <!--
+      有选择的可忽略添加一条记录到数据库表中
+    -->
+    <insert id="insertSelectiveIgnore" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.lego.framework.equipment.model.entity.EquipmentMaintenance">
+        insert ignore into tpl_equipment_maintenance
+        <include refid="Base_Insert_Selective"/>
+    </insert>
+
+    <!--
+      根据主键有选择的更新数据库表
+    -->
+    <update id="updateByPrimaryKeySelective" parameterType="com.lego.framework.equipment.model.entity.EquipmentMaintenance">
+        update tpl_equipment_maintenance
+        <include refid="Base_Update_Column"></include>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+
+    <!--
+      根据主键更新数据库表
+    -->
+    <update id="updateByPrimaryKey" parameterType="com.lego.framework.equipment.model.entity.EquipmentMaintenance">
+        update tpl_equipment_maintenance
+        <set>
+            <if test="id != null">
+                id = #{id,jdbcType=BIGINT},
+            </if>
+            <if test="project != null">
+                project = #{project,jdbcType=VARCHAR},
+            </if>
+            <if test="operateDate != null">
+                operate_date = #{operateDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="operateBy != null">
+                operate_by = #{operateBy,jdbcType=BIGINT},
+            </if>
+            <if test="projectId != null">
+                project_id = #{projectId,jdbcType=BIGINT},
+            </if>
+            <if test="supervisor != null">
+                supervisor = #{supervisor,jdbcType=VARCHAR},
+            </if>
+            <if test="completeStatus != null">
+                complete_status = #{completeStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="equipmentId != null">
+                equipment_id = #{equipmentId,jdbcType=BIGINT},
+            </if>
+            <if test="equipmentCode != null">
+                equipment_code = #{equipmentCode,jdbcType=VARCHAR},
+            </if>
+            <if test="creationDate != null">
+                creation_date = #{creationDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createdBy != null">
+                created_by = #{createdBy,jdbcType=BIGINT}
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <!--
+      批量添加记录到数据库表中
+    -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into tpl_equipment_maintenance
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id, project, operate_date, operate_by, project_id, supervisor, complete_status, remark, equipment_id,
+            equipment_code, creation_date, created_by
+        </trim>
+        values
+        <foreach collection="list" index="index" item="item" separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{item.id,jdbcType=BIGINT}, #{item.project,jdbcType=VARCHAR}, #{item.operateDate,jdbcType=TIMESTAMP},
+                #{item.operateBy,jdbcType=BIGINT}, #{item.projectId,jdbcType=BIGINT},
+                #{item.supervisor,jdbcType=VARCHAR}, #{item.completeStatus,jdbcType=VARCHAR},
+                #{item.remark,jdbcType=VARCHAR}, #{item.equipmentId,jdbcType=BIGINT},
+                #{item.equipmentCode,jdbcType=VARCHAR}, #{item.creationDate,jdbcType=TIMESTAMP},
+                #{item.createdBy,jdbcType=BIGINT}
+            </trim>
+        </foreach>
+    </insert>
+
+    <!--
+      根据主键批量更新数据库表中的记录
+    -->
+    <update id="batchUpdate" parameterType="java.util.List">
+        <foreach collection="list" index="index" item="item" separator=";">
+            update tpl_equipment_maintenance
+            <set>
+                <trim suffixOverrides=",">
+                    <if test="item.id != null">
+                        id = #{item.id,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.project != null">
+                        project = #{item.project,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.operateDate != null">
+                        operate_date = #{item.operateDate,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.operateBy != null">
+                        operate_by = #{item.operateBy,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.projectId != null">
+                        project_id = #{item.projectId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.supervisor != null">
+                        supervisor = #{item.supervisor,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.completeStatus != null">
+                        complete_status = #{item.completeStatus,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.remark != null">
+                        remark = #{item.remark,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.equipmentId != null">
+                        equipment_id = #{item.equipmentId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.equipmentCode != null">
+                        equipment_code = #{item.equipmentCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.creationDate != null">
+                        creation_date = #{item.creationDate,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.createdBy != null">
+                        created_by = #{item.createdBy,jdbcType=BIGINT}
+                    </if>
+                </trim>
+            </set>
+            <where>
+                <trim suffixOverrides=",">
+                    where id = #{item.id,jdbcType=INTEGER}
+                </trim>
+            </where>
+        </foreach>
+    </update>
+
+    <!--
+     使用给定的字段名定义Where子句
+   -->
+    <sql id="Identifiers_Array_Conditions">
+        <foreach collection="array" index="index" item="item" separator=" and ">
+            <if test="item == 'id'">
+                id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="item == 'project'">
+                project = #{project,jdbcType=VARCHAR}
+            </if>
+            <if test="item == 'operateDate'">
+                operate_date = #{operateDate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="item == 'operateBy'">
+                operate_by = #{operateBy,jdbcType=BIGINT}
+            </if>
+            <if test="item == 'projectId'">
+                project_id = #{projectId,jdbcType=BIGINT}
+            </if>
+            <if test="item == 'supervisor'">
+                supervisor = #{supervisor,jdbcType=VARCHAR}
+            </if>
+            <if test="item == 'completeStatus'">
+                complete_status = #{completeStatus,jdbcType=VARCHAR}
+            </if>
+            <if test="item == 'remark'">
+                remark = #{remark,jdbcType=VARCHAR}
+            </if>
+            <if test="item == 'equipmentId'">
+                equipment_id = #{equipmentId,jdbcType=BIGINT}
+            </if>
+            <if test="item == 'equipmentCode'">
+                equipment_code = #{equipmentCode,jdbcType=VARCHAR}
+            </if>
+            <if test="item == 'creationDate'">
+                creation_date = #{creationDate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="item == 'createdBy'">
+                created_by = #{createdBy,jdbcType=BIGINT}
+            </if>
+        </foreach>
+    </sql>
+
+    <!--
+      存在即更新否则插入
+    -->
+    <update id="upsert" parameterType="com.lego.framework.equipment.model.entity.EquipmentMaintenance">
+        insert into tpl_equipment_maintenance
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id, project, operate_date, operate_by, project_id, supervisor, complete_status, remark, equipment_id,
+            equipment_code, creation_date, created_by
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{id,jdbcType=BIGINT}, #{project,jdbcType=VARCHAR}, #{operateDate,jdbcType=TIMESTAMP},
+            #{operateBy,jdbcType=BIGINT}, #{projectId,jdbcType=BIGINT}, #{supervisor,jdbcType=VARCHAR},
+            #{completeStatus,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{equipmentId,jdbcType=BIGINT},
+            #{equipmentCode,jdbcType=VARCHAR}, #{creationDate,jdbcType=TIMESTAMP}, #{createdBy,jdbcType=BIGINT}
+        </trim>
+        on duplicate key update
+        <trim suffixOverrides=",">
+            #{id,jdbcType=BIGINT}, #{project,jdbcType=VARCHAR}, #{operateDate,jdbcType=TIMESTAMP},
+            #{operateBy,jdbcType=BIGINT}, #{projectId,jdbcType=BIGINT}, #{supervisor,jdbcType=VARCHAR},
+            #{completeStatus,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{equipmentId,jdbcType=BIGINT},
+            #{equipmentCode,jdbcType=VARCHAR}, #{creationDate,jdbcType=TIMESTAMP}, #{createdBy,jdbcType=BIGINT}
+        </trim>
+    </update>
+
+
+    <!--
+      带有空值检查的存在即更新否则插入
+    -->
+    <update id="upsertSelective" parameterType="com.lego.framework.equipment.model.entity.EquipmentMaintenance">
+        insert into tpl_equipment_maintenance
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id !=null ">
+                id,
+            </if>
+            <if test="project !=null ">
+                project,
+            </if>
+            <if test="operateDate !=null ">
+                operate_date,
+            </if>
+            <if test="operateBy !=null ">
+                operate_by,
+            </if>
+            <if test="projectId !=null ">
+                project_id,
+            </if>
+            <if test="supervisor !=null ">
+                supervisor,
+            </if>
+            <if test="completeStatus !=null ">
+                complete_status,
+            </if>
+            <if test="remark !=null ">
+                remark,
+            </if>
+            <if test="equipmentId !=null ">
+                equipment_id,
+            </if>
+            <if test="equipmentCode !=null ">
+                equipment_code,
+            </if>
+            <if test="creationDate !=null ">
+                creation_date,
+            </if>
+            <if test="createdBy !=null ">
+                created_by
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id !=null ">
+                id = #{id,jdbcType=BIGINT},
+            </if>
+            <if test="project !=null ">
+                project = #{project,jdbcType=VARCHAR},
+            </if>
+            <if test="operateDate !=null ">
+                operate_date = #{operateDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="operateBy !=null ">
+                operate_by = #{operateBy,jdbcType=BIGINT},
+            </if>
+            <if test="projectId !=null ">
+                project_id = #{projectId,jdbcType=BIGINT},
+            </if>
+            <if test="supervisor !=null ">
+                supervisor = #{supervisor,jdbcType=VARCHAR},
+            </if>
+            <if test="completeStatus !=null ">
+                complete_status = #{completeStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="remark !=null ">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="equipmentId !=null ">
+                equipment_id = #{equipmentId,jdbcType=BIGINT},
+            </if>
+            <if test="equipmentCode !=null ">
+                equipment_code = #{equipmentCode,jdbcType=VARCHAR},
+            </if>
+            <if test="creationDate !=null ">
+                creation_date = #{creationDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createdBy !=null ">
+                created_by = #{createdBy,jdbcType=BIGINT}
+            </if>
+        </trim>
+        on duplicate key update
+        <trim suffixOverrides=",">
+            <if test="id !=null ">
+                id = #{id,jdbcType=BIGINT},
+            </if>
+            <if test="project !=null ">
+                project = #{project,jdbcType=VARCHAR},
+            </if>
+            <if test="operateDate !=null ">
+                operate_date = #{operateDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="operateBy !=null ">
+                operate_by = #{operateBy,jdbcType=BIGINT},
+            </if>
+            <if test="projectId !=null ">
+                project_id = #{projectId,jdbcType=BIGINT},
+            </if>
+            <if test="supervisor !=null ">
+                supervisor = #{supervisor,jdbcType=VARCHAR},
+            </if>
+            <if test="completeStatus !=null ">
+                complete_status = #{completeStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="remark !=null ">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="equipmentId !=null ">
+                equipment_id = #{equipmentId,jdbcType=BIGINT},
+            </if>
+            <if test="equipmentCode !=null ">
+                equipment_code = #{equipmentCode,jdbcType=VARCHAR},
+            </if>
+            <if test="creationDate !=null ">
+                creation_date = #{creationDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createdBy !=null ">
+                created_by = #{createdBy,jdbcType=BIGINT}
+            </if>
+        </trim>
+    </update>
+
+    <select id="query" resultMap="BaseResultMap" parameterType="com.lego.framework.equipment.model.entity.EquipmentMaintenance">
+        select
+        <include refid="Base_Column_List"/>
+        from tpl_equipment_maintenance
+        <where>
+            <include refid="Base_Query_Where"></include>
+        </where>
+    </select>
+
+    <select id="queryTotal" resultType="long">
+        select count(*) from tpl_equipment_maintenance
+    </select>
+
+
+    <delete id="deleteBatch">
+        delete from tpl_equipment_maintenance where id in
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

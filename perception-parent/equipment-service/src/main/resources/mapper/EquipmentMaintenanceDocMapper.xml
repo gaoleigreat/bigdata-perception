@@ -1,0 +1,608 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lego.equipment.service.mapper.EquipmentMaintenanceDocMapper">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.lego.framework.equipment.model.entity.EquipmentMaintenanceDoc" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="equipmentId" column="equipment_id"/>
+        <result property="fileId" column="file_id"/>
+        <result property="sys" column="sys"/>
+        <result property="part" column="part"/>
+        <result property="method" column="method"/>
+        <result property="excipient" column="excipient"/>
+        <result property="cycle" column="cycle"/>
+        <result property="type" column="type"/>
+        <result property="creationDate" column="creation_date"/>
+        <result property="creationBy" column="creation_by"/>
+    </resultMap>
+
+    <!--
+          选择性插入
+        -->
+    <sql id="Base_Insert_Selective">
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="equipmentId != null">
+                equipment_id,
+            </if>
+            <if test="fileId != null">
+                file_id,
+            </if>
+            <if test="sys != null">
+                sys,
+            </if>
+            <if test="part != null">
+                part,
+            </if>
+            <if test="method != null">
+                method,
+            </if>
+            <if test="excipient != null">
+                excipient,
+            </if>
+            <if test="cycle != null">
+                cycle,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="creationDate != null">
+                creation_date,
+            </if>
+            <if test="creationBy != null">
+                creation_by
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="equipmentId != null">
+                #{equipmentId,jdbcType=BIGINT},
+            </if>
+            <if test="fileId != null">
+                #{fileId,jdbcType=BIGINT},
+            </if>
+            <if test="sys != null">
+                #{sys,jdbcType=VARCHAR},
+            </if>
+            <if test="part != null">
+                #{part,jdbcType=VARCHAR},
+            </if>
+            <if test="method != null">
+                #{method,jdbcType=VARCHAR},
+            </if>
+            <if test="excipient != null">
+                #{excipient,jdbcType=VARCHAR},
+            </if>
+            <if test="cycle != null">
+                #{cycle,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=TINYINT},
+            </if>
+            <if test="creationDate != null">
+                #{creationDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creationBy != null">
+                #{creationBy,jdbcType=BIGINT}
+            </if>
+        </trim>
+    </sql>
+
+    <!--
+      数据库表的基本查询列名集合
+    -->
+    <sql id="Base_Column_List">
+        id, equipment_id,file_id, sys, part, method, excipient, cycle, type, creation_date, creation_by
+    </sql>
+
+    <!--
+        Where子句
+      -->
+    <sql id="Base_Query_Where">
+        <if test="id != null">
+            and id = #{id,jdbcType=BIGINT}
+        </if>
+        <if test="equipmentId != null">
+            and equipment_id = #{equipmentId,jdbcType=BIGINT}
+        </if>
+        <if test="fileId != null">
+            and file_id = #{fileId,jdbcType=BIGINT}
+        </if>
+        <if test="sys != null">
+            and sys = #{sys,jdbcType=VARCHAR}
+        </if>
+        <if test="part != null">
+            and part = #{part,jdbcType=VARCHAR}
+        </if>
+        <if test="method != null">
+            and method = #{method,jdbcType=VARCHAR}
+        </if>
+        <if test="excipient != null">
+            and excipient = #{excipient,jdbcType=VARCHAR}
+        </if>
+        <if test="cycle != null">
+            and cycle = #{cycle,jdbcType=VARCHAR}
+        </if>
+        <if test="type != null">
+            and type = #{type,jdbcType=TINYINT}
+        </if>
+        <if test="creationDate != null">
+            and creation_date = #{creationDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="creationBy != null">
+            and creation_by = #{creationBy,jdbcType=BIGINT}
+        </if>
+    </sql>
+
+    <!--
+        基本更新字段
+    -->
+    <sql id="Base_Update_Column">
+        <set>
+            <if test="id != null">
+                id = #{id,jdbcType=BIGINT},
+            </if>
+            <if test="equipmentId != null">
+                equipment_id = #{equipmentId,jdbcType=BIGINT},
+            </if>
+            <if test="fileId != null">
+                file_id = #{fileId,jdbcType=BIGINT},
+            </if>
+            <if test="sys != null">
+                sys = #{sys,jdbcType=VARCHAR},
+            </if>
+            <if test="part != null">
+                part = #{part,jdbcType=VARCHAR},
+            </if>
+            <if test="method != null">
+                method = #{method,jdbcType=VARCHAR},
+            </if>
+            <if test="excipient != null">
+                excipient = #{excipient,jdbcType=VARCHAR},
+            </if>
+            <if test="cycle != null">
+                cycle = #{cycle,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=TINYINT},
+            </if>
+            <if test="creationDate != null">
+                creation_date = #{creationDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creationBy != null">
+                creation_by = #{creationBy,jdbcType=BIGINT}
+            </if>
+        </set>
+    </sql>
+
+    <!--
+        分页查询数据库表
+      -->
+    <select id="selectPaged" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tpl_equipment_maintenance_doc
+    </select>
+
+    <!--
+      根据主键查询数据库表
+    -->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tpl_equipment_maintenance_doc
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+
+    <!--
+      根据主键删除数据库表中的记录
+    -->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete
+        FROM tpl_equipment_maintenance_doc
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <!--
+      添加一条记录到数据库表中
+    -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.lego.framework.equipment.model.entity.EquipmentMaintenanceDoc">
+        insert into tpl_equipment_maintenance_doc
+        (<include refid="Base_Column_List"/>)
+        values (
+        <if test="id != null">
+            #{id,jdbcType=BIGINT},
+        </if>
+        <if test="equipmentId != null">
+            #{equipment_id,jdbcType=BIGINT},
+        </if>
+        <if test="fileId != null">
+            #{fileId,jdbcType=BIGINT},
+        </if>
+        <if test="sys != null">
+            #{sys,jdbcType=VARCHAR},
+        </if>
+        <if test="part != null">
+            #{part,jdbcType=VARCHAR},
+        </if>
+        <if test="method != null">
+            #{method,jdbcType=VARCHAR},
+        </if>
+        <if test="excipient != null">
+            #{excipient,jdbcType=VARCHAR},
+        </if>
+        <if test="cycle != null">
+            #{cycle,jdbcType=VARCHAR},
+        </if>
+        <if test="type != null">
+            #{type,jdbcType=TINYINT},
+        </if>
+        <if test="creationDate != null">
+            #{creationDate,jdbcType=TIMESTAMP},
+        </if>
+        <if test="creationBy != null">
+            #{creationBy,jdbcType=BIGINT}
+        </if>
+        )
+    </insert>
+
+    <!--
+     有选择的添加一条记录到数据库表中
+   -->
+    <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.lego.framework.equipment.model.entity.EquipmentMaintenanceDoc">
+        insert into tpl_equipment_maintenance_doc
+        <include refid="Base_Insert_Selective"/>
+    </insert>
+
+    <!--
+      有选择的可忽略添加一条记录到数据库表中
+    -->
+    <insert id="insertSelectiveIgnore" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.lego.framework.equipment.model.entity.EquipmentMaintenanceDoc">
+        insert ignore into tpl_equipment_maintenance_doc
+        <include refid="Base_Insert_Selective"/>
+    </insert>
+
+    <!--
+      根据主键有选择的更新数据库表
+    -->
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.lego.framework.equipment.model.entity.EquipmentMaintenanceDoc">
+        update tpl_equipment_maintenance_doc
+        <include refid="Base_Update_Column"></include>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+
+    <!--
+      根据主键更新数据库表
+    -->
+    <update id="updateByPrimaryKey" parameterType="com.lego.framework.equipment.model.entity.EquipmentMaintenanceDoc">
+        update tpl_equipment_maintenance_doc
+        <set>
+            <if test="id != null">
+                id = #{id,jdbcType=BIGINT},
+            </if>
+            <if test="equipmentId != null">
+                equipment_id = #{equipmentId,jdbcType=BIGINT},
+            </if>
+            <if test="fileId != null">
+                file_id = #{fileId,jdbcType=BIGINT},
+            </if>
+            <if test="sys != null">
+                sys = #{sys,jdbcType=VARCHAR},
+            </if>
+            <if test="part != null">
+                part = #{part,jdbcType=VARCHAR},
+            </if>
+            <if test="method != null">
+                method = #{method,jdbcType=VARCHAR},
+            </if>
+            <if test="excipient != null">
+                excipient = #{excipient,jdbcType=VARCHAR},
+            </if>
+            <if test="cycle != null">
+                cycle = #{cycle,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=TINYINT},
+            </if>
+            <if test="creationDate != null">
+                creation_date = #{creationDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creationBy != null">
+                creation_by = #{creationBy,jdbcType=BIGINT}
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <!--
+      批量添加记录到数据库表中
+    -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into tpl_equipment_maintenance_doc
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            equipment_id,file_id, sys, part, method, excipient, cycle, type, creation_date, creation_by
+        </trim>
+        values
+        <foreach collection="list" index="index" item="item" separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{item.equipmentId,jdbcType=BIGINT},
+                #{item.fileId,jdbcType=BIGINT},
+                #{item.sys,jdbcType=VARCHAR},
+                #{item.part,jdbcType=VARCHAR},
+               #{item.method,jdbcType=VARCHAR},
+               #{item.excipient,jdbcType=VARCHAR},
+                #{item.cycle,jdbcType=VARCHAR},
+               #{item.type,jdbcType=TINYINT},
+               #{item.creationDate,jdbcType=TIMESTAMP},
+                #{item.creationBy,jdbcType=BIGINT}
+            </trim>
+        </foreach>
+    </insert>
+
+    <!--
+      根据主键批量更新数据库表中的记录
+    -->
+    <update id="batchUpdate" parameterType="java.util.List">
+        <foreach collection="list" index="index" item="item" separator=";">
+            update tpl_equipment_maintenance_doc
+            <set>
+                <trim suffixOverrides=",">
+                    <if test="item.id != null">
+                        id = #{item.id,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.equipmentId != null">
+                        id = #{item.equipmentId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.fileId != null">
+                        file_id = #{item.fileId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.sys != null">
+                        sys = #{item.sys,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.part != null">
+                        part = #{item.part,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.method != null">
+                        method = #{item.method,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.excipient != null">
+                        excipient = #{item.excipient,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.cycle != null">
+                        cycle = #{item.cycle,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.type != null">
+                        type = #{item.type,jdbcType=TINYINT},
+                    </if>
+                    <if test="item.creationDate != null">
+                        creation_date = #{item.creationDate,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.creationBy != null">
+                        creation_by = #{item.creationBy,jdbcType=BIGINT}
+                    </if>
+                </trim>
+            </set>
+            <where>
+                <trim suffixOverrides=",">
+                    where id = #{item.id,jdbcType=BIGINT}
+                </trim>
+            </where>
+        </foreach>
+    </update>
+
+    <!--
+     使用给定的字段名定义Where子句
+   -->
+    <sql id="Identifiers_Array_Conditions">
+        <foreach collection="array" index="index" item="item" separator=" and ">
+            <if test="item == 'id'">
+                id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="item == 'equipmentId'">
+                equipment_id = #{equipmentId,jdbcType=BIGINT}
+            </if>
+            <if test="item == 'fileId'">
+                file_id = #{fileId,jdbcType=BIGINT}
+            </if>
+            <if test="item == 'sys'">
+                sys = #{sys,jdbcType=VARCHAR}
+            </if>
+            <if test="item == 'part'">
+                part = #{part,jdbcType=VARCHAR}
+            </if>
+            <if test="item == 'method'">
+                method = #{method,jdbcType=VARCHAR}
+            </if>
+            <if test="item == 'excipient'">
+                excipient = #{excipient,jdbcType=VARCHAR}
+            </if>
+            <if test="item == 'cycle'">
+                cycle = #{cycle,jdbcType=VARCHAR}
+            </if>
+            <if test="item == 'type'">
+                type = #{type,jdbcType=TINYINT}
+            </if>
+            <if test="item == 'creationDate'">
+                creation_date = #{creationDate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="item == 'creationBy'">
+                creation_by = #{creationBy,jdbcType=BIGINT}
+            </if>
+        </foreach>
+    </sql>
+
+    <!--
+      存在即更新否则插入
+    -->
+    <update id="upsert" parameterType="com.lego.framework.equipment.model.entity.EquipmentMaintenanceDoc">
+        insert into tpl_equipment_maintenance_doc
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id, file_id, sys, part, method, excipient, cycle, type, creation_date, creation_by
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{id,jdbcType=BIGINT}, #{equipmentId,jdbcType=BIGINT},#{fileId,jdbcType=BIGINT}, #{sys,jdbcType=VARCHAR},
+            #{part,jdbcType=VARCHAR},
+            #{method,jdbcType=VARCHAR}, #{excipient,jdbcType=VARCHAR}, #{cycle,jdbcType=VARCHAR},
+            #{type,jdbcType=TINYINT}, #{creationDate,jdbcType=TIMESTAMP}, #{creationBy,jdbcType=BIGINT}
+        </trim>
+        on duplicate key update
+        <trim suffixOverrides=",">
+            #{id,jdbcType=BIGINT},#{equipmentId,jdbcType=BIGINT}, #{fileId,jdbcType=BIGINT}, #{sys,jdbcType=VARCHAR},
+            #{part,jdbcType=VARCHAR},
+            #{method,jdbcType=VARCHAR}, #{excipient,jdbcType=VARCHAR}, #{cycle,jdbcType=VARCHAR},
+            #{type,jdbcType=TINYINT}, #{creationDate,jdbcType=TIMESTAMP}, #{creationBy,jdbcType=BIGINT}
+        </trim>
+    </update>
+
+
+    <!--
+      带有空值检查的存在即更新否则插入
+    -->
+    <update id="upsertSelective" parameterType="com.lego.framework.equipment.model.entity.EquipmentMaintenanceDoc">
+        insert into tpl_equipment_maintenance_doc
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id !=null ">
+                id,
+            </if>
+            <if test="equipmentId !=null ">
+                equipment_id,
+            </if>
+            <if test="fileId !=null ">
+                file_id,
+            </if>
+            <if test="sys !=null ">
+                sys,
+            </if>
+            <if test="part !=null ">
+                part,
+            </if>
+            <if test="method !=null ">
+                method,
+            </if>
+            <if test="excipient !=null ">
+                excipient,
+            </if>
+            <if test="cycle !=null ">
+                cycle,
+            </if>
+            <if test="type !=null ">
+                type,
+            </if>
+            <if test="creationDate !=null ">
+                creation_date,
+            </if>
+            <if test="creationBy !=null ">
+                creation_by
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id !=null ">
+                id = #{id,jdbcType=BIGINT},
+            </if>
+            <if test="equipmentId !=null ">
+                equipment_id = #{equipmentId,jdbcType=BIGINT},
+            </if>
+            <if test="fileId !=null ">
+                file_id = #{fileId,jdbcType=BIGINT},
+            </if>
+            <if test="sys !=null ">
+                sys = #{sys,jdbcType=VARCHAR},
+            </if>
+            <if test="part !=null ">
+                part = #{part,jdbcType=VARCHAR},
+            </if>
+            <if test="method !=null ">
+                method = #{method,jdbcType=VARCHAR},
+            </if>
+            <if test="excipient !=null ">
+                excipient = #{excipient,jdbcType=VARCHAR},
+            </if>
+            <if test="cycle !=null ">
+                cycle = #{cycle,jdbcType=VARCHAR},
+            </if>
+            <if test="type !=null ">
+                type = #{type,jdbcType=TINYINT},
+            </if>
+            <if test="creationDate !=null ">
+                creation_date = #{creationDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creationBy !=null ">
+                creation_by = #{creationBy,jdbcType=BIGINT}
+            </if>
+        </trim>
+        on duplicate key update
+        <trim suffixOverrides=",">
+            <if test="id !=null ">
+                id = #{id,jdbcType=BIGINT},
+            </if>
+            <if test="equipmentId !=null ">
+                equipment_id = #{equipmentId,jdbcType=BIGINT},
+            </if>
+            <if test="fileId !=null ">
+                file_id = #{fileId,jdbcType=BIGINT},
+            </if>
+            <if test="sys !=null ">
+                sys = #{sys,jdbcType=VARCHAR},
+            </if>
+            <if test="part !=null ">
+                part = #{part,jdbcType=VARCHAR},
+            </if>
+            <if test="method !=null ">
+                method = #{method,jdbcType=VARCHAR},
+            </if>
+            <if test="excipient !=null ">
+                excipient = #{excipient,jdbcType=VARCHAR},
+            </if>
+            <if test="cycle !=null ">
+                cycle = #{cycle,jdbcType=VARCHAR},
+            </if>
+            <if test="type !=null ">
+                type = #{type,jdbcType=TINYINT},
+            </if>
+            <if test="creationDate !=null ">
+                creation_date = #{creationDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creationBy !=null ">
+                creation_by = #{creationBy,jdbcType=BIGINT}
+            </if>
+        </trim>
+    </update>
+
+    <select id="query" resultMap="BaseResultMap"
+            parameterType="com.lego.framework.equipment.model.entity.EquipmentMaintenanceDoc">
+        select
+        <include refid="Base_Column_List"/>
+        from tpl_equipment_maintenance_doc
+        <where>
+            <include refid="Base_Query_Where"></include>
+        </where>
+    </select>
+
+    <select id="queryTotal" resultType="long">
+        select count(*)
+        from tpl_equipment_maintenance_doc
+    </select>
+
+
+    <delete id="deleteBatch">
+        delete from tpl_equipment_maintenance_doc where id in
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

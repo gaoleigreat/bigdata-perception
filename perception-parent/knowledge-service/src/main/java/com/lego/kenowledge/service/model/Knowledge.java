@@ -32,9 +32,9 @@ public class Knowledge {
     @ApiModelProperty("标签")
     private List<String> tags;
     @ApiModelProperty("提问内容")
-    private String askContent;
+    private Ask ask;
     @ApiModelProperty("回复内容")
-    private String answerBody;
+    private List<Answer> answers;
     @ApiModelProperty("描述")
     private String description;
     @ApiModelProperty("创建时间")
@@ -45,4 +45,28 @@ public class Knowledge {
     private Date lastUpdateDate;
     @ApiModelProperty("更新人id")
     private Long lastUpdatedBy;
+}
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+class Ask {
+    @ApiModelProperty("提问内容")
+    private String askBody;
+    @ApiModelProperty("提问人id")
+    private Long askBy;
+    @ApiModelProperty("提问时间")
+    private Date askDate;
+}
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+class Answer {
+    @ApiModelProperty("回复内容")
+    private String answerBody;
+    @ApiModelProperty("回复人id")
+    private Long answerBy;
+    @ApiModelProperty("回复时间")
+    private Date answerDate;
 }
