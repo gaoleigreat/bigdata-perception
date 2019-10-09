@@ -6,7 +6,6 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
 /**
  * @author : yanglf
  * @version : 1.0
@@ -37,6 +36,7 @@ public interface KnowledgeRepository extends ElasticsearchRepository<Knowledge, 
 
 
     /**
+     * 根据提问人id获取知识库信息
      *
      * @param askBy
      * @return

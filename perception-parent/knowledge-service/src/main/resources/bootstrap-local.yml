@@ -1,4 +1,10 @@
 spring:
+  data:
+    elasticsearch:
+      repositories:
+        enabled: true
+      cluster-name: equipment
+      cluster-nodes: 192.168.101.52:9300
   cloud:
     config:
       fail-fast: true
