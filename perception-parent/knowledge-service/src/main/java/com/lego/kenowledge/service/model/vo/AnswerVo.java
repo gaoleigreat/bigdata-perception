@@ -23,7 +23,7 @@ public class AnswerVo {
     @ApiModelProperty("回复内容")
     private String answerBody;
     @ApiModelProperty("回复人id")
-    private Long answerBy;
+    private Long createdId;
     @ApiModelProperty("回复时间")
-    private Date answerDate;
+    private Date createdDate;
 }

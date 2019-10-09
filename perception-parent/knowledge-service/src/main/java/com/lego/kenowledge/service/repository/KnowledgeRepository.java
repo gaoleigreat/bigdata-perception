@@ -5,6 +5,8 @@ import org.springframework.data.elasticsearch.annotations.Query;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @author : yanglf
  * @version : 1.0
@@ -32,6 +34,14 @@ public interface KnowledgeRepository extends ElasticsearchRepository<Knowledge, 
      * @return
      */
     Knowledge findKnowledgeByAskId(String askId);
+
+
+    /**
+     *
+     * @param askBy
+     * @return
+     */
+    List<Knowledge> findAllByAskCreatedIdOrderByCreatedDateDesc(Long askBy);
 
 
     /**

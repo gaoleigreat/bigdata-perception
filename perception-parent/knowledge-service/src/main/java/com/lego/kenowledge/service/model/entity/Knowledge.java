@@ -37,14 +37,14 @@ public class Knowledge {
     private List<Answer> answers;
     @ApiModelProperty("创建时间")
     @Field(index = false)
-    private Date creationDate;
+    private Date createdDate;
     @ApiModelProperty("创建人id")
     @Field(index = false)
-    private Long createdBy;
+    private Long createdId;
     @ApiModelProperty("更新时间")
     @Field(index = false)
-    private Date lastUpdateDate;
+    private Date updatedDate;
     @Field(index = false)
     @ApiModelProperty("更新人id")
-    private Long lastUpdatedBy;
+    private Long updatedId;
 }

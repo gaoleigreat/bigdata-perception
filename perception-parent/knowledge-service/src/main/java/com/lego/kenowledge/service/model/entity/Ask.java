@@ -26,7 +26,7 @@ public class Ask {
     @ApiModelProperty("提问描述")
     private String askDesc;
     @ApiModelProperty("提问人id")
-    private Long askBy;
+    private Long createdId;
     @ApiModelProperty("提问时间")
-    private Date askDate;
+    private Date createdDate;
 }

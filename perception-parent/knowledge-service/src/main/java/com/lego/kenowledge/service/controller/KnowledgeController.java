@@ -10,17 +10,13 @@ import com.lego.kenowledge.service.model.entity.Answer;
 import com.lego.kenowledge.service.model.entity.Ask;
 import com.lego.kenowledge.service.model.entity.Knowledge;
 import com.lego.kenowledge.service.model.vo.AskVo;
-import com.lego.kenowledge.service.model.vo.KnowledgeVo;
 import com.lego.kenowledge.service.repository.KnowledgeRepository;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
-import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.TermQueryBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.*;
@@ -66,15 +62,15 @@ public class KnowledgeController {
                           @RequestParam Integer classify,
                           @RequestParam(required = false) List<String> tags) {
         Knowledge knowledge = new Knowledge();
-        ask.setAskBy(1L);
-        ask.setAskDate(new Date());
+        ask.setCreatedId(1L);
+        ask.setCreatedDate(new Date());
         ask.setId(UuidUtils.generateShortUuid());
         knowledge.setAsk(ask);
         knowledge.setId(UuidUtils.generateShortUuid());
         knowledge.setClassify(classify);
-        knowledge.setCreatedBy(1L);
-        knowledge.setCreationDate(new Date());
-        knowledge.setLastUpdateDate(new Date());
+        knowledge.setCreatedId(1L);
+        knowledge.setCreatedDate(new Date());
+        knowledge.setUpdatedDate(new Date());
         knowledge.setTags(tags);
         Knowledge save = knowledgeRepository.save(knowledge);
         return RespVOBuilder.success();
@@ -90,15 +86,15 @@ public class KnowledgeController {
     public RespVO saveAnswer(@RequestBody Answer answer,
                              @RequestParam String askId) {
         Knowledge knowledge = knowledgeRepository.findKnowledgeByAskId(askId);
-        if (knowledge==null) {
+        if (knowledge == null) {
             return RespVOBuilder.failure("知识不存在");
         }
         List<Answer> answers = knowledge.getAnswers();
         if (answers == null) {
             answers = new ArrayList<>();
         }
-        answer.setAnswerDate(new Date());
-        answer.setAnswerBy(2L);
+        answer.setCreatedDate(new Date());
+        answer.setCreatedId(2L);
         answer.setId(UuidUtils.generateShortUuid());
         answers.add(answer);
         knowledge.setAnswers(answers);
@@ -121,7 +117,7 @@ public class KnowledgeController {
                                             @PageableDefault() Pageable pageable) {
         NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
         queryBuilder.withPageable(pageable);
-        queryBuilder.withSort(new FieldSortBuilder("ask.askDate").order(SortOrder.DESC));
+        queryBuilder.withSort(new FieldSortBuilder("ask.createdDate").order(SortOrder.DESC));
         if (classify != null) {
             queryBuilder.withQuery(termQuery("classify", classify));
         }
@@ -155,10 +151,33 @@ public class KnowledgeController {
     @RequestMapping(value = "/details/{askId}", method = RequestMethod.GET)
     public RespVO<Knowledge> details(@PathVariable String askId) {
         Knowledge knowledge = knowledgeRepository.findKnowledgeByAskId(askId);
-        if (knowledge==null) {
+        if (knowledge == null) {
             return RespVOBuilder.failure("知识不存在");
         }
         return RespVOBuilder.success(knowledge);
+    }
+
+
+    @ApiOperation(value = "我的提问", httpMethod = "GET")
+    @ApiImplicitParams({
+
+    })
+    @Operation(value = "myAsk", desc = "我的提问")
+    @RequestMapping(value = "/myAsk", method = RequestMethod.GET)
+    public RespVO<RespDataVO<AskVo>> myAsk() {
+        List<Knowledge> knowledgeList = knowledgeRepository.findAllByAskCreatedIdOrderByCreatedDateDesc(1L);
+        List<AskVo> askVos = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(knowledgeList)) {
+            for (Knowledge knowledge : knowledgeList) {
+                Ask ask = knowledge.getAsk();
+                AskVo askVo = new AskVo();
+                BeanUtils.copyProperties(ask, askVo);
+                List<Answer> answers = knowledge.getAnswers();
+                askVo.setAnswerCount(answers != null ? answers.size() : 0);
+                askVos.add(askVo);
+            }
+        }
+        return RespVOBuilder.success(askVos);
     }
 
 
