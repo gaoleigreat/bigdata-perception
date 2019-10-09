@@ -100,7 +100,7 @@ public class BusinessController {
     @ApiOperation(value = "新增业务", httpMethod = "POST")
     @RequestMapping(value = "/save_tplBusiness", method = RequestMethod.POST)
     @Transactional(rollbackFor = RuntimeException.class)
-    public RespVO insert(@RequestBody Business business) {
+    public RespVO insert(@RequestBody Business business,@RequestParam(value = "parentId") Long parentId) {
         String templateCode = business.getTemplateCode();
         Business queryBusiness = new Business();
         queryBusiness.setTemplateCode(templateCode);
@@ -127,9 +127,14 @@ public class BusinessController {
             ExceptionBuilder.operateFailException(vo.getMsg());
         }
         Sitemap querySitemap = new Sitemap();
-        querySitemap.setName("业务管理");
-        querySitemap.setSubSystem("basicManage");
-        querySitemap.setType(1);
+        if (parentId ==null){
+            querySitemap.setName("业务管理");
+            querySitemap.setSubSystem("basicManage");
+            querySitemap.setType(1);
+        }else{
+            querySitemap.setId(parentId);
+        }
+
         List<Sitemap> list = sitemapClient.list(querySitemap);
         if (CollectionUtils.isEmpty(list)) {
             // 创建业务菜单

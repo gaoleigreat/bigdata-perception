@@ -8,10 +8,10 @@ import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.lego.equipment.service.service.IEquipmentFileService;
-import com.lego.framework.base.annotation.Operation;
+import com.lego.framework.base.context.RequestContext;
+import com.lego.framework.equipment.feign.EquipmentMaintenanceDocClient;
 import com.lego.framework.equipment.model.entity.EquipmentFile;
-import com.lego.framework.file.feign.FileClient;
-import com.lego.framework.system.model.entity.DataFile;
+import com.lego.framework.file.feign.HDFSFileClient;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -22,10 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author itar
@@ -40,7 +37,15 @@ public class EquipmentFileController {
     private IEquipmentFileService equipmentFileService;
 
     @Autowired
-    private FileClient fileClient;
+    private HDFSFileClient hdfsFileClient;
+
+    @Autowired
+    private EquipmentMaintenanceDocClient equipmentMaintenanceDocClient;
+
+
+    private String storePath = "/opt/data/storePath/";
+
+    private String savePath = "/opt/data/savePath/";
 
     /**
      * 分页查询数据
@@ -126,68 +131,49 @@ public class EquipmentFileController {
     }
 
 
-    @ApiOperation(value = "formatted", notes = "格式化文件上传")
+
+
+
+
+    @ApiOperation(value = "设备相关文件上传", notes = "设备相关文件上传")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "files", value = "格式化文件上传，", paramType = "formData", allowMultiple = true, required = true, dataType = "file"),
-            @ApiImplicitParam(name = "equipmentId", value = "模板Id，", paramType = "query", required = true, dataType = "Long"),
-            @ApiImplicitParam(name = "equipmentCode", value = "工程Id，", paramType = "query", required = false, dataType = "Long"),
-            @ApiImplicitParam(name = "remark", value = "说明，", paramType = "query", required = false, dataType = "String"),
-            @ApiImplicitParam(name = "tags", value = "标签，", paramType = "query", required = false, dataType = "String"),
-    })
-    @PostMapping(value = "/upload/formatted", headers = "content-type=multipart/form-data")
-    @Operation(value = "formatted", desc = "格式化文件上传")
-    public RespVO uplodeFormatted(
-            @RequestParam(value = "files", required = true) MultipartFile[] files,
-            @RequestParam(value = "projectId", required = false) Long projectId,
-            @RequestParam(value = "remark", required = false) String remark,
-            @RequestParam(value = "tags", required = false) String tags) {
-        if (files == null || files.length <= 0) {
-            return RespVOBuilder.failure("上传文件为空");
-        }
-
-        RespVO<RespDataVO<DataFile>> uploads = fileClient.uploads(files, projectId, null, -1, remark, tags);
-        if (uploads.getRetCode() != 1) {
-            return RespVOBuilder.failure("上传文件失败");
-        }
-        if (uploads.getInfo().getList().size() <= 0) {
-            return RespVOBuilder.failure("上传文件失败");
-        }
-        return RespVOBuilder.success(uploads.getInfo().getList().get(0).getBatchNum());
-
-
-    }
-
-
-    @ApiOperation(value = "非格式化文件上传", notes = "非格式化文件上传")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "files", value = "格式化文件上传，", paramType = "formData", allowMultiple = true, required = true, dataType = "file"),
-            @ApiImplicitParam(name = "projectId", value = "工程Id，", paramType = "query", required = false, dataType = "long"),
+            @ApiImplicitParam(name = "equipmentId", value = "工程Id，", paramType = "query", required = false, dataType = "long"),
+            @ApiImplicitParam(name = "equipmentCode", value = "设备编号", paramType = "query", required = false, dataType = "String"),
             @ApiImplicitParam(name = "remark", value = "说明", paramType = "query", required = false, dataType = "String"),
             @ApiImplicitParam(name = "tags", value = "标签", paramType = "query", required = false, dataType = "String", example = "文件,设备,建筑"),
     })
     @PostMapping(value = "/upload/unformatted", headers = "content-type=multipart/form-data")
-    @Operation(value = "unformatted", desc = "非格式化文件上传")
-    public RespVO uplodeFormatted(@RequestParam(value = "projectId", required = false) Long projectId,
-                                  @RequestParam(value = "files", required = true) MultipartFile[] files,
+    public RespVO uplodeUnFormatted(@RequestParam(value = "files", required = true) MultipartFile[] files,
+                                  @RequestParam(value = "equipmentId", required = true) Long equipmentId,
+                                  @RequestParam(value = "equipmentCode", required = false) String equipmentCode,
                                   @RequestParam(value = "remark", required = false) String remark,
                                   @RequestParam(value = "tags", required = false) String tags) {
-        Set<Character> set = new HashSet<>();
 
-        char[] chars1 = remark.toCharArray();
-        for (char c1 : chars1) {
-            set.add(c1);
+        if (files ==null || files.length==0){
+            return RespVOBuilder.failure("上传文件不能为空");
         }
-        if (files == null || files.length <= 0) {
-            return RespVOBuilder.failure("上传文件有误");
+        RespVO<Map<String, String>> respVO = hdfsFileClient.uploads("", "", files);
+        if (respVO ==null || respVO.getRetCode() != 1){
+            return RespVOBuilder.failure("文件上传失败");
         }
-        RespVO<RespDataVO<DataFile>> uploads = fileClient.uploads(files, projectId, null, -1, remark, tags);
-        if (uploads.getRetCode() != 1) {
-            return RespVOBuilder.failure("上传文件失败");
-        }
-        if (uploads.getInfo().getList().size() <= 0) {
-            return RespVOBuilder.failure("上传文件失败");
-        }
-        return RespVOBuilder.success(uploads.getInfo().getList().get(0).getBatchNum());
+        List<EquipmentFile> equipmentFiles = new ArrayList<>();
+        Map<String, String> respVOInfo = respVO.getInfo();
+        Arrays.stream(files).forEach(f ->{
+            EquipmentFile equipmentFile = new EquipmentFile();
+            equipmentFile.setDeleteFlag(0);
+            equipmentFile.setEquipmentCode(equipmentCode);
+            equipmentFile.setEquipmentId(equipmentId);
+            equipmentFile.setFileName(f.getOriginalFilename());
+            equipmentFile.setFileUrl(respVOInfo.get(f.getOriginalFilename()));
+            equipmentFile.setCreateInfo();
+            equipmentFile.setCreatedBy(RequestContext.getCurrent().getUserId());
+            equipmentFileService.insert(equipmentFile);
+            equipmentFiles.add(equipmentFile);
+            equipmentMaintenanceDocClient.upload(f,equipmentFile.getFileId());
+        });
+
+      return RespVOBuilder.success(equipmentFiles);
 
     }
 

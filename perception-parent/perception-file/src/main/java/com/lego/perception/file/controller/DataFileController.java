@@ -45,7 +45,6 @@ public class DataFileController {
             @ApiImplicitParam(name = "sourceType", value = "sourceType，", paramType = "query", allowMultiple = false, required = true, dataType = "int"),
             @ApiImplicitParam(name = "remark", value = "remark，", paramType = "query", allowMultiple = true, required = false, dataType = "String"),
             @ApiImplicitParam(name = "tags", value = "tags，", paramType = "query", allowMultiple = true, required = false, dataType = "String"),
-            @ApiImplicitParam(name = "equipmentId", value = "equipmentId，", paramType = "query", allowMultiple = true, required = false, dataType = "Long"),
             @ApiImplicitParam(name = "tags", value = "equipmentCode，", paramType = "equipmentCode", allowMultiple = true, required = false, dataType = "String")
 
     })
@@ -55,9 +54,7 @@ public class DataFileController {
                                                 @RequestParam(value = "templateId", required = false) Long templateId,
                                                 @RequestParam(value = "sourceType", required = true) int sourceType,
                                                 @RequestParam(value = "remark", required = false) String remark,
-                                                @RequestParam(value = "tags", required = false) String tags,
-                                                @RequestParam(value = "equipmentId", required = false) Long equipmentId,
-                                                @RequestParam(value = "equipmentCode", required = false) String equipmentCode
+                                                @RequestParam(value = "tags", required = false) String tags
 
     ) {
         String batchNum = UuidUtils.generate16Uuid();
@@ -82,12 +79,6 @@ public class DataFileController {
                     fileMap.put("fileName", f.getOriginalFilename());
                     fileMap.put("url", upload.getInfo().get("data"));
                     DataFile dataFile = new DataFile(uploadFile.getFileName(), uploadFile.getExt(), projectId, upload.getInfo().get("data").toString(), upload.getInfo().get("data").toString(), templateId, 0, sourceType, 0, remark, tags, batchNum);
-                    if (null == equipmentId){
-                        dataFile.setEquipmentId(equipmentId);
-                       if (!StringUtils.isEmpty(equipmentCode)) {
-                           dataFile.setEquipmentCode(equipmentCode);
-                       }
-                    }
                     dataFiles.add(dataFile);
                     returnList.add(dataFile);
                 }
