@@ -233,7 +233,7 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <phase>package</phase>
+                        <!--<phase>package</phase>-->
                         <goals>
                             <goal>convertSwagger2markup</goal>
                         </goals>
@@ -274,7 +274,7 @@
                 <executions>
                     <execution>
                         <id>output-html</id>
-                        <phase>package</phase>
+                        <!--<phase>package</phase>-->
                         <goals>
                             <goal>process-asciidoc</goal>
                         </goals>
@@ -286,7 +286,7 @@
 
                     <execution>
                         <id>output-pdf</id>
-                      <phase>package</phase>
+                        <!--<phase>package</phase>-->
                         <goals>
                             <goal>process-asciidoc</goal>
                         </goals>
