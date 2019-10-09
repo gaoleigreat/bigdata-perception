@@ -24,7 +24,7 @@ import java.util.Map;
  * @description
  * @since 2019/8/27
  **/
-@FeignClient(value = "file-service", path = "/hdfs/v1", fallbackFactory = FileClientFallbackFactory.class)
+@FeignClient(value = "file-service", path = "/hdfs/v1", fallbackFactory = HDFSFileClientFallbackFactory.class)
 public interface HDFSFileClient {
 
     @PostMapping(value = "/uploadFile", headers = "content-type=multipart/form-data")
@@ -42,13 +42,7 @@ class HDFSFileClientFallbackFactory implements FallbackFactory<HDFSFileClient> {
     @Override
     public HDFSFileClient create(Throwable throwable) {
         log.error("fallback; reason was:{}", throwable);
-        return new HDFSFileClient() {
-
-            @Override
-            public RespVO<Map<String, String>> uploads(String storePath, String savePath, MultipartFile[] files) {
-                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "file服务不可用");
-            }
-        };
+        return (storePath, savePath, files) -> RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "file服务不可用");
     }
 }
 
