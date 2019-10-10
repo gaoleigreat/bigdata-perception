@@ -1,6 +1,4 @@
 package com.lego.kenowledge.service.controller;
-
-import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
@@ -15,17 +13,14 @@ import com.lego.kenowledge.service.model.vo.AskVo;
 import com.lego.kenowledge.service.repository.KnowledgeRepository;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
-import org.elasticsearch.search.sort.FieldSortBuilder;
-import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
-import org.springframework.data.elasticsearch.core.aggregation.AggregatedPage;
 import org.springframework.data.elasticsearch.core.query.*;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -113,8 +108,8 @@ public class KnowledgeController {
             @ApiImplicitParam(name = "keyWords", value = "提问内容搜索词", dataType = "String", paramType = "query"),
             @ApiImplicitParam(name = "tags", value = "标签", dataType = "String", allowMultiple = true, paramType = "query"),
             @ApiImplicitParam(name = "classify", value = "知识库分类(1-专家经验库;2-厂家一般故障库;3-特殊装备故障;4-其他故障)", dataType = "int", paramType = "query"),
-            @ApiImplicitParam(name = "pageIndex", value = "当前页数", dataType = "int", required = true, paramType = "query"),
-            @ApiImplicitParam(name = "pageSize", value = "每页大小", dataType = "int", defaultValue = "10", paramType = "query")
+            @ApiImplicitParam(name = "pageIndex", value = "当前页数", dataType = "int",required = true, paramType = "query"),
+            @ApiImplicitParam(name = "pageSize", value = "每页大小", dataType = "int",defaultValue = "10",paramType = "query")
 
     })
     @Operation(value = "list", desc = "知识提问列表")
@@ -124,24 +119,33 @@ public class KnowledgeController {
                                              @RequestParam(required = false) Integer classify,
                                              @RequestParam Integer pageIndex,
                                              @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
-        NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
+       // NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
+        Criteria criteria=new Criteria();
         Pageable pageable = PageRequest.of(pageIndex - 1, pageSize, Sort.by(Sort.Direction.DESC, "ask.createdDate"));
-        queryBuilder.withPageable(pageable);
         if (classify != null) {
-            queryBuilder.withQuery(termQuery("classify", classify));
+            criteria.and("classify").is(classify);
         }
         if (!StringUtils.isEmpty(keyWords)) {
-            queryBuilder.withQuery(matchPhraseQuery("ask.askBody", keyWords));
+            criteria.and("ask.askBody").contains(keyWords);
         }
         if (!CollectionUtils.isEmpty(tags)) {
-            queryBuilder.withQuery(termsQuery("tags", tags));
+            criteria.and("tags").in(tags);
         }
         PagedResult pagedResult = new PagedResult();
+        CriteriaQuery criteriaQuery=new CriteriaQuery(criteria);
+        criteriaQuery.setPageable(pageable);
+        Page<Knowledge> knowledgePage = elasticsearchTemplate.queryForPage(criteriaQuery, Knowledge.class);
+        List<Knowledge> knowledgeList = knowledgePage.getContent();
+        List<AskVo> askVos = getAskVos(knowledgeList);
+        pagedResult.setResultList(askVos);
+        pagedResult.setPage(new com.framework.common.page.Page(pageIndex, pageSize, 0, knowledgePage.getNumberOfElements(), knowledgePage.getTotalPages()));
+        return RespVOBuilder.success(pagedResult);
+    }
+
+    private List<AskVo> getAskVos(List<Knowledge> knowledgeList) {
         List<AskVo> askVos = new ArrayList<>();
-        AggregatedPage<Knowledge> aggregatedPage = elasticsearchTemplate.queryForPage(queryBuilder.build(), Knowledge.class);
-        List<Knowledge> knowledges = aggregatedPage.getContent();
-        if (!CollectionUtils.isEmpty(knowledges)) {
-            for (Knowledge know : knowledges) {
+        if (!CollectionUtils.isEmpty(knowledgeList)) {
+            for (Knowledge know : knowledgeList) {
                 Ask ask = know.getAsk();
                 AskVo askVo = new AskVo();
                 BeanUtils.copyProperties(ask, askVo);
@@ -150,9 +154,7 @@ public class KnowledgeController {
                 askVos.add(askVo);
             }
         }
-        pagedResult.setResultList(askVos);
-        pagedResult.setPage(new Page(pageIndex, pageSize, 0, aggregatedPage.getNumberOfElements(), aggregatedPage.getTotalPages()));
-        return RespVOBuilder.success(pagedResult);
+        return askVos;
     }
 
 
@@ -179,17 +181,7 @@ public class KnowledgeController {
     @RequestMapping(value = "/myAsk", method = RequestMethod.GET)
     public RespVO<RespDataVO<AskVo>> myAsk() {
         List<Knowledge> knowledgeList = knowledgeRepository.findAllByAskCreatedIdOrderByCreatedDateDesc(1L);
-        List<AskVo> askVos = new ArrayList<>();
-        if (!CollectionUtils.isEmpty(knowledgeList)) {
-            for (Knowledge knowledge : knowledgeList) {
-                Ask ask = knowledge.getAsk();
-                AskVo askVo = new AskVo();
-                BeanUtils.copyProperties(ask, askVo);
-                List<Answer> answers = knowledge.getAnswers();
-                askVo.setAnswerCount(answers != null ? answers.size() : 0);
-                askVos.add(askVo);
-            }
-        }
+        List<AskVo> askVos = getAskVos(knowledgeList);
         return RespVOBuilder.success(askVos);
     }
 
@@ -241,6 +233,15 @@ public class KnowledgeController {
         knowledgeRepository.deleteById(id);
         return RespVOBuilder.success();
     }
+
+
+    @RequestMapping(value = "/drop", method = RequestMethod.GET)
+    public RespVO drop() {
+        boolean b = elasticsearchTemplate.deleteIndex(Knowledge.class);
+        return RespVOBuilder.success(b);
+    }
+
+
 
 
 }
