@@ -1,5 +1,6 @@
 package com.lego.perception.template.service;
 import com.lego.framework.template.model.entity.DataTemplateItem;
+import com.lego.framework.template.model.entity.FormTemplateItem;
 
 import java.util.List;
 
@@ -14,5 +15,5 @@ public interface ISearchConditionService {
      * @param templateCode
      * @return
      */
-    List<DataTemplateItem> findSearchCondition(String templateCode);
+    List<FormTemplateItem> findSearchCondition(String templateCode);
 }

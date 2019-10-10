@@ -2,7 +2,10 @@ package com.lego.perception.template.service.impl;
 
 import com.lego.framework.template.model.entity.DataTemplate;
 import com.lego.framework.template.model.entity.DataTemplateItem;
+import com.lego.framework.template.model.entity.FormTemplate;
+import com.lego.framework.template.model.entity.FormTemplateItem;
 import com.lego.perception.template.service.IDataTemplateService;
+import com.lego.perception.template.service.IFormTemplateService;
 import com.lego.perception.template.service.ISearchConditionService;
 import com.lego.perception.template.service.ITemplateItemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,30 +21,30 @@ public class SearchConditionServiceImpl implements ISearchConditionService {
 
 
     @Autowired
-    @Qualifier(value = "dataTemplateItemService")
-    private ITemplateItemService dataTemplateItemService;
+    @Qualifier(value = "formTemplateItemServiceImpl")
+    private ITemplateItemService templateItemService;
 
     @Autowired
-    private IDataTemplateService dataTemplateService;
+    private IFormTemplateService formTemplateService;
 
     @Override
-    public List<DataTemplateItem> findSearchCondition(String templateCode) {
-        DataTemplate queryParam = new DataTemplate();
+    public List<FormTemplateItem> findSearchCondition(String templateCode) {
+        FormTemplate queryParam = new FormTemplate();
         queryParam.setTemplateCode(templateCode);
-        List<DataTemplate> dataTemplateList = dataTemplateService.findList(queryParam);
-        if (CollectionUtils.isEmpty(dataTemplateList)) {
+        List<FormTemplate> templateList = formTemplateService.findList(queryParam);
+        if (CollectionUtils.isEmpty(templateList)) {
             return Collections.EMPTY_LIST;
         }
 
-        DataTemplate dataTemplate = dataTemplateList.get(0);
-        DataTemplateItem itemQueryParam = new DataTemplateItem();
-        itemQueryParam.setTemplateId(dataTemplate.getId());
+        FormTemplate formTemplate = templateList.get(0);
+        FormTemplateItem itemQueryParam = new FormTemplateItem();
+        itemQueryParam.setTemplateId(formTemplate.getId());
         itemQueryParam.setIsSearch(1);
-        List<DataTemplateItem> itemList = dataTemplateItemService.findList(itemQueryParam);
+        List<FormTemplateItem> itemList = templateItemService.findList(itemQueryParam);
         if (CollectionUtils.isEmpty(itemList)) {
             return Collections.EMPTY_LIST;
         }
-        List<DataTemplateItem> resultList = dataTemplateItemService.convertList2Tree(itemList);
+        List<FormTemplateItem> resultList = templateItemService.convertList2Tree(itemList);
         return resultList;
     }
 }

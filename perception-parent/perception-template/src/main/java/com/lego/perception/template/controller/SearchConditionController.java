@@ -4,6 +4,7 @@ import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.base.annotation.Resource;
 import com.lego.framework.template.model.entity.ConditionSymbol;
 import com.lego.framework.template.model.entity.DataTemplateItem;
+import com.lego.framework.template.model.entity.FormTemplateItem;
 import com.lego.perception.template.service.ISearchConditionService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,9 +33,9 @@ public class SearchConditionController {
     @RequestMapping(value = "/{templateCode}", method = RequestMethod.GET)
     @ApiOperation(value = "搜索条件",httpMethod = "GET")
     public RespVO<Map<String, Object>> household(@PathVariable("templateCode") String templateCode){
-        List<DataTemplateItem> items = searchConditionService.findSearchCondition(templateCode);
+        List<FormTemplateItem> searchCondition = searchConditionService.findSearchCondition(templateCode);
         Map<String, Object> map = new HashMap<>(3);
-        map.put("items", items);
+        map.put("items", searchCondition);
         map.put("symbols", getSymbols());
         return RespVOBuilder.success(map);
     }
