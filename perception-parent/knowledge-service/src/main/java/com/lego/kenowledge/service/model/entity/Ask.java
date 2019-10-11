@@ -4,9 +4,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.elasticsearch.annotations.Field;
-
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author : yanglf
@@ -29,4 +28,6 @@ public class Ask {
     private Long createdId;
     @ApiModelProperty("提问时间")
     private Date createdDate;
+    @ApiModelProperty("附件批次号")
+    private String annexNum;
 }

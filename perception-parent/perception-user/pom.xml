@@ -134,6 +134,12 @@
 
 
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+        </dependency>
+
+
+        <dependency>
             <groupId>com.lego.permission</groupId>
             <artifactId>framework-permission</artifactId>
             <version>${service.version}</version>
@@ -144,6 +150,14 @@
             <groupId>com.framework.log</groupId>
             <version>${service.version}</version>
             <artifactId>framework-log</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.ym.sso.supervisor</groupId>
+            <artifactId>sso-supervisor-client</artifactId>
+            <version>1.01.01-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
 
 

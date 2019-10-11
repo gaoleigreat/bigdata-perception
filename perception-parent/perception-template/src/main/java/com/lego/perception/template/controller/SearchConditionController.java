@@ -40,7 +40,7 @@ public class SearchConditionController {
         return RespVOBuilder.success(map);
     }
 
-    private Map<Integer, List<ConditionSymbol>> getSymbols(){
+    private Map<String, List<ConditionSymbol>> getSymbols(){
         List<ConditionSymbol> enumList = Arrays.asList(new ConditionSymbol("包含","in"),
                 new ConditionSymbol("不包含","notin"),
                 new ConditionSymbol("为空","notExists"),
@@ -58,23 +58,23 @@ public class SearchConditionController {
                 new ConditionSymbol("否","false"),
                 new ConditionSymbol("为空","notExists"),
                 new ConditionSymbol("不为空","exists"));
-        Map<Integer, List<ConditionSymbol>> map = new HashMap<>();
-        map.put(1, stringList);
-        map.put(2, stringList);
-        map.put(3,null);
-        map.put(4,null);
-        map.put(5,null);
-        map.put(6,enumList);
-        map.put(7,enumList);
-        map.put(8,null);
-        map.put(9,numList);
-        map.put(10,null);
-        map.put(11,null);
-        map.put(13, booleanList);
-        map.put(14,numList);
-        map.put(15,stringList);
-        map.put(16,null);
-        map.put(17,null);
+        Map<String, List<ConditionSymbol>> map = new HashMap<>();
+        map.put("1", stringList);
+        map.put("2", stringList);
+        map.put("3",null);
+        map.put("4",null);
+        map.put("5",null);
+        map.put("6",enumList);
+        map.put("7",enumList);
+        map.put("8",null);
+        map.put("9",numList);
+        map.put("10",null);
+        map.put("11",null);
+        map.put("13", booleanList);
+        map.put("14",numList);
+        map.put("15",stringList);
+        map.put("16",null);
+        map.put("17",null);
        return map;
     }
 }

@@ -1,4 +1,5 @@
 package com.lego.kenowledge.service.controller;
+
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
@@ -11,6 +12,7 @@ import com.lego.kenowledge.service.model.entity.Ask;
 import com.lego.kenowledge.service.model.entity.Knowledge;
 import com.lego.kenowledge.service.model.vo.AskVo;
 import com.lego.kenowledge.service.repository.KnowledgeRepository;
+import com.lego.kenowledge.service.service.KnowledgeFileService;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -24,6 +26,7 @@ import org.springframework.data.elasticsearch.core.query.*;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
@@ -50,6 +53,9 @@ public class KnowledgeController {
     @Autowired
     private ElasticsearchTemplate elasticsearchTemplate;
 
+    @Autowired
+    private KnowledgeFileService knowledgeFileService;
+
 
     @ApiOperation(value = "新增知识库提问信息", httpMethod = "POST")
     @ApiImplicitParams({
@@ -60,6 +66,7 @@ public class KnowledgeController {
     @RequestMapping(value = "/saveAsk", method = RequestMethod.POST)
     public RespVO saveAsk(@RequestBody Ask ask,
                           @RequestParam Integer classify,
+                          @RequestParam MultipartFile[] files,
                           @RequestParam(required = false) List<String> tags) {
         Knowledge knowledge = new Knowledge();
         ask.setCreatedId(1L);
@@ -72,6 +79,13 @@ public class KnowledgeController {
         knowledge.setCreatedDate(new Date());
         knowledge.setUpdatedDate(new Date());
         knowledge.setTags(tags);
+        if (files != null && files.length > 0) {
+            String batchNumber = knowledgeFileService.upLoadFile(files, "知识库提问附件", "KNOWLEDGE");
+            if (batchNumber == null) {
+                return RespVOBuilder.failure("附件上传失败");
+            }
+            ask.setAnnexNum(batchNumber);
+        }
         Knowledge save = knowledgeRepository.save(knowledge);
         return RespVOBuilder.success();
     }
@@ -84,6 +98,7 @@ public class KnowledgeController {
     @Operation(value = "saveAnswer", desc = "新增知识库回答信息")
     @RequestMapping(value = "/saveAnswer", method = RequestMethod.POST)
     public RespVO saveAnswer(@RequestBody Answer answer,
+                             @RequestParam MultipartFile[] files,
                              @RequestParam String askId) {
         Knowledge knowledge = knowledgeRepository.findKnowledgeByAskId(askId);
         if (knowledge == null) {
@@ -98,6 +113,13 @@ public class KnowledgeController {
         answer.setId(UuidUtils.generateShortUuid());
         answers.add(answer);
         knowledge.setAnswers(answers);
+        if (files != null && files.length > 0) {
+            String batchNumber = knowledgeFileService.upLoadFile(files, "知识库回答附件", "KNOWLEDGE");
+            if (batchNumber == null) {
+                return RespVOBuilder.failure("附件上传失败");
+            }
+            answer.setAnnexNum(batchNumber);
+        }
         Knowledge save = knowledgeRepository.save(knowledge);
         return RespVOBuilder.success();
     }
@@ -108,8 +130,8 @@ public class KnowledgeController {
             @ApiImplicitParam(name = "keyWords", value = "提问内容搜索词", dataType = "String", paramType = "query"),
             @ApiImplicitParam(name = "tags", value = "标签", dataType = "String", allowMultiple = true, paramType = "query"),
             @ApiImplicitParam(name = "classify", value = "知识库分类(1-专家经验库;2-厂家一般故障库;3-特殊装备故障;4-其他故障)", dataType = "int", paramType = "query"),
-            @ApiImplicitParam(name = "pageIndex", value = "当前页数", dataType = "int",required = true, paramType = "query"),
-            @ApiImplicitParam(name = "pageSize", value = "每页大小", dataType = "int",defaultValue = "10",paramType = "query")
+            @ApiImplicitParam(name = "pageIndex", value = "当前页数", dataType = "int", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "pageSize", value = "每页大小", dataType = "int", defaultValue = "10", paramType = "query")
 
     })
     @Operation(value = "list", desc = "知识提问列表")
@@ -119,8 +141,8 @@ public class KnowledgeController {
                                              @RequestParam(required = false) Integer classify,
                                              @RequestParam Integer pageIndex,
                                              @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
-       // NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
-        Criteria criteria=new Criteria();
+        // NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
+        Criteria criteria = new Criteria();
         Pageable pageable = PageRequest.of(pageIndex - 1, pageSize, Sort.by(Sort.Direction.DESC, "ask.createdDate"));
         if (classify != null) {
             criteria.and("classify").is(classify);
@@ -132,7 +154,7 @@ public class KnowledgeController {
             criteria.and("tags").in(tags);
         }
         PagedResult pagedResult = new PagedResult();
-        CriteriaQuery criteriaQuery=new CriteriaQuery(criteria);
+        CriteriaQuery criteriaQuery = new CriteriaQuery(criteria);
         criteriaQuery.setPageable(pageable);
         Page<Knowledge> knowledgePage = elasticsearchTemplate.queryForPage(criteriaQuery, Knowledge.class);
         List<Knowledge> knowledgeList = knowledgePage.getContent();
@@ -240,8 +262,6 @@ public class KnowledgeController {
         boolean b = elasticsearchTemplate.deleteIndex(Knowledge.class);
         return RespVOBuilder.success(b);
     }
-
-
 
 
 }

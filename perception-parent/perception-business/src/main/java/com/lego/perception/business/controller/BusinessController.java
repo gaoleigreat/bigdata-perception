@@ -116,7 +116,7 @@ public class BusinessController {
         if (template == null) {
             ExceptionBuilder.operateFailException("模板不存在");
         }
-        business.setType(template.getType());
+        business.setType(template.getDataType());
         business.setTableName(template.getDescription());
         Integer num = iBusinessService.insertSelective(business);
         if (num <= 0) {
@@ -134,7 +134,6 @@ public class BusinessController {
         }else{
             querySitemap.setId(parentId);
         }
-
         List<Sitemap> list = sitemapClient.list(querySitemap);
         if (CollectionUtils.isEmpty(list)) {
             // 创建业务菜单

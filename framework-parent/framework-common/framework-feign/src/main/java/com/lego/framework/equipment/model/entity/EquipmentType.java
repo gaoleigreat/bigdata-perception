@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -24,6 +25,7 @@ import java.util.Date;
 public class EquipmentType extends BaseModel {
     @ApiModelProperty("设备类型id")
     private Long id;
+    @NotNull(message = "请输入设备类型名称")
     @ApiModelProperty("设备类型名称")
     private String name;
     @ApiModelProperty("设备类型编码")
@@ -32,6 +34,7 @@ public class EquipmentType extends BaseModel {
     private String description;
     @ApiModelProperty("业务类型对应表单模板")
     private Integer type;
+    @NotNull(message = "请选择设备类型模板")
     @ApiModelProperty("模板code")
     @TableField(exist = false)
     private String templateCode;

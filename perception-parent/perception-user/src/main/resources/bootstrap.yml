@@ -2,6 +2,9 @@ server:
   port: 18050
   servlet:
     context-path: /
+    session:
+      cookie:
+        name: SSO-SUPERVISOR-CLIENT-SESSION-ID
 spring:
   application:
     name: user-service
@@ -13,6 +16,29 @@ spring:
         output_log:
           destination: printLog
           content-type: application/json
+
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    encoding: UTF-8
+    servlet:
+      content-type: text/html
+  resources:
+    static-locations: classpath:/static/,classpath:/templates/
+
+
+
+sso:
+  server:
+    supervisor:
+      url:
+        http://127.0.0.1:8092
+  local:
+    url:
+      http://127.0.0.1:8081
+
 
 
 application:
