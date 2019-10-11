@@ -134,7 +134,6 @@ public class BusinessController {
         }else{
             querySitemap.setId(parentId);
         }
-
         List<Sitemap> list = sitemapClient.list(querySitemap);
         if (CollectionUtils.isEmpty(list)) {
             // 创建业务菜单

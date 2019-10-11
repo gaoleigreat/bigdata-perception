@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lego.framework.system.model.entity.DataFile;
-import com.lego.framework.system.model.entity.Dictionary;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
