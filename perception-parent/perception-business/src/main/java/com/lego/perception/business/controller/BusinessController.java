@@ -116,7 +116,7 @@ public class BusinessController {
         if (template == null) {
             ExceptionBuilder.operateFailException("模板不存在");
         }
-        business.setType(template.getType());
+        business.setType(template.getDataType());
         business.setTableName(template.getDescription());
         Integer num = iBusinessService.insertSelective(business);
         if (num <= 0) {

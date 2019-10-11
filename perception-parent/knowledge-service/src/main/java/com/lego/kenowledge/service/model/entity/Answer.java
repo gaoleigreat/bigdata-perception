@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.elasticsearch.annotations.Field;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author : yanglf
@@ -27,4 +28,6 @@ public class Answer {
     private Long createdId;
     @ApiModelProperty("回复时间")
     private Date createdDate;
+    @ApiModelProperty("附件批次号")
+    private String annexNum;
 }

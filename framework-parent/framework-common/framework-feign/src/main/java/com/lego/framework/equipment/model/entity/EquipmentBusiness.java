@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -22,16 +23,19 @@ import java.util.Date;
 @NoArgsConstructor
 @TableName(value = "tpl_equipment_business")
 public class EquipmentBusiness extends BaseModel {
+
     @ApiModelProperty("id")
     private Long id;
     /**
      * 设备id
      */
+    @NotNull(message = "请选择设备类型")
     @ApiModelProperty("设备id")
     private Long equipmentId;
     /**
      * 业务id
      */
+    @NotNull(message = "请选择业务")
     @ApiModelProperty("业务id")
     private Long businessId;
     /**
@@ -40,6 +44,7 @@ public class EquipmentBusiness extends BaseModel {
     @ApiModelProperty(value = "操作类型((1-新增;2-删除;3-更新;4-查询;5-导入;6-导出))", example = "1,2,3")
     private String operationType;
 
+    @NotNull(message = "请输入业务名称")
     @TableField(exist = false)
     @ApiModelProperty("业务名称")
     private String name;

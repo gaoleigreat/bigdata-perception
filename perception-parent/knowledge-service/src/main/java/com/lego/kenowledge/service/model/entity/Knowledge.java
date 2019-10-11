@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
-
 import java.util.Date;
 import java.util.List;
 
@@ -48,4 +46,5 @@ public class Knowledge {
     @Field(index = false)
     @ApiModelProperty("更新人id")
     private Long updatedId;
+
 }

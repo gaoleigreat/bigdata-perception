@@ -20,6 +20,8 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.util.CollectionUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,6 +43,7 @@ import java.util.Map;
 @RequestMapping("/crud")
 @Api(value = "crud", description = "业务操作管理")
 @Resource(value = "crud", desc = "业务操作管理")
+@Validated
 public class CrudController {
 
     @Autowired
@@ -79,6 +82,9 @@ public class CrudController {
     @Operation(value = "insert", desc = "新增业务数据")
     public RespVO insertBusinessData(@RequestParam String templateCode,
                                      @RequestBody List<Map<String, Object>> data) {
+        if (CollectionUtils.isEmpty(data)) {
+            return RespVOBuilder.failure("业务参数不能为空");
+        }
         RespVO<FormTemplate> respVO = templateFeignClient.findFormTemplateByCode(templateCode);
         if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
             return RespVOBuilder.failure("获取模板信息失败");
