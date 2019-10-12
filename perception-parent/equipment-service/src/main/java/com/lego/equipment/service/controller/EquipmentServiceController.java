@@ -34,11 +34,11 @@ public class EquipmentServiceController {
     /**
      * 分页查询数据
      */
-    @ApiOperation(value = "查询维修费用", httpMethod = "POST")
+    @ApiOperation(value = "查询维修设备", httpMethod = "POST")
     @ApiImplicitParams({
 
     })
-    @Operation(value = "select_paged", desc = "查询维修费用")
+    @Operation(value = "select_paged", desc = "查询维修设备")
     @RequestMapping(value = "/select_paged", method = RequestMethod.POST)
     public RespVO<PagedResult<EquipmentService>> selectPaged(@ModelAttribute EquipmentService equipmentService,
                                                              @PathParam(value = "") Page page) {
@@ -77,7 +77,7 @@ public class EquipmentServiceController {
     @RequestMapping("/save_tplEquipmentService")
     public RespVO<Integer> insert(@RequestBody EquipmentService equipmentService) {
 
-        Integer num = equipmentServiceService.insertSelective(equipmentService);
+        Integer num = equipmentServiceService.insert(equipmentService);
 
         return RespVOBuilder.success(num);
     }

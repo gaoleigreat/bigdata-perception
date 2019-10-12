@@ -1,5 +1,7 @@
 package com.lego.framework.equipment.model.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,11 +12,13 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@TableName("tpl_equipment_service")
 public class EquipmentService {
     /**
      * 设备维修id
      */
     @ApiModelProperty(value = "设备维修id")
+    @TableId
     private Long id;
     /**
      * 设备编号
@@ -34,8 +38,8 @@ public class EquipmentService {
     /**
      * 维修附件文档，数组格式用，隔开
      */
-    @ApiModelProperty(value = "维修附件文档，数组格式用，隔开")
-    private String fileIds;
+    @ApiModelProperty(value = "维修附件文档")
+    private String batchNumber;
     /**
      * 更换辅件，数组格式用，隔开
      */

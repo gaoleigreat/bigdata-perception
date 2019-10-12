@@ -95,7 +95,7 @@ public class EquipmentServiceRecordController {
     @Operation(value = "save_equipmentServiceRecord", desc = "新增维修记录")
     @RequestMapping(value = "/save_equipmentServiceRecord", method = RequestMethod.POST)
     public RespVO insert(@RequestBody EquipmentServiceRecord equipmentServiceRecord) {
-        Integer num = equipmentServiceRecordService.insertSelective(equipmentServiceRecord);
+        Integer num = equipmentServiceRecordService.insert(equipmentServiceRecord);
         if (num > 0) {
             return RespVOBuilder.success();
         }

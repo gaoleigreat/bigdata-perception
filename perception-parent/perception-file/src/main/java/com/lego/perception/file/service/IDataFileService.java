@@ -107,7 +107,7 @@ public interface IDataFileService {
      * @param tags
      * @return
      */
-    String upLoadFile(MultipartFile[] files, String remark, String tags);
+    RespVO<RespDataVO<DataFile>> upLoadFile(MultipartFile[] files, String remark, String tags);
 
     /**
      * @param storePath

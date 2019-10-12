@@ -1,5 +1,6 @@
 package com.lego.framework.equipment.model.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,7 @@ public class EquipmentCost {
      * 设备费用id
      */
     @ApiModelProperty("设备费用id")
+    @TableId
     private Long id;
     /**
      * 设备编号

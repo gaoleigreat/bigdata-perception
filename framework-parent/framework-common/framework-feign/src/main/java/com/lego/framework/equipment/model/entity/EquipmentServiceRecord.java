@@ -1,5 +1,7 @@
 package com.lego.framework.equipment.model.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -13,6 +15,7 @@ import java.util.Date;
  * @since jdk1.8
  */
 @Data
+@TableName("tpl_equipment_service_record")
 public class EquipmentServiceRecord implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -20,6 +23,7 @@ public class EquipmentServiceRecord implements Serializable {
      * 维修记录Id
      */
     @ApiModelProperty("维修记录Id")
+    @TableId
     private Long id;
     /**
      * 设备编号
@@ -54,7 +58,7 @@ public class EquipmentServiceRecord implements Serializable {
     /**
      * 维修Id
      */
-    private String equipmentServiceId;
+    private Long equipmentServiceId;
     /**
      * 记录时间
      */

@@ -56,7 +56,7 @@ public interface FileClient {
      * @return
      */
     @PostMapping(value = "/upLoadFile", headers = "content-type=multipart/form-data")
-    RespVO<String> upLoadFile(@RequestParam(value = "files") MultipartFile[] files,
+    RespVO<RespDataVO<DataFile>> upLoadFile(@RequestParam(value = "files") MultipartFile[] files,
                               @RequestParam(required = false, value = "remark") String remark,
                               @RequestParam(value = "tags") String tags);
 
@@ -95,7 +95,7 @@ class FileClientFallbackFactory implements FallbackFactory<FileClient> {
             }
 
             @Override
-            public RespVO<String> upLoadFile(MultipartFile[] files, String remark, String tags) {
+           public RespVO<RespDataVO<DataFile>> upLoadFile(MultipartFile[] files, String remark, String tags) {
                 return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "file服务不可用");
             }
 

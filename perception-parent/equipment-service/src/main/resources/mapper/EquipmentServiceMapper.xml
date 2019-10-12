@@ -9,7 +9,7 @@
         <result property="equipmentCode" column="equipment_code"/>
         <result property="status" column="status"/>
         <result property="malfunctionId" column="malfunction_id"/>
-        <result property="fileIds" column="file_ids"/>
+        <result property="batchNumber" column="batch_number"/>
         <result property="centerMaterialsNums" column="center_materials_nums"/>
         <result property="remark" column="remark"/>
         <result property="creationDate" column="creation_date"/>
@@ -33,8 +33,8 @@
             <if test="malfunctionId != null">
                 malfunction_id,
             </if>
-            <if test="fileIds != null">
-                file_ids,
+            <if test="batchNumber != null">
+                batch_number,
             </if>
             <if test="centerMaterialsNums != null">
                 center_materials_nums,
@@ -62,8 +62,8 @@
             <if test="malfunctionId != null">
                 #{malfunctionId,jdbcType=BIGINT},
             </if>
-            <if test="fileIds != null">
-                #{fileIds,jdbcType=VARCHAR},
+            <if test="batchNumber != null">
+                #{batchNumber,jdbcType=VARCHAR},
             </if>
             <if test="centerMaterialsNums != null">
                 #{centerMaterialsNums,jdbcType=VARCHAR},
@@ -84,7 +84,7 @@
       数据库表的基本查询列名集合
     -->
     <sql id="Base_Column_List">
-        id, equipment_code, status, malfunction_id, file_ids, center_materials_nums, remark, creation_date, creation_by
+        id, equipment_code, status, malfunction_id, batch_number, center_materials_nums, remark, creation_date, creation_by
     </sql>
 
     <!--
@@ -103,8 +103,8 @@
         <if test="malfunctionId != null">
             and malfunction_id = #{malfunctionId,jdbcType=BIGINT}
         </if>
-        <if test="fileIds != null">
-            and file_ids = #{fileIds,jdbcType=VARCHAR}
+        <if test="batchNumber != null">
+            and batch_number = #{batchNumber,jdbcType=VARCHAR}
         </if>
         <if test="centerMaterialsNums != null">
             and center_materials_nums = #{centerMaterialsNums,jdbcType=VARCHAR}
@@ -137,8 +137,8 @@
             <if test="malfunctionId != null">
                 malfunction_id = #{malfunctionId,jdbcType=BIGINT},
             </if>
-            <if test="fileIds != null">
-                file_ids = #{fileIds,jdbcType=VARCHAR},
+            <if test="batchNumber != null">
+                batch_number = #{batchNumber,jdbcType=VARCHAR},
             </if>
             <if test="centerMaterialsNums != null">
                 center_materials_nums = #{centerMaterialsNums,jdbcType=VARCHAR},
@@ -175,43 +175,6 @@
         where id = #{id,jdbcType=BIGINT}
     </delete>
 
-    <!--
-      添加一条记录到数据库表中
-    -->
-    <insert id="insert" useGeneratedKeys="true" keyProperty="id"
-            parameterType="com.lego.framework.equipment.model.entity.EquipmentService">
-        insert into tpl_equipment_service
-        (<include refid="Base_Column_List"/>)
-        values (
-        <if test="id != null">
-            #{id,jdbcType=BIGINT},
-        </if>
-        <if test="equipmentCode != null">
-            #{equipmentCode,jdbcType=VARCHAR},
-        </if>
-        <if test="status != null">
-            #{status,jdbcType=TINYINT},
-        </if>
-        <if test="malfunctionId != null">
-            #{malfunctionId,jdbcType=BIGINT},
-        </if>
-        <if test="fileIds != null">
-            #{fileIds,jdbcType=VARCHAR},
-        </if>
-        <if test="centerMaterialsNums != null">
-            #{centerMaterialsNums,jdbcType=VARCHAR},
-        </if>
-        <if test="remark != null">
-            #{remark,jdbcType=VARCHAR},
-        </if>
-        <if test="creationDate != null">
-            #{creationDate,jdbcType=TIMESTAMP},
-        </if>
-        <if test="creationBy != null">
-            #{creationBy,jdbcType=BIGINT}
-        </if>
-        )
-    </insert>
 
     <!--
      有选择的添加一条记录到数据库表中
@@ -259,8 +222,8 @@
             <if test="malfunctionId != null">
                 malfunction_id = #{malfunctionId,jdbcType=BIGINT},
             </if>
-            <if test="fileIds != null">
-                file_ids = #{fileIds,jdbcType=VARCHAR},
+            <if test="batchNumber != null">
+                batch_number = #{batchNumber,jdbcType=VARCHAR},
             </if>
             <if test="centerMaterialsNums != null">
                 center_materials_nums = #{centerMaterialsNums,jdbcType=VARCHAR},
@@ -284,14 +247,14 @@
     <insert id="batchInsert" parameterType="java.util.List">
         insert into tpl_equipment_service
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            id, equipment_code, status, malfunction_id, file_ids, center_materials_nums, remark, creation_date,
+            id, equipment_code, status, malfunction_id, batch_number, center_materials_nums, remark, creation_date,
             creation_by
         </trim>
         values
         <foreach collection="list" index="index" item="item" separator=",">
             <trim prefix="(" suffix=")" suffixOverrides=",">
                 #{item.id,jdbcType=BIGINT}, #{item.equipmentCode,jdbcType=VARCHAR}, #{item.status,jdbcType=TINYINT},
-                #{item.malfunctionId,jdbcType=BIGINT}, #{item.fileIds,jdbcType=VARCHAR},
+                #{item.malfunctionId,jdbcType=BIGINT}, #{item.batchNumber,jdbcType=VARCHAR},
                 #{item.centerMaterialsNums,jdbcType=VARCHAR}, #{item.remark,jdbcType=VARCHAR},
                 #{item.creationDate,jdbcType=TIMESTAMP}, #{item.creationBy,jdbcType=BIGINT}
             </trim>
@@ -318,8 +281,8 @@
                     <if test="item.malfunctionId != null">
                         malfunction_id = #{item.malfunctionId,jdbcType=BIGINT},
                     </if>
-                    <if test="item.fileIds != null">
-                        file_ids = #{item.fileIds,jdbcType=VARCHAR},
+                    <if test="item.batchNumber != null">
+                        batch_number = #{item.batchNumber,jdbcType=VARCHAR},
                     </if>
                     <if test="item.centerMaterialsNums != null">
                         center_materials_nums = #{item.centerMaterialsNums,jdbcType=VARCHAR},
@@ -360,8 +323,8 @@
             <if test="item == 'malfunctionId'">
                 malfunction_id = #{malfunctionId,jdbcType=BIGINT}
             </if>
-            <if test="item == 'fileIds'">
-                file_ids = #{fileIds,jdbcType=VARCHAR}
+            <if test="item == 'batchNumber'">
+                batch_number = #{batchNumber,jdbcType=VARCHAR}
             </if>
             <if test="item == 'centerMaterialsNums'">
                 center_materials_nums = #{centerMaterialsNums,jdbcType=VARCHAR}
@@ -384,19 +347,19 @@
     <update id="upsert" parameterType="com.lego.framework.equipment.model.entity.EquipmentService">
         insert into tpl_equipment_service
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            id, equipment_code, status, malfunction_id, file_ids, center_materials_nums, remark, creation_date,
+            id, equipment_code, status, malfunction_id, batch_number, center_materials_nums, remark, creation_date,
             creation_by
         </trim>
         values
         <trim prefix="(" suffix=")" suffixOverrides=",">
             #{id,jdbcType=BIGINT}, #{equipmentCode,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT},
-            #{malfunctionId,jdbcType=BIGINT}, #{fileIds,jdbcType=VARCHAR}, #{centerMaterialsNums,jdbcType=VARCHAR},
+            #{malfunctionId,jdbcType=BIGINT}, #{batchNumber,jdbcType=VARCHAR}, #{centerMaterialsNums,jdbcType=VARCHAR},
             #{remark,jdbcType=VARCHAR}, #{creationDate,jdbcType=TIMESTAMP}, #{creationBy,jdbcType=BIGINT}
         </trim>
         on duplicate key update
         <trim suffixOverrides=",">
             #{id,jdbcType=BIGINT}, #{equipmentCode,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT},
-            #{malfunctionId,jdbcType=BIGINT}, #{fileIds,jdbcType=VARCHAR}, #{centerMaterialsNums,jdbcType=VARCHAR},
+            #{malfunctionId,jdbcType=BIGINT}, #{batchNumber,jdbcType=VARCHAR}, #{centerMaterialsNums,jdbcType=VARCHAR},
             #{remark,jdbcType=VARCHAR}, #{creationDate,jdbcType=TIMESTAMP}, #{creationBy,jdbcType=BIGINT}
         </trim>
     </update>
@@ -420,8 +383,8 @@
             <if test="malfunctionId !=null ">
                 malfunction_id,
             </if>
-            <if test="fileIds !=null ">
-                file_ids,
+            <if test="batchNumber !=null ">
+                batch_number,
             </if>
             <if test="centerMaterialsNums !=null ">
                 center_materials_nums,
@@ -450,8 +413,8 @@
             <if test="malfunctionId !=null ">
                 malfunction_id = #{malfunctionId,jdbcType=BIGINT},
             </if>
-            <if test="fileIds !=null ">
-                file_ids = #{fileIds,jdbcType=VARCHAR},
+            <if test="batchNumber !=null ">
+                batch_number = #{batchNumber,jdbcType=VARCHAR},
             </if>
             <if test="centerMaterialsNums !=null ">
                 center_materials_nums = #{centerMaterialsNums,jdbcType=VARCHAR},
@@ -480,8 +443,8 @@
             <if test="malfunctionId !=null ">
                 malfunction_id = #{malfunctionId,jdbcType=BIGINT},
             </if>
-            <if test="fileIds !=null ">
-                file_ids = #{fileIds,jdbcType=VARCHAR},
+            <if test="batchNumber !=null ">
+                batch_number = #{batchNumber,jdbcType=VARCHAR},
             </if>
             <if test="centerMaterialsNums !=null ">
                 center_materials_nums = #{centerMaterialsNums,jdbcType=VARCHAR},

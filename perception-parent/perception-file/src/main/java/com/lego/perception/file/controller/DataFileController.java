@@ -192,11 +192,10 @@ public class DataFileController {
     })
     @PostMapping(value = "/upLoadFile", headers = "content-type=multipart/form-data")
     @Operation(value = "upLoadFile", desc = "上传业务文件")
-    public RespVO<String> upLoadFile(@RequestParam MultipartFile[] files,
+    public RespVO<RespDataVO<DataFile>> upLoadFile(@RequestParam MultipartFile[] files,
                                      @RequestParam(required = false) String remark,
                                      @RequestParam String tags) {
-        String batchNum = dataFileService.upLoadFile(files, remark, tags);
-        return RespVOBuilder.success(batchNum);
+        return dataFileService.upLoadFile(files, remark, tags);
     }
 
 }

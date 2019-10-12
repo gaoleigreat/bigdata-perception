@@ -197,46 +197,7 @@
         where id = #{id,jdbcType=BIGINT}
     </delete>
 
-    <!--
-      添加一条记录到数据库表中
-    -->
-    <insert id="insert" useGeneratedKeys="true" keyProperty="id"
-            parameterType="com.lego.framework.equipment.model.entity.EquipmentServiceRecord">
-        insert into tpl_equipment_service_record
-        (<include refid="Base_Column_List"/>)
-        values (
-        <if test="id != null">
-            #{id,jdbcType=BIGINT},
-        </if>
-        <if test="equipmentCode != null">
-            #{equipmentCode,jdbcType=VARCHAR},
-        </if>
-        <if test="status != null">
-            #{status,jdbcType=TINYINT},
-        </if>
-        <if test="malfunctionId != null">
-            #{malfunctionId,jdbcType=BIGINT},
-        </if>
-        <if test="batchNumber != null">
-            #{batchNumber,jdbcType=VARCHAR},
-        </if>
-        <if test="centerMaterialsNums != null">
-            #{centerMaterialsNums,jdbcType=VARCHAR},
-        </if>
-        <if test="remark != null">
-            #{remark,jdbcType=VARCHAR},
-        </if>
-        <if test="equipmentServiceId != null">
-            #{equipmentServiceId,jdbcType=VARCHAR},
-        </if>
-        <if test="creationDate != null">
-            #{creationDate,jdbcType=TIMESTAMP},
-        </if>
-        <if test="creationBy != null">
-            #{creationBy,jdbcType=BIGINT}
-        </if>
-        )
-    </insert>
+
 
     <!--
      有选择的添加一条记录到数据库表中

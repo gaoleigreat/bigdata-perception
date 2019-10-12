@@ -21,8 +21,7 @@ public interface EquipmentServiceRecordMapper extends Mapper<EquipmentServiceRec
 
     Integer deleteByPrimaryKey(Long id);
 
-    @Override
-    int insert(EquipmentServiceRecord equipmentServiceRecord);
+
 
     Integer insertSelective(EquipmentServiceRecord equipmentServiceRecord);
 

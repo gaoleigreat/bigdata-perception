@@ -187,7 +187,7 @@ public class DataFileServiceImpl implements IDataFileService {
 
 
     @Override
-    public String upLoadFile(MultipartFile[] files, String remark, String tags) {
+    public RespVO<RespDataVO<DataFile>>  upLoadFile(MultipartFile[] files, String remark, String tags) {
         String batchNumber = UuidUtils.generateShortUuid();
         if (files == null || files.length == 0) {
             ExceptionBuilder.operateFailException("上传文件不能为空");
@@ -218,7 +218,7 @@ public class DataFileServiceImpl implements IDataFileService {
         if (respDataVORespVO.getRetCode() != 1) {
             ExceptionBuilder.operateFailException("上传文件失败");
         }
-        return batchNumber;
+        return RespVOBuilder.success(dataFileList);
     }
 
 

@@ -4,8 +4,11 @@ import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.mybatis.utils.PageUtil;
 import com.lego.equipment.service.mapper.EquipmentServiceMapper;
+import com.lego.equipment.service.mapper.EquipmentServiceRecordMapper;
 import com.lego.equipment.service.service.IEquipmentServiceService;
 import com.lego.framework.equipment.model.entity.EquipmentService;
+import com.lego.framework.equipment.model.entity.EquipmentServiceRecord;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +20,9 @@ public class EquipmentServiceServiceImpl implements IEquipmentServiceService {
 
     @Autowired
     public EquipmentServiceMapper equipmentServiceMapper;
+
+    @Autowired
+    public EquipmentServiceRecordMapper equipmentServiceRecordMapper;
 
 
     @Override
@@ -35,13 +41,27 @@ public class EquipmentServiceServiceImpl implements IEquipmentServiceService {
     }
 
     @Override
-    public Integer insert(EquipmentService tplEquipmentService) {
-        return equipmentServiceMapper.insert(tplEquipmentService);
+    public Integer insert(EquipmentService equipmentService) {
+        int insert = equipmentServiceMapper.insert(equipmentService);
+        if (insert >0){
+            EquipmentServiceRecord equipmentServiceRecord = new EquipmentServiceRecord();
+            BeanUtils.copyProperties(equipmentService,equipmentServiceRecord);
+            equipmentServiceRecord.setEquipmentServiceId(equipmentService.getId());
+            equipmentServiceRecordMapper.insert(equipmentServiceRecord);
+        }
+        return insert;
     }
 
     @Override
-    public Integer insertSelective(EquipmentService tplEquipmentService) {
-        return equipmentServiceMapper.insertSelective(tplEquipmentService);
+    public Integer insertSelective(EquipmentService equipmentService) {
+        int insert =  equipmentServiceMapper.insertSelective(equipmentService);
+        if (insert >0){
+            EquipmentServiceRecord equipmentServiceRecord = new EquipmentServiceRecord();
+            BeanUtils.copyProperties(equipmentService,equipmentServiceRecord);
+            equipmentServiceRecord.setEquipmentServiceId(equipmentService.getId());
+            equipmentServiceRecordMapper.insert(equipmentServiceRecord);
+        }
+        return insert;
     }
 
     @Override
@@ -50,13 +70,28 @@ public class EquipmentServiceServiceImpl implements IEquipmentServiceService {
     }
 
     @Override
-    public Integer updateByPrimaryKeySelective(EquipmentService tplEquipmentService) {
-        return equipmentServiceMapper.updateByPrimaryKeySelective(tplEquipmentService);
+    public Integer updateByPrimaryKeySelective(EquipmentService equipmentService) {
+
+        int update =  equipmentServiceMapper.updateByPrimaryKeySelective(equipmentService);
+        if (update >0){
+            EquipmentServiceRecord equipmentServiceRecord = new EquipmentServiceRecord();
+            BeanUtils.copyProperties(equipmentService,equipmentServiceRecord);
+            equipmentServiceRecord.setEquipmentServiceId(equipmentService.getId());
+            equipmentServiceRecordMapper.insert(equipmentServiceRecord);
+        }
+        return update;
     }
 
     @Override
-    public Integer updateByPrimaryKey(EquipmentService tplEquipmentService) {
-        return equipmentServiceMapper.updateByPrimaryKey(tplEquipmentService);
+    public Integer updateByPrimaryKey(EquipmentService equipmentService) {
+        int update =  equipmentServiceMapper.updateByPrimaryKey(equipmentService);
+        if (update >0){
+            EquipmentServiceRecord equipmentServiceRecord = new EquipmentServiceRecord();
+            BeanUtils.copyProperties(equipmentService,equipmentServiceRecord);
+            equipmentServiceRecord.setEquipmentServiceId(equipmentService.getId());
+            equipmentServiceRecordMapper.insert(equipmentServiceRecord);
+        }
+        return update;
     }
 
     @Override
