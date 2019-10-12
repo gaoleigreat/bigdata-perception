@@ -35,16 +35,6 @@ public interface EquipmentDocTraceClient {
 
 
     /**
-     * 新增设备文档轨迹
-     *
-     * @param equipmentDocTrace
-     * @return
-     */
-    @RequestMapping(value = "/insert", method = RequestMethod.POST)
-    RespVO insert(@RequestBody EquipmentDocTrace equipmentDocTrace);
-
-
-    /**
      * 查询设备文档轨迹
      *
      * @param equipmentDocTrace
@@ -65,11 +55,6 @@ class EquipmentDocTraceClientFallbackFactory implements FallbackFactory<Equipmen
         return new EquipmentDocTraceClient() {
             @Override
             public RespVO<EquipmentDocTrace> selectByPrimaryKey(Long id) {
-                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "equipment服务不可用");
-            }
-
-            @Override
-            public RespVO insert(EquipmentDocTrace equipmentDocTrace) {
                 return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "equipment服务不可用");
             }
 
