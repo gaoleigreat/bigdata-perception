@@ -3,6 +3,7 @@ package com.lego.perception.file.controller;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
+import com.lego.perception.file.service.IDataFileService;
 import com.lego.perception.file.service.IHdfsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,6 +33,9 @@ public class HdfsController {
 
     @Autowired
     private IHdfsService iHdfsService;
+
+    @Autowired
+    private IDataFileService iDataFileService;
 
 
     @ApiOperation(value = "创建文件夹", httpMethod = "POST")
@@ -75,26 +79,7 @@ public class HdfsController {
     public RespVO<Map<String, String>> uploadFile(@RequestParam String storePath,
                                                   @RequestParam String savePath,
                                                   @RequestParam(value = "files") MultipartFile[] files) {
-        Map<String,String> fileNamemap = new HashMap<>();
-        if (files == null || files.length == 0) {
-            return RespVOBuilder.failure("上传文件files不能为空");
-        }
-        Arrays.stream(files).forEach(f -> {
-            String name = f.getOriginalFilename();
-            String subffix = name.substring(name.lastIndexOf(".") + 1, name.length());//我这里取得文件后缀
-            String fileName = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-            File file = new File(storePath);
-            if (!file.exists()) {//目录不存在就创建
-                file.mkdirs();
-            }
-            try {
-                f.transferTo(new File(storePath + "/" + fileName + "." + subffix));//保存文件
-                iHdfsService.uploadFileToHdfs(storePath + "/" + fileName + "." + subffix, savePath);
-                fileNamemap.put(name,storePath + "/" + fileName + "." + subffix);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+        Map<String, String> fileNamemap = iDataFileService.uploadToHdfs(storePath, savePath, files);
         return RespVOBuilder.success(fileNamemap);
     }
 

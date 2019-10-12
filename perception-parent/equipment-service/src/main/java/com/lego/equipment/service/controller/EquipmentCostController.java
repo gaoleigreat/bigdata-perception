@@ -25,7 +25,7 @@ import java.util.List;
  * @since jdk 1.8
  */
 @RestController
-@RequestMapping("/tplequipmentcost")
+@RequestMapping("/equipmentcost")
 public class EquipmentCostController {
     @Autowired
     private IEquipmentCostService equipmentCostService;
@@ -53,7 +53,7 @@ public class EquipmentCostController {
      */
     @ApiOperation(value = "查询维修费用", httpMethod = "GET")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "维修费用ID", dataType = "String", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "id", value = "维修费用ID", dataType = "Long", required = true, paramType = "query"),
     })
     @Operation(value = "select_by_id", desc = "查询维修费用")
     @RequestMapping(value = "/select_by_id", method = RequestMethod.GET)
@@ -69,7 +69,7 @@ public class EquipmentCostController {
      */
     @ApiOperation(value = "删除维修费用", httpMethod = "DELETE")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "维修费用ID", dataType = "String", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "id", value = "维修费用ID", dataType = "Long", required = true, paramType = "query"),
     })
     @Operation(value = "delete_by_id", desc = "删除维修费用")
     @RequestMapping(value = "/delete_by_id", method = RequestMethod.DELETE)
@@ -90,8 +90,8 @@ public class EquipmentCostController {
     @ApiImplicitParams({
 
     })
-    @Operation(value = "save_equipmentStopReason", desc = "新增维修费用")
-    @RequestMapping(value = "/save_equipmentStopReason", method = RequestMethod.POST)
+    @Operation(value = "save_equipmentCost", desc = "新增维修费用")
+    @RequestMapping(value = "/save_equipmentCost", method = RequestMethod.POST)
     public RespVO insert(@RequestBody EquipmentCost equipmentStopReason) {
         Integer num = equipmentCostService.insertSelective(equipmentStopReason);
         if (num > 0) {
@@ -109,10 +109,10 @@ public class EquipmentCostController {
     @ApiImplicitParams({
 
     })
-    @Operation(value = "update_equipmentStopReason", desc = "修改维修费用")
-    @RequestMapping(value = "/update_equipmentStopReason", method = RequestMethod.PUT)
-    public RespVO updateByPrimaryKeySelective(@RequestBody EquipmentCost equipmentStopReason) {
-        Integer num = equipmentCostService.updateByPrimaryKeySelective(equipmentStopReason);
+    @Operation(value = "update_equipmentCost", desc = "修改维修费用")
+    @RequestMapping(value = "/update_equipmentCost", method = RequestMethod.PUT)
+    public RespVO updateByPrimaryKeySelective(@RequestBody EquipmentCost equipmentCost) {
+        Integer num = equipmentCostService.updateByPrimaryKeySelective(equipmentCost);
         if (num > 0) {
             return RespVOBuilder.success();
         }

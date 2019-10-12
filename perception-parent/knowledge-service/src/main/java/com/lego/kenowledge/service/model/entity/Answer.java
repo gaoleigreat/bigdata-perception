@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.elasticsearch.annotations.Field;
 
+import javax.validation.constraints.NotEmpty;
 import java.util.Date;
 import java.util.List;
 
@@ -22,6 +23,7 @@ import java.util.List;
 public class Answer {
     @ApiModelProperty("回复id")
     private String id;
+    @NotEmpty(message = "请输入回复内容")
     @ApiModelProperty("回复内容")
     private String answerBody;
     @ApiModelProperty("回复人id")

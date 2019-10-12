@@ -35,8 +35,30 @@ public interface FileClient {
                                          @RequestParam(value = "remark", required = false) String remark,
                                          @RequestParam(value = "tags", required = false) String tags);
 
+    /**
+     * 通过批次号标签查询文件
+     *
+     * @param batchNums
+     * @param tags      标签（多标签使用逗号隔开）
+     * @return
+     */
     @RequestMapping(value = "/selectByBatchNums", method = RequestMethod.GET)
-    RespVO<RespDataVO<DataFile>> selectByBatchNums(@RequestParam(value = "bathNums") List<String> bathNums);
+    RespVO selectByBatchNums(@RequestParam(value = "bathNums") List<String> batchNums,
+                             @RequestParam(required = false, value = "tags") String tags);
+
+
+    /**
+     * 上传业务文件
+     *
+     * @param files
+     * @param remark
+     * @param tags  标签（多标签使用逗号隔开）
+     * @return
+     */
+    @PostMapping(value = "/upLoadFile", headers = "content-type=multipart/form-data")
+    RespVO<String> upLoadFile(@RequestParam(value = "files") MultipartFile[] files,
+                              @RequestParam(required = false, value = "remark") String remark,
+                              @RequestParam(value = "tags") String tags);
 }
 
 @Slf4j
@@ -53,7 +75,12 @@ class FileClientFallbackFactory implements FallbackFactory<FileClient> {
             }
 
             @Override
-            public RespVO<RespDataVO<DataFile>> selectByBatchNums(List<String> bathNums) {
+            public RespVO<RespDataVO<DataFile>> selectByBatchNums(List<String> bathNums,String tags) {
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "file服务不可用");
+            }
+
+            @Override
+            public RespVO<String> upLoadFile(MultipartFile[] files, String remark, String tags) {
                 return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "file服务不可用");
             }
         };

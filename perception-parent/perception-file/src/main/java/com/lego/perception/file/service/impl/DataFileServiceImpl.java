@@ -8,14 +8,22 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
+import com.framework.common.utils.UuidUtils;
+import com.lego.framework.base.exception.ExceptionBuilder;
 import com.lego.framework.system.model.entity.DataFile;
 
 import com.lego.perception.file.mapper.DataFileMapper;
 import com.lego.perception.file.service.IDataFileService;
+import com.lego.perception.file.service.IHdfsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,6 +31,16 @@ public class DataFileServiceImpl implements IDataFileService {
 
     @Autowired
     private DataFileMapper dataFileMapper;
+
+    @Autowired
+    private IHdfsService iHdfsService;
+
+    @Value("${hdfs.storePath}")
+    private String storePath;
+
+
+    @Value("${hdfs.savePath}")
+    private String savePath;
 
     @Override
     public DataFile findById(Long id) {
@@ -119,8 +137,14 @@ public class DataFileServiceImpl implements IDataFileService {
     }
 
     @Override
-    public RespVO selectBybatchNums(List<String> batchNums) {
+    public RespVO selectBybatchNums(List<String> batchNums, String tags) {
         QueryWrapper<DataFile> wrapper = Wrappers.query();
+        if (tags != null) {
+            String[] tag = tags.split(",");
+            if (tag.length > 0) {
+                wrapper.in("tags", tag);
+            }
+        }
         if (CollectionUtils.isEmpty(batchNums)) {
             return RespVOBuilder.failure("批次号为空");
         }
@@ -160,4 +184,69 @@ public class DataFileServiceImpl implements IDataFileService {
         }
         return queryWrapper;
     }
+
+
+    @Override
+    public String upLoadFile(MultipartFile[] files, String remark, String tags) {
+        String batchNumber = UuidUtils.generateShortUuid();
+        if (files == null || files.length == 0) {
+            ExceptionBuilder.operateFailException("上传文件不能为空");
+        }
+        //返回文件名为键值 文件url为key的map
+        Map<String, String> uploadsInfo = uploadToHdfs(storePath, savePath, files);
+        if (uploadsInfo.isEmpty()) {
+            ExceptionBuilder.operateFailException("上传文件失败");
+        }
+        List<DataFile> dataFileList = new ArrayList<>();
+        Arrays.stream(files).forEach(f -> {
+            //文件名
+            String originalFilename = f.getOriginalFilename();
+            //文件url
+            String fileUrl = uploadsInfo.get(originalFilename);
+            //文件后缀
+            String ext = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
+            DataFile dataFile = new DataFile();
+            dataFile.setFileUrl(fileUrl);
+            dataFile.setFileType(ext);
+            dataFile.setName(originalFilename);
+            dataFile.setBatchNum(batchNumber);
+            dataFile.setRemark(remark);
+            dataFile.setTags(tags);
+            dataFileList.add(dataFile);
+        });
+        RespVO<RespDataVO<Long>> respDataVORespVO = insertList(dataFileList);
+        if (respDataVORespVO.getRetCode() != 1) {
+            ExceptionBuilder.operateFailException("上传文件失败");
+        }
+        return batchNumber;
+    }
+
+
+    @Override
+    public Map<String, String> uploadToHdfs(String storePath, String savePath, MultipartFile[] files) {
+        Map<String, String> fileNamemap = new HashMap<>();
+        if (files == null || files.length == 0) {
+            ExceptionBuilder.operateFailException("上传文件files不能为空");
+        }
+        Arrays.stream(files).forEach(f -> {
+            String name = f.getOriginalFilename();
+            String subffix = name.substring(name.lastIndexOf(".") + 1, name.length());//我这里取得文件后缀
+            String fileName = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+            File file = new File(storePath);
+            if (!file.exists()) {//目录不存在就创建
+                file.mkdirs();
+            }
+            try {
+                f.transferTo(new File(storePath + "/" + fileName + "." + subffix));//保存文件
+                iHdfsService.uploadFileToHdfs(storePath + "/" + fileName + "." + subffix, savePath);
+                fileNamemap.put(name, storePath + "/" + fileName + "." + subffix);
+            } catch (IOException e) {
+                e.printStackTrace();
+                ExceptionBuilder.operateFailException("上传HDFS文件失败");
+            }
+        });
+        return fileNamemap;
+    }
+
+
 }

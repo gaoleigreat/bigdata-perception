@@ -123,7 +123,7 @@ public class DatasharedtableController {
     @Operation(value = "shareData", desc = "共享数据")
     public RespVO shareData(@RequestParam List<String> batchNums) {
         //  获取所属数据源
-        RespVO<RespDataVO<DataFile>> respDataVORespVO = fileClient.selectByBatchNums(batchNums);
+        RespVO<RespDataVO<DataFile>> respDataVORespVO = fileClient.selectByBatchNums(batchNums,null);
         if (respDataVORespVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
             return RespVOBuilder.failure();
         }
