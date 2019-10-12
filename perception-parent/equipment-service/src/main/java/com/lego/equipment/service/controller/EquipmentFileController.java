@@ -138,7 +138,7 @@ public class EquipmentFileController {
      *
      * @return
      */
-    @ApiOperation(value = "查询维修费用", httpMethod = "POST")
+    @ApiOperation(value = "查询文件", httpMethod = "POST")
     @ApiImplicitParams({
 
     })

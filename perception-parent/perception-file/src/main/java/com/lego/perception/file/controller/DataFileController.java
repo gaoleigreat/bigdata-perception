@@ -97,7 +97,7 @@ public class DataFileController {
             {
             }
     )
-    public RespVO<DataFile> getDataFileById(@RequestParam(required = false) Long id) {
+    public RespVO<DataFile> getDataFileById(@RequestParam Long id) {
         DataFile dataFile = dataFileService.findById(id);
         if (dataFile != null) {
             return RespVOBuilder.success(dataFile);

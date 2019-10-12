@@ -1,5 +1,6 @@
 package com.lego.equipment.service.controller;
 
+import com.framework.common.consts.RespConsts;
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
@@ -9,12 +10,17 @@ import com.lego.equipment.service.service.IEquipmentDocTraceService;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
 import com.lego.framework.equipment.model.entity.EquipmentDocTrace;
+import com.lego.framework.file.feign.FileClient;
+import com.lego.framework.system.model.entity.DataFile;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.websocket.server.PathParam;
 import java.util.List;
 
@@ -31,6 +37,9 @@ import java.util.List;
 public class EquipmentDocTraceController {
     @Autowired
     private IEquipmentDocTraceService iEquipmentDocTraceService;
+
+    @Autowired
+    private FileClient fileClient;
 
     /**
      * 分页查询数据
@@ -93,7 +102,26 @@ public class EquipmentDocTraceController {
     })
     @Operation(value = "insert", desc = "新增设备文档轨迹")
     @RequestMapping(value = "/insert", method = RequestMethod.POST)
-    public RespVO insert(@RequestBody EquipmentDocTrace equipmentDocTrace) {
+    public RespVO insert(@RequestParam(value = "equipmentId", required = true) Long equipmentId,
+                         @RequestParam(value = "equipmentCode", required = false) String equipmentCode,
+                         @RequestParam(required = false) String remark,
+                         @RequestParam MultipartFile file) {
+        EquipmentDocTrace equipmentDocTrace = new EquipmentDocTrace();
+        equipmentDocTrace.setEquipmentCode(equipmentCode);
+        equipmentDocTrace.setEquipmentId(equipmentId);
+        equipmentDocTrace.setType(1);
+        RespVO<RespDataVO<DataFile>> stringRespVO = fileClient.upLoad(new MultipartFile[]{file}, remark, "");
+        if (stringRespVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
+            return RespVOBuilder.failure("文件上传失败");
+        }
+        RespDataVO<DataFile> dataVO = stringRespVO.getInfo();
+        if (dataVO == null || CollectionUtils.isEmpty(dataVO.getList())) {
+            return RespVOBuilder.failure("文件上传失败");
+        }
+        DataFile dataFile = dataVO.getList().get(0);
+        equipmentDocTrace.setFileId(dataFile.getId());
+        equipmentDocTrace.setFileUrl(dataFile.getFileUrl());
+        equipmentDocTrace.setPreviewUrl(dataFile.getPreviewUrl());
         Integer num = iEquipmentDocTraceService.insertSelective(equipmentDocTrace);
         if (num > 0) {
             return RespVOBuilder.success();

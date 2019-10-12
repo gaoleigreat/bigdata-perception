@@ -52,13 +52,27 @@ public interface FileClient {
      *
      * @param files
      * @param remark
-     * @param tags  标签（多标签使用逗号隔开）
+     * @param tags   标签（多标签使用逗号隔开）
      * @return
      */
     @PostMapping(value = "/upLoadFile", headers = "content-type=multipart/form-data")
     RespVO<String> upLoadFile(@RequestParam(value = "files") MultipartFile[] files,
                               @RequestParam(required = false, value = "remark") String remark,
                               @RequestParam(value = "tags") String tags);
+
+
+    /**
+     * @param files
+     * @param remark
+     * @param tags
+     * @return
+     */
+    @PostMapping(value = "/upLoadFile", headers = "content-type=multipart/form-data")
+    RespVO<RespDataVO<DataFile>> upLoad(@RequestParam(value = "files") MultipartFile[] files,
+                                        @RequestParam(required = false, value = "remark") String remark,
+                                        @RequestParam(value = "tags") String tags);
+
+
 }
 
 @Slf4j
@@ -75,12 +89,17 @@ class FileClientFallbackFactory implements FallbackFactory<FileClient> {
             }
 
             @Override
-            public RespVO<RespDataVO<DataFile>> selectByBatchNums(List<String> bathNums,String tags) {
+            public RespVO<RespDataVO<DataFile>> selectByBatchNums(List<String> bathNums, String tags) {
                 return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "file服务不可用");
             }
 
             @Override
             public RespVO<String> upLoadFile(MultipartFile[] files, String remark, String tags) {
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "file服务不可用");
+            }
+
+            @Override
+            public RespVO<RespDataVO<DataFile>> upLoad(MultipartFile[] files, String remark, String tags) {
                 return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "file服务不可用");
             }
         };
