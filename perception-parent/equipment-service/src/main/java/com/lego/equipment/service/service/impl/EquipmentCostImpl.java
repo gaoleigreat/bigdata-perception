@@ -1,8 +1,11 @@
-package com.lego.perception.business.service.impl;
+package com.lego.equipment.service.service.impl;
 
+import com.framework.common.page.Page;
+import com.framework.common.page.PagedResult;
+import com.framework.mybatis.utils.PageUtil;
+import com.lego.equipment.service.mapper.EquipmentCostMapper;
+import com.lego.equipment.service.service.IEquipmentCostService;
 import com.lego.framework.equipment.model.entity.EquipmentCost;
-import com.lego.perception.business.mapper.CostMapper;
-import com.lego.perception.business.service.ICostService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,10 +14,15 @@ import java.util.List;
 
 @Service
 @Slf4j
-public class CostImpl implements ICostService {
+public class EquipmentCostImpl implements IEquipmentCostService {
 
     @Autowired
-    public CostMapper costMapper;
+    public EquipmentCostMapper costMapper;
+
+    @Override
+    public PagedResult<EquipmentCost> selectPaged(EquipmentCost equipmentCost, Page page) {
+        return PageUtil.queryPaged(page,equipmentCost,costMapper);
+    }
 
     @Override
     public EquipmentCost selectByPrimaryKey(Long id) {

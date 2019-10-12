@@ -1,10 +1,13 @@
-package com.lego.perception.business.service;
+package com.lego.equipment.service.service;
 
+import com.framework.common.page.Page;
+import com.framework.common.page.PagedResult;
 import com.lego.framework.equipment.model.entity.EquipmentCost;
 
 import java.util.List;
 
-public interface ICostService {
+public interface IEquipmentCostService {
+    PagedResult<EquipmentCost> selectPaged(EquipmentCost equipmentCost, Page page);
 
     EquipmentCost selectByPrimaryKey(Long id);
 
