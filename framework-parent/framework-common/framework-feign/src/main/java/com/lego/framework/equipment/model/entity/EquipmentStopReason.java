@@ -18,7 +18,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EquipmentStopReason{
+public class EquipmentStopReason {
     /**
      * 设备停机原因id
      */
@@ -27,7 +27,7 @@ public class EquipmentStopReason{
     /**
      * 设备分类id
      */
-    @ApiModelProperty("设备分类id")
+    @ApiModelProperty("设备类型id")
     private Long equipmentId;
     /**
      * 设备号

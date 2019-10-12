@@ -4,6 +4,7 @@ import com.lego.framework.zuul.custom.CustomShutdown;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
@@ -28,7 +29,7 @@ public class ZuulServerApplication {
     }
 
     @Bean
-    public TomcatServletWebServerFactory tomcatServletWebServerFactory(CustomShutdown customShutdown) {
+    public ServletWebServerFactory tomcatServletWebServerFactory(CustomShutdown customShutdown) {
         TomcatServletWebServerFactory factory = new TomcatServletWebServerFactory();
         factory.addConnectorCustomizers(customShutdown);
         return factory;

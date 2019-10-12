@@ -7,9 +7,11 @@ import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.lego.framework.system.model.entity.DataFile;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Map;
 
 @Validated
 public interface IDataFileService {
@@ -94,5 +96,24 @@ public interface IDataFileService {
      * @param batchNums
      * @return
      */
-    RespVO selectBybatchNums(List<String> batchNums);
+    RespVO selectBybatchNums(List<String> batchNums, String tags);
+
+
+    /**
+     * 上传业务文件
+     *
+     * @param files
+     * @param remark
+     * @param tags
+     * @return
+     */
+    String upLoadFile(MultipartFile[] files, String remark, String tags);
+
+    /**
+     * @param storePath
+     * @param savePath
+     * @param files
+     * @return
+     */
+    Map<String, String> uploadToHdfs(String storePath, String savePath, MultipartFile[] files);
 }

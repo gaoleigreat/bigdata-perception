@@ -4,6 +4,9 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
@@ -20,6 +23,7 @@ import java.util.List;
 public class Ask {
     @ApiModelProperty("提问id")
     private String id;
+    @NotEmpty(message = "请输入提问内容")
     @ApiModelProperty("提问内容")
     private String askBody;
     @ApiModelProperty("提问描述")

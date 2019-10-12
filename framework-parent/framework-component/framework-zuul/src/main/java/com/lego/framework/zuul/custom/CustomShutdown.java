@@ -25,7 +25,6 @@ public class CustomShutdown implements TomcatConnectorCustomizer, ApplicationLis
     @Override
     public void customize(Connector connector) {
         this.connector = connector;
-
     }
 
     @Override
@@ -45,13 +44,10 @@ public class CustomShutdown implements TomcatConnectorCustomizer, ApplicationLis
                     if(!poolExecutor.awaitTermination(TIMEOUT, TimeUnit.SECONDS)){
                         log.warn("关闭失败.....");
                     }
-
                 }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
-
-
         }
 
     }

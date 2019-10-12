@@ -50,11 +50,11 @@ public class DataFileController {
     })
     @PostMapping(value = "/uploads", headers = "content-type=multipart/form-data")
     public RespVO uploads(@RequestParam(value = "files", required = true) MultipartFile[] files,
-                                                @RequestParam(value = "projectId", required = false) Long projectId,
-                                                @RequestParam(value = "templateId", required = false) Long templateId,
-                                                @RequestParam(value = "sourceType", required = false) int sourceType,
-                                                @RequestParam(value = "remark", required = false) String remark,
-                                                @RequestParam(value = "tags", required = false) String tags
+                          @RequestParam(value = "projectId", required = false) Long projectId,
+                          @RequestParam(value = "templateId", required = false) Long templateId,
+                          @RequestParam(value = "sourceType", required = false) int sourceType,
+                          @RequestParam(value = "remark", required = false) String remark,
+                          @RequestParam(value = "tags", required = false) String tags
 
     ) {
         String batchNum = UuidUtils.generate16Uuid();
@@ -158,7 +158,6 @@ public class DataFileController {
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
     @Operation(value = "delete", desc = "删除")
     public RespVO deleteList(@RequestParam Long id) {
-
         return dataFileService.delete(id);
     }
 
@@ -174,12 +173,30 @@ public class DataFileController {
 
     @ApiOperation(value = "通过批次号查询", notes = "通过批次号查询")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "batchNums", value = "批次号，", paramType = "query", allowMultiple = true, required = true, dataType = "String")
+            @ApiImplicitParam(name = "batchNums", value = "批次号，", paramType = "query", allowMultiple = true, required = true, dataType = "String"),
+            @ApiImplicitParam(name = "tags", value = "标签(多标签用逗号隔开)", paramType = "query", dataType = "String")
     })
     @RequestMapping(value = "/selectByBatchNums", method = RequestMethod.GET)
     @Operation(value = "select", desc = "通过批次号查询")
-    public RespVO selectByBatchNums(@RequestParam(value = "bathNums") List<String> batchNums) {
-        return dataFileService.selectBybatchNums(batchNums);
+    public RespVO selectByBatchNums(@RequestParam(value = "bathNums") List<String> batchNums,
+                                    @RequestParam(required = false) String tags) {
+        return dataFileService.selectBybatchNums(batchNums, tags);
+    }
+
+
+    @ApiOperation(value = "上传业务文件", notes = "上传业务文件")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "files", value = "多个文件，", paramType = "formData", allowMultiple = true, required = true, dataType = "file"),
+            @ApiImplicitParam(name = "tags", value = "标签(多标签用逗号隔开)", paramType = "query", dataType = "String"),
+            @ApiImplicitParam(name = "remark", value = "备注", paramType = "query", dataType = "String")
+    })
+    @PostMapping(value = "/upLoadFile", headers = "content-type=multipart/form-data")
+    @Operation(value = "upLoadFile", desc = "上传业务文件")
+    public RespVO<String> upLoadFile(@RequestParam MultipartFile[] files,
+                                     @RequestParam(required = false) String remark,
+                                     @RequestParam String tags) {
+        String batchNum = dataFileService.upLoadFile(files, remark, tags);
+        return RespVOBuilder.success(batchNum);
     }
 
 }

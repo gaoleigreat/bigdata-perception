@@ -170,5 +170,9 @@ sso:
   name: sso-server
   url_prefix: http://t.weather.sojson.com/api/weather
 
+hdfs:
+  storePath: /home/work/file/
+  savePath: equipment
+
 
 
