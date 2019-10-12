@@ -1,22 +1,14 @@
 package com.lego.equipment.service.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.framework.common.consts.RespConsts;
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
-import com.framework.common.sdto.RespVO;
 import com.framework.mybatis.utils.PageUtil;
 import com.lego.equipment.service.mapper.EquipmentServiceRecordMapper;
 import com.lego.equipment.service.service.IEquipmentServiceRecordService;
-import com.lego.equipment.service.service.IEquipmentServiceRecordService;
-import com.lego.framework.business.feign.BusinessClient;
-import com.lego.framework.business.model.entity.Business;
-import com.lego.framework.config.BaseModel;
 import com.lego.framework.equipment.model.entity.EquipmentServiceRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
 import java.util.List;
 
 /**
