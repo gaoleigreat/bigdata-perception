@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.websocket.server.PathParam;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,8 +33,8 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/equipmentDocTrace")
-@Api(value = "equipmentDocTrace", description = "设备文档轨迹管理")
-@Resource(value = "equipmentDocTrace", desc = "设备文档轨迹管理")
+@Api(value = "equipmentDocTrace", description = "设备文档管理")
+@Resource(value = "equipmentDocTrace", desc = "设备文档管理")
 public class EquipmentDocTraceController {
     @Autowired
     private IEquipmentDocTraceService iEquipmentDocTraceService;
@@ -73,44 +74,26 @@ public class EquipmentDocTraceController {
     }
 
     /**
-     * 通过ID删除
-     *
-     * @return
-     */
-    @ApiOperation(value = "删除设备文档轨迹", httpMethod = "DELETE")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "轨迹ID", dataType = "String", required = true, paramType = "query"),
-    })
-    @Operation(value = "delete_by_id", desc = "删除设备文档轨迹")
-    @RequestMapping(value = "/delete_by_id", method = RequestMethod.DELETE)
-    public RespVO deleteByPrimaryKey(Long id) {
-        Integer num = iEquipmentDocTraceService.deleteByPrimaryKey(id);
-        if (num > 0) {
-            return RespVOBuilder.success();
-        }
-        return RespVOBuilder.failure();
-    }
-
-    /**
      * 新增数据
      *
      * @return
      */
-    @ApiOperation(value = "新增设备文档轨迹", httpMethod = "POST")
+    @ApiOperation(value = "新增设备文档", httpMethod = "POST")
     @ApiImplicitParams({
+            @ApiImplicitParam(name = "equipmentId", value = "设备类型id", dataType = "long", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "equipmentCode", value = "设备编号", dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "remark", value = "备注", dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "type", value = "文档类型(0-机械图纸；1-电气图纸；2-液压图纸；3-维修方案；4-会议纪要；5-转场记录；6-维修合同)", dataType = "int", required = true, paramType = "query"),
 
     })
-    @Operation(value = "insert", desc = "新增设备文档轨迹")
+    @Operation(value = "insert", desc = "新增设备文档")
     @RequestMapping(value = "/insert", method = RequestMethod.POST)
-    public RespVO insert(@RequestParam(value = "equipmentId", required = true) Long equipmentId,
-                         @RequestParam(value = "equipmentCode", required = false) String equipmentCode,
+    public RespVO insert(@RequestParam Long equipmentId,
+                         @RequestParam(required = false) String equipmentCode,
                          @RequestParam(required = false) String remark,
-                         @RequestParam MultipartFile file) {
-        EquipmentDocTrace equipmentDocTrace = new EquipmentDocTrace();
-        equipmentDocTrace.setEquipmentCode(equipmentCode);
-        equipmentDocTrace.setEquipmentId(equipmentId);
-        equipmentDocTrace.setType(1);
-        RespVO<RespDataVO<DataFile>> stringRespVO = fileClient.upLoad(new MultipartFile[]{file}, remark, "");
+                         @RequestParam Integer type,
+                         @RequestParam MultipartFile[] files) {
+        RespVO<RespDataVO<DataFile>> stringRespVO = fileClient.upLoad(files, remark, "设备文档,", null);
         if (stringRespVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
             return RespVOBuilder.failure("文件上传失败");
         }
@@ -118,30 +101,67 @@ public class EquipmentDocTraceController {
         if (dataVO == null || CollectionUtils.isEmpty(dataVO.getList())) {
             return RespVOBuilder.failure("文件上传失败");
         }
-        DataFile dataFile = dataVO.getList().get(0);
-        equipmentDocTrace.setFileId(dataFile.getId());
-        equipmentDocTrace.setFileUrl(dataFile.getFileUrl());
-        equipmentDocTrace.setPreviewUrl(dataFile.getPreviewUrl());
-        Integer num = iEquipmentDocTraceService.insertSelective(equipmentDocTrace);
+        List<EquipmentDocTrace> equipmentDocTraceList = new ArrayList<>();
+        List<DataFile> dataFiles = dataVO.getList();
+        for (DataFile dataFile : dataFiles) {
+            EquipmentDocTrace equipmentDocTrace = new EquipmentDocTrace();
+            equipmentDocTrace.setEquipmentCode(equipmentCode);
+            equipmentDocTrace.setEquipmentId(equipmentId);
+            equipmentDocTrace.setType(type);
+            equipmentDocTrace.setFileId(dataFile.getId());
+            equipmentDocTrace.setFileUrl(dataFile.getFileUrl());
+            equipmentDocTrace.setPreviewUrl(dataFile.getPreviewUrl());
+            equipmentDocTraceList.add(equipmentDocTrace);
+        }
+        Integer num = iEquipmentDocTraceService.batchInsert(equipmentDocTraceList);
         if (num > 0) {
             return RespVOBuilder.success();
         }
         return RespVOBuilder.failure();
     }
 
+
     /**
-     * 修改数据
+     * 新增数据
      *
      * @return
      */
-    @ApiOperation(value = "更新设备文档轨迹", httpMethod = "PUT")
+    @ApiOperation(value = "更新设备文档", httpMethod = "POST")
     @ApiImplicitParams({
 
     })
-    @Operation(value = "update_equipmentDocTrace", desc = "更新设备文档轨迹")
-    @RequestMapping(value = "/update_equipmentDocTrace", method = RequestMethod.PUT)
-    public RespVO updateByPrimaryKeySelective(@RequestBody EquipmentDocTrace equipmentDocTrace) {
-        Integer num = iEquipmentDocTraceService.updateByPrimaryKeySelective(equipmentDocTrace);
+    @Operation(value = "update", desc = "更新设备文档")
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public RespVO update(@RequestParam Long fileId,
+                         @RequestParam(required = false) String remark,
+                         @RequestParam MultipartFile file) {
+        RespVO<RespDataVO<DataFile>> stringRespVO = fileClient.upLoad(new MultipartFile[]{file}, remark, "设备文档,", fileId);
+        if (stringRespVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
+            return RespVOBuilder.failure("文件上传失败");
+        }
+        RespDataVO<DataFile> dataVO = stringRespVO.getInfo();
+        if (dataVO == null || CollectionUtils.isEmpty(dataVO.getList())) {
+            return RespVOBuilder.failure("文件上传失败");
+        }
+        List<EquipmentDocTrace> equipmentDocTraceList = new ArrayList<>();
+        List<DataFile> dataFiles = dataVO.getList();
+        EquipmentDocTrace queryEquipmentDocTrace = new EquipmentDocTrace();
+        queryEquipmentDocTrace.setFileId(fileId);
+        List<EquipmentDocTrace> list = iEquipmentDocTraceService.query(queryEquipmentDocTrace);
+        if (CollectionUtils.isEmpty(list)) {
+            return RespVOBuilder.failure("更新的设备文档不存在");
+        }
+        for (DataFile dataFile : dataFiles) {
+            EquipmentDocTrace equipmentDocTrace = new EquipmentDocTrace();
+            equipmentDocTrace.setEquipmentCode(list.get(0).getEquipmentCode());
+            equipmentDocTrace.setEquipmentId(list.get(0).getId());
+            equipmentDocTrace.setType(list.get(0).getType());
+            equipmentDocTrace.setFileId(dataFile.getId());
+            equipmentDocTrace.setFileUrl(dataFile.getFileUrl());
+            equipmentDocTrace.setPreviewUrl(dataFile.getPreviewUrl());
+            equipmentDocTraceList.add(equipmentDocTrace);
+        }
+        Integer num = iEquipmentDocTraceService.batchInsert(equipmentDocTraceList);
         if (num > 0) {
             return RespVOBuilder.success();
         }

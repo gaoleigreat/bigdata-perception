@@ -5,7 +5,9 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.util.Date;
+
 /**
  * @author itar
  * @mail wuhandzy@gmail.com
@@ -44,8 +46,10 @@ public class EquipmentDocTrace {
      */
     @ApiModelProperty("文件预览URL")
     private String previewUrl;
-    @ApiModelProperty("操作类型(1-新增;2-修改;3-删除)")
+
+    @ApiModelProperty("设备类型(0-机械图纸；1-电气图纸；2-液压图纸；3-维修方案；4-会议纪要；5-转场记录；6-维修合同)")
     private Integer type;
+
     @ApiModelProperty("备注")
     private String remark;
     /**
