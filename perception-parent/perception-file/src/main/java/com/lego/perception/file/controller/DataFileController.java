@@ -40,12 +40,11 @@ public class DataFileController {
     @ApiOperation(value = "多文件上传", notes = "多文件上传")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "files", value = "多个文件，", paramType = "formData", allowMultiple = true, required = true, dataType = "file"),
-            @ApiImplicitParam(name = "projectId", value = "projectId，", paramType = "query", allowMultiple = true, required = false, dataType = "Long"),
-            @ApiImplicitParam(name = "templateId", value = "templateId，", paramType = "query", allowMultiple = false, required = false, dataType = "Long"),
-            @ApiImplicitParam(name = "sourceType", value = "sourceType，", paramType = "query", allowMultiple = false, required = true, dataType = "int"),
-            @ApiImplicitParam(name = "remark", value = "remark，", paramType = "query", allowMultiple = true, required = false, dataType = "String"),
-            @ApiImplicitParam(name = "tags", value = "tags，", paramType = "query", allowMultiple = true, required = false, dataType = "String"),
-            @ApiImplicitParam(name = "tags", value = "equipmentCode，", paramType = "equipmentCode", allowMultiple = true, required = false, dataType = "String")
+            @ApiImplicitParam(name = "projectId", value = "项目id，", paramType = "query", allowMultiple = true, required = false, dataType = "Long"),
+            @ApiImplicitParam(name = "templateId", value = "模板id，", paramType = "query", allowMultiple = false, required = false, dataType = "Long"),
+            @ApiImplicitParam(name = "sourceType", value = "数据源类型(0-MySql;1-Mongo)，", paramType = "query", allowMultiple = false, required = true, dataType = "int"),
+            @ApiImplicitParam(name = "remark", value = "备注", paramType = "query", allowMultiple = true, required = false, dataType = "String"),
+            @ApiImplicitParam(name = "tags", value = "标签", paramType = "query", allowMultiple = true, required = false, dataType = "String"),
 
     })
     @PostMapping(value = "/uploads", headers = "content-type=multipart/form-data")
@@ -95,6 +94,7 @@ public class DataFileController {
     @ApiOperation(value = "根据Id查询详情", httpMethod = "GET")
     @ApiImplicitParams(
             {
+
             }
     )
     public RespVO<DataFile> getDataFileById(@RequestParam Long id) {

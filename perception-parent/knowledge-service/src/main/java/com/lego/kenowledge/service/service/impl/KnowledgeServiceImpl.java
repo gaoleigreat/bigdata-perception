@@ -10,6 +10,7 @@ import com.lego.framework.base.context.RequestContext;
 import com.lego.framework.base.exception.ExceptionBuilder;
 import com.lego.framework.base.utils.UuidUtils;
 import com.lego.framework.file.feign.FileClient;
+import com.lego.framework.system.model.entity.DataFile;
 import com.lego.kenowledge.service.model.entity.Answer;
 import com.lego.kenowledge.service.model.entity.Ask;
 import com.lego.kenowledge.service.model.entity.Knowledge;
@@ -74,15 +75,15 @@ public class KnowledgeServiceImpl implements IKnowledgeService {
         knowledge.setUpdatedDate(new Date());
         knowledge.setTags(tags);
         if (files != null && files.length > 0) {
-            RespVO<String> respVO = fileClient.upLoadFile(files, "知识库提问附件", "KNOWLEDGE,");
+            RespVO<RespDataVO<DataFile>> respVO = fileClient.upLoadFile(files, "知识库提问附件", "知识库,");
             if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
                 return RespVOBuilder.failure("附件上传失败");
             }
-            String batchNumber = respVO.getInfo();
-            if (batchNumber == null) {
+            RespDataVO<DataFile> dataVO = respVO.getInfo();
+            if (dataVO == null || CollectionUtils.isEmpty(dataVO.getList())) {
                 return RespVOBuilder.failure("附件上传失败");
             }
-            ask.setAnnexNum(batchNumber);
+            ask.setAnnexNum(dataVO.getList().get(0).getBatchNum());
         }
         Knowledge save = knowledgeRepository.save(knowledge);
         return RespVOBuilder.success();
@@ -105,15 +106,15 @@ public class KnowledgeServiceImpl implements IKnowledgeService {
         answers.add(answer);
         knowledge.setAnswers(answers);
         if (files != null && files.length > 0) {
-            RespVO<String> respVO = fileClient.upLoadFile(files, "知识库提问附件", "KNOWLEDGE,");
+            RespVO<RespDataVO<DataFile>> respVO = fileClient.upLoadFile(files, "知识库提问附件", "知识库,");
             if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
                 return RespVOBuilder.failure("附件上传失败");
             }
-            String batchNumber = respVO.getInfo();
-            if (batchNumber == null) {
+            RespDataVO<DataFile> dataVO = respVO.getInfo();
+            if (dataVO == null || CollectionUtils.isEmpty(dataVO.getList())) {
                 return RespVOBuilder.failure("附件上传失败");
             }
-            answer.setAnnexNum(batchNumber);
+            answer.setAnnexNum(dataVO.getList().get(0).getBatchNum());
         }
         Knowledge save = knowledgeRepository.save(knowledge);
         return RespVOBuilder.success();

@@ -37,6 +37,7 @@ import java.util.List;
 @Api(value = "fitting", description = "配件管理")
 @Resource(value = "fitting", desc = "配件管理")
 public class FittingController {
+
     @Autowired
     private IFittingService iFittingService;
 
