@@ -90,8 +90,8 @@ public class EquipmentCostController {
     @ApiImplicitParams({
 
     })
-    @Operation(value = "save_equipmentStopReason", desc = "新增维修费用")
-    @RequestMapping(value = "/save_equipmentStopReason", method = RequestMethod.POST)
+    @Operation(value = "save_equipmentCost", desc = "新增维修费用")
+    @RequestMapping(value = "/save_equipmentCost", method = RequestMethod.POST)
     public RespVO insert(@RequestBody EquipmentCost equipmentStopReason) {
         Integer num = equipmentCostService.insertSelective(equipmentStopReason);
         if (num > 0) {
@@ -109,10 +109,10 @@ public class EquipmentCostController {
     @ApiImplicitParams({
 
     })
-    @Operation(value = "update_equipmentStopReason", desc = "修改维修费用")
-    @RequestMapping(value = "/update_equipmentStopReason", method = RequestMethod.PUT)
-    public RespVO updateByPrimaryKeySelective(@RequestBody EquipmentCost equipmentStopReason) {
-        Integer num = equipmentCostService.updateByPrimaryKeySelective(equipmentStopReason);
+    @Operation(value = "update_equipmentCost", desc = "修改维修费用")
+    @RequestMapping(value = "/update_equipmentCost", method = RequestMethod.PUT)
+    public RespVO updateByPrimaryKeySelective(@RequestBody EquipmentCost equipmentCost) {
+        Integer num = equipmentCostService.updateByPrimaryKeySelective(equipmentCost);
         if (num > 0) {
             return RespVOBuilder.success();
         }
