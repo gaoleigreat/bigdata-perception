@@ -8,6 +8,7 @@ import com.framework.common.sdto.RespVOBuilder;
 import com.lego.equipment.service.service.IEquipmentCostService;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.equipment.model.entity.EquipmentCost;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -26,6 +27,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/equipmentcost")
+@Api(value = "设备费用管理", description = "设备费用管理")
 public class EquipmentCostController {
     @Autowired
     private IEquipmentCostService equipmentCostService;

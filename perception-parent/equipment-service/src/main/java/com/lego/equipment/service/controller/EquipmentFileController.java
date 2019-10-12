@@ -8,18 +8,17 @@ import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.lego.equipment.service.service.IEquipmentFileService;
+import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.context.RequestContext;
 import com.lego.framework.equipment.feign.EquipmentMaintenanceDocClient;
 import com.lego.framework.equipment.model.entity.EquipmentFile;
 import com.lego.framework.file.feign.HDFSFileClient;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
@@ -32,6 +31,7 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/equipmentfile")
+@Api(value = "设备文档管理", description = "设备文档管理")
 public class EquipmentFileController {
     @Autowired
     private IEquipmentFileService equipmentFileService;
@@ -43,13 +43,14 @@ public class EquipmentFileController {
     private EquipmentMaintenanceDocClient equipmentMaintenanceDocClient;
 
 
-    private String storePath = "/opt/data/storePath/";
-
-    private String savePath = "/opt/data/savePath/";
-
     /**
      * 分页查询数据
      */
+    @ApiOperation(value = "分页查询数据", httpMethod = "POST")
+    @ApiImplicitParams({
+
+    })
+    @Operation(value = "select_paged", desc = "分页查询数据")
     @RequestMapping("/select_paged")
     public RespVO<PagedResult<EquipmentFile>> selectPaged(EquipmentFile equipmentFile, Page page) {
 
@@ -62,6 +63,11 @@ public class EquipmentFileController {
      *
      * @return
      */
+    @ApiOperation(value = "查询设备文档", httpMethod = "GET")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "查询设备文档", dataType = "Long", required = true, paramType = "query"),
+    })
+    @Operation(value = "select_by_id", desc = "查询设备文档")
     @RequestMapping("/select_by_id")
     public RespVO<EquipmentFile> selectByPrimaryKey(Long fileId) {
         EquipmentFile po = equipmentFileService.selectByPrimaryKey(fileId);
@@ -73,7 +79,12 @@ public class EquipmentFileController {
      *
      * @return
      */
-    @RequestMapping("/delete_by_id")
+    @ApiOperation(value = "删除设备文档", httpMethod = "DELETE")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "fileId", value = "删除设备文档", dataType = "Long", required = true, paramType = "query"),
+    })
+    @Operation(value = "delete_by_id", desc = "删除设备文档")
+    @RequestMapping(value = "/delete_by_id", method = RequestMethod.DELETE)
     public RespVO deleteByPrimaryKey(Long fileId) {
         Integer num = equipmentFileService.deleteByPrimaryKey(fileId);
         if (num != null && num > 0) {
@@ -88,6 +99,10 @@ public class EquipmentFileController {
      *
      * @return
      */
+    @ApiOperation(value = "新增数据", httpMethod = "POST")
+    @ApiImplicitParams({
+
+    })
     @RequestMapping("/save_equipmentFile")
     public RespVO insert(EquipmentFile equipmentFile) {
         Integer num = equipmentFileService.insertSelective(equipmentFile);
@@ -103,6 +118,10 @@ public class EquipmentFileController {
      *
      * @return
      */
+    @ApiOperation(value = "修改数据", httpMethod = "POST")
+    @ApiImplicitParams({
+
+    })
     @RequestMapping("/update_equipmentFile")
     public RespVO updateByPrimaryKeySelective(EquipmentFile equipmentFile) {
         Integer num = equipmentFileService.updateByPrimaryKeySelective(equipmentFile);
@@ -119,6 +138,10 @@ public class EquipmentFileController {
      *
      * @return
      */
+    @ApiOperation(value = "查询维修费用", httpMethod = "POST")
+    @ApiImplicitParams({
+
+    })
     @RequestMapping("/query_list")
     public RespVO<RespDataVO<EquipmentFile>> queryByCondition(EquipmentFile equipmentFile) {
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="${daoImport}">
+<mapper namespace="com.lego.equipment.service.mapper.EquipmentServiceRecordMapper">
 
     <!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="com.lego.framework.equipment.model.entity.EquipmentServiceRecord" id="BaseResultMap">
@@ -201,7 +201,7 @@
       添加一条记录到数据库表中
     -->
     <insert id="insert" useGeneratedKeys="true" keyProperty="id"
-            parameterType="com.github.mustfun.TplEquipmentServiceRecordPo">
+            parameterType="com.lego.framework.equipment.model.entity.EquipmentServiceRecord">
         insert into tpl_equipment_service_record
         (<include refid="Base_Column_List"/>)
         values (
@@ -242,7 +242,7 @@
      有选择的添加一条记录到数据库表中
    -->
     <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id"
-            parameterType="com.github.mustfun.TplEquipmentServiceRecordPo">
+            parameterType="com.lego.framework.equipment.model.entity.EquipmentServiceRecord">
         insert into tpl_equipment_service_record
         <include refid="Base_Insert_Selective"/>
     </insert>
@@ -251,7 +251,7 @@
       有选择的可忽略添加一条记录到数据库表中
     -->
     <insert id="insertSelectiveIgnore" useGeneratedKeys="true" keyProperty="id"
-            parameterType="com.github.mustfun.TplEquipmentServiceRecordPo">
+            parameterType="com.lego.framework.equipment.model.entity.EquipmentServiceRecord">
         insert ignore into tpl_equipment_service_record
         <include refid="Base_Insert_Selective"/>
     </insert>
@@ -259,7 +259,7 @@
     <!--
       根据主键有选择的更新数据库表
     -->
-    <update id="updateByPrimaryKeySelective" parameterType="com.github.mustfun.TplEquipmentServiceRecordPo">
+    <update id="updateByPrimaryKeySelective" parameterType="com.lego.framework.equipment.model.entity.EquipmentServiceRecord">
         update tpl_equipment_service_record
         <include refid="Base_Update_Column"></include>
         where id = #{id,jdbcType=BIGINT}
@@ -269,7 +269,7 @@
     <!--
       根据主键更新数据库表
     -->
-    <update id="updateByPrimaryKey" parameterType="com.github.mustfun.TplEquipmentServiceRecordPo">
+    <update id="updateByPrimaryKey" parameterType="com.lego.framework.equipment.model.entity.EquipmentServiceRecord">
         update tpl_equipment_service_record
         <set>
             <if test="id != null">
@@ -416,7 +416,7 @@
     <!--
       存在即更新否则插入
     -->
-    <update id="upsert" parameterType="com.github.mustfun.TplEquipmentServiceRecordPo">
+    <update id="upsert" parameterType="com.lego.framework.equipment.model.entity.EquipmentServiceRecord">
         insert into tpl_equipment_service_record
         <trim prefix="(" suffix=")" suffixOverrides=",">
             id, equipment_code, status, malfunction_id, batch_number, center_materials_nums, remark,
@@ -442,7 +442,7 @@
     <!--
       带有空值检查的存在即更新否则插入
     -->
-    <update id="upsertSelective" parameterType="com.github.mustfun.TplEquipmentServiceRecordPo">
+    <update id="upsertSelective" parameterType="com.lego.framework.equipment.model.entity.EquipmentServiceRecord">
         insert into tpl_equipment_service_record
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id !=null ">
@@ -544,7 +544,7 @@
         </trim>
     </update>
 
-    <select id="query" resultMap="BaseResultMap" parameterType="com.github.mustfun.TplEquipmentServiceRecordPo">
+    <select id="query" resultMap="BaseResultMap" parameterType="com.lego.framework.equipment.model.entity.EquipmentServiceRecord">
         select
         <include refid="Base_Column_List"/>
         from tpl_equipment_service_record

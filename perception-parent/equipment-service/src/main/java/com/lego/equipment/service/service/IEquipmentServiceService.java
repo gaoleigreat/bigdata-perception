@@ -1,5 +1,7 @@
 package com.lego.equipment.service.service;
 
+import com.framework.common.page.Page;
+import com.framework.common.page.PagedResult;
 import com.lego.framework.equipment.model.entity.EquipmentService;
 
 import java.util.List;
@@ -7,7 +9,7 @@ import java.util.List;
 public interface IEquipmentServiceService {
     /*<AUTOGEN--BEGIN>*/
 
-  
+    PagedResult<EquipmentService> selectPaged(EquipmentService equipmentService, Page page);
     EquipmentService selectByPrimaryKey(Long id);
 
     Integer deleteByPrimaryKey(Long id);
