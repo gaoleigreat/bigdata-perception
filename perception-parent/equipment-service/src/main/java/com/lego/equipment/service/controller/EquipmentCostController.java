@@ -25,7 +25,7 @@ import java.util.List;
  * @since jdk 1.8
  */
 @RestController
-@RequestMapping("/tplequipmentcost")
+@RequestMapping("/equipmentcost")
 public class EquipmentCostController {
     @Autowired
     private IEquipmentCostService equipmentCostService;
@@ -53,7 +53,7 @@ public class EquipmentCostController {
      */
     @ApiOperation(value = "查询维修费用", httpMethod = "GET")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "维修费用ID", dataType = "String", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "id", value = "维修费用ID", dataType = "Long", required = true, paramType = "query"),
     })
     @Operation(value = "select_by_id", desc = "查询维修费用")
     @RequestMapping(value = "/select_by_id", method = RequestMethod.GET)
@@ -69,7 +69,7 @@ public class EquipmentCostController {
      */
     @ApiOperation(value = "删除维修费用", httpMethod = "DELETE")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "维修费用ID", dataType = "String", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "id", value = "维修费用ID", dataType = "Long", required = true, paramType = "query"),
     })
     @Operation(value = "delete_by_id", desc = "删除维修费用")
     @RequestMapping(value = "/delete_by_id", method = RequestMethod.DELETE)
