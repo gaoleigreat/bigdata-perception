@@ -9,11 +9,8 @@ spring:
       password: admin123
       retry:
         max-attempts: 3
-    stream:
-      bindings:
-        output_log:
-          destination: printLog
-          content-type: application/json
+
+
   security:
     user:
       name: ${define.user.name}

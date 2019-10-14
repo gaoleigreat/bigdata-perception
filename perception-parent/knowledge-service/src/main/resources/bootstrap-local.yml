@@ -4,20 +4,15 @@ spring:
       repositories:
         enabled: true
       cluster-name: equipment
-      cluster-nodes: 192.168.101.52:9300
+      cluster-nodes: 192.168.101.41:9300
   cloud:
     config:
       fail-fast: true
-      uri: http://192.168.101.52:18020
+      uri: http://192.168.101.41:18020
       profile: local
       label: master
       username: admin
       password: admin123456
       retry:
         max-attempts: 3
-    stream:
-      bindings:
-        output_log:
-          destination: printLog
-          content-type: application/json
 

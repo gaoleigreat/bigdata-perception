@@ -10,10 +10,6 @@ spring:
       retry:
         max-attempts: 3
 
-logging:
-  level:
-    org.springframework: debug
-
 file:
   service:
     url: http://192.168.0.95/
