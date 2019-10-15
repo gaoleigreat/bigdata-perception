@@ -91,6 +91,34 @@ public interface AuthClient {
                      @RequestParam(value = "deviceType") String deviceType,
                      @RequestParam(value = "token") String token);
 
+    /**
+     * sso 保存 用户  token信息
+     *
+     * @param idNumber  用户身份证号
+     * @param sessionId 当前 session id
+     * @return
+     */
+    @RequestMapping(value = "/saveUserToken", method = RequestMethod.POST)
+    RespVO saveUserToken(@RequestParam(value = "idNumber") String idNumber,
+                         @RequestParam(value = "sessionId") String sessionId);
+
+    /**
+     * sso 获取 用户  token信息
+     *
+     * @param sessionId
+     * @return
+     */
+    @RequestMapping(value = "/getUserToken", method = RequestMethod.GET)
+    RespVO<CurrentVo> getUserToken(@RequestParam(value = "sessionId") String sessionId);
+
+    /**
+     * 删除用户  token
+     *
+     * @param sessionId
+     * @return
+     */
+    @RequestMapping(value = "/removeUserToken", method = RequestMethod.DELETE)
+    RespVO removeUserToken(@RequestParam(value = "sessionId") String sessionId);
 }
 
 @Slf4j
@@ -129,6 +157,21 @@ class AuthClientFallbackFactory implements FallbackFactory<AuthClient> {
 
             @Override
             public RespVO setAuthVo(String userId, String deviceType, String token) {
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "auth服务不可用");
+            }
+
+            @Override
+            public RespVO saveUserToken(String idNumber, String sessionId) {
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "auth服务不可用");
+            }
+
+            @Override
+            public RespVO<CurrentVo> getUserToken(String sessionId) {
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "auth服务不可用");
+            }
+
+            @Override
+            public RespVO removeUserToken(String sessionId) {
                 return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "auth服务不可用");
             }
         };

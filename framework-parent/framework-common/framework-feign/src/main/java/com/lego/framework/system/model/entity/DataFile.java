@@ -65,7 +65,7 @@ public class DataFile extends BaseModel {
     @ApiModelProperty("文件说明")
     private String remark;
 
-    @ApiModelProperty("文件标签")
+    @ApiModelProperty("文件标签()")
     private String tags;
 
 

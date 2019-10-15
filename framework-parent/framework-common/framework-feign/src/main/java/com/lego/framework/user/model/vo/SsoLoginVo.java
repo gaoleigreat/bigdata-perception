@@ -1,5 +1,6 @@
 package com.lego.framework.user.model.vo;
 
+import com.framework.common.sdto.CurrentVo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,5 +24,5 @@ public class SsoLoginVo {
     private String ssoClientUrl;
     private String tenantId;
     private Long time;
-
+    private CurrentVo currentVo;
 }

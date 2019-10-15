@@ -128,18 +128,16 @@ public class AuthFilter extends ZuulFilter {
      * @return
      */
     private Object checkSsoLogin(RequestContext ctx, String pvId, String traceInfo, String userToken, String deviceType) {
-        if (!StringUtils.isEmpty(userToken) && !StringUtils.isEmpty(deviceType)) {
-            RespVO<SsoLoginVo> respVO = loginClient.checkSession();
-            if (respVO.getRetCode() == RespConsts.SUCCESS_RESULT_CODE) {
-                SsoLoginVo ssoLoginVo = respVO.getInfo();
-                if (ssoLoginVo != null && "check_session_success".equals(ssoLoginVo.getResult())) {
-                    String idNumber = ssoLoginVo.getIdNumber();
-                    // TODO 通过身份证号 获取用户信息
-                    CurrentVo currentVo = new CurrentVo();
-                    setRequest(ctx, currentVo, traceInfo);
-                    ctx.set("pvId", pvId);
-                    return null;
-                }
+        RespVO<SsoLoginVo> respVO = loginClient.checkSession();
+        if (respVO.getRetCode() == RespConsts.SUCCESS_RESULT_CODE) {
+            SsoLoginVo ssoLoginVo = respVO.getInfo();
+            if (ssoLoginVo != null && "check_session_success".equals(ssoLoginVo.getResult())) {
+                String idNumber = ssoLoginVo.getIdNumber();
+                // TODO 通过身份证号 获取用户信息
+                CurrentVo currentVo = new CurrentVo();
+                setRequest(ctx, currentVo, traceInfo);
+                ctx.set("pvId", pvId);
+                return null;
             }
         }
         RespVO<SsoLoginVo> failure = RespVOBuilder.failure(RespConsts.FAIL_LOGIN_CODE, "登录失败");
