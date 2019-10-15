@@ -54,7 +54,7 @@ function checkSessionResult(result) {
  * @returns 登录地址
  */
 function getLoginUrl(formData) {
-    return formData.ssoSupServerUrl + "/sso/login.html?ssoClientUrl=" + formData.ssoClientUrl
+    return formData.info.ssoSupServerUrl + "/sso/login.html?ssoClientUrl=" + formData.info.ssoClientUrl
 }
 
 /**
