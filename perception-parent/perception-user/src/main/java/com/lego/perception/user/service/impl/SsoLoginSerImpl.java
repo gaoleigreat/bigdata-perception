@@ -2,6 +2,7 @@ package com.lego.perception.user.service.impl;
 
 
 import com.alibaba.fastjson.JSON;
+import com.lego.framework.auth.feign.AuthClient;
 import com.lego.perception.user.constant.InitConst;
 import com.lego.perception.user.constant.LoginConst;
 import com.lego.perception.user.model.User;
@@ -13,6 +14,7 @@ import com.ym.sso.supervisor.common.constant.LoginResultEnum;
 import com.ym.sso.supervisor.common.constant.TicketResultEnum;
 import com.ym.sso.supervisor.common.util.SsoHttpClient;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
@@ -35,6 +37,9 @@ public class SsoLoginSerImpl implements SsoLoginService {
      * 初始化内存加载
      */
     private InitConst initConst = new InitConst();
+
+    @Autowired
+    private AuthClient authClient;
 
     /**
      * 检查门票是否存在
@@ -82,6 +87,7 @@ public class SsoLoginSerImpl implements SsoLoginService {
     @Override
     public SsoTicket login(HttpSession session, SsoTicket ssoTicket, String ssoSupServerUrl) {
         log.debug("login:ssoTicket={},ssoSupServerUrl={}", ssoTicket, ssoSupServerUrl);
+        // 本地保存  session
         User user = new User();
         user.setUserName("王富贵");
         user.setIdNumber(ssoTicket.getIdNumber());
@@ -92,6 +98,7 @@ public class SsoLoginSerImpl implements SsoLoginService {
         }
         sessionMap.put(session.getId(), session);
         initConst.setSessionMap(sessionMap);
+        // 上报  session
         ssoTicket.setSessionId(session.getId());
         String json = SsoHttpClient.doPost(
                 ssoSupServerUrl + "/000000/sso/ticket/receiveSessionId.do",
@@ -186,6 +193,7 @@ public class SsoLoginSerImpl implements SsoLoginService {
             ssoLogin.setTime(time);
             return ssoLogin;
         }
+        //TODO  验证 session
         Map<String, HttpSession> sessionMap = initConst.getSessionMap();
         if (sessionMap == null) {
             ssoLogin.setResult(LoginResultEnum.CHECK_SESSION_FAIL.getNo());

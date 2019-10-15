@@ -7,6 +7,8 @@ import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.auth.feign.AuthClient;
 import com.lego.framework.base.utils.HttpUtils;
+import com.lego.framework.user.feign.LoginClient;
+import com.lego.framework.user.model.vo.SsoLoginVo;
 import com.lego.framework.zuul.predicate.RibbonVersionHolder;
 import com.lego.framework.zuul.utils.JwtPatternUrl;
 import com.lego.framework.zuul.utils.RouteUtil;
@@ -52,6 +54,9 @@ public class AuthFilter extends ZuulFilter {
 
     @Autowired
     private AuthClient authClient;
+
+    @Autowired
+    private LoginClient loginClient;
 
 
     @Override
@@ -103,24 +108,71 @@ public class AuthFilter extends ZuulFilter {
             if (!StringUtils.isEmpty(osType)) {
                 RibbonVersionHolder.setContext(osType);
             }
-            if (!StringUtils.isEmpty(userToken) && !StringUtils.isEmpty(deviceType)) {
-                RespVO<CurrentVo> currentVoRespVO = authClient.parseUserToken(userToken, deviceType);
-                if (currentVoRespVO.getRetCode() == RespConsts.SUCCESS_RESULT_CODE) {
-                    CurrentVo currentVo = currentVoRespVO.getInfo();
-                    if (currentVo != null) {
-                        setRequest(ctx, currentVo, traceInfo);
-                        ctx.set("pvId", pvId);
-                        return null;
-                    }
-                }
-            }
-            RespVO failure = RespVOBuilder.failure(RespConsts.FAIL_LOGIN_CODE, "登录失败");
-            return RouteUtil.writeAndReturn(ctx, pvId, failure);
+            //  是否登录
+            return checkLogin(ctx, pvId, traceInfo, userToken, deviceType);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
         return null;
     }
+
+
+    /**
+     * 单点登录
+     *
+     * @param ctx
+     * @param pvId
+     * @param traceInfo
+     * @param userToken
+     * @param deviceType
+     * @return
+     */
+    private Object checkSsoLogin(RequestContext ctx, String pvId, String traceInfo, String userToken, String deviceType) {
+        if (!StringUtils.isEmpty(userToken) && !StringUtils.isEmpty(deviceType)) {
+            RespVO<SsoLoginVo> respVO = loginClient.checkSession();
+            if (respVO.getRetCode() == RespConsts.SUCCESS_RESULT_CODE) {
+                SsoLoginVo ssoLoginVo = respVO.getInfo();
+                if (ssoLoginVo != null && "check_session_success".equals(ssoLoginVo.getResult())) {
+                    String idNumber = ssoLoginVo.getIdNumber();
+                    // TODO 通过身份证号 获取用户信息
+                    CurrentVo currentVo = new CurrentVo();
+                    setRequest(ctx, currentVo, traceInfo);
+                    ctx.set("pvId", pvId);
+                    return null;
+                }
+            }
+        }
+        RespVO<SsoLoginVo> failure = RespVOBuilder.failure(RespConsts.FAIL_LOGIN_CODE, "登录失败");
+        return RouteUtil.writeAndReturn(ctx, pvId, failure);
+    }
+
+
+    /**
+     * 普通登录处理
+     *
+     * @param ctx
+     * @param pvId
+     * @param traceInfo
+     * @param userToken
+     * @param deviceType
+     * @return
+     */
+    private Object checkLogin(RequestContext ctx, String pvId, String traceInfo, String userToken, String deviceType) {
+        if (!StringUtils.isEmpty(userToken) && !StringUtils.isEmpty(deviceType)) {
+            RespVO<CurrentVo> currentVoRespVO = authClient.parseUserToken(userToken, deviceType);
+            if (currentVoRespVO.getRetCode() == RespConsts.SUCCESS_RESULT_CODE) {
+                CurrentVo currentVo = currentVoRespVO.getInfo();
+                if (currentVo != null) {
+                    setRequest(ctx, currentVo, traceInfo);
+                    ctx.set("pvId", pvId);
+                    return null;
+                }
+            }
+        }
+        RespVO failure = RespVOBuilder.failure(RespConsts.FAIL_LOGIN_CODE, "登录失败");
+        return RouteUtil.writeAndReturn(ctx, pvId, failure);
+    }
+
 
     private Boolean isIgnore(String uri) {
         String s = uri.replaceAll(contextPath, "");

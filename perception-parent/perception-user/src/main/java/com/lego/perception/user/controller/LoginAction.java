@@ -5,9 +5,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import com.framework.common.consts.DictConstant;
+import com.framework.common.sdto.RespVO;
+import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.base.annotation.Resource;
+import com.lego.framework.user.model.vo.SsoLoginVo;
 import com.lego.perception.user.service.SsoLoginService;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -72,8 +76,10 @@ public class LoginAction {
     public SsoTicket login(HttpServletRequest request, @RequestBody SsoTicket ssoTicket) {
         log.debug("login:ssoTicket={}", ssoTicket);
         String sessionId = request.getRequestedSessionId();
+        // 验证登录后重定向回来的 票据 是否合法
         ssoTicket = ssoLoginService.checkTicket(ssoTicket, ssoSupServerUrl, sessionId);
         if (TicketResultEnum.SSO_SUCCESS.getNo().equals(ssoTicket.getResult())) {
+            // 处理本地 session
             HttpSession session = request.getSession();
             ssoTicket.setSessionId(sessionId);
             ssoTicket.setSessionKey(sessionKey);
@@ -92,13 +98,15 @@ public class LoginAction {
      */
     @ApiOperation(value = "checkSession", notes = "checkSession", httpMethod = "GET")
     @GetMapping(value = "checkSession")
-    public SsoLogin checkSession(HttpServletRequest request) {
+    public RespVO<SsoLoginVo> checkSession(HttpServletRequest request) {
         log.debug("checkSession");
         String sessionId = request.getRequestedSessionId();
         SsoLogin ssoLogin = ssoLoginService.checkSession(sessionId);
         ssoLogin.setSsoSupServerUrl(ssoSupServerUrl);
         ssoLogin.setSsoClientUrl(localUrl);
-        return ssoLogin;
+        SsoLoginVo ssoLoginVo = new SsoLoginVo();
+        BeanUtils.copyProperties(ssoLogin, ssoLoginVo);
+        return RespVOBuilder.success(ssoLoginVo);
     }
 
     /**
