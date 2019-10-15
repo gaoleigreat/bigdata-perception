@@ -6,7 +6,7 @@ import com.lego.framework.equipment.model.entity.EquipmentCost;
 
 import java.util.List;
 
-public interface IEquipmentCostService {
+public interface EquipmentCostService {
     PagedResult<EquipmentCost> selectPaged(EquipmentCost equipmentCost, Page page);
 
     EquipmentCost selectByPrimaryKey(Long id);

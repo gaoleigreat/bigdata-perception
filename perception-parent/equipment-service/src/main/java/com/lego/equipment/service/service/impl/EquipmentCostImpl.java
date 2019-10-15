@@ -4,7 +4,7 @@ import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.mybatis.utils.PageUtil;
 import com.lego.equipment.service.mapper.EquipmentCostMapper;
-import com.lego.equipment.service.service.IEquipmentCostService;
+import com.lego.equipment.service.service.EquipmentCostService;
 import com.lego.framework.equipment.model.entity.EquipmentCost;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import java.util.List;
 
 @Service
 @Slf4j
-public class EquipmentCostImpl implements IEquipmentCostService {
+public class EquipmentCostImpl implements EquipmentCostService {
 
     @Autowired
     public EquipmentCostMapper costMapper;

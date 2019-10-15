@@ -5,7 +5,7 @@ import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
-import com.lego.equipment.service.service.IEquipmentCostService;
+import com.lego.equipment.service.service.EquipmentCostService;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.equipment.model.entity.EquipmentCost;
 import io.swagger.annotations.Api;
@@ -30,7 +30,7 @@ import java.util.List;
 @Api(value = "设备费用管理", description = "设备费用管理")
 public class EquipmentCostController {
     @Autowired
-    private IEquipmentCostService equipmentCostService;
+    private EquipmentCostService equipmentCostService;
 
 
     /**

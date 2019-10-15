@@ -78,6 +78,12 @@ public class EquipmentServiceRecordServiceImpl implements IEquipmentServiceRecor
     }
 
     @Override
+    public Integer update(EquipmentServiceRecord equipmentServiceRecord) {
+        QueryWrapper<EquipmentServiceRecord> wrapper = new QueryWrapper<>();
+        return equipmentBusinessMapper.update(equipmentServiceRecord,wrapper);
+    }
+
+    @Override
     public Integer batchInsert(List<EquipmentServiceRecord> list) {
         return equipmentBusinessMapper.batchInsert(list);
     }

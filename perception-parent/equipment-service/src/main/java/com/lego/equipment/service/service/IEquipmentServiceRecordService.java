@@ -35,6 +35,9 @@ public interface IEquipmentServiceRecordService {
 
     Integer updateByPrimaryKey(EquipmentServiceRecord equipmentServiceRecord);
 
+    Integer update(EquipmentServiceRecord equipmentServiceRecord);
+
+
     Integer batchInsert(List<EquipmentServiceRecord> list);
 
     Integer batchUpdate(List<EquipmentServiceRecord> list);
