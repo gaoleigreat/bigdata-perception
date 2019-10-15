@@ -1,5 +1,6 @@
 package com.lego.equipment.service.controller;
 
+import com.framework.common.consts.RespConsts;
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
@@ -8,16 +9,23 @@ import com.framework.common.sdto.RespVOBuilder;
 import com.lego.equipment.service.service.IEquipmentServiceRecordService;
 import com.lego.equipment.service.service.IEquipmentServiceService;
 import com.lego.framework.base.annotation.Operation;
+import com.lego.framework.equipment.model.entity.EquipmentDocTrace;
 import com.lego.framework.equipment.model.entity.EquipmentService;
+import com.lego.framework.equipment.model.entity.EquipmentServiceRecord;
+import com.lego.framework.file.feign.FileClient;
+import com.lego.framework.system.model.entity.DataFile;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.websocket.server.PathParam;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -31,6 +39,10 @@ public class EquipmentServiceController {
 
     @Autowired
     private IEquipmentServiceRecordService equipmentServiceRecordService;
+
+    @Autowired
+    private FileClient fileClient;
+
     /**
      * 分页查询数据
      */
@@ -129,5 +141,40 @@ public class EquipmentServiceController {
         return RespVOBuilder.success(list);
     }
 
+    /**
+     * 上传附件
+     */
+    @ApiOperation(value = "设备维修上传附件",httpMethod = "POST")
+    @ApiImplicitParams({
+            @ApiImplicitParam(value = "设备维修Id",name = "id",required = true,dataType = "long",paramType = "query")
+    })
+    @Operation(value = "uploadFile",desc="上传附件")
+    @RequestMapping(value = "/uploadFile",method = RequestMethod.POST)
+    public RespVO<Object> uploadFile(@RequestParam("id")Long id, @RequestParam MultipartFile [] file){
+        RespVO<RespDataVO<DataFile>> stringRespVO = fileClient.upLoad(file, null, "设备维修附件", null);
+        if (stringRespVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
+            return RespVOBuilder.failure("文件上传失败");
+        }
+        RespDataVO<DataFile> dataVO = stringRespVO.getInfo();
+        if (dataVO == null || CollectionUtils.isEmpty(dataVO.getList())) {
+            return RespVOBuilder.failure("文件上传失败");
+        }
+        List<DataFile> dataFiles = dataVO.getList();
+        EquipmentServiceRecord equipmentServiceRecord = new EquipmentServiceRecord();
+        EquipmentService equipmentService = new EquipmentService();
+        for (DataFile dataFile : dataFiles) {
+            equipmentServiceRecord.setBatchNumber(dataFile.getBatchNum());
+            equipmentService.setBatchNumber(dataFile.getBatchNum());
+            break;
+        }
+        equipmentServiceRecord.setEquipmentServiceId(id);
+        equipmentService.setId(id);
+        Integer equipmentServiceNum = equipmentServiceService.updateByPrimaryKeySelective(equipmentService);
+        Integer num = equipmentServiceRecordService.update(equipmentServiceRecord);
+        if (num > 0 && equipmentServiceNum >0) {
+            return RespVOBuilder.success();
+        }
+        return RespVOBuilder.failure();
+    }
 
 }
