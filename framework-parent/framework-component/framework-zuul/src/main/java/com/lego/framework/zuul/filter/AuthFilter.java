@@ -102,13 +102,16 @@ public class AuthFilter extends ZuulFilter {
                 ctx.set("pvId", pvId);
                 return null;
             }
+            String osType = req.getHeader(HttpConsts.OS_VERSION);
             String userToken = req.getHeader(HttpConsts.HEADER_TOKEN);
             String deviceType = req.getHeader(HttpConsts.DEVICE_TYPE);
-            String osType = req.getHeader(HttpConsts.OS_VERSION);
             if (!StringUtils.isEmpty(osType)) {
                 RibbonVersionHolder.setContext(osType);
             }
             //  是否登录
+            if(req.getLocalAddr().equals("192.168.101.41")){
+                return checkSsoLogin(ctx,pvId,traceInfo);
+            }
             return checkLogin(ctx, pvId, traceInfo, userToken, deviceType);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
@@ -123,11 +126,9 @@ public class AuthFilter extends ZuulFilter {
      * @param ctx
      * @param pvId
      * @param traceInfo
-     * @param userToken
-     * @param deviceType
      * @return
      */
-    private Object checkSsoLogin(RequestContext ctx, String pvId, String traceInfo, String userToken, String deviceType) {
+    private Object checkSsoLogin(RequestContext ctx, String pvId, String traceInfo) {
         RespVO<SsoLoginVo> respVO = loginClient.checkSession();
         if (respVO.getRetCode() == RespConsts.SUCCESS_RESULT_CODE) {
             SsoLoginVo ssoLoginVo = respVO.getInfo();
