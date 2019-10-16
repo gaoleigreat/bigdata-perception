@@ -9,6 +9,7 @@ import com.framework.common.sdto.RespVOBuilder;
 import com.lego.equipment.service.service.IEquipmentDocTraceService;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
+import com.lego.framework.base.context.ContextMap;
 import com.lego.framework.equipment.model.entity.EquipmentDocTrace;
 import com.lego.framework.file.feign.FileClient;
 import com.lego.framework.system.model.entity.DataFile;
@@ -21,9 +22,12 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.PostConstruct;
 import javax.websocket.server.PathParam;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author itar
@@ -83,7 +87,7 @@ public class EquipmentDocTraceController {
             @ApiImplicitParam(name = "equipmentId", value = "设备类型id", dataType = "long", required = true, paramType = "query"),
             @ApiImplicitParam(name = "equipmentCode", value = "设备编号", dataType = "String", paramType = "query"),
             @ApiImplicitParam(name = "remark", value = "备注", dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "type", value = "文档类型(0-机械图纸；1-电气图纸；2-液压图纸；3-维修方案；4-会议纪要；5-转场记录；6-维修合同)", dataType = "int", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "type", value = "文档类型(0-机械图纸；1-电气图纸；2-液压图纸；3-维修方案；4-会议纪要；5-转场记录；6-维修合同;7-其他)", dataType = "int", required = true, paramType = "query"),
 
     })
     @Operation(value = "insert", desc = "新增设备文档")
@@ -93,7 +97,8 @@ public class EquipmentDocTraceController {
                          @RequestParam(required = false) String remark,
                          @RequestParam Integer type,
                          @RequestParam MultipartFile[] files) {
-        RespVO<RespDataVO<DataFile>> stringRespVO = fileClient.upLoad(files, remark, "设备文档,", null);
+        Map<Integer, String> docTypes = ContextMap.getDocTypes();
+        RespVO<RespDataVO<DataFile>> stringRespVO = fileClient.upLoad(files, remark, docTypes.get(type) + ",", null);
         if (stringRespVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
             return RespVOBuilder.failure("文件上传失败");
         }
@@ -119,7 +124,6 @@ public class EquipmentDocTraceController {
         }
         return RespVOBuilder.failure();
     }
-
 
     /**
      * 新增数据

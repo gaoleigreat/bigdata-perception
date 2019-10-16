@@ -102,13 +102,16 @@ public class AuthFilter extends ZuulFilter {
                 ctx.set("pvId", pvId);
                 return null;
             }
+            String osType = req.getHeader(HttpConsts.OS_VERSION);
             String userToken = req.getHeader(HttpConsts.HEADER_TOKEN);
             String deviceType = req.getHeader(HttpConsts.DEVICE_TYPE);
-            String osType = req.getHeader(HttpConsts.OS_VERSION);
             if (!StringUtils.isEmpty(osType)) {
                 RibbonVersionHolder.setContext(osType);
             }
             //  是否登录
+            if(req.getLocalAddr().equals("192.168.101.41")){
+                return checkSsoLogin(ctx,pvId,traceInfo);
+            }
             return checkLogin(ctx, pvId, traceInfo, userToken, deviceType);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
@@ -123,23 +126,19 @@ public class AuthFilter extends ZuulFilter {
      * @param ctx
      * @param pvId
      * @param traceInfo
-     * @param userToken
-     * @param deviceType
      * @return
      */
-    private Object checkSsoLogin(RequestContext ctx, String pvId, String traceInfo, String userToken, String deviceType) {
-        if (!StringUtils.isEmpty(userToken) && !StringUtils.isEmpty(deviceType)) {
-            RespVO<SsoLoginVo> respVO = loginClient.checkSession();
-            if (respVO.getRetCode() == RespConsts.SUCCESS_RESULT_CODE) {
-                SsoLoginVo ssoLoginVo = respVO.getInfo();
-                if (ssoLoginVo != null && "check_session_success".equals(ssoLoginVo.getResult())) {
-                    String idNumber = ssoLoginVo.getIdNumber();
-                    // TODO 通过身份证号 获取用户信息
-                    CurrentVo currentVo = new CurrentVo();
-                    setRequest(ctx, currentVo, traceInfo);
-                    ctx.set("pvId", pvId);
-                    return null;
-                }
+    private Object checkSsoLogin(RequestContext ctx, String pvId, String traceInfo) {
+        RespVO<SsoLoginVo> respVO = loginClient.checkSession();
+        if (respVO.getRetCode() == RespConsts.SUCCESS_RESULT_CODE) {
+            SsoLoginVo ssoLoginVo = respVO.getInfo();
+            if (ssoLoginVo != null && "check_session_success".equals(ssoLoginVo.getResult())) {
+                String idNumber = ssoLoginVo.getIdNumber();
+                // TODO 通过身份证号 获取用户信息
+                CurrentVo currentVo = new CurrentVo();
+                setRequest(ctx, currentVo, traceInfo);
+                ctx.set("pvId", pvId);
+                return null;
             }
         }
         RespVO<SsoLoginVo> failure = RespVOBuilder.failure(RespConsts.FAIL_LOGIN_CODE, "登录失败");

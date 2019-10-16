@@ -51,6 +51,32 @@ public class AuthController {
     }
 
 
+    /**
+     * 登录成功  保存用户 token信息
+     *
+     * @param idNumber
+     * @param sessionId
+     * @return
+     */
+    @RequestMapping(value = "/saveUserToken", method = RequestMethod.POST)
+    public RespVO saveUserToken(@RequestParam(value = "idNumber") String idNumber,
+                                @RequestParam(value = "sessionId") String sessionId) {
+        return iAuthService.saveUserToken(idNumber,sessionId);
+    }
+
+
+    @RequestMapping(value = "/getUserToken", method = RequestMethod.GET)
+    public RespVO<CurrentVo> getUserToken(@RequestParam(value = "sessionId") String sessionId){
+        return iAuthService.getUserToken(sessionId);
+    }
+
+
+    @RequestMapping(value = "/removeUserToken", method = RequestMethod.DELETE)
+    public RespVO removeUserToken(@RequestParam(value = "sessionId") String sessionId){
+        return iAuthService.removeUserToken(sessionId);
+    }
+
+
     @ApiOperation(value = "验证用户登录token", httpMethod = "GET", notes = "验证用户登录token")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "token", value = "用户登录Token", dataType = "String", required = true, paramType = "query"),

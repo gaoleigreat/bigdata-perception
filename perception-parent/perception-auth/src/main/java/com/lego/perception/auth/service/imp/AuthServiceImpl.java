@@ -2,10 +2,11 @@ package com.lego.perception.auth.service.imp;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.framework.common.sdto.AuthVo;
-import com.framework.common.sdto.CurrentVo;
-import com.framework.common.sdto.TokenVo;
+import com.framework.common.consts.RespConsts;
+import com.framework.common.sdto.*;
+import com.lego.framework.base.exception.ExceptionBuilder;
 import com.lego.framework.system.feign.PermissionClient;
+import com.lego.framework.system.feign.UserClient;
 import com.lego.framework.system.model.entity.Permission;
 import com.lego.framework.system.model.entity.User;
 import com.lego.perception.auth.propery.JwtProperty;
@@ -53,6 +54,9 @@ public class AuthServiceImpl implements IAuthService {
     @Autowired
     private PermissionClient permissionClient;
 
+    @Autowired
+    private UserClient userClient;
+
 
     @Override
     public TokenVo generateUserToken(User user, String deviceType) {
@@ -87,6 +91,7 @@ public class AuthServiceImpl implements IAuthService {
         currentVo.setName(user.getRealName());
         findPermissions(currentVo, user);
         currentVo.setPhone(user.getPhone());
+        currentVo.setIdCardNumber(user.getIdCardNO());
         return currentVo;
     }
 
@@ -228,6 +233,69 @@ public class AuthServiceImpl implements IAuthService {
             log.error(" service token invalid");
         }
         return null;
+    }
+
+    @Override
+    public RespVO saveUserToken(String idNumber, String sessionId) {
+        try {
+            User user = new User();
+            user.setIdCardNO(idNumber);
+            RespVO<User> respVO = userClient.findUserById(user);
+            if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
+                return RespVOBuilder.failure();
+            }
+            User info = respVO.getInfo();
+            if (info == null) {
+                return RespVOBuilder.failure("用户不存在");
+            }
+            CurrentVo currentVo = generateCurrentVo(info, "2");
+            ValueOperations<String, String> ops = stringRedisTemplate.opsForValue();
+            long webExpires = jwtProperty.getWebExpires();
+            ops.set(sessionId, JSONObject.toJSONString(currentVo), webExpires, TimeUnit.MINUTES);
+        } catch (Exception e) {
+            e.printStackTrace();
+            ExceptionBuilder.operateFailException("token保存失败");
+        }
+        return RespVOBuilder.success();
+    }
+
+    @Override
+    public RespVO<CurrentVo> getUserToken(String sessionId) {
+        CurrentVo currentVo = null;
+        try {
+            if (StringUtils.isEmpty(sessionId)) {
+                return RespVOBuilder.failure();
+            }
+            Boolean aBoolean = stringRedisTemplate.hasKey(sessionId);
+            if (aBoolean == null || !aBoolean) {
+                return RespVOBuilder.failure();
+            }
+            ValueOperations<String, String> ops = stringRedisTemplate.opsForValue();
+            String session = ops.get(sessionId);
+            currentVo = JSONObject.parseObject(session, CurrentVo.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            ExceptionBuilder.operateFailException("获取session失败");
+        }
+        return RespVOBuilder.success(currentVo);
+    }
+
+    @Override
+    public RespVO removeUserToken(String sessionId) {
+        try {
+            if (StringUtils.isEmpty(sessionId)) {
+                return RespVOBuilder.failure();
+            }
+            Boolean aBoolean = stringRedisTemplate.hasKey(sessionId);
+            if (aBoolean == null || !aBoolean) {
+                return RespVOBuilder.success();
+            }
+            stringRedisTemplate.delete(sessionId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            ExceptionBuilder.operateFailException("获取session失败");
+        }
+        return RespVOBuilder.success();
     }
 
 

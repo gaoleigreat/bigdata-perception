@@ -150,8 +150,8 @@ public class EquipmentServiceController {
     })
     @Operation(value = "uploadFile",desc="上传附件")
     @RequestMapping(value = "/uploadFile",method = RequestMethod.POST)
-    public RespVO<Object> uploadFile(@RequestParam("id")Long id, @RequestParam MultipartFile [] file){
-        RespVO<RespDataVO<DataFile>> stringRespVO = fileClient.upLoad(file, null, "设备维修附件", null);
+    public RespVO<Object> uploadFile(@RequestParam("id")Long id, @RequestParam MultipartFile  file){
+        RespVO<RespDataVO<DataFile>> stringRespVO = fileClient.upLoad(new MultipartFile[]{file}, null, "设备维修附件", null);
         if (stringRespVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
             return RespVOBuilder.failure("文件上传失败");
         }

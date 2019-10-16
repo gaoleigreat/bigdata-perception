@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
  * @date : 2019/10/15 10:20
  * @desc :
  */
-@FeignClient(value = "user-service", path = "/sso/login/*", fallbackFactory = LoginClientFallbackFactory.class)
+@FeignClient(value = "user-service", path = "/sso/login/", fallbackFactory = LoginClientFallbackFactory.class)
 public interface LoginClient {
 
 

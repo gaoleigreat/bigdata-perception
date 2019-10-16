@@ -33,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version 2019-09-24 16:15
  */
 @RestController
-@RequestMapping("/sso/login/*")
+@RequestMapping("/sso/login/")
 @Api(value = "登录")
 @Slf4j
 public class LoginAction {
@@ -83,7 +83,7 @@ public class LoginAction {
             HttpSession session = request.getSession();
             ssoTicket.setSessionId(sessionId);
             ssoTicket.setSessionKey(sessionKey);
-            ssoTicket = ssoLoginService.login(session, ssoTicket, ssoSupServerUrl);
+            ssoTicket = ssoLoginService.loginRedis(session, ssoTicket, ssoSupServerUrl);
         }
         ssoTicket.setSsoClientUrl(localUrl);
         ssoTicket.setSsoSupServerUrl(ssoSupServerUrl);
@@ -101,7 +101,7 @@ public class LoginAction {
     public RespVO<SsoLoginVo> checkSession(HttpServletRequest request) {
         log.debug("checkSession");
         String sessionId = request.getRequestedSessionId();
-        SsoLogin ssoLogin = ssoLoginService.checkSession(sessionId);
+        SsoLogin ssoLogin = ssoLoginService.checkRedisSession(sessionId);
         ssoLogin.setSsoSupServerUrl(ssoSupServerUrl);
         ssoLogin.setSsoClientUrl(localUrl);
         SsoLoginVo ssoLoginVo = new SsoLoginVo();
@@ -121,7 +121,7 @@ public class LoginAction {
     public SsoLogin logout(HttpServletRequest request, @RequestBody SsoLogin ssoLogin) {
         log.debug("logout:ssoLogin={}", ssoLogin);
         String sessionId = request.getRequestedSessionId();
-        return ssoLoginService.logout(ssoLogin, sessionId);
+        return ssoLoginService.logoutRedis(ssoLogin, sessionId);
     }
 
     /**
@@ -135,7 +135,7 @@ public class LoginAction {
     public SsoLogin getLogParam(HttpServletRequest request) {
         log.debug("getLogParam");
         String sessionId = request.getRequestedSessionId();
-        SsoLogin ssoLogin = ssoLoginService.getLogParam(sessionId);
+        SsoLogin ssoLogin = ssoLoginService.getLogParamRedis(sessionId);
         ssoLogin.setSsoClientUrl(localUrl);
         ssoLogin.setSsoSupServerUrl(ssoSupServerUrl);
         return ssoLogin;
