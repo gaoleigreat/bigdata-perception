@@ -30,6 +30,12 @@ public class EquipmentService {
      */
     @ApiModelProperty(value = "状态(0-计划;1-进行;2-完成)")
     private Integer status;
+
+    /**
+     * 设备类型Id
+     */
+    @ApiModelProperty(value = "设备类型Id")
+    private Long  equipmentTypeId;
     /**
      * 故障id
      */

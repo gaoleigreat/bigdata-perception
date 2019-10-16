@@ -7,6 +7,7 @@
     <resultMap type="com.lego.framework.equipment.model.entity.EquipmentService" id="BaseResultMap">
         <result property="id" column="id"/>
         <result property="equipmentCode" column="equipment_code"/>
+        <result property="equipmentTypeId" column="equipment_type_id"/>
         <result property="status" column="status"/>
         <result property="malfunctionId" column="malfunction_id"/>
         <result property="batchNumber" column="batch_number"/>
@@ -26,6 +27,9 @@
             </if>
             <if test="equipmentCode != null">
                 equipment_code,
+            </if>
+            <if test="equipmentTypeId != null">
+                equipment_type_id,
             </if>
             <if test="status != null">
                 status,
@@ -56,6 +60,9 @@
             <if test="equipmentCode != null">
                 #{equipmentCode,jdbcType=VARCHAR},
             </if>
+            <if test="equipmentTypeId != null">
+                #{equipmentTypeId,jdbcType=BIGINT},
+            </if>
             <if test="status != null">
                 #{status,jdbcType=TINYINT},
             </if>
@@ -84,7 +91,7 @@
       数据库表的基本查询列名集合
     -->
     <sql id="Base_Column_List">
-        id, equipment_code, status, malfunction_id, batch_number, center_materials_nums, remark, creation_date, creation_by
+        id, equipment_code,equipment_type_id, status, malfunction_id, batch_number, center_materials_nums, remark, creation_date, creation_by
     </sql>
 
     <!--
@@ -96,6 +103,9 @@
         </if>
         <if test="equipmentCode != null">
             and equipment_code = #{equipmentCode,jdbcType=VARCHAR}
+        </if>
+        <if test="equipmentTypeId != null">
+            and equipment_type_id = #{equipmentTypeId,jdbcType=BIGINT}
         </if>
         <if test="status != null">
             and status = #{status,jdbcType=TINYINT}
@@ -130,6 +140,9 @@
             </if>
             <if test="equipmentCode != null">
                 equipment_code = #{equipmentCode,jdbcType=VARCHAR},
+            </if>
+            <if test="equipmentTypeId != null">
+                equipment_type_id = #{equipmentTypeId,jdbcType=BIGINT},
             </if>
             <if test="status != null">
                 status = #{status,jdbcType=TINYINT},
@@ -216,6 +229,9 @@
             <if test="equipmentCode != null">
                 equipment_code = #{equipmentCode,jdbcType=VARCHAR},
             </if>
+            <if test="equipmentTypeId != null">
+                equipment_type_id = #{equipmentTypeId,jdbcType=BIGINT},
+            </if>
             <if test="status != null">
                 status = #{status,jdbcType=TINYINT},
             </if>
@@ -247,13 +263,13 @@
     <insert id="batchInsert" parameterType="java.util.List">
         insert into tpl_equipment_service
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            id, equipment_code, status, malfunction_id, batch_number, center_materials_nums, remark, creation_date,
+            id, equipment_code,equipment_type_id ,status, malfunction_id, batch_number, center_materials_nums, remark, creation_date,
             creation_by
         </trim>
         values
         <foreach collection="list" index="index" item="item" separator=",">
             <trim prefix="(" suffix=")" suffixOverrides=",">
-                #{item.id,jdbcType=BIGINT}, #{item.equipmentCode,jdbcType=VARCHAR}, #{item.status,jdbcType=TINYINT},
+                #{item.id,jdbcType=BIGINT}, #{item.equipmentCode,jdbcType=VARCHAR},#{item.equipmentTypeId,jdbcType=BIGINT}, #{item.status,jdbcType=TINYINT},
                 #{item.malfunctionId,jdbcType=BIGINT}, #{item.batchNumber,jdbcType=VARCHAR},
                 #{item.centerMaterialsNums,jdbcType=VARCHAR}, #{item.remark,jdbcType=VARCHAR},
                 #{item.creationDate,jdbcType=TIMESTAMP}, #{item.creationBy,jdbcType=BIGINT}
@@ -274,6 +290,9 @@
                     </if>
                     <if test="item.equipmentCode != null">
                         equipment_code = #{item.equipmentCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.equipmentTypeId != null">
+                        equipment_type_id = #{item.equipmentTypeId,jdbcType=BIGINT},
                     </if>
                     <if test="item.status != null">
                         status = #{item.status,jdbcType=TINYINT},
@@ -317,6 +336,9 @@
             <if test="item == 'equipmentCode'">
                 equipment_code = #{equipmentCode,jdbcType=VARCHAR}
             </if>
+            <if test="item == 'equipmentTypeId'">
+                equipment_type_id = #{equipmentTypeId,jdbcType=BIGINT}
+            </if>
             <if test="item == 'status'">
                 status = #{status,jdbcType=TINYINT}
             </if>
@@ -347,18 +369,18 @@
     <update id="upsert" parameterType="com.lego.framework.equipment.model.entity.EquipmentService">
         insert into tpl_equipment_service
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            id, equipment_code, status, malfunction_id, batch_number, center_materials_nums, remark, creation_date,
+            id, equipment_code,equipment_type_id, status, malfunction_id, batch_number, center_materials_nums, remark, creation_date,
             creation_by
         </trim>
         values
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            #{id,jdbcType=BIGINT}, #{equipmentCode,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT},
+            #{id,jdbcType=BIGINT}, #{equipmentCode,jdbcType=VARCHAR},#{equipmentTypeId,jdbcType=BIGINT}, #{status,jdbcType=TINYINT},
             #{malfunctionId,jdbcType=BIGINT}, #{batchNumber,jdbcType=VARCHAR}, #{centerMaterialsNums,jdbcType=VARCHAR},
             #{remark,jdbcType=VARCHAR}, #{creationDate,jdbcType=TIMESTAMP}, #{creationBy,jdbcType=BIGINT}
         </trim>
         on duplicate key update
         <trim suffixOverrides=",">
-            #{id,jdbcType=BIGINT}, #{equipmentCode,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT},
+            #{id,jdbcType=BIGINT}, #{equipmentCode,jdbcType=VARCHAR},#{equipmentTypeId,jdbcType=BIGINT}, #{status,jdbcType=TINYINT},
             #{malfunctionId,jdbcType=BIGINT}, #{batchNumber,jdbcType=VARCHAR}, #{centerMaterialsNums,jdbcType=VARCHAR},
             #{remark,jdbcType=VARCHAR}, #{creationDate,jdbcType=TIMESTAMP}, #{creationBy,jdbcType=BIGINT}
         </trim>
@@ -376,6 +398,9 @@
             </if>
             <if test="equipmentCode !=null ">
                 equipment_code,
+            </if>
+            <if test="equipmentTypeId !=null ">
+                equipment_type_id,
             </if>
             <if test="status !=null ">
                 status,
@@ -407,6 +432,9 @@
             <if test="equipmentCode !=null ">
                 equipment_code = #{equipmentCode,jdbcType=VARCHAR},
             </if>
+            <if test="equipmentTypeId !=null ">
+                equipment_type_id = #{equipmentTypeId,jdbcType=BIGINT},
+            </if>
             <if test="status !=null ">
                 status = #{status,jdbcType=TINYINT},
             </if>
@@ -436,6 +464,9 @@
             </if>
             <if test="equipmentCode !=null ">
                 equipment_code = #{equipmentCode,jdbcType=VARCHAR},
+            </if>
+            <if test="equipmentTypeId !=null ">
+                equipment_type_id = #{equipmentTypeId,jdbcType=BIGINT},
             </if>
             <if test="status !=null ">
                 status = #{status,jdbcType=TINYINT},

@@ -30,6 +30,11 @@ public class EquipmentServiceRecord implements Serializable {
      */
     @ApiModelProperty("设备编号")
     private String equipmentCode;
+
+
+
+    @ApiModelProperty(value = "设备类型Id")
+    private Long  equipmentTypeId;
     /**
      * 状态(0-计划;1-进行;2-完成)
      */

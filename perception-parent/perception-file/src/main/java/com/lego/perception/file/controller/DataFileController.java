@@ -1,7 +1,6 @@
 package com.lego.perception.file.controller;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
@@ -16,11 +15,11 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import com.framework.common.page.Page;
 
 import java.io.IOException;
 import java.util.*;
@@ -105,18 +104,6 @@ public class DataFileController {
         return RespVOBuilder.failure("文件不存在");
     }
 
-    @ApiOperation(value = "分页查询", notes = "分页查询")
-    @RequestMapping(value = "/findList", method = RequestMethod.GET)
-    @Operation(value = "find", desc = "查询")
-    public RespVO<RespDataVO<DataFile>> findList(@ModelAttribute DataFile dataFile) {
-        List<DataFile> dataFiles = dataFileService.findList(dataFile);
-        if (CollectionUtils.isNotEmpty(dataFiles)) {
-            return RespVOBuilder.success(dataFiles);
-        } else {
-            return RespVOBuilder.failure();
-        }
-
-    }
 
     @ApiOperation(value = "分页查询", notes = "分页查询")
     @ApiImplicitParams({
@@ -125,10 +112,14 @@ public class DataFileController {
     })
     @RequestMapping(value = "/findPagedList", method = RequestMethod.GET)
     @Operation(value = "find", desc = "查询")
-    public RespVO<IPage<DataFile>> findPagedList(@ModelAttribute DataFile dataFile, @RequestParam(value = "pageIndex") int pageIndex,
+    public RespVO< PagedResult<DataFile>> findPagedList(@ModelAttribute DataFile dataFile, @RequestParam(value = "pageIndex") int pageIndex,
                                                  @RequestParam(required = false, defaultValue = "10") int pageSize) {
-        Page<DataFile> page = new Page<>(pageIndex, pageSize);
-        return RespVOBuilder.success(dataFileService.findPagedList(dataFile, page));
+        Page page = new Page();
+        page.setPageIndex(pageIndex);
+        page.setPageSize(pageSize);
+
+        PagedResult<DataFile> dataFilePagedResult = dataFileService.findPagedList(dataFile, page);
+        return RespVOBuilder.success(dataFilePagedResult);
     }
 
     @ApiOperation(value = "批量新增", notes = "批量新增")
@@ -192,7 +183,7 @@ public class DataFileController {
     })
     @PostMapping(value = "/upLoadFile", headers = "content-type=multipart/form-data")
     @Operation(value = "upLoadFile", desc = "上传业务文件")
-    public RespVO<RespDataVO<DataFile>> upLoadFile(@RequestParam MultipartFile[] files,
+    public RespVO<RespDataVO<DataFile>> upLoadFile(@RequestParam(value = "files", required = true)MultipartFile[] files,
                                      @RequestParam(required = false) String remark,
                                      @RequestParam String tags) {
         return dataFileService.upLoadFile(files, remark, tags);

@@ -1,8 +1,9 @@
 package com.lego.perception.file.service;
 
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+
+import com.framework.common.page.Page;
+import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.lego.framework.system.model.entity.DataFile;
@@ -24,13 +25,7 @@ public interface IDataFileService {
     DataFile findById(@NotNull Long id);
 
 
-    /**
-     * 查询列表
-     *
-     * @param DataFile
-     * @return
-     */
-    List<DataFile> findList(DataFile DataFile);
+
 
 
     /**
@@ -40,7 +35,7 @@ public interface IDataFileService {
      * @param page
      * @return
      */
-    IPage<DataFile> findPagedList(DataFile DataFile, Page page);
+    PagedResult findPagedList(DataFile DataFile, Page page);
 
     /**
      * 新增

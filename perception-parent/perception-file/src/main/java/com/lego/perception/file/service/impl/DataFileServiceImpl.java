@@ -4,11 +4,13 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.framework.common.page.Page;
+import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.framework.common.utils.UuidUtils;
+import com.framework.mybatis.utils.PageUtil;
 import com.lego.framework.base.exception.ExceptionBuilder;
 import com.lego.framework.system.model.entity.DataFile;
 
@@ -48,18 +50,14 @@ public class DataFileServiceImpl implements IDataFileService {
     }
 
     @Override
-    public List<DataFile> findList(DataFile dataFile) {
-        QueryWrapper<DataFile> wrapper = query(dataFile);
-        List<DataFile> dataFiles = dataFileMapper.selectList(wrapper);
-        return dataFiles;
+    public PagedResult findPagedList(DataFile dataFile, Page page) {
+        PagedResult pagedResult = PageUtil.queryPaged(page, dataFile, dataFileMapper);
+        if (!CollectionUtils.isEmpty(pagedResult.getResultList())) {
+            List<DataFile> resultList = pagedResult.getResultList();
+        }
+        return pagedResult;
     }
 
-    @Override
-    public IPage<DataFile> findPagedList(DataFile dataFile, Page page) {
-        QueryWrapper queryWrapper = query(dataFile);
-        IPage<DataFile> ipage = dataFileMapper.selectPage(page, queryWrapper);
-        return ipage;
-    }
 
     @Override
     public RespVO<Long> insert(DataFile dataFile) {
