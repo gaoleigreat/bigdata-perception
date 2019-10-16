@@ -617,7 +617,7 @@
             parameterType="com.lego.framework.equipment.model.entity.EquipmentService">
         select
         <include refid="Base_Column_List"/>
-        from tpl_equipment_service
+        from tpl_equipment_service e
         <where>
             <include refid="Base_Query_Where"></include>
         </where>
@@ -629,10 +629,10 @@
     </select>
 
 
-    <select id="queryList">
+    <select id="queryList" resultType="com.lego.framework.equipment.model.entity.EquipmentService">
         select
         <include refid="All_Column_List"/>
-        from tpl_equipment_business
+        from tpl_equipment_service e
         <where>
             ${ew.sqlSegment}
         </where>

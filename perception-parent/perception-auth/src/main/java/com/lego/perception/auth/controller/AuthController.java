@@ -167,8 +167,7 @@ public class AuthController {
             ExceptionBuilder.sessionTimeoutException();
         }
         String token = headerVo.getToken();
-        String deviceType = headerVo.getDeviceType();
-        AuthVo authVo = iAuthService.verifyUserToken(token, deviceType);
+        AuthVo authVo = iAuthService.verifyUserToken(token, "2");
         if (authVo == null) {
             ExceptionBuilder.sessionTimeoutException();
         }
