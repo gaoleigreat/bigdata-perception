@@ -89,4 +89,11 @@ public interface CrudMapper extends Mapper<BusinessTable> {
     Integer delBusinessData(BusinessTable businessTable);
 
 
+    /**
+     * @param tableName
+     * @param equipmentCode
+     * @return
+     */
+    Map<String, Object> queryByCode(@Param(value = "tableName") String tableName,
+                                    @Param(value = "equipmentCode") String equipmentCode);
 }

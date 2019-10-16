@@ -77,7 +77,7 @@ public interface SsoLoginService {
      * @param sessionId
      * @return
      */
-    SsoLogin checkRedisSession(String sessionId);
+    SsoLoginVo checkRedisSession(String sessionId);
 
     /**
      * 获取登录数据
@@ -94,6 +94,6 @@ public interface SsoLoginService {
      * @param sessionId
      * @return
      */
-    SsoLogin getLogParamRedis(String sessionId);
+    SsoLoginVo getLogParamRedis(String sessionId);
 
 }

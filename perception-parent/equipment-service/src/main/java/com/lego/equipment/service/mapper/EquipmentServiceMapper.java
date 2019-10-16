@@ -1,5 +1,8 @@
 package com.lego.equipment.service.mapper;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespVO;
 import com.framework.mybatis.mapper.Mapper;
@@ -51,5 +54,10 @@ public interface EquipmentServiceMapper extends Mapper<EquipmentService> {
 
     Integer deleteBatch(List<Long> list);
 
-    /*<AUTOGEN--END>*/
+    /**
+     * @param wrapper
+     * @param page
+     * @return
+     */
+    IPage<EquipmentService> queryList(QueryWrapper wrapper, IPage page);
 }

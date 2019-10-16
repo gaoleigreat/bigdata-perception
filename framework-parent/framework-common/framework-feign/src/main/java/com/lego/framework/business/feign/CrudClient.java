@@ -12,6 +12,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 import java.util.Map;
 
@@ -57,6 +58,15 @@ public interface CrudClient {
     @RequestMapping(value = "/query", method = RequestMethod.POST)
     RespVO<RespDataVO<Map<String, Object>>> queryBusinessData(@RequestParam(value = "templateCode") String templateCode,
                                                               @RequestBody List<SearchParam> searchParams);
+
+    /**
+     * @param templateCode
+     * @param equipmentCode
+     * @return
+     */
+    @RequestMapping(value = "/queryByCode", method = RequestMethod.GET)
+    RespVO<Map<String, Object>> queryBusinessDataByCode(@RequestParam(value = "templateCode") String templateCode,
+                                                        @RequestParam(value = "equipmentCode") String equipmentCode);
 
 
     /**
@@ -132,6 +142,11 @@ class CrudClientFallbackFactory implements FallbackFactory<CrudClient> {
 
             @Override
             public RespVO<RespDataVO<Map<String, Object>>> queryBusinessData(String templateCode, List<SearchParam> searchParams) {
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
+            }
+
+            @Override
+            public RespVO<Map<String, Object>> queryBusinessDataByCode(String templateCode, String equipmentCode) {
                 return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
             }
 

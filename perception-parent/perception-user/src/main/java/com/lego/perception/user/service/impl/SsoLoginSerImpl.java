@@ -7,7 +7,6 @@ import com.framework.common.sdto.CurrentVo;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.auth.feign.AuthClient;
-import com.lego.framework.system.feign.UserClient;
 import com.lego.framework.user.model.vo.SsoLoginVo;
 import com.lego.perception.user.constant.InitConst;
 import com.lego.perception.user.constant.LoginConst;
@@ -94,9 +93,7 @@ public class SsoLoginSerImpl implements SsoLoginService {
     @Override
     public SsoTicket loginRedis(HttpSession session, SsoTicket ssoTicket, String ssoSupServerUrl) {
         log.debug("login:ssoTicket={},ssoSupServerUrl={}", ssoTicket, ssoSupServerUrl);
-        //TODO 本地保存  session
-        // todo 调用  auth 保存 session 到  redis
-        //  sessionId   ->    jwt user 信息
+        //保存 session-user 到  redis
         authClient.saveUserToken(ssoTicket.getIdNumber(), ssoTicket.getSessionId());
         // 上报  session
         ssoTicket.setSessionId(session.getId());
@@ -174,6 +171,7 @@ public class SsoLoginSerImpl implements SsoLoginService {
             ssoLogin.setTime(time);
             return ssoLogin;
         }
+        //  删除  本地  token
         authClient.removeUserToken(sessionId);
         ssoLogin.setResult(LoginResultEnum.LOGIN_OUT_SUCCESS.getNo());
         ssoLogin.setMessage(LoginResultEnum.LOGIN_OUT_SUCCESS.getMessage());
@@ -242,36 +240,37 @@ public class SsoLoginSerImpl implements SsoLoginService {
 
 
     @Override
-    public SsoLogin checkRedisSession(String sessionId) {
+    public SsoLoginVo checkRedisSession(String sessionId) {
         log.debug("checkSession:sessionId={}", sessionId);
         Long time = System.currentTimeMillis();
-        SsoLogin ssoLogin = new SsoLogin();
+        SsoLoginVo ssoLoginVo = new SsoLoginVo();
         if (sessionId == null) {
-            ssoLogin.setResult(LoginResultEnum.CHECK_SESSION_MISS_PARAM.getNo());
-            ssoLogin.setMessage(LoginResultEnum.CHECK_SESSION_MISS_PARAM.getMessage());
-            ssoLogin.setTime(time);
-            return ssoLogin;
+            ssoLoginVo.setResult(LoginResultEnum.CHECK_SESSION_MISS_PARAM.getNo());
+            ssoLoginVo.setMessage(LoginResultEnum.CHECK_SESSION_MISS_PARAM.getMessage());
+            ssoLoginVo.setTime(time);
+            return ssoLoginVo;
         }
-        //TODO  验证 session
+        //验证本地 session
         RespVO<CurrentVo> currentVoRespVO = authClient.getUserToken(sessionId);
         if (currentVoRespVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
-            ssoLogin.setResult(LoginResultEnum.CHECK_SESSION_FAIL.getNo());
-            ssoLogin.setMessage(LoginResultEnum.CHECK_SESSION_FAIL.getMessage());
-            ssoLogin.setTime(time);
-            return ssoLogin;
+            ssoLoginVo.setResult(LoginResultEnum.CHECK_SESSION_FAIL.getNo());
+            ssoLoginVo.setMessage(LoginResultEnum.CHECK_SESSION_FAIL.getMessage());
+            ssoLoginVo.setTime(time);
+            return ssoLoginVo;
         }
         CurrentVo info = currentVoRespVO.getInfo();
         if (info == null) {
-            ssoLogin.setResult(LoginResultEnum.CHECK_SESSION_FAIL.getNo());
-            ssoLogin.setMessage(LoginResultEnum.CHECK_SESSION_FAIL.getMessage());
-            ssoLogin.setTime(time);
-            return ssoLogin;
+            ssoLoginVo.setResult(LoginResultEnum.CHECK_SESSION_FAIL.getNo());
+            ssoLoginVo.setMessage(LoginResultEnum.CHECK_SESSION_FAIL.getMessage());
+            ssoLoginVo.setTime(time);
+            return ssoLoginVo;
         }
-        ssoLogin.setIdNumber(info.getIdCardNumber());
-        ssoLogin.setResult(LoginResultEnum.CHECK_SESSION_SUCCESS.getNo());
-        ssoLogin.setMessage(LoginResultEnum.CHECK_SESSION_SUCCESS.getMessage());
-        ssoLogin.setTime(time);
-        return ssoLogin;
+        ssoLoginVo.setCurrentVo(info);
+        ssoLoginVo.setIdNumber(info.getIdCardNumber());
+        ssoLoginVo.setResult(LoginResultEnum.CHECK_SESSION_SUCCESS.getNo());
+        ssoLoginVo.setMessage(LoginResultEnum.CHECK_SESSION_SUCCESS.getMessage());
+        ssoLoginVo.setTime(time);
+        return ssoLoginVo;
     }
 
 
@@ -352,15 +351,14 @@ public class SsoLoginSerImpl implements SsoLoginService {
     }
 
 
-
     @Override
-    public SsoLogin getLogParamRedis(String sessionId) {
+    public SsoLoginVo getLogParamRedis(String sessionId) {
         log.debug("getLogParam:sessionId={}", sessionId);
-        SsoLogin ssoLogin = checkSession(sessionId);
-        if (LoginResultEnum.CHECK_SESSION_SUCCESS.getNo().equals(ssoLogin.getResult())) {
-            ssoLogin.setSessionId(sessionId);
+        SsoLoginVo ssoLoginVo = checkRedisSession(sessionId);
+        if (LoginResultEnum.CHECK_SESSION_SUCCESS.getNo().equals(ssoLoginVo.getResult())) {
+            ssoLoginVo.setSessionId(sessionId);
         }
-        return ssoLogin;
+        return ssoLoginVo;
     }
 
 }

@@ -90,18 +90,17 @@ public class EquipmentController {
     @Operation(value = "selectEquipmentByType", desc = "查询设备下面子设备")
     @RequestMapping(value = "/selectEquipmentByType", method = RequestMethod.GET)
     public RespVO selectByPrimaryKey(@RequestParam(value = "type") String type) {
-        RespVO<RespDataVO<FormTemplate>> respDataVORespVO = templateFeignClient.findByDataType(Integer.valueOf(type));
+        RespVO<FormTemplate> respDataVORespVO = templateFeignClient.findByDataType(Integer.valueOf(type));
         if (respDataVORespVO == null) {
             ExceptionBuilder.operateFailException("模板服务不可用");
         }
         if (respDataVORespVO.getRetCode() != 1) {
             ExceptionBuilder.operateFailException("获取模板失败");
         }
-        List<FormTemplate> formTemplates = respDataVORespVO.getInfo().getList();
-        if (CollectionUtils.isEmpty(formTemplates)) {
+        FormTemplate formTemplateGet = respDataVORespVO.getInfo();
+        if (formTemplateGet == null) {
             ExceptionBuilder.operateFailException("没有对应的表单模板");
         }
-        FormTemplate formTemplateGet = formTemplates.get(0);
         return crudClient.queryBusinessData(formTemplateGet.getTemplateCode(), new ArrayList<>());
     }
 

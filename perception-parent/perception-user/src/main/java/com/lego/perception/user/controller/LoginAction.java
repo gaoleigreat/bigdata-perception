@@ -3,15 +3,11 @@ package com.lego.perception.user.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
-import com.framework.common.consts.DictConstant;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
-import com.lego.framework.base.annotation.Resource;
 import com.lego.framework.user.model.vo.SsoLoginVo;
 import com.lego.perception.user.service.SsoLoginService;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -101,11 +97,9 @@ public class LoginAction {
     public RespVO<SsoLoginVo> checkSession(HttpServletRequest request) {
         log.debug("checkSession");
         String sessionId = request.getRequestedSessionId();
-        SsoLogin ssoLogin = ssoLoginService.checkRedisSession(sessionId);
-        ssoLogin.setSsoSupServerUrl(ssoSupServerUrl);
-        ssoLogin.setSsoClientUrl(localUrl);
-        SsoLoginVo ssoLoginVo = new SsoLoginVo();
-        BeanUtils.copyProperties(ssoLogin, ssoLoginVo);
+        SsoLoginVo ssoLoginVo = ssoLoginService.checkRedisSession(sessionId);
+        ssoLoginVo.setSsoSupServerUrl(ssoSupServerUrl);
+        ssoLoginVo.setSsoClientUrl(localUrl);
         return RespVOBuilder.success(ssoLoginVo);
     }
 
@@ -132,10 +126,10 @@ public class LoginAction {
      */
     @ApiOperation(value = "getLogParam", notes = "getLogParam", httpMethod = "GET")
     @GetMapping(value = "getLogParam")
-    public SsoLogin getLogParam(HttpServletRequest request) {
+    public SsoLoginVo getLogParam(HttpServletRequest request) {
         log.debug("getLogParam");
         String sessionId = request.getRequestedSessionId();
-        SsoLogin ssoLogin = ssoLoginService.getLogParamRedis(sessionId);
+        SsoLoginVo ssoLogin = ssoLoginService.getLogParamRedis(sessionId);
         ssoLogin.setSsoClientUrl(localUrl);
         ssoLogin.setSsoSupServerUrl(ssoSupServerUrl);
         return ssoLogin;

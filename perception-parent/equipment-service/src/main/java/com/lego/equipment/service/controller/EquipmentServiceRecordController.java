@@ -41,9 +41,9 @@ public class EquipmentServiceRecordController {
 
     })
     @Operation(value = "select_paged", desc = "查询维修记录")
-    @RequestMapping(value = "/select_paged", method = RequestMethod.POST)
+    @RequestMapping(value = "/select_paged/{pageSize}/{pageIndex}", method = RequestMethod.POST)
     public RespVO<PagedResult<EquipmentServiceRecord>> selectPaged(@ModelAttribute EquipmentServiceRecord equipmentServiceRecord,
-                                                                @PathParam(value = "") Page page) {
+                                                                   @PathParam(value = "") Page page) {
         PagedResult<EquipmentServiceRecord> equipmentServiceRecordPagedResult = equipmentServiceRecordService.selectPaged(equipmentServiceRecord, page);
         return RespVOBuilder.success(equipmentServiceRecordPagedResult);
     }

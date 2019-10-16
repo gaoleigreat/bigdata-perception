@@ -1,18 +1,31 @@
 package com.lego.equipment.service.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.framework.common.consts.RespConsts;
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
+import com.framework.common.sdto.RespVO;
+import com.framework.mybatis.tool.WhereEntityTool;
 import com.framework.mybatis.utils.PageUtil;
 import com.lego.equipment.service.mapper.EquipmentServiceMapper;
 import com.lego.equipment.service.mapper.EquipmentServiceRecordMapper;
 import com.lego.equipment.service.service.IEquipmentServiceService;
+import com.lego.framework.business.feign.CrudClient;
 import com.lego.framework.equipment.model.entity.EquipmentService;
 import com.lego.framework.equipment.model.entity.EquipmentServiceRecord;
+import com.lego.framework.system.feign.ProjectClient;
+import com.lego.framework.system.model.entity.Project;
+import com.lego.framework.template.feign.TemplateFeignClient;
+import com.lego.framework.template.model.entity.FormTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class EquipmentServiceServiceImpl implements IEquipmentServiceService {
@@ -24,10 +37,45 @@ public class EquipmentServiceServiceImpl implements IEquipmentServiceService {
     @Autowired
     public EquipmentServiceRecordMapper equipmentServiceRecordMapper;
 
+    @Autowired
+    private TemplateFeignClient templateFeignClient;
+
+    @Autowired
+    private CrudClient crudClient;
+
+    @Autowired
+    private ProjectClient projectClient;
+
 
     @Override
     public PagedResult<EquipmentService> selectPaged(EquipmentService equipmentService, Page page) {
-        return PageUtil.queryPaged(page,equipmentService,equipmentServiceMapper);
+        QueryWrapper wrapper = new QueryWrapper();
+        WhereEntityTool.invoke(wrapper);
+        IPage iPage = PageUtil.page2IPage(page);
+        IPage<EquipmentService> queryList = equipmentServiceMapper.queryList(wrapper, iPage);
+        List<EquipmentService> records = queryList.getRecords();
+        if (!CollectionUtils.isEmpty(records)) {
+            for (EquipmentService record : records) {
+                Integer templateType = record.getTemplateType();
+                RespVO<FormTemplate> respVO = templateFeignClient.findByDataType(templateType);
+                if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE || respVO.getInfo()==null) {
+                    continue;
+                }
+                FormTemplate formTemplate = respVO.getInfo();
+                String equipmentCode = record.getEquipmentCode();
+                RespVO<Map<String, Object>> dataByCode = crudClient.queryBusinessDataByCode(formTemplate.getTemplateCode(), equipmentCode);
+                if (dataByCode.getRetCode() == RespConsts.SUCCESS_RESULT_CODE
+                        && dataByCode.getInfo() != null && dataByCode.getInfo().containsKey("name")) {
+                    record.setEquipmentName(dataByCode.getInfo().get("name").toString());
+                }
+
+                RespVO<Project> projectRespVO = projectClient.selectByPrimaryKey(record.getProjectId());
+                if (projectRespVO.getRetCode() == RespConsts.SUCCESS_RESULT_CODE && projectRespVO.getInfo() != null) {
+                    record.setProjectName(projectRespVO.getInfo().getName());
+                }
+            }
+        }
+        return PageUtil.iPage2Result(queryList);
     }
 
     @Override
@@ -43,9 +91,9 @@ public class EquipmentServiceServiceImpl implements IEquipmentServiceService {
     @Override
     public Integer insert(EquipmentService equipmentService) {
         int insert = equipmentServiceMapper.insert(equipmentService);
-        if (insert >0){
+        if (insert > 0) {
             EquipmentServiceRecord equipmentServiceRecord = new EquipmentServiceRecord();
-            BeanUtils.copyProperties(equipmentService,equipmentServiceRecord);
+            BeanUtils.copyProperties(equipmentService, equipmentServiceRecord);
             equipmentServiceRecord.setEquipmentServiceId(equipmentService.getId());
             equipmentServiceRecordMapper.insert(equipmentServiceRecord);
         }
@@ -54,10 +102,10 @@ public class EquipmentServiceServiceImpl implements IEquipmentServiceService {
 
     @Override
     public Integer insertSelective(EquipmentService equipmentService) {
-        int insert =  equipmentServiceMapper.insertSelective(equipmentService);
-        if (insert >0){
+        int insert = equipmentServiceMapper.insertSelective(equipmentService);
+        if (insert > 0) {
             EquipmentServiceRecord equipmentServiceRecord = new EquipmentServiceRecord();
-            BeanUtils.copyProperties(equipmentService,equipmentServiceRecord);
+            BeanUtils.copyProperties(equipmentService, equipmentServiceRecord);
             equipmentServiceRecord.setEquipmentServiceId(equipmentService.getId());
             equipmentServiceRecordMapper.insert(equipmentServiceRecord);
         }
@@ -72,10 +120,10 @@ public class EquipmentServiceServiceImpl implements IEquipmentServiceService {
     @Override
     public Integer updateByPrimaryKeySelective(EquipmentService equipmentService) {
 
-        int update =  equipmentServiceMapper.updateByPrimaryKeySelective(equipmentService);
-        if (update >0){
+        int update = equipmentServiceMapper.updateByPrimaryKeySelective(equipmentService);
+        if (update > 0) {
             EquipmentServiceRecord equipmentServiceRecord = new EquipmentServiceRecord();
-            BeanUtils.copyProperties(equipmentService,equipmentServiceRecord);
+            BeanUtils.copyProperties(equipmentService, equipmentServiceRecord);
             equipmentServiceRecord.setEquipmentServiceId(equipmentService.getId());
             equipmentServiceRecordMapper.insert(equipmentServiceRecord);
         }
@@ -84,10 +132,10 @@ public class EquipmentServiceServiceImpl implements IEquipmentServiceService {
 
     @Override
     public Integer updateByPrimaryKey(EquipmentService equipmentService) {
-        int update =  equipmentServiceMapper.updateByPrimaryKey(equipmentService);
-        if (update >0){
+        int update = equipmentServiceMapper.updateByPrimaryKey(equipmentService);
+        if (update > 0) {
             EquipmentServiceRecord equipmentServiceRecord = new EquipmentServiceRecord();
-            BeanUtils.copyProperties(equipmentService,equipmentServiceRecord);
+            BeanUtils.copyProperties(equipmentService, equipmentServiceRecord);
             equipmentServiceRecord.setEquipmentServiceId(equipmentService.getId());
             equipmentServiceRecordMapper.insert(equipmentServiceRecord);
         }

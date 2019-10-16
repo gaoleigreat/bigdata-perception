@@ -117,6 +117,27 @@ public class CrudController {
     }
 
 
+    @ApiOperation(value = "查询业务数据", httpMethod = "GET")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "templateCode", value = "表单模板code", dataType = "String", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "equipmentCode", value = "设备编码", dataType = "String", required = true, paramType = "query"),
+    })
+    @RequestMapping(value = "/queryByCode", method = RequestMethod.GET)
+    @Operation(value = "queryByCode", desc = "查询业务数据")
+    public RespVO<Map<String, Object>> queryBusinessDataByCode(@RequestParam String templateCode,
+                                                               @RequestParam String equipmentCode) {
+        RespVO<FormTemplate> respVO = templateFeignClient.findFormTemplateByCode(templateCode);
+        if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
+            return RespVOBuilder.failure("获取模板信息失败");
+        }
+        FormTemplate formTemplate = respVO.getInfo();
+        if (formTemplate == null) {
+            return RespVOBuilder.failure("找不到对应模板信息");
+        }
+        return mySqlBusinessService.queryBusinessDataByCode(formTemplate.getDescription(), equipmentCode);
+    }
+
+
     @ApiOperation(value = "查询业务数据", httpMethod = "POST")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "templateCode", value = "表单模板code", dataType = "String", required = true, paramType = "query"),

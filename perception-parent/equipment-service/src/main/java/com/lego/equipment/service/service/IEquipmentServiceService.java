@@ -7,7 +7,6 @@ import com.lego.framework.equipment.model.entity.EquipmentService;
 import java.util.List;
 
 public interface IEquipmentServiceService {
-    /*<AUTOGEN--BEGIN>*/
 
     PagedResult<EquipmentService> selectPaged(EquipmentService equipmentService, Page page);
     EquipmentService selectByPrimaryKey(Long id);
