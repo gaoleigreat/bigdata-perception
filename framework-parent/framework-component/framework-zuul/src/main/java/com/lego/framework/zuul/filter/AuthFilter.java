@@ -133,9 +133,7 @@ public class AuthFilter extends ZuulFilter {
         if (respVO.getRetCode() == RespConsts.SUCCESS_RESULT_CODE) {
             SsoLoginVo ssoLoginVo = respVO.getInfo();
             if (ssoLoginVo != null && "check_session_success".equals(ssoLoginVo.getResult())) {
-                String idNumber = ssoLoginVo.getIdNumber();
-                // TODO 通过身份证号 获取用户信息
-                CurrentVo currentVo = new CurrentVo();
+                CurrentVo currentVo = ssoLoginVo.getCurrentVo();
                 setRequest(ctx, currentVo, traceInfo);
                 ctx.set("pvId", pvId);
                 return null;

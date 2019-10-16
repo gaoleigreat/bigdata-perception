@@ -171,7 +171,7 @@ public class EquipmentServiceController {
         equipmentService.setId(id);
         Integer equipmentServiceNum = equipmentServiceService.updateByPrimaryKeySelective(equipmentService);
         Integer num = equipmentServiceRecordService.update(equipmentServiceRecord);
-        if (num > 0 && equipmentServiceNum >0) {
+        if (num > 0 && equipmentServiceNum > 0) {
             return RespVOBuilder.success();
         }
         return RespVOBuilder.failure();

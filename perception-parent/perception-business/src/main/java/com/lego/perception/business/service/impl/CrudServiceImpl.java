@@ -44,7 +44,7 @@ import java.util.*;
 public class CrudServiceImpl implements ICrudService {
 
     @Autowired
-    private CrudMapper businessMapper;
+    private CrudMapper crudMapper;
 
     @Autowired
     private TemplateFeignClient templateFeignClient;
@@ -83,8 +83,8 @@ public class CrudServiceImpl implements ICrudService {
             sb.append(",");
         }
         sb.replace(sb.length() - 1, sb.length(), "");
-        businessMapper.createBusinessTable(tableName, sb.toString());
-        Integer existTable = businessMapper.existTable(tableName);
+        crudMapper.createBusinessTable(tableName, sb.toString());
+        Integer existTable = crudMapper.existTable(tableName);
         if (existTable != null) {
             return RespVOBuilder.success();
         }
@@ -100,7 +100,7 @@ public class CrudServiceImpl implements ICrudService {
         // 参数校验
         for (Map<String, Object> objectMap : data) {
             BusinessTable businessTable = new BusinessTable(null, tableName, objectMap);
-            Integer insertBusinessData = businessMapper.insertBusinessData(businessTable);
+            Integer insertBusinessData = crudMapper.insertBusinessData(businessTable);
             if (insertBusinessData <= 0) {
                 ExceptionBuilder.operateFailException("新增数据失败");
             }
@@ -124,7 +124,7 @@ public class CrudServiceImpl implements ICrudService {
                 WrapperUtils.addAdvancedCondition(wrapper, symbol, absoluteField, value);
             }
         }
-        List<Map<String, Object>> data = businessMapper.queryBusinessData(tableName, wrapper);
+        List<Map<String, Object>> data = crudMapper.queryBusinessData(tableName, wrapper);
         if (!CollectionUtils.isEmpty(data)) {
             for (Map datum : data) {
                 datum.remove("fileId");
@@ -150,7 +150,7 @@ public class CrudServiceImpl implements ICrudService {
         }
 
         IPage iPage = PageUtil.page2IPage(page);
-        IPage<Map<String, Object>> data = businessMapper.queryBusinessData(iPage, tableName, wrapper);
+        IPage<Map<String, Object>> data = crudMapper.queryBusinessData(iPage, tableName, wrapper);
         if (!CollectionUtils.isEmpty(data.getRecords())) {
             for (Map datum : data.getRecords()) {
                 datum.remove("fileId");
@@ -168,7 +168,7 @@ public class CrudServiceImpl implements ICrudService {
         }
         Long id = Long.valueOf(data.get("id") + "");
         BusinessTable business = new BusinessTable(id, tableName, data);
-        Integer update = businessMapper.updateByID(business);
+        Integer update = crudMapper.updateByID(business);
         if (update > 0) {
             return RespVOBuilder.success();
         }
@@ -182,7 +182,7 @@ public class CrudServiceImpl implements ICrudService {
         }
         Long id = (Long) data.get("id");
         BusinessTable business = new BusinessTable(id, tableName, null);
-        Integer delBusinessData = businessMapper.delBusinessData(business);
+        Integer delBusinessData = crudMapper.delBusinessData(business);
         if (delBusinessData > 0) {
             return RespVOBuilder.success();
         }
@@ -233,6 +233,12 @@ public class CrudServiceImpl implements ICrudService {
             e.printStackTrace();
             ExceptionBuilder.operateFailException("下载失败");
         }
+    }
+
+    @Override
+    public RespVO<Map<String, Object>> queryBusinessDataByCode(String description, String equipmentCode) {
+        Map<String, Object> data = crudMapper.queryByCode(description, equipmentCode);
+        return RespVOBuilder.success(data);
     }
 
     private List<Map<String, String>> getItemsStrData(List<Map<String, Object>> mapList, FormTemplate formTemplate) {

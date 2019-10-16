@@ -140,11 +140,13 @@ public class FormTemplateController {
     @RequestMapping(value = "/findByDataType/{dataType}", method = RequestMethod.GET)
     @Operation(value = "find", desc = "根据dataType查询")
     @ApiOperation("根据dataType查询")
-    public RespVO<RespDataVO<FormTemplate>> findfindByDataType(@PathVariable Integer dataType) {
+    public RespVO<FormTemplate> findByDataType(@PathVariable Integer dataType) {
         FormTemplate template = new FormTemplate();
         template.setDataType(dataType);
         List<FormTemplate> formTemplates = formTemplateService.findList(template);
-
-        return RespVOBuilder.success(formTemplates);
+        if (CollectionUtils.isEmpty(formTemplates)) {
+            return RespVOBuilder.failure("查询不到模板数据");
+        }
+        return RespVOBuilder.success(formTemplates.get(0));
     }
 }

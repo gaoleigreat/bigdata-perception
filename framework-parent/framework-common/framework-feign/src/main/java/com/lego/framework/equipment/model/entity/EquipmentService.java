@@ -1,6 +1,8 @@
 package com.lego.framework.equipment.model.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -20,27 +22,68 @@ public class EquipmentService {
     @ApiModelProperty(value = "设备维修id")
     @TableId
     private Long id;
+
+
+    @ApiModelProperty("所在项目id")
+    private Long projectId;
+
+
+    @TableField(exist = false)
+    @ApiModelProperty("所在项目名")
+    private String projectName;
+
     /**
      * 设备编号
      */
     @ApiModelProperty(value = "设备编号")
     private String equipmentCode;
+
+    @TableField(exist = false)
+    @ApiModelProperty("设备名称")
+    private String equipmentName;
+
     /**
-     * 状态(0-计划;1-进行;2-完成)
+     * 状态(0-计划;1-进行;2-审核;3-完成)
      */
-    @ApiModelProperty(value = "状态(0-计划;1-进行;2-完成)")
+    @ApiModelProperty(value = "状态(0-计划;1-进行;2-审核;3-完成)")
     private Integer status;
 
     /**
      * 设备类型Id
      */
     @ApiModelProperty(value = "设备类型Id")
-    private Long  equipmentTypeId;
+    private Long equipmentTypeId;
+
+
+    @TableField(exist = false)
+    private Integer templateType;
+
+    @TableField(exist = false)
+    @ApiModelProperty("设备类型名称")
+    private String typeName;
+
     /**
      * 故障id
      */
     @ApiModelProperty(value = "故障id")
     private Long malfunctionId;
+
+
+    @TableField(exist = false)
+    @ApiModelProperty("维修系统")
+    private String sys;
+
+    @TableField(exist = false)
+    @ApiModelProperty("故障现象")
+    private String phenomenon;
+
+    @ApiModelProperty("开始时间")
+    private Date startDate;
+
+    @ApiModelProperty("负责人")
+    private String principal;
+
+
     /**
      * 维修附件文档，数组格式用，隔开
      */

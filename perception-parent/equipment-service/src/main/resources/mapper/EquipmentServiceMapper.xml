@@ -6,6 +6,7 @@
     <!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="com.lego.framework.equipment.model.entity.EquipmentService" id="BaseResultMap">
         <result property="id" column="id"/>
+        <result property="projectId" column="project_id"/>
         <result property="equipmentCode" column="equipment_code"/>
         <result property="equipmentTypeId" column="equipment_type_id"/>
         <result property="status" column="status"/>
@@ -13,6 +14,8 @@
         <result property="batchNumber" column="batch_number"/>
         <result property="centerMaterialsNums" column="center_materials_nums"/>
         <result property="remark" column="remark"/>
+        <result property="principal" column="principal"/>
+        <result property="startDate" column="start_date"/>
         <result property="creationDate" column="creation_date"/>
         <result property="creationBy" column="creation_by"/>
     </resultMap>
@@ -24,6 +27,9 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
                 id,
+            </if>
+            <if test="projectId!=null">
+                project_id,
             </if>
             <if test="equipmentCode != null">
                 equipment_code,
@@ -46,6 +52,12 @@
             <if test="remark != null">
                 remark,
             </if>
+            <if test="principal!=null">
+                principal,
+            </if>
+            <if test="startDate!=null">
+                start_date,
+            </if>
             <if test="creationDate != null">
                 creation_date,
             </if>
@@ -56,6 +68,9 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
                 #{id,jdbcType=BIGINT},
+            </if>
+            <if test="projectId != null">
+                #{projectId,jdbcType=BIGINT},
             </if>
             <if test="equipmentCode != null">
                 #{equipmentCode,jdbcType=VARCHAR},
@@ -78,6 +93,12 @@
             <if test="remark != null">
                 #{remark,jdbcType=VARCHAR},
             </if>
+            <if test="principal != null">
+                #{principal,jdbcType=VARCHAR},
+            </if>
+            <if test="startDate != null">
+                #{startDate,jdbcType=TIMESTAMP},
+            </if>
             <if test="creationDate != null">
                 #{creationDate,jdbcType=TIMESTAMP},
             </if>
@@ -91,8 +112,36 @@
       数据库表的基本查询列名集合
     -->
     <sql id="Base_Column_List">
-        id, equipment_code,equipment_type_id, status, malfunction_id, batch_number, center_materials_nums, remark, creation_date, creation_by
+        id, project_id,equipment_code,equipment_type_id, status, malfunction_id, batch_number, center_materials_nums, remark,principal,start_date, creation_date, creation_by
     </sql>
+
+
+    <sql id="All_Column_List">
+        e.id id,
+        e.project_id projectId,
+        e.equipment_code equipmentCode,
+        e.equipment_type_id equipmentTypeId,
+        t.name typeName,
+        t.type templateType,
+        e.status status,
+        e.malfunction_id malfunctionId,
+        m.sys  sys,
+        m.phenomenon phenomenon,
+        e.batch_number batchNumber,
+        e.center_materials_nums centerMaterialsNums,
+         e.remark remark,
+         e.principal principal,
+         e.start_date startDate,
+         e.creation_date creationDate,
+          e.creation_by creationBy
+    </sql>
+
+
+    <sql id="CONDITION">
+        LEFT  JOIN tpl_equipment_type t on t.id=e.equipment_type_id
+        LEFT JOIN  tpl_equipment_malfunction m on m.id=e.malfunction_id
+    </sql>
+
 
     <!--
         Where子句
@@ -100,6 +149,9 @@
     <sql id="Base_Query_Where">
         <if test="id != null">
             and id = #{id,jdbcType=BIGINT}
+        </if>
+        <if test="projectId!=null">
+            and project_id = #{projectId,jdbcType=BIGINT}
         </if>
         <if test="equipmentCode != null">
             and equipment_code = #{equipmentCode,jdbcType=VARCHAR}
@@ -184,7 +236,8 @@
       根据主键删除数据库表中的记录
     -->
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-        delete FROM tpl_equipment_service
+        delete
+        FROM tpl_equipment_service
         where id = #{id,jdbcType=BIGINT}
     </delete>
 
@@ -226,6 +279,9 @@
             <if test="id != null">
                 id = #{id,jdbcType=BIGINT},
             </if>
+            <if test="projectId!=null">
+                project_id =#{projectId,jdbcType=BIGINT},
+            </if>
             <if test="equipmentCode != null">
                 equipment_code = #{equipmentCode,jdbcType=VARCHAR},
             </if>
@@ -247,6 +303,12 @@
             <if test="remark != null">
                 remark = #{remark,jdbcType=VARCHAR},
             </if>
+            <if test="principal != null">
+                principal = #{principal,jdbcType=VARCHAR},
+            </if>
+            <if test="startDate != null">
+                start_date = #{startDate,jdbcType=TIMESTAMP},
+            </if>
             <if test="creationDate != null">
                 creation_date = #{creationDate,jdbcType=TIMESTAMP},
             </if>
@@ -263,16 +325,36 @@
     <insert id="batchInsert" parameterType="java.util.List">
         insert into tpl_equipment_service
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            id, equipment_code,equipment_type_id ,status, malfunction_id, batch_number, center_materials_nums, remark, creation_date,
+            id,
+            project_id,
+            equipment_code,
+            equipment_type_id ,
+            status,
+            malfunction_id,
+            batch_number,
+            center_materials_nums,
+            remark,
+            principal,
+            start_date,
+            creation_date,
             creation_by
         </trim>
         values
         <foreach collection="list" index="index" item="item" separator=",">
             <trim prefix="(" suffix=")" suffixOverrides=",">
-                #{item.id,jdbcType=BIGINT}, #{item.equipmentCode,jdbcType=VARCHAR},#{item.equipmentTypeId,jdbcType=BIGINT}, #{item.status,jdbcType=TINYINT},
-                #{item.malfunctionId,jdbcType=BIGINT}, #{item.batchNumber,jdbcType=VARCHAR},
-                #{item.centerMaterialsNums,jdbcType=VARCHAR}, #{item.remark,jdbcType=VARCHAR},
-                #{item.creationDate,jdbcType=TIMESTAMP}, #{item.creationBy,jdbcType=BIGINT}
+                #{item.id,jdbcType=BIGINT},
+                #{item.projectId,jdbcType=BIGINT},
+                #{item.equipmentCode,jdbcType=VARCHAR},
+                #{item.equipmentTypeId,jdbcType=BIGINT},
+                #{item.status,jdbcType=TINYINT},
+                #{item.malfunctionId,jdbcType=BIGINT},
+                #{item.batchNumber,jdbcType=VARCHAR},
+                #{item.centerMaterialsNums,jdbcType=VARCHAR},
+                #{item.remark,jdbcType=VARCHAR},
+                #{item.principal,jdbcType=VARCHAR},
+                #{item.startDate,jdbcType=TIMESTAMP},
+                #{item.creationDate,jdbcType=TIMESTAMP},
+                #{item.creationBy,jdbcType=BIGINT}
             </trim>
         </foreach>
     </insert>
@@ -287,6 +369,9 @@
                 <trim suffixOverrides=",">
                     <if test="item.id != null">
                         id = #{item.id,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.projectId != null">
+                        project_id = #{item.projectId,jdbcType=BIGINT},
                     </if>
                     <if test="item.equipmentCode != null">
                         equipment_code = #{item.equipmentCode,jdbcType=VARCHAR},
@@ -308,6 +393,12 @@
                     </if>
                     <if test="item.remark != null">
                         remark = #{item.remark,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.principal != null">
+                        principal = #{item.principal,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.startDate != null">
+                        start_date = #{item.startDate,jdbcType=TIMESTAMP},
                     </if>
                     <if test="item.creationDate != null">
                         creation_date = #{item.creationDate,jdbcType=TIMESTAMP},
@@ -369,18 +460,21 @@
     <update id="upsert" parameterType="com.lego.framework.equipment.model.entity.EquipmentService">
         insert into tpl_equipment_service
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            id, equipment_code,equipment_type_id, status, malfunction_id, batch_number, center_materials_nums, remark, creation_date,
+            id, equipment_code,equipment_type_id, status, malfunction_id, batch_number, center_materials_nums, remark,
+            creation_date,
             creation_by
         </trim>
         values
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            #{id,jdbcType=BIGINT}, #{equipmentCode,jdbcType=VARCHAR},#{equipmentTypeId,jdbcType=BIGINT}, #{status,jdbcType=TINYINT},
+            #{id,jdbcType=BIGINT}, #{equipmentCode,jdbcType=VARCHAR},#{equipmentTypeId,jdbcType=BIGINT},
+            #{status,jdbcType=TINYINT},
             #{malfunctionId,jdbcType=BIGINT}, #{batchNumber,jdbcType=VARCHAR}, #{centerMaterialsNums,jdbcType=VARCHAR},
             #{remark,jdbcType=VARCHAR}, #{creationDate,jdbcType=TIMESTAMP}, #{creationBy,jdbcType=BIGINT}
         </trim>
         on duplicate key update
         <trim suffixOverrides=",">
-            #{id,jdbcType=BIGINT}, #{equipmentCode,jdbcType=VARCHAR},#{equipmentTypeId,jdbcType=BIGINT}, #{status,jdbcType=TINYINT},
+            #{id,jdbcType=BIGINT}, #{equipmentCode,jdbcType=VARCHAR},#{equipmentTypeId,jdbcType=BIGINT},
+            #{status,jdbcType=TINYINT},
             #{malfunctionId,jdbcType=BIGINT}, #{batchNumber,jdbcType=VARCHAR}, #{centerMaterialsNums,jdbcType=VARCHAR},
             #{remark,jdbcType=VARCHAR}, #{creationDate,jdbcType=TIMESTAMP}, #{creationBy,jdbcType=BIGINT}
         </trim>
@@ -395,6 +489,9 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id !=null ">
                 id,
+            </if>
+            <if test="projectId !=null ">
+                project_id,
             </if>
             <if test="equipmentCode !=null ">
                 equipment_code,
@@ -417,6 +514,12 @@
             <if test="remark !=null ">
                 remark,
             </if>
+            <if test="principal!=null">
+                principal,
+            </if>
+            <if test="startDate !=null ">
+                start_date,
+            </if>
             <if test="creationDate !=null ">
                 creation_date,
             </if>
@@ -428,6 +531,9 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id !=null ">
                 id = #{id,jdbcType=BIGINT},
+            </if>
+            <if test="projectId !=null ">
+                project_id = #{projectId,jdbcType=BIGINT},
             </if>
             <if test="equipmentCode !=null ">
                 equipment_code = #{equipmentCode,jdbcType=VARCHAR},
@@ -449,6 +555,12 @@
             </if>
             <if test="remark !=null ">
                 remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="principal !=null ">
+                principal = #{principal,jdbcType=VARCHAR},
+            </if>
+            <if test="startDate !=null ">
+                start_date = #{startDate,jdbcType=TIMESTAMP},
             </if>
             <if test="creationDate !=null ">
                 creation_date = #{creationDate,jdbcType=TIMESTAMP},
@@ -462,6 +574,9 @@
             <if test="id !=null ">
                 id = #{id,jdbcType=BIGINT},
             </if>
+            <if test="projectId !=null ">
+                project_id = #{projectId,jdbcType=BIGINT},
+            </if>
             <if test="equipmentCode !=null ">
                 equipment_code = #{equipmentCode,jdbcType=VARCHAR},
             </if>
@@ -483,6 +598,12 @@
             <if test="remark !=null ">
                 remark = #{remark,jdbcType=VARCHAR},
             </if>
+            <if test="principal !=null ">
+                principal = #{principal,jdbcType=VARCHAR},
+            </if>
+            <if test="startDate !=null ">
+                start_date = #{startDate,jdbcType=TIMESTAMP},
+            </if>
             <if test="creationDate !=null ">
                 creation_date = #{creationDate,jdbcType=TIMESTAMP},
             </if>
@@ -492,17 +613,30 @@
         </trim>
     </update>
 
-    <select id="query" resultMap="BaseResultMap" parameterType="com.lego.framework.equipment.model.entity.EquipmentService">
+    <select id="query" resultMap="BaseResultMap"
+            parameterType="com.lego.framework.equipment.model.entity.EquipmentService">
         select
         <include refid="Base_Column_List"/>
-        from tpl_equipment_service
+        from tpl_equipment_service e
         <where>
             <include refid="Base_Query_Where"></include>
         </where>
     </select>
 
     <select id="queryTotal" resultType="long">
-        select count(*) from tpl_equipment_service
+        select count(*)
+        from tpl_equipment_service
+    </select>
+
+
+    <select id="queryList" resultType="com.lego.framework.equipment.model.entity.EquipmentService">
+        select
+        <include refid="All_Column_List"/>
+        from tpl_equipment_service e
+        <where>
+            ${ew.sqlSegment}
+        </where>
+        <include refid="CONDITION"/>
     </select>
 
 

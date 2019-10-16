@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
 import javax.websocket.server.PathParam;
 import java.util.List;
 
@@ -67,7 +68,7 @@ public class EquipmentTypeController {
         PagedResult<EquipmentType> pagedResult = iEquipmentTypeService.selectPaged(equipmentType, page);
         List<EquipmentType> resultList = pagedResult.getResultList();
         resultList.forEach(equipmentType1 -> {
-            RespVO<RespDataVO<FormTemplate>> respDataVORespVO = templateFeignClient.findByDataType(Integer.valueOf(equipmentType1.getType()));
+            RespVO<FormTemplate> respDataVORespVO = templateFeignClient.findByDataType(Integer.valueOf(equipmentType1.getType()));
 
             if (respDataVORespVO == null) {
                 ExceptionBuilder.operateFailException("模板服务不可用");
@@ -75,11 +76,10 @@ public class EquipmentTypeController {
             if (respDataVORespVO.getRetCode() != 1) {
                 ExceptionBuilder.operateFailException("获取模板失败");
             }
-            List<FormTemplate> formTemplates = respDataVORespVO.getInfo().getList();
-            if (CollectionUtils.isEmpty(formTemplates)) {
+            FormTemplate formTemplateGet = respDataVORespVO.getInfo();
+            if (formTemplateGet == null) {
                 ExceptionBuilder.operateFailException("没有对应的表单模板");
             }
-            FormTemplate formTemplateGet = formTemplates.get(0);
             equipmentType1.setTemplateCode(formTemplateGet.getTemplateCode());
         });
         pagedResult.setResultList(resultList);
@@ -100,7 +100,7 @@ public class EquipmentTypeController {
     public RespVO<EquipmentType> selectByPrimaryKey(@RequestParam(value = "id") Long id) {
         EquipmentType po = iEquipmentTypeService.selectByPrimaryKey(id);
 
-        RespVO<RespDataVO<FormTemplate>> respDataVORespVO = templateFeignClient.findByDataType(Integer.valueOf(po.getType()));
+        RespVO<FormTemplate> respDataVORespVO = templateFeignClient.findByDataType(Integer.valueOf(po.getType()));
 
         if (respDataVORespVO == null) {
             ExceptionBuilder.operateFailException("模板服务不可用");
@@ -108,11 +108,10 @@ public class EquipmentTypeController {
         if (respDataVORespVO.getRetCode() != 1) {
             ExceptionBuilder.operateFailException("获取模板失败");
         }
-        List<FormTemplate> formTemplates = respDataVORespVO.getInfo().getList();
-        if (CollectionUtils.isEmpty(formTemplates)) {
+        FormTemplate formTemplateGet = respDataVORespVO.getInfo();
+        if (formTemplateGet == null) {
             ExceptionBuilder.operateFailException("没有对应的表单模板");
         }
-        FormTemplate formTemplateGet = formTemplates.get(0);
         po.setTemplateCode(formTemplateGet.getTemplateCode());
         return RespVOBuilder.success(po);
     }

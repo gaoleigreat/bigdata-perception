@@ -100,4 +100,12 @@ public interface ICrudService {
      * @return
      */
     void downloadBusinessData(FormTemplate formTemplate, List<SearchParam> searchParams, HttpServletResponse response);
+
+    /**
+     * 根据设备编码查询设备数据表
+     * @param description
+     * @param equipmentCode
+     * @return
+     */
+    RespVO<Map<String, Object>> queryBusinessDataByCode(String description, String equipmentCode);
 }

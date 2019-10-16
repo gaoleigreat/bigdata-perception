@@ -25,10 +25,6 @@ public class HeaderUtils {
             String userId = request.getHeader(USER_ID);
             String userName = request.getHeader(USER_NAME);
             return HeaderVo.builder()
-                    .deviceType(deviceType)
-                    .osVersion(osVersion)
-                    .sn(sn)
-                    .time(time)
                     .token(token)
                     .userId(userId)
                     .userName(userName)

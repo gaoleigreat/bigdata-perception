@@ -53,7 +53,7 @@ public class ProjectController {
     @RequestMapping(value = "/select_by_id", method = RequestMethod.GET)
     @Operation(value = "select_by_id", desc = "根据ID查询项目")
     @ApiOperation("根据ID查询项目")
-    public RespVO<Project> selectByPrimaryKey(Long id) {
+    public RespVO<Project> selectByPrimaryKey(@RequestParam Long id) {
         Project po = iProjectService.selectByPrimaryKey(id);
         return RespVOBuilder.success(po);
     }

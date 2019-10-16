@@ -1,9 +1,13 @@
 package com.lego.equipment.service.mapper;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespVO;
 import com.framework.mybatis.mapper.Mapper;
 import com.lego.framework.equipment.model.entity.EquipmentService;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,7 +20,6 @@ public interface EquipmentServiceMapper extends Mapper<EquipmentService> {
     EquipmentService selectByPrimaryKey(Long id);
 
     Integer deleteByPrimaryKey(Long id);
-
 
 
     Integer insertSelective(EquipmentService tplEquipmentService);
@@ -51,5 +54,10 @@ public interface EquipmentServiceMapper extends Mapper<EquipmentService> {
 
     Integer deleteBatch(List<Long> list);
 
-    /*<AUTOGEN--END>*/
+    /**
+     * @param wrapper
+     * @param page
+     * @return
+     */
+    Page<EquipmentService> queryList(@Param(value = "page") IPage<EquipmentService> page, @Param(value = "ew") QueryWrapper wrapper);
 }

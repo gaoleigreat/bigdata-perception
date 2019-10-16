@@ -50,6 +50,12 @@
         </where>
     </select>
 
+    <select id="queryByCode">
+        select *
+        from ${tableName}
+        where equipment_code = #{equipmentCode}
+    </select>
+
 
     <delete id="delBusinessData" parameterType="com.lego.framework.business.model.entity.BusinessTable">
         DELETE ${tableName}
