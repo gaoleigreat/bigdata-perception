@@ -1,5 +1,6 @@
 package com.lego.framework.equipment.model.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
@@ -25,20 +26,37 @@ public class EquipmentServiceRecord implements Serializable {
     @ApiModelProperty("维修记录Id")
     @TableId
     private Long id;
+
+
+    @ApiModelProperty("工程id")
+    private Long projectId;
+
+    @TableField(exist = false)
+    @ApiModelProperty("工程名称")
+    private String projectName;
+
     /**
      * 设备编号
      */
     @ApiModelProperty("设备编号")
     private String equipmentCode;
 
+    @TableField(exist = false)
+    @ApiModelProperty("设备名称")
+    private String euipmentName;
 
 
     @ApiModelProperty(value = "设备类型Id")
-    private Long  equipmentTypeId;
+    private Long equipmentTypeId;
+
+    @ApiModelProperty("设备类型名称")
+    @TableField(exist = false)
+    private String equipmentTypeName;
+
     /**
-     * 状态(0-计划;1-进行;2-完成)
+     * 状态(0-计划;1-进行;2-审核;3-完成)
      */
-    @ApiModelProperty("状态(0-计划;1-进行;2-完成)")
+    @ApiModelProperty("状态(0-计划;1-进行;2-审核;3-完成)")
     private Integer status;
     /**
      * 故障id
@@ -60,6 +78,19 @@ public class EquipmentServiceRecord implements Serializable {
      */
     @ApiModelProperty("备注")
     private String remark;
+
+
+    @ApiModelProperty("负责人")
+    private String principal;
+
+    @ApiModelProperty("开始时间")
+    private Date startDate;
+
+
+    @ApiModelProperty("结束时间")
+    private Date endDate;
+
+
     /**
      * 维修Id
      */
