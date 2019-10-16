@@ -16,6 +16,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -185,8 +186,32 @@ public class DataFileController {
     @Operation(value = "upLoadFile", desc = "上传业务文件")
     public RespVO<RespDataVO<DataFile>> upLoadFile(@RequestParam(value = "files", required = true)MultipartFile[] files,
                                      @RequestParam(required = false) String remark,
-                                     @RequestParam String tags) {
+                                     @RequestParam(required = false)String tags) {
         return dataFileService.upLoadFile(files, remark, tags);
     }
 
+
+
+    @ApiOperation(value = "testUpLoad", notes = "testUpLoad")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "files", value = "多个文件，", paramType = "formData", allowMultiple = true, required = true, dataType = "file")
+    })
+    @PostMapping(value = "/testUpLoad", headers = "content-type=multipart/form-data",produces = {MediaType.APPLICATION_JSON_UTF8_VALUE},
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(value = "testUpLoad", desc = "test多文件上传")
+    public RespVO testUpLoad(@RequestParam(value = "files", required = true)MultipartFile[] files) {
+        return RespVOBuilder.success(files.length);
+    }
+
+    @ApiOperation(value = "testOneUpLoad", notes = "testOneUpLoad")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "file", value = "多个文件，", paramType = "formData", allowMultiple = true, required = true, dataType = "file")
+    })
+    @PostMapping(value = "/testOneUpLoad", headers = "content-type=multipart/form-data" ,produces = {MediaType.APPLICATION_JSON_UTF8_VALUE},
+
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(value = "testOneUpLoad", desc = "testOneUpLoad")
+    public RespVO testOneUpLoad(@RequestParam(value = "file", required = true)MultipartFile file) {
+        return RespVOBuilder.success(file.getSize());
+    }
 }

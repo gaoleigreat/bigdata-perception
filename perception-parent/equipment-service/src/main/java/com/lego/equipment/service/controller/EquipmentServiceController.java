@@ -151,7 +151,7 @@ public class EquipmentServiceController {
     @Operation(value = "uploadFile",desc="上传附件")
     @RequestMapping(value = "/uploadFile",method = RequestMethod.POST)
     public RespVO<Object> uploadFile(@RequestParam("id")Long id, @RequestParam MultipartFile  file){
-        RespVO<RespDataVO<DataFile>> stringRespVO = fileClient.upLoad(new MultipartFile[]{file}, null, "设备维修附件", null);
+        RespVO<RespDataVO<DataFile>> stringRespVO = fileClient.upLoadFile(new MultipartFile[]{file}, null, "设备维修附件");
         if (stringRespVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
             return RespVOBuilder.failure("文件上传失败");
         }
@@ -177,4 +177,30 @@ public class EquipmentServiceController {
         return RespVOBuilder.failure();
     }
 
+
+
+    /**
+     * 上传附件
+     */
+    @ApiOperation(value = "testUpLoad",httpMethod = "POST")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "files", value = "多个文件，", paramType = "formData", allowMultiple = true, required = true, dataType = "file")
+    })
+    @RequestMapping(value = "/testUpLoad",method = RequestMethod.POST,headers = "content-type=multipart/form-data")
+    public RespVO testUpLoad(@RequestParam(value = "files") MultipartFile[]  files){
+     return fileClient.testUpLoad(files);
+    }
+
+
+    /**
+     * 上传附件
+     */
+    @ApiOperation(value = "testOneUpLoad",httpMethod = "POST")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "file", value = "1文件，", paramType = "formData", allowMultiple = true, required = true, dataType = "file")
+    })
+    @RequestMapping(value = "/testOneUpLoad",method = RequestMethod.POST,headers = "content-type=multipart/form-data")
+    public RespVO testOneUpLoad(@RequestPart(value = "file") MultipartFile file){
+        return fileClient.testOneUpLoad(file);
+    }
 }

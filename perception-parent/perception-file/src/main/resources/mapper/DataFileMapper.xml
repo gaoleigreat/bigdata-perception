@@ -6,7 +6,7 @@
 		id as id,
 		name as name,
 		file_type as fileType,
-		 project_id as project_id,
+		project_id as project_id,
 		file_url as file_url,
 		previewUrl as preview_url,
         template_id as template_id
@@ -17,7 +17,7 @@
         publish_date as publish_date,
         publish_by as  publish_by,
         data_type as  data_type,
-        delet_flag as delet_flag,
+        delete_flag as delete_flag,
         remark as remark,
 		tags as tags,
 		batch_num as batchNum,
@@ -130,8 +130,8 @@
             #{item.tags, jdbcType=VARCHAR},
             #{item.batchNum, jdbcType=VARCHAR},
             #{item.creationDate, jdbcType=TIMESTAMP},
-            #{item.createdBy, jdbcType=VARCHAR},
-            #{item.lastUpdatedBy, jdbcType=TIMESTAMP}
+            #{item.createdBy, jdbcType=BIGINT},
+            #{item.lastUpdatedBy, jdbcType=BIGINT}
             )
         </foreach>
     </insert>

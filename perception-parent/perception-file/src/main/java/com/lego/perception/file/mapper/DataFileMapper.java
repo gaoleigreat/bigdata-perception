@@ -24,10 +24,10 @@ public interface DataFileMapper extends Mapper<DataFile> {
     /**
      * 批量新增
      *
-     * @param dataFiles
+     * @param list
      * @return
      */
-    Integer insertList(List<DataFile> dataFiles);
+    Integer insertList(List<DataFile> list);
 
 
     /**
@@ -36,7 +36,7 @@ public interface DataFileMapper extends Mapper<DataFile> {
      * @param dataFiles
      * @return
      */
-    Integer updateList(List<DataFile> dataFiles);
+    Integer updateList(List<DataFile> list);
 
 
 
@@ -46,7 +46,7 @@ public interface DataFileMapper extends Mapper<DataFile> {
      * @param ids
      * @return
      */
-    Integer deleteList(List<Long> ids);
+    Integer deleteList(List<Long> list);
 
 
 

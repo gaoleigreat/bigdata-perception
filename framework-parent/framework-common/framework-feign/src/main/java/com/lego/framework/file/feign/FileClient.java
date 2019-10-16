@@ -5,6 +5,7 @@ import com.framework.common.consts.RespConsts;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
+import com.lego.framework.config.MultipartSupportConfig;
 import com.lego.framework.file.model.UploadFile;
 import com.lego.framework.system.model.entity.DataFile;
 import feign.hystrix.FallbackFactory;
@@ -24,11 +25,11 @@ import java.util.Map;
  * @description
  * @since 2019/8/27
  **/
-@FeignClient(value = "file-service", path = "/datefile/v1", fallbackFactory = FileClientFallbackFactory.class)
+@FeignClient(value = "file-service", path = "/datefile/v1", fallbackFactory = FileClientFallbackFactory.class,configuration = MultipartSupportConfig.class)
 public interface FileClient {
 
-    @PostMapping(value = "/uploads", headers = "content-type=multipart/form-data")
-    RespVO<RespDataVO<DataFile>> uploads(@RequestParam(value = "files", required = true) MultipartFile[] files,
+    @PostMapping(value = "/uploads", headers = "content-type=multipart/form-data",consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    RespVO<RespDataVO<DataFile>> uploads(@RequestPart(value = "files", required = true) MultipartFile[] files,
                                          @RequestParam(value = "projectId", required = false) Long projectId,
                                          @RequestParam(value = "templateId", required = false) Long templateId,
                                          @RequestParam(value = "sourceType", required = true) int sourceType,
@@ -55,10 +56,10 @@ public interface FileClient {
      * @param tags   标签（多标签使用逗号隔开）
      * @return
      */
-    @PostMapping(value = "/upLoadFile", headers = "content-type=multipart/form-data")
-    RespVO<RespDataVO<DataFile>> upLoadFile(@RequestParam(value = "files") MultipartFile[] files,
+    @PostMapping(value = "/upLoadFile",consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    RespVO<RespDataVO<DataFile>> upLoadFile(@RequestPart(value = "files") MultipartFile[] files,
                               @RequestParam(required = false, value = "remark") String remark,
-                              @RequestParam(value = "tags") String tags);
+                              @RequestParam(required = false,value = "tags") String tags);
 
 
     /**
@@ -67,13 +68,19 @@ public interface FileClient {
      * @param tags
      * @return
      */
-    @PostMapping(value = "/upLoadFile", headers = "content-type=multipart/form-data")
-    RespVO<RespDataVO<DataFile>> upLoad(@RequestParam(value = "files") MultipartFile[] files,
+    @PostMapping(value = "/upLoadFile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    RespVO<RespDataVO<DataFile>> upLoad(@RequestPart(value = "files") MultipartFile[] files,
                                         @RequestParam(required = false, value = "remark") String remark,
                                         @RequestParam(value = "tags") String tags,
                                         @RequestParam(required = false, value = "fileId") Long fileId);
 
 
+
+    @RequestMapping(method = RequestMethod.POST , value = "/testUpLoad", headers = "content-type=multipart/form-data",consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    RespVO testUpLoad(@RequestPart(value = "files", required = true) MultipartFile[] files);
+
+    @RequestMapping(method = RequestMethod.POST ,value = "/testOneUpLoad", headers = "content-type=multipart/form-data",consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    RespVO  testOneUpLoad(@RequestPart(value = "file", required = true) MultipartFile file);
 }
 
 @Slf4j
@@ -101,6 +108,16 @@ class FileClientFallbackFactory implements FallbackFactory<FileClient> {
 
             @Override
             public RespVO<RespDataVO<DataFile>> upLoad(MultipartFile[] files, String remark, String tags, Long fileId) {
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "file服务不可用");
+            }
+
+            @Override
+            public RespVO<RespDataVO<DataFile>> testUpLoad(MultipartFile[] files) {
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "file服务不可用");
+            }
+
+            @Override
+            public RespVO<RespDataVO<DataFile>> testOneUpLoad(MultipartFile file) {
                 return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "file服务不可用");
             }
         };

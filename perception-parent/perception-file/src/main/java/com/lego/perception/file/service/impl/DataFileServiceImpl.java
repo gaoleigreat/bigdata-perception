@@ -73,14 +73,15 @@ public class DataFileServiceImpl implements IDataFileService {
 
     @Override
     public RespVO<RespDataVO<Long>> insertList(List<DataFile> dataFiles) {
-        int result = 0;
         if (CollectionUtils.isNotEmpty(dataFiles)) {
-            result = dataFileMapper.insertList(dataFiles);
+            dataFiles.forEach(f -> {
+                dataFileMapper.insert(f);
+            });
+
         }
-        if (result > 0) {
-            return RespVOBuilder.success(dataFiles.stream().map(DataFile::getId).collect(Collectors.toList()));
-        }
-        return RespVOBuilder.failure("插入失敗");
+
+        return RespVOBuilder.success(dataFiles.stream().map(DataFile::getId).collect(Collectors.toList()));
+
     }
 
     @Override
@@ -185,26 +186,26 @@ public class DataFileServiceImpl implements IDataFileService {
 
 
     @Override
-    public RespVO<RespDataVO<DataFile>>  upLoadFile(MultipartFile[] files, String remark, String tags) {
+    public RespVO<RespDataVO<DataFile>> upLoadFile(MultipartFile[] files, String remark, String tags) {
         String batchNumber = UuidUtils.generateShortUuid();
         if (files == null || files.length == 0) {
             ExceptionBuilder.operateFailException("上传文件不能为空");
         }
         //返回文件名为键值 文件url为key的map
-        Map<String, String> uploadsInfo = uploadToHdfs(storePath, savePath, files);
+     /*   Map<String, String> uploadsInfo = uploadToHdfs(storePath, savePath, files);
         if (uploadsInfo.isEmpty()) {
             ExceptionBuilder.operateFailException("上传文件失败");
-        }
+        }*/
         List<DataFile> dataFileList = new ArrayList<>();
         Arrays.stream(files).forEach(f -> {
             //文件名
             String originalFilename = f.getOriginalFilename();
             //文件url
-            String fileUrl = uploadsInfo.get(originalFilename);
+            //  String fileUrl = uploadsInfo.get(originalFilename);
             //文件后缀
             String ext = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
             DataFile dataFile = new DataFile();
-            dataFile.setFileUrl(fileUrl);
+            // dataFile.setFileUrl(fileUrl);
             dataFile.setFileType(ext);
             dataFile.setName(originalFilename);
             dataFile.setBatchNum(batchNumber);
