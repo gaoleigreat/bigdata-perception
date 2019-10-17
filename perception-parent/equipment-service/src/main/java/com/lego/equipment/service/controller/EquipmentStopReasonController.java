@@ -34,12 +34,12 @@ public class EquipmentStopReasonController {
     /**
      * 分页查询数据
      */
-    @ApiOperation(value = "查询停机原因", httpMethod = "POST")
+    @ApiOperation(value = "查询停机原因", httpMethod = "GET")
     @ApiImplicitParams({
 
     })
-    @Operation(value = "select_paged", desc = "查询停机原因")
-    @RequestMapping(value = "/select_paged", method = RequestMethod.POST)
+    @Operation(value = "select_paged/{pageSize}/{pageIndex}", desc = "查询停机原因")
+    @RequestMapping(value = "/select_paged", method = RequestMethod.GET)
     public RespVO<PagedResult<EquipmentStopReason>> selectPaged(@ModelAttribute EquipmentStopReason equipmentStopReason,
                                                                 @PathParam(value = "") Page page) {
         PagedResult<EquipmentStopReason> stopReasonPagedResult = iEquipmentStopReasonService.selectPaged(equipmentStopReason, page);

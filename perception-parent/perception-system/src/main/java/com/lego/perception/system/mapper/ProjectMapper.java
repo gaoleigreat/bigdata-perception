@@ -16,8 +16,6 @@ import java.util.List;
 @Repository
 public interface ProjectMapper extends Mapper<Project> {
 
-    PagedResult<Project> selectPaged(RowBounds rowBounds);
-
     Project selectByPrimaryKey(Long id);
 
     Integer deleteByPrimaryKey(Long id);

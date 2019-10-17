@@ -1,5 +1,6 @@
 package com.lego.framework.equipment.model.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,6 +18,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@TableName(value = "tpl_fitting")
 public class Fitting {
     /**
      * 配件id

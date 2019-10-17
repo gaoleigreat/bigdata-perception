@@ -50,12 +50,12 @@ public class FittingController {
     /**
      * 分页查询数据
      */
-    @ApiOperation(value = "分页查询配件", httpMethod = "POST")
+    @ApiOperation(value = "分页查询配件", httpMethod = "GET")
     @ApiImplicitParams({
 
     })
     @Operation(value = "select_paged", desc = "分页查询配件")
-    @RequestMapping(value = "/select_paged/{pageSize}/{pageIndex}", method = RequestMethod.POST)
+    @RequestMapping(value = "/select_paged/{pageSize}/{pageIndex}", method = RequestMethod.GET)
     public RespVO<PagedResult<Fitting>> selectPaged(@ModelAttribute Fitting fitting,
                                                     @PathParam(value = "") Page page) {
         PagedResult<Fitting> pageResult = iFittingService.selectPaged(fitting, page);

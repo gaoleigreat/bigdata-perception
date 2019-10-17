@@ -46,12 +46,12 @@ public class EquipmentServiceController {
     /**
      * 分页查询数据
      */
-    @ApiOperation(value = "查询维修设备", httpMethod = "POST")
+    @ApiOperation(value = "查询维修设备", httpMethod = "GET")
     @ApiImplicitParams({
 
     })
     @Operation(value = "select_paged", desc = "查询维修设备")
-    @RequestMapping(value = "/select_paged", method = RequestMethod.POST)
+    @RequestMapping(value = "/select_paged/{pageSize}/{pageIndex}", method = RequestMethod.GET)
     public RespVO<PagedResult<EquipmentService>> selectPaged(@ModelAttribute EquipmentService equipmentService,
                                                              @PathParam(value = "") Page page) {
 
@@ -131,9 +131,9 @@ public class EquipmentServiceController {
      *
      * @return
      */
-    @ApiOperation(value = "查询维修项",httpMethod = "POST")
+    @ApiOperation(value = "查询维修项", httpMethod = "POST")
     @ApiImplicitParams({})
-    @Operation(value = "query_list",desc = "查询列表")
+    @Operation(value = "query_list", desc = "查询列表")
     @RequestMapping("/query_list")
     public RespVO<RespDataVO<EquipmentService>> queryByCondition(@RequestBody EquipmentService tplEquipmentService) {
 
@@ -144,13 +144,13 @@ public class EquipmentServiceController {
     /**
      * 上传附件
      */
-    @ApiOperation(value = "设备维修上传附件",httpMethod = "POST")
+    @ApiOperation(value = "设备维修上传附件", httpMethod = "POST")
     @ApiImplicitParams({
-            @ApiImplicitParam(value = "设备维修Id",name = "id",required = true,dataType = "long",paramType = "query")
+            @ApiImplicitParam(value = "设备维修Id", name = "id", required = true, dataType = "long", paramType = "query")
     })
-    @Operation(value = "uploadFile",desc="上传附件")
-    @RequestMapping(value = "/uploadFile",method = RequestMethod.POST)
-    public RespVO<Object> uploadFile(@RequestParam("id")Long id, @RequestParam MultipartFile  file){
+    @Operation(value = "uploadFile", desc = "上传附件")
+    @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
+    public RespVO<Object> uploadFile(@RequestParam("id") Long id, @RequestParam MultipartFile file) {
         RespVO<RespDataVO<DataFile>> stringRespVO = fileClient.upLoadFile(new MultipartFile[]{file}, null, "设备维修附件");
         if (stringRespVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
             return RespVOBuilder.failure("文件上传失败");
@@ -178,29 +178,28 @@ public class EquipmentServiceController {
     }
 
 
-
     /**
      * 上传附件
      */
-    @ApiOperation(value = "testUpLoad",httpMethod = "POST")
+    @ApiOperation(value = "testUpLoad", httpMethod = "POST")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "files", value = "多个文件，", paramType = "formData", allowMultiple = true, required = true, dataType = "file")
     })
-    @RequestMapping(value = "/testUpLoad",method = RequestMethod.POST,headers = "content-type=multipart/form-data")
-    public RespVO testUpLoad(@RequestParam(value = "files") MultipartFile[]  files){
-     return fileClient.testUpLoad(files);
+    @RequestMapping(value = "/testUpLoad", method = RequestMethod.POST, headers = "content-type=multipart/form-data")
+    public RespVO testUpLoad(@RequestParam(value = "files") MultipartFile[] files) {
+        return fileClient.testUpLoad(files);
     }
 
 
     /**
      * 上传附件
      */
-    @ApiOperation(value = "testOneUpLoad",httpMethod = "POST")
+    @ApiOperation(value = "testOneUpLoad", httpMethod = "POST")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "file", value = "1文件，", paramType = "formData", allowMultiple = true, required = true, dataType = "file")
     })
-    @RequestMapping(value = "/testOneUpLoad",method = RequestMethod.POST,headers = "content-type=multipart/form-data")
-    public RespVO testOneUpLoad(@RequestPart(value = "file") MultipartFile file){
+    @RequestMapping(value = "/testOneUpLoad", method = RequestMethod.POST, headers = "content-type=multipart/form-data")
+    public RespVO testOneUpLoad(@RequestPart(value = "file") MultipartFile file) {
         return fileClient.testOneUpLoad(file);
     }
 }

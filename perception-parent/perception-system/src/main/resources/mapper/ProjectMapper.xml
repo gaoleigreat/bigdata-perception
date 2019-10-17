@@ -196,15 +196,6 @@
     </sql>
 
     <!--
-        分页查询数据库表
-      -->
-    <select id="selectPaged" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from tpl_project
-    </select>
-
-    <!--
       根据主键查询数据库表
     -->
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">

@@ -36,12 +36,12 @@ public class EquipmentCostController {
     /**
      * 分页查询数据
      */
-    @ApiOperation(value = "查询维修费用", httpMethod = "POST")
+    @ApiOperation(value = "查询维修费用", httpMethod = "GET")
     @ApiImplicitParams({
 
     })
     @Operation(value = "select_paged", desc = "查询维修费用")
-    @RequestMapping(value = "/select_paged", method = RequestMethod.POST)
+    @RequestMapping(value = "/select_paged/{pageSize}/{pageIndex}", method = RequestMethod.GET)
     public RespVO<PagedResult<EquipmentCost>> selectPaged(@ModelAttribute EquipmentCost equipmentCost,
                                                                 @PathParam(value = "") Page page) {
         PagedResult<EquipmentCost> equipmentCostPagedResult = equipmentCostService.selectPaged(equipmentCost, page);

@@ -36,12 +36,12 @@ public class EquipmentServiceRecordController {
     /**
      * 分页查询数据
      */
-    @ApiOperation(value = "查询维修记录", httpMethod = "POST")
+    @ApiOperation(value = "查询维修记录", httpMethod = "GET")
     @ApiImplicitParams({
 
     })
     @Operation(value = "select_paged", desc = "查询维修记录")
-    @RequestMapping(value = "/select_paged/{pageSize}/{pageIndex}", method = RequestMethod.POST)
+    @RequestMapping(value = "/select_paged/{pageSize}/{pageIndex}", method = RequestMethod.GET)
     public RespVO<PagedResult<EquipmentServiceRecord>> selectPaged(@ModelAttribute EquipmentServiceRecord equipmentServiceRecord,
                                                                    @PathParam(value = "") Page page) {
         PagedResult<EquipmentServiceRecord> equipmentServiceRecordPagedResult = equipmentServiceRecordService.selectPaged(equipmentServiceRecord, page);

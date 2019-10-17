@@ -58,12 +58,12 @@ public class EquipmentMaintenanceDocController {
     /**
      * 分页查询数据
      */
-    @ApiOperation(value = "查询保养手册项", httpMethod = "POST")
+    @ApiOperation(value = "查询保养手册项", httpMethod = "GET")
     @ApiImplicitParams({
 
     })
     @Operation(value = "select_paged", desc = "查询保养手册项")
-    @RequestMapping(value = "/select_paged/{pageSize}/{pageIndex}", method = RequestMethod.POST)
+    @RequestMapping(value = "/select_paged/{pageSize}/{pageIndex}", method = RequestMethod.GET)
     public RespVO<PagedResult<EquipmentMaintenanceDoc>> selectPaged(@ModelAttribute EquipmentMaintenanceDoc equipmentMaintenanceDoc,
                                                                     @PathParam(value = "") Page page) {
         PagedResult<EquipmentMaintenanceDoc> selectPaged = iEquipmentMaintenanceDocService.selectPaged(equipmentMaintenanceDoc, page);

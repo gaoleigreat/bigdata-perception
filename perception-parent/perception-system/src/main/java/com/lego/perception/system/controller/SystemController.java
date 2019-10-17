@@ -11,6 +11,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.websocket.server.PathParam;
@@ -31,7 +32,7 @@ public class SystemController {
     /**
      * 分页查询数据
      */
-    @RequestMapping("/findPaged/{pageSize}/{pageIndex}")
+    @RequestMapping(value = "/findPaged/{pageSize}/{pageIndex}",method = RequestMethod.GET)
     public RespVO<PagedResult<TbSystem>> selectPaged(@ModelAttribute TbSystem tbSystem, @PathParam(value = "")Page page) {
         PagedResult<TbSystem> result = systemService.selectPaged(tbSystem,page);
         return RespVOBuilder.success(result);
