@@ -3,6 +3,7 @@ package com.lego.framework.equipment.model.entity;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.metadata.BaseRowModel;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,7 +20,8 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EquipmentMaintenanceDoc{
+@TableName(value = "tpl_equipment_maintenance_doc")
+public class EquipmentMaintenanceDoc {
     /**
      * 设备保养手册id
      */
