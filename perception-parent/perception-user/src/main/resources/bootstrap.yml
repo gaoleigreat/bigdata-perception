@@ -6,6 +6,8 @@ server:
       cookie:
         name: SSO-SUPERVISOR-CLIENT-SESSION-ID
 spring:
+  main:
+    allow-bean-definition-overriding: true
   application:
     name: user-service
   profiles:

@@ -3,6 +3,8 @@ server:
   servlet:
     context-path: /
 spring:
+  main:
+    allow-bean-definition-overriding: true
   application:
     name: business-service
   profiles:
@@ -17,13 +19,3 @@ spring:
 
 application:
   description: 业务服务
-
-
-logging:
-  level:
-    com:
-      lego:
-        framework:
-          template:
-            feign:
-              TemplateFeignClient: debug

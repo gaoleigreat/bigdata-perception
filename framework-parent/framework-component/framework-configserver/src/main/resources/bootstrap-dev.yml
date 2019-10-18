@@ -6,8 +6,6 @@ spring:
       server:
         native:
           search-locations: file:/home/work/config
-        #search-locations: classpath:/config/dev
-
           # git:
           #   uri: http://192.168.105.11:8888/SMP/config-repo.git
           #  username: yanglf

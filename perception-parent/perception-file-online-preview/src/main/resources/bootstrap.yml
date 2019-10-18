@@ -11,6 +11,8 @@ application:
   description: 文件预览服务
 
 spring:
+  main:
+    allow-bean-definition-overriding: true
   freemarker:
     cache: false
     charset: UTF-8
