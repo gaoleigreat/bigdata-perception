@@ -1,13 +1,18 @@
 package com.lego.equipment.service.service.impl;
 
+import com.framework.common.consts.RespConsts;
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
+import com.framework.common.sdto.RespVO;
 import com.framework.mybatis.utils.PageUtil;
 import com.lego.equipment.service.mapper.ServiceCommentMapper;
 import com.lego.equipment.service.service.IServiceCommentService;
 import com.lego.framework.equipment.model.entity.ServiceComment;
+import com.lego.framework.system.feign.UserClient;
+import com.lego.framework.system.model.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -23,15 +28,42 @@ public class ServiceCommentServiceImpl implements IServiceCommentService {
     @Autowired
     public ServiceCommentMapper serviceCommentMapper;
 
+    @Autowired
+    private UserClient userClient;
+
 
     @Override
     public PagedResult<ServiceComment> selectPaged(Page page, ServiceComment serviceComment) {
-        return PageUtil.queryPaged(page, serviceComment, serviceCommentMapper);
+        PagedResult<ServiceComment> pagedResult = PageUtil.queryPaged(page, serviceComment, serviceCommentMapper);
+        List<ServiceComment> resultList = pagedResult.getResultList();
+        if (!CollectionUtils.isEmpty(resultList)) {
+            for (ServiceComment comment : resultList) {
+                setUserInfo(comment);
+            }
+        }
+        return pagedResult;
+    }
+
+    private void setUserInfo(ServiceComment comment) {
+        Long creationBy = comment.getCreationBy();
+        User user = new User();
+        user.setId(creationBy);
+        RespVO<User> respVO = userClient.findUser(user);
+        if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
+            return;
+        }
+        User info = respVO.getInfo();
+        if (info != null) {
+            comment.setCreationName(info.getUsername());
+            comment.setCreationImg(info.getHeadImg());
+        }
     }
 
     @Override
     public ServiceComment selectByPrimaryKey(Long id) {
-        return serviceCommentMapper.selectByPrimaryKey(id);
+        ServiceComment serviceComment = serviceCommentMapper.selectByPrimaryKey(id);
+        setUserInfo(serviceComment);
+        return serviceComment;
     }
 
     @Override
@@ -96,7 +128,13 @@ public class ServiceCommentServiceImpl implements IServiceCommentService {
 
     @Override
     public List<ServiceComment> query(ServiceComment serviceComment) {
-        return serviceCommentMapper.query(serviceComment);
+        List<ServiceComment> commentList = serviceCommentMapper.query(serviceComment);
+        if (!CollectionUtils.isEmpty(commentList)) {
+            for (ServiceComment comment : commentList) {
+                setUserInfo(comment);
+            }
+        }
+        return commentList;
     }
 
     @Override

@@ -1,0 +1,21 @@
+server:
+  port: 38030
+  servlet:
+    context-path: /
+spring:
+  application:
+    name: statistics-service
+
+  profiles:
+    active: local
+  cloud:
+    stream:
+      bindings:
+        output_log:
+          destination: printLog
+          content-type: application/json
+
+
+
+application:
+  description: 统计服务

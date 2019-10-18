@@ -44,6 +44,7 @@ public class SwaggerConfig {
             resources.add(createResource("数据服务", "data-service"));
             resources.add(createResource("设备服务", "equipment-service"));
             resources.add(createResource("知识库管理", "knowledge-service"));
+            resources.add(createResource("统计服务", "statistics-service"));
 
             return resources;
         };
