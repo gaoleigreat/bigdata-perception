@@ -2,6 +2,8 @@ package com.lego.equipment.service.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.framework.common.consts.RespConsts;
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
@@ -28,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class EquipmentServiceServiceImpl implements IEquipmentServiceService {
+public class EquipmentServiceServiceImpl extends ServiceImpl<EquipmentServiceMapper, EquipmentService> implements IEquipmentServiceService {
     /*<AUTOGEN--BEGIN>*/
 
     @Autowired
@@ -52,13 +54,13 @@ public class EquipmentServiceServiceImpl implements IEquipmentServiceService {
         QueryWrapper wrapper = new QueryWrapper();
         WhereEntityTool.invoke(wrapper);
         IPage<EquipmentService> iPage = PageUtil.page2IPage(page);
-        com.baomidou.mybatisplus.extension.plugins.pagination.Page<EquipmentService> queryList = equipmentServiceMapper.queryList(iPage,wrapper);
+        com.baomidou.mybatisplus.extension.plugins.pagination.Page<EquipmentService> queryList = equipmentServiceMapper.queryList(iPage, wrapper);
         List<EquipmentService> records = queryList.getRecords();
         if (!CollectionUtils.isEmpty(records)) {
             for (EquipmentService record : records) {
                 Integer templateType = record.getTemplateType();
                 RespVO<FormTemplate> respVO = templateFeignClient.findByDataType(templateType);
-                if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE || respVO.getInfo()==null) {
+                if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE || respVO.getInfo() == null) {
                     continue;
                 }
                 FormTemplate formTemplate = respVO.getInfo();

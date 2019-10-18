@@ -1,12 +1,13 @@
 package com.lego.equipment.service.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.lego.framework.equipment.model.entity.EquipmentService;
 
 import java.util.List;
 
-public interface IEquipmentServiceService {
+public interface IEquipmentServiceService extends IService<EquipmentService> {
 
     PagedResult<EquipmentService> selectPaged(EquipmentService equipmentService, Page page);
     EquipmentService selectByPrimaryKey(Long id);
