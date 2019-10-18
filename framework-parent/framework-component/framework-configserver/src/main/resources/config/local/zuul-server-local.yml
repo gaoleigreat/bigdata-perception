@@ -10,6 +10,7 @@ zuul:
     data-service: /data-service/**
     equipment-service: /equipment-service/**
     knowledge-service: /knowledge-service/**
+    statistics-service: /statistics-service/**
   ignored-services: '*'
 
 
