@@ -42,6 +42,8 @@ eureka:
     lease-renewal-interval-in-seconds: 1
     lease-expiration-duration-in-seconds: 2
 spring:
+  main:
+    allow-bean-definition-overriding: true
   cloud:
     bus:
       trace:

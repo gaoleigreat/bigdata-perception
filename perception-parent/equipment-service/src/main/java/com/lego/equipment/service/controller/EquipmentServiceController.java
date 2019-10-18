@@ -183,9 +183,8 @@ public class EquipmentServiceController {
      */
     @ApiOperation(value = "testUpLoad", httpMethod = "POST")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "files", value = "多个文件，", paramType = "formData", allowMultiple = true, required = true, dataType = "file")
     })
-    @RequestMapping(value = "/testUpLoad", method = RequestMethod.POST, headers = "content-type=multipart/form-data")
+    @RequestMapping(value = "/testUpLoad", method = RequestMethod.POST)
     public RespVO testUpLoad(@RequestParam(value = "files") MultipartFile[] files) {
         return fileClient.testUpLoad(files);
     }
@@ -196,7 +195,6 @@ public class EquipmentServiceController {
      */
     @ApiOperation(value = "testOneUpLoad", httpMethod = "POST")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "file", value = "1文件，", paramType = "formData", allowMultiple = true, required = true, dataType = "file")
     })
     @RequestMapping(value = "/testOneUpLoad", method = RequestMethod.POST, headers = "content-type=multipart/form-data")
     public RespVO testOneUpLoad(@RequestPart(value = "file") MultipartFile file) {

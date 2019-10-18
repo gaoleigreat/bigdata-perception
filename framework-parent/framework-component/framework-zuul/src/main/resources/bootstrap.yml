@@ -13,6 +13,8 @@ server:
   servlet:
     context-path: /perception
 spring:
+  main:
+    allow-bean-definition-overriding: true
   application:
     name: zuul-server
   profiles:

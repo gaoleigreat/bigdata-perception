@@ -196,20 +196,15 @@ public class DataFileController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "files", value = "多个文件，", paramType = "formData", allowMultiple = true, required = true, dataType = "file")
     })
-    @PostMapping(value = "/testUpLoad", headers = "content-type=multipart/form-data",produces = {MediaType.APPLICATION_JSON_UTF8_VALUE},
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/testUpLoad")
     @Operation(value = "testUpLoad", desc = "test多文件上传")
     public RespVO testUpLoad(@RequestParam(value = "files", required = true)MultipartFile[] files) {
         return RespVOBuilder.success(files.length);
     }
 
     @ApiOperation(value = "testOneUpLoad", notes = "testOneUpLoad")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "file", value = "多个文件，", paramType = "formData", allowMultiple = true, required = true, dataType = "file")
-    })
-    @PostMapping(value = "/testOneUpLoad", headers = "content-type=multipart/form-data" ,produces = {MediaType.APPLICATION_JSON_UTF8_VALUE},
-
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ApiImplicitParams({})
+    @PostMapping(value = "/testOneUpLoad", headers = "content-type=multipart/form-data")
     @Operation(value = "testOneUpLoad", desc = "testOneUpLoad")
     public RespVO testOneUpLoad(@RequestParam(value = "file", required = true)MultipartFile file) {
         return RespVOBuilder.success(file.getSize());

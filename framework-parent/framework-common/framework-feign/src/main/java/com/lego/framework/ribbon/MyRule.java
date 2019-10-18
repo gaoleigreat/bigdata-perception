@@ -1,3 +1,4 @@
+/*
 package com.lego.framework.ribbon;
 
 import com.netflix.client.config.IClientConfig;
@@ -11,11 +12,13 @@ import org.springframework.util.CollectionUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+*/
 /**
  * @author yanglf
  * @description
  * @since 2019/7/17
- **/
+ **//*
+
 @Slf4j
 public class MyRule extends AbstractLoadBalancerRule {
 
@@ -62,10 +65,12 @@ public class MyRule extends AbstractLoadBalancerRule {
         if (!CollectionUtils.isEmpty(upList)) {
             for (Server server : upList) {
                 String host = server.getHost();
-               /* if(ArrayUtils.contains(blackInstances,host)){
+               */
+/* if(ArrayUtils.contains(blackInstances,host)){
                     loadBalancer.markServerDown(server);
                     continue;
-                }*/
+                }*//*
+
                 if (!ArrayUtils.contains(localhost, host)) {
                     continue;
                 }
@@ -77,3 +82,4 @@ public class MyRule extends AbstractLoadBalancerRule {
         return availableServers;
     }
 }
+*/
