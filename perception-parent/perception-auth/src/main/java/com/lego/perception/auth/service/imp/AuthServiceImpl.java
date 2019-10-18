@@ -1,6 +1,4 @@
 package com.lego.perception.auth.service.imp;
-
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.framework.common.consts.RespConsts;
 import com.framework.common.sdto.*;
@@ -240,7 +238,7 @@ public class AuthServiceImpl implements IAuthService {
         try {
             User user = new User();
             user.setIdCardNO(idNumber);
-            RespVO<User> respVO = userClient.findUserById(user);
+            RespVO<User> respVO = userClient.findUser(user);
             if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
                 return RespVOBuilder.failure();
             }

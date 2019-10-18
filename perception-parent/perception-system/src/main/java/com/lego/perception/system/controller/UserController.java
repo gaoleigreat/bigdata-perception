@@ -165,9 +165,9 @@ public class UserController {
     }
 
     @ApiOperation("查询用户")
-    @RequestMapping(value = "/findUserById", method = RequestMethod.POST)
-    public RespVO<User> findUserById(@RequestBody User user) {
-        return RespVOBuilder.success(userService.findById(user));
+    @RequestMapping(value = "/findUser", method = RequestMethod.POST)
+    public RespVO<User> findUser(@RequestBody User user) {
+        return RespVOBuilder.success(userService.findUser(user));
     }
 
     @ApiOperation("查询全部用户")

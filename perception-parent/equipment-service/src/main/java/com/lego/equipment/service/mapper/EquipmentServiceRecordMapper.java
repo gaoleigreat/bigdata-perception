@@ -2,6 +2,7 @@ package com.lego.equipment.service.mapper;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.framework.mybatis.mapper.Mapper;
 import com.lego.framework.equipment.model.entity.EquipmentServiceRecord;
 import org.apache.ibatis.annotations.Param;
@@ -63,6 +64,6 @@ public interface EquipmentServiceRecordMapper extends Mapper<EquipmentServiceRec
      * @param wrapper
      * @return
      */
-    List<EquipmentServiceRecord> queryList(@Param(value = "page") IPage<EquipmentServiceRecord> page,
+    Page<EquipmentServiceRecord> queryList(@Param(value = "page") IPage<EquipmentServiceRecord> page,
                                            @Param(value = "ew") QueryWrapper<EquipmentServiceRecord> wrapper);
 }

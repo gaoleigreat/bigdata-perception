@@ -24,8 +24,8 @@ public interface UserClient {
      * @param user
      * @return
      */
-    @RequestMapping(value = "/findUserById", method = RequestMethod.POST)
-    RespVO<User> findUserById(@RequestBody User user);
+    @RequestMapping(value = "/findUser", method = RequestMethod.POST)
+    RespVO<User> findUser(@RequestBody User user);
 
 
 }

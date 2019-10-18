@@ -57,7 +57,7 @@ public class LogServiceImpl implements ILogService {
         log.setCreateTime(new Date());
         Long userId = log.getUserId();
         if (userId != null) {
-            RespVO<User> respVO = userClient.findUserById(User.builder().id(userId).build());
+            RespVO<User> respVO = userClient.findUser(User.builder().id(userId).build());
             if (respVO.getRetCode() == RespConsts.SUCCESS_RESULT_CODE) {
                 User user = respVO.getInfo();
                 if (user != null) {

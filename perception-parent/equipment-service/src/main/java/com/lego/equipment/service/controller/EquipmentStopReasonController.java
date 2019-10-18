@@ -15,8 +15,10 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import javax.websocket.server.PathParam;
 import java.util.List;
+
 /**
  * @author itar
  * @email wuhandzy@gmail.com
@@ -53,7 +55,7 @@ public class EquipmentStopReasonController {
      */
     @ApiOperation(value = "查询停机原因", httpMethod = "GET")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "停机原因ID", dataType = "String", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "id", value = "停机原因ID", dataType = "long", required = true, paramType = "query"),
     })
     @Operation(value = "select_by_id", desc = "查询停机原因")
     @RequestMapping(value = "/select_by_id", method = RequestMethod.GET)
@@ -69,7 +71,7 @@ public class EquipmentStopReasonController {
      */
     @ApiOperation(value = "删除停机原因", httpMethod = "DELETE")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "停机原因ID", dataType = "String", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "id", value = "停机原因ID", dataType = "long", required = true, paramType = "query"),
     })
     @Operation(value = "delete_by_id", desc = "删除停机原因")
     @RequestMapping(value = "/delete_by_id", method = RequestMethod.DELETE)

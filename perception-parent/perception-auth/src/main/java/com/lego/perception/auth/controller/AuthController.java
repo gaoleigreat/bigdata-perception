@@ -117,7 +117,7 @@ public class AuthController {
             // 删除之前的  token
             iAuthService.deleteUserToken(token, deviceType);
         }
-        RespVO<User> userRespVO = userClient.findUserById(User.builder().id(userId).build());
+        RespVO<User> userRespVO = userClient.findUser(User.builder().id(userId).build());
         if (userRespVO.getRetCode() == RespConsts.SUCCESS_RESULT_CODE) {
             User user = userRespVO.getInfo();
             if (user != null) {
@@ -177,7 +177,7 @@ public class AuthController {
 
     @RequestMapping(value = "/setAuthVo", method = RequestMethod.POST)
     public RespVO setAuthVo(@RequestParam Long userId, String deviceType, String token) {
-        RespVO<User> userRespVO = userClient.findUserById(User.builder().id(userId).build());
+        RespVO<User> userRespVO = userClient.findUser(User.builder().id(userId).build());
         if (userRespVO.getRetCode() == RespConsts.SUCCESS_RESULT_CODE) {
             User user = userRespVO.getInfo();
             if (user != null) {

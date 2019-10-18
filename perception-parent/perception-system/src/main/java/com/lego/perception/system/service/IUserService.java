@@ -126,7 +126,7 @@ public interface IUserService {
 	 * @param user
 	 * @return
 	 */
-    User findById(User user);
+    User findUser(User user);
 
 	/**
 	 * 返回用户信息

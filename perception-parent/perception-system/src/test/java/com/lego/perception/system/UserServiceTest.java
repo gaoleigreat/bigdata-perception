@@ -63,7 +63,7 @@ public class UserServiceTest {
      */
     @Test
     public void testFindById() {
-        iUserService.findById(User.builder().id(1L).build());
+        iUserService.findUser(User.builder().id(1L).build());
 
     }
 

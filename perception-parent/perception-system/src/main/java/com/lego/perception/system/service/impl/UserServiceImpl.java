@@ -247,7 +247,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public User findById(User user) {
+    public User findUser(User user) {
         List<User> userList = userMapper.findList(user);
         if (userList == null || userList.size() <= 0) {
             return null;

@@ -137,7 +137,7 @@ public class LoginController {
         User user = new User();
         user.setPassword(SecurityUtils.encryptionWithMd5(password));
         user.setUsername(userName);
-        RespVO<User> respVO = userClient.findUserById(user);
+        RespVO<User> respVO = userClient.findUser(user);
         if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
             return RespVOBuilder.failure();
         }
