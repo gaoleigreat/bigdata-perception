@@ -38,8 +38,7 @@ public class LocalDataController {
     @ApiOperation(value = "formatted", notes = "格式化文件上传")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "files", value = "格式化文件上传，", paramType = "formData", allowMultiple = true, required = true, dataType = "file"),
-            @ApiImplicitParam(name = "equipmentId", value = "模板Id，", paramType = "query", required = true, dataType = "Long"),
-            @ApiImplicitParam(name = "equipmentCode", value = "工程Id，", paramType = "query", required = false, dataType = "Long"),
+            @ApiImplicitParam(name = "projectId", value = "工程Id，", paramType = "query", required = false, dataType = "Long"),
             @ApiImplicitParam(name = "remark", value = "说明，", paramType = "query", required = false, dataType = "String"),
             @ApiImplicitParam(name = "tags", value = "标签，", paramType = "query", required = false, dataType = "String"),
     })
