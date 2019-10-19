@@ -161,7 +161,7 @@
              check_date = #{dataFile.checkDate,jdbcType=TIMESTAMP},
           </if>
           <if test="dataFile.checkBy != null">
-             check_by = #{dataFile.checkBy,jdbcType=INTEGER},
+             check_by = #{dataFile.checkBy,jdbcType=BIGINT},
           </if>
           <if test="dataFile.publishFlag != null">
              publish_flag = #{dataFile.publishFlag,jdbcType=INTEGER},
