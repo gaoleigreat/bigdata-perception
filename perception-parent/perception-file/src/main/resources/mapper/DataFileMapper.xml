@@ -346,7 +346,7 @@
 
     <!--批量添加记录到数据库表中-->
     <insert id="batchInsert" parameterType="java.util.List">
-        insert into data_file
+        insert into tpl_data_file
         <trim prefix="(" suffix=")" suffixOverrides=",">
              id,
              name,
@@ -405,7 +405,7 @@
     <!-- 根据主键批量更新数据库表中的记录-->
     <update id="batchUpdate" parameterType="java.util.List">
         <foreach collection="list" index="index" item="item" separator=";">
-            update data_file
+            update tpl_data_file
             <set>
                 <trim suffixOverrides=",">
                     id = #{item.id,jdbcType=BIGINT},
@@ -443,7 +443,7 @@
 
     <!--存在即更新否则插入-->
     <update id="upsert" parameterType="com.lego.framework.system.model.entity.DataFile">
-        insert into data_file
+        insert into tpl_data_file
         <trim prefix="(" suffix=")" suffixOverrides=",">
              id ,
              name ,
@@ -523,7 +523,7 @@
 
     <!--带有空值检查的存在即更新否则插入-->
     <update id="upsertSelective" parameterType="com.lego.framework.system.model.entity.DataFile">
-        insert into data_file
+        insert into tpl_data_file
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="dataFile.id != null">
                 id,
@@ -735,14 +735,14 @@
     <select id="query" resultMap="BaseResultMap" parameterType="com.lego.framework.system.model.entity.DataFile">
         select
         <include refid="Base_Column_List"/>
-        from data_file
+        from tpl_data_file
         <where>
             <include refid="Base_Query_Where"></include>
         </where>
     </select>
 
     <select id="queryTotalCount" resultType="long">
-        select count(*) from data_file
+        select count(*) from tpl_data_file
     </select>
 
 
