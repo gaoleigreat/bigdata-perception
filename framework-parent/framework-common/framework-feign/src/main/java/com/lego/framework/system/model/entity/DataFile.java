@@ -1,5 +1,6 @@
 package com.lego.framework.system.model.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.lego.framework.config.BaseModel;
@@ -17,13 +18,10 @@ import java.util.Date;
 
 @Data
 @TableName("tpl_data_file")
-public class DataFile extends BaseModel implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
+public class DataFile extends BaseModel {
 
     /**
-     *文件Id
+     * 文件Id
      */
     @TableId
     @ApiModelProperty("文件Id")
@@ -31,7 +29,7 @@ public class DataFile extends BaseModel implements Serializable {
 
 
     /**
-     *文件名称
+     * 文件名称
      */
 
     @ApiModelProperty("文件名称")
@@ -39,7 +37,7 @@ public class DataFile extends BaseModel implements Serializable {
 
 
     /**
-     *文件类型
+     * 文件类型
      */
 
     @ApiModelProperty("文件类型")
@@ -47,7 +45,7 @@ public class DataFile extends BaseModel implements Serializable {
 
 
     /**
-     *工程id
+     * 工程id
      */
 
     @ApiModelProperty("工程id")
@@ -55,7 +53,7 @@ public class DataFile extends BaseModel implements Serializable {
 
 
     /**
-     *文件路径
+     * 文件路径
      */
 
     @ApiModelProperty("文件路径")
@@ -63,7 +61,7 @@ public class DataFile extends BaseModel implements Serializable {
 
 
     /**
-     *预览url
+     * 预览url
      */
 
     @ApiModelProperty("预览url")
@@ -71,7 +69,7 @@ public class DataFile extends BaseModel implements Serializable {
 
 
     /**
-     *业务模板id
+     * 业务模板id
      */
 
     @ApiModelProperty("业务模板id")
@@ -79,7 +77,7 @@ public class DataFile extends BaseModel implements Serializable {
 
 
     /**
-     *是否审核(0-待审核;1-审核通过;2-审核驳回)
+     * 是否审核(0-待审核;1-审核通过;2-审核驳回)
      */
 
     @ApiModelProperty("是否审核(0-待审核;1-审核通过;2-审核驳回)")
@@ -87,7 +85,7 @@ public class DataFile extends BaseModel implements Serializable {
 
 
     /**
-     *审核时间
+     * 审核时间
      */
 
     @ApiModelProperty("审核时间")
@@ -95,7 +93,7 @@ public class DataFile extends BaseModel implements Serializable {
 
 
     /**
-     *审核人
+     * 审核人
      */
 
     @ApiModelProperty("审核人")
@@ -103,7 +101,7 @@ public class DataFile extends BaseModel implements Serializable {
 
 
     /**
-     *是否发布(0-否;1-是)
+     * 是否发布(0-否;1-是)
      */
 
     @ApiModelProperty("是否发布(0-否;1-是)")
@@ -111,7 +109,7 @@ public class DataFile extends BaseModel implements Serializable {
 
 
     /**
-     *发布时间
+     * 发布时间
      */
 
     @ApiModelProperty("发布时间")
@@ -119,7 +117,7 @@ public class DataFile extends BaseModel implements Serializable {
 
 
     /**
-     *发布人
+     * 发布人
      */
 
     @ApiModelProperty("发布人")
@@ -127,7 +125,7 @@ public class DataFile extends BaseModel implements Serializable {
 
 
     /**
-     *数据类型(1-结构化数据;2-非结构化数据)
+     * 数据类型(1-结构化数据;2-非结构化数据)
      */
 
     @ApiModelProperty("数据类型(1-结构化数据;2-非结构化数据)")
@@ -135,7 +133,7 @@ public class DataFile extends BaseModel implements Serializable {
 
 
     /**
-     *是否删除
+     * 是否删除
      */
 
     @ApiModelProperty("是否删除")
@@ -143,7 +141,7 @@ public class DataFile extends BaseModel implements Serializable {
 
 
     /**
-     *文件说明
+     * 文件说明
      */
 
     @ApiModelProperty("文件说明")
@@ -151,7 +149,7 @@ public class DataFile extends BaseModel implements Serializable {
 
 
     /**
-     *标签
+     * 标签
      */
 
     @ApiModelProperty("标签")
@@ -159,7 +157,7 @@ public class DataFile extends BaseModel implements Serializable {
 
 
     /**
-     *批次号
+     * 批次号
      */
 
     @ApiModelProperty("批次号")
@@ -167,7 +165,7 @@ public class DataFile extends BaseModel implements Serializable {
 
 
     /**
-     *创建人
+     * 创建人
      */
 
     @ApiModelProperty("创建人")
@@ -175,7 +173,7 @@ public class DataFile extends BaseModel implements Serializable {
 
 
     /**
-     *创建时间
+     * 创建时间
      */
 
     @ApiModelProperty("创建时间")
@@ -183,7 +181,7 @@ public class DataFile extends BaseModel implements Serializable {
 
 
     /**
-     *最后修改人
+     * 最后修改人
      */
 
     @ApiModelProperty("最后修改人")
@@ -191,14 +189,14 @@ public class DataFile extends BaseModel implements Serializable {
 
 
     /**
-     *最后修改时间
+     * 最后修改时间
      */
 
     @ApiModelProperty("最后修改时间")
     private Date lastUpdateDate;
 
 
-    public DataFile(String name, String fileType, Long projectId, String fileUrl, String previewUrl, Long templateId, int checkFlag, int dataType, Integer deleteFlag,String remark,String tags,String batchNum) {
+    public DataFile(String name, String fileType, Long projectId, String fileUrl, String previewUrl, Long templateId, int checkFlag, int dataType, Integer deleteFlag, String remark, String tags, String batchNum) {
         Date currentTime = new Date();
         this.name = name;
         this.fileType = fileType;
