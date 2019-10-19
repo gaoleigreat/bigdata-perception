@@ -44,96 +44,178 @@ public class DataFileServiceImpl implements IDataFileService {
     @Value("${hdfs.savePath}")
     private String savePath;
 
+
     @Override
-    public DataFile findById(Long id) {
-        return dataFileMapper.selectById(id);
+    public PagedResult<DataFile> selectPaged(DataFile dataFile, Page page) {
+        return PageUtil.queryPaged(page,dataFile,dataFileMapper);
     }
 
+    /**
+     * 创建DataFile
+     *
+     * @param dataFile
+     * @return
+     */
     @Override
-    public PagedResult findPagedList(DataFile dataFile, Page page) {
-        PagedResult pagedResult = PageUtil.queryPaged(page, dataFile, dataFileMapper);
-        if (!CollectionUtils.isEmpty(pagedResult.getResultList())) {
-            List<DataFile> resultList = pagedResult.getResultList();
+    public Integer insert(DataFile dataFile) {
+        if (dataFile == null) {
+            return 0;
         }
-        return pagedResult;
+        return dataFileMapper.insert(dataFile);
     }
 
 
+    /**
+     * 根据主键删除
+     *
+     * @param id
+     * @return
+     */
     @Override
-    public RespVO<Long> insert(DataFile dataFile) {
-        int result = 0;
-        if (dataFile != null) {
-            result = dataFileMapper.insert(dataFile);
+    public Integer deleteByPrimaryKey(Long id) {
+        if (id == null) {
+            return 0;
         }
-        if (result > 0) {
-            return RespVOBuilder.success(dataFile.getId());
-        }
-        return RespVOBuilder.failure("插入失敗");
-    }
-
-    @Override
-    public RespVO<RespDataVO<Long>> insertList(List<DataFile> dataFiles) {
-        if (CollectionUtils.isNotEmpty(dataFiles)) {
-            dataFiles.forEach(f -> {
-                dataFileMapper.insert(f);
-            });
-
-        }
-
-        return RespVOBuilder.success(dataFiles.stream().map(DataFile::getId).collect(Collectors.toList()));
+        Integer result = dataFileMapper.deleteById(id);
+        return result;
 
     }
 
+    /**
+     * 修改DataFile
+     *
+     * @param dataFile
+     * @return
+     */
     @Override
-    public RespVO update(DataFile dataFile) {
-        int result = 0;
-        if (dataFile != null && dataFile.getId() != null) {
-            result = dataFileMapper.updateById(dataFile);
+    public Integer updateByPrimaryKey(DataFile dataFile) {
+        if (dataFile == null) {
+            return 0;
         }
-        if (result > 0) {
-            return RespVOBuilder.success();
-        }
-        return RespVOBuilder.failure("更新失敗");
+        return dataFileMapper.updateById(dataFile);
     }
 
+    /**
+     * 根据主键查询
+     *
+     * @param id
+     * @return
+     */
     @Override
-    public RespVO updateList(List<DataFile> dataFiles) {
-        int result = 0;
-        if (CollectionUtils.isNotEmpty(dataFiles)) {
-            result = dataFileMapper.updateList(dataFiles);
+    public DataFile selectByPrimaryKey(Long id) {
+        if (id == null) {
+            return null;
         }
-        if (result > 0) {
-            return RespVOBuilder.success();
+        DataFile dataFile = dataFileMapper.selectById(id);
+        if (dataFile == null) {
+            return null;
         }
-        return RespVOBuilder.failure("更新失敗");
+        return dataFile;
     }
 
+
+    /**
+     * 批量插入
+     *
+     * @param list List<DataFile
+     * @return Integer
+     */
     @Override
-    public RespVO delete(Long id) {
-        int result = 0;
-        QueryWrapper<DataFile> queryWrapper = Wrappers.query();
-        queryWrapper.eq("id", id);
-        DataFile dataFile = new DataFile();
-        dataFile.setDeleteFlag(2);
-        result = dataFileMapper.update(dataFile, queryWrapper);
-        if (result > 0) {
-            return RespVOBuilder.success();
+    public Integer batchInsert(List<DataFile> list) {
+        if (CollectionUtils.isEmpty(list)) {
+            return 0;
+        } else {
+            return dataFileMapper.batchInsert(list);
         }
-        return RespVOBuilder.failure("删除失败");
     }
 
+    /**
+     * 批量更新
+     *
+     * @param list List<DataFile>
+     * @return Integer
+     */
     @Override
-    public RespVO deleteList(List<Long> ids) {
-        int result = 0;
-        if (CollectionUtils.isNotEmpty(ids)) {
-            result = dataFileMapper.deleteList(ids);
+    public Integer batchUpdate(List<DataFile> list) {
+        if (CollectionUtils.isEmpty(list)) {
+            return 0;
+        } else {
+            return dataFileMapper.batchInsert(list);
         }
-        dataFileMapper.deleteList(ids);
-        if (result > 0) {
-            return RespVOBuilder.success();
-        }
-        return RespVOBuilder.failure("删除失败");
     }
+
+    /**
+     * 批量删除
+     *
+     * @param list List<Long >
+     * @return Integer
+     */
+    @Override
+    public Integer deleteBatchIds(List<Long> list) {
+        if (CollectionUtils.isEmpty(list)) {
+            return 0;
+        } else {
+            return dataFileMapper.deleteBatchIds(list);
+        }
+    }
+
+    /**
+     * 存在即更新
+     *
+     * @param dataFile DataFile
+     * @return Integer
+     */
+    @Override
+    public Integer upsert(DataFile dataFile) {
+
+        if (dataFile == null) {
+            return 0;
+        } else {
+            return dataFileMapper.upsert(dataFile);
+        }
+
+    }
+
+    /**
+     * 存在即更新，可选择具体属性
+     *
+     * @param dataFile DataFile
+     * @return Integer
+     */
+    @Override
+    public Integer upsertSelective(DataFile dataFile) {
+        if (dataFile == null) {
+            return 0;
+        } else {
+            return dataFileMapper.upsert(dataFile);
+        }
+    }
+
+    /**
+     * 条件查询
+     *
+     * @param dataFile DataFile
+     * @return List<DataFile>
+     */
+    @Override
+    public List<DataFile> query(DataFile dataFile) {
+        if (dataFile == null) {
+            return null;
+        } else {
+            return dataFileMapper.query(dataFile);
+        }
+    }
+
+    /**
+     * 查询总数
+     *
+     * @return Integer
+     */
+    @Override
+    public Long queryTotalCount() {
+        return dataFileMapper.queryTotalCount();
+    }
+
 
     @Override
     public RespVO selectBybatchNums(List<String> batchNums, String tags) {
@@ -150,38 +232,6 @@ public class DataFileServiceImpl implements IDataFileService {
         wrapper.in("batch_num", batchNums);
         List<DataFile> dataFiles = dataFileMapper.selectList(wrapper);
         return RespVOBuilder.success(dataFiles);
-    }
-
-
-    private QueryWrapper<DataFile> query(DataFile dataFile) {
-        QueryWrapper queryWrapper = Wrappers.query();
-
-        if (dataFile != null) {
-            if (dataFile.getId() != null) {
-                queryWrapper.eq("id", dataFile.getId());
-            }
-            if (dataFile.getName() != null) {
-                queryWrapper.eq("name", dataFile.getName());
-            }
-            if (dataFile.getFileUrl() != null) {
-                queryWrapper.eq("file_url", dataFile.getFileUrl());
-            }
-            if (dataFile.getPreviewUrl() != null) {
-                queryWrapper.eq("preview_url", dataFile.getPreviewUrl());
-            }
-            if (dataFile.getFileType() != null) {
-                queryWrapper.eq("file_type", dataFile.getFileType());
-            }
-            if (dataFile.getCreatedBy() != null) {
-                queryWrapper.eq("created_by", dataFile.getCreatedBy());
-            }
-
-            if (dataFile.getLastUpdatedBy() != null) {
-                queryWrapper.eq("last_updated_by", dataFile.getLastUpdatedBy());
-            }
-
-        }
-        return queryWrapper;
     }
 
 
@@ -213,11 +263,13 @@ public class DataFileServiceImpl implements IDataFileService {
             dataFile.setTags(tags);
             dataFileList.add(dataFile);
         });
-        RespVO<RespDataVO<Long>> respDataVORespVO = insertList(dataFileList);
-        if (respDataVORespVO.getRetCode() != 1) {
-            ExceptionBuilder.operateFailException("上传文件失败");
+
+        Integer num = dataFileMapper.batchInsert(dataFileList);
+        if (num == dataFileList.size()) {
+            return RespVOBuilder.success(dataFileList);
+        } else {
+            return RespVOBuilder.failure("上传失败");
         }
-        return RespVOBuilder.success(dataFileList);
     }
 
 

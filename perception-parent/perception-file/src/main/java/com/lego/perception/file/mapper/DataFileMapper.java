@@ -10,48 +10,45 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 public interface DataFileMapper extends Mapper<DataFile> {
-
     /**
-     * 查询列表
-     *
-     * @param dataFile
-     * @return
+     * 批量插入
+     * @param list List<DataFile
+     * @return Integer
      */
-    List<DataFile> findList(DataFile dataFile);
-
-
-
-    /**
-     * 批量新增
-     *
-     * @param list
-     * @return
-     */
-    Integer insertList(List<DataFile> list);
-
+    Integer batchInsert(List<DataFile> list);
 
     /**
      * 批量更新
-     *
-     * @param dataFiles
-     * @return
+     * @param list List<DataFile>
+     * @return Integer
      */
-    Integer updateList(List<DataFile> list);
-
-
+    Integer batchUpdate(List<DataFile> list);
 
     /**
-     * 批量删除
-     *
-     * @param ids
-     * @return
+     * 存在即更新
+     * @param dataFile DataFile
+     * @return Integer
      */
-    Integer deleteList(List<Long> list);
+    Integer upsert(@Param("dataFile") DataFile dataFile);
 
+    /**
+     * 存在即更新，可选择具体属性
+     * @param dataFile DataFile
+     * @return Integer
+     */
+    Integer upsertSelective(@Param("dataFile") DataFile dataFile);
 
+    /**
+     * 条件查询
+     * @param dataFile DataFile
+     * @return List<DataFile>
+     */
+    List<DataFile> query(@Param("dataFile") DataFile dataFile);
 
-
-    IPage<DataFile> queryList(IPage<DataFile> page, @Param("ew") Wrapper<DataFile> queryWrapper, @Param("dataFile") DataFile dataFile);
-
+    /**
+     * 查询总数
+     * @return Integer
+     */
+    Long queryTotalCount();
 
 }

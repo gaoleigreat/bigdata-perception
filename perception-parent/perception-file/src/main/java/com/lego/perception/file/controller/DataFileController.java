@@ -6,6 +6,7 @@ import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.utils.UuidUtils;
+import com.lego.framework.equipment.model.entity.EquipmentCost;
 import com.lego.framework.system.model.entity.DataFile;
 import com.lego.perception.file.model.UploadFile;
 import com.lego.perception.file.service.IDataFileService;
@@ -17,11 +18,13 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import com.framework.common.page.Page;
 
+import javax.websocket.server.PathParam;
 import java.io.IOException;
 import java.util.*;
 
@@ -85,83 +88,117 @@ public class DataFileController {
                 e.printStackTrace();
             }
         });
-        dataFileService.insertList(dataFiles);
+        dataFileService.batchInsert(dataFiles);
         return RespVOBuilder.success(returnList);
     }
 
 
-    @GetMapping(value = "/getDataFileById")
-    @ApiOperation(value = "根据Id查询详情", httpMethod = "GET")
-    @ApiImplicitParams(
-            {
-
-            }
-    )
-    public RespVO<DataFile> getDataFileById(@RequestParam Long id) {
-        DataFile dataFile = dataFileService.findById(id);
-        if (dataFile != null) {
-            return RespVOBuilder.success(dataFile);
-        }
-        return RespVOBuilder.failure("文件不存在");
-    }
-
-
-    @ApiOperation(value = "分页查询", notes = "分页查询")
+    /**
+     * 分页查询数据
+     */
+    @ApiOperation(value = "查询维修费用", httpMethod = "GET")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "pageIndex", value = "pageIndex，", paramType = "query", required = true, dataType = "int"),
-            @ApiImplicitParam(name = "pageSize", value = "pageSize，", paramType = "query", required = true, dataType = "int"),
-    })
-    @RequestMapping(value = "/findPagedList", method = RequestMethod.GET)
-    @Operation(value = "find", desc = "查询")
-    public RespVO< PagedResult<DataFile>> findPagedList(@ModelAttribute DataFile dataFile, @RequestParam(value = "pageIndex") int pageIndex,
-                                                 @RequestParam(required = false, defaultValue = "10") int pageSize) {
-        Page page = new Page();
-        page.setPageIndex(pageIndex);
-        page.setPageSize(pageSize);
 
-        PagedResult<DataFile> dataFilePagedResult = dataFileService.findPagedList(dataFile, page);
+    })
+    @Operation(value = "select_paged", desc = "查询维修费用")
+    @RequestMapping(value = "/select_paged/{pageSize}/{pageIndex}", method = RequestMethod.GET)
+    public RespVO<PagedResult<DataFile>> selectPaged(@ModelAttribute DataFile dataFile,
+                                                          @PathParam(value = "") Page page) {
+        PagedResult<DataFile> dataFilePagedResult = dataFileService.selectPaged(dataFile, page);
         return RespVOBuilder.success(dataFilePagedResult);
     }
 
-    @ApiOperation(value = "批量新增", notes = "批量新增")
+    @ApiOperation(value = "通过主键id查询DataFile", notes = "通过主键id查询DataFile")
     @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", paramType = "path", value = "id", required = true, dataType = "Long")
     })
-    @RequestMapping(value = "/insertList", method = RequestMethod.POST)
-    @Operation(value = "insert", desc = "批量新增")
-    public RespVO<RespDataVO<Long>> insertList(@RequestBody List<DataFile> dataFiles) {
-
-        return dataFileService.insertList(dataFiles);
+    @GetMapping("/{id}")
+    public RespVO<DataFile> selectByPrimaryKey(@PathVariable(value = "id") Long id) {
+        DataFile dataFile =
+                dataFileService.selectByPrimaryKey(id);
+        if (dataFile == null) {
+            return RespVOBuilder.failure("当前DataFile不存在");
+        } else {
+            return RespVOBuilder.success(dataFile);
+        }
     }
 
-    @ApiOperation(value = "更新", notes = "更新")
+    @ApiOperation(value = "通过主键id删除DataFile", notes = "通过主键id删除DataFile")
     @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", paramType = "path", value = "id", required = true, dataType = "Long")
     })
-    @RequestMapping(value = "/updateList", method = RequestMethod.POST)
-    @Operation(value = "update", desc = "更新")
-    public RespVO updateList(@RequestBody List<DataFile> dataFiles) {
-
-        return dataFileService.updateList(dataFiles);
+    @DeleteMapping("/{id}")
+    public RespVO deleteByPrimaryKey(@PathVariable(value = "id") Long id) {
+        Integer num = dataFileService.deleteByPrimaryKey(id);
+        if (num == 0) {
+            return RespVOBuilder.failure("删除DataFile失败");
+        } else {
+            return RespVOBuilder.success("删除DataFile成功");
+        }
     }
 
-    @ApiOperation(value = "删除", notes = "删除")
+    @ApiOperation(value = "新增DataFile", notes = "新增DataFile")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "id，", paramType = "query", required = true, dataType = "String")
     })
-    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
-    @Operation(value = "delete", desc = "删除")
-    public RespVO deleteList(@RequestParam Long id) {
-        return dataFileService.delete(id);
+    @PostMapping("/")
+    public RespVO insert(@RequestBody DataFile dataFile) {
+        if (dataFile == null) {
+            return RespVOBuilder.failure("参数不能为空");
+        }
+        Integer num = dataFileService.insert(dataFile);
+        if (num == 0) {
+            return RespVOBuilder.failure("添加DataFile失败");
+        } else {
+            return RespVOBuilder.success("添加DataFile成功");
+        }
     }
 
-    @ApiOperation(value = "批量删除", notes = "批量删除")
+    @ApiOperation(value = "修改DataFile", notes = "修改DataFile")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "ids", value = "ids", paramType = "query", required = true, dataType = "String")
     })
-    @RequestMapping(value = "/deleteList", method = RequestMethod.POST)
-    @Operation(value = "delete", desc = "批量删除")
-    public RespVO deleteList(@RequestBody List<Long> ids) {
-        return dataFileService.deleteList(ids);
+    @PutMapping("/")
+    public RespVO updateByPrimaryKey(@RequestBody DataFile dataFile) {
+        if (dataFile == null) {
+            return RespVOBuilder.failure("参数不能为空");
+        }
+        Integer num = dataFileService.updateByPrimaryKey(dataFile);
+        if (num == 0) {
+            return RespVOBuilder.failure("修改DataFile失败");
+        } else {
+            return RespVOBuilder.success("修改DataFile成功");
+        }
     }
+
+
+    @ApiOperation(value = "通过主键id批量删除DataFile", notes = "通过主键id批量删除DataFile")
+    @ApiImplicitParams({
+    })
+    @DeleteMapping("/deleteBatchPrimaryKeys")
+    public RespVO deleteBatchPrimaryKeys(@RequestBody List<Long> list) {
+        if (CollectionUtils.isEmpty(list)) {
+            return RespVOBuilder.failure("参数不能为空");
+        }
+        Integer num = dataFileService.deleteBatchIds(list);
+        if (num == 0) {
+            return RespVOBuilder.failure("批量删除DataFile失败");
+        } else {
+            return RespVOBuilder.success("批量删除DataFile成功");
+        }
+    }
+
+
+    @ApiOperation(value = "条件查询DataFile", notes = "条件查询DataFile")
+    @ApiImplicitParams({
+    })
+    @PostMapping("/list")
+    public RespVO query(@RequestBody DataFile dataFile) {
+        if (dataFile == null) {
+            return RespVOBuilder.failure("参数不能为空");
+        }
+        List<DataFile> list = dataFileService.query(dataFile);
+        return RespVOBuilder.success(list);
+    }
+
 
     @ApiOperation(value = "通过批次号查询", notes = "通过批次号查询")
     @ApiImplicitParams({
@@ -184,12 +221,11 @@ public class DataFileController {
     })
     @PostMapping(value = "/upLoadFile", headers = "content-type=multipart/form-data")
     @Operation(value = "upLoadFile", desc = "上传业务文件")
-    public RespVO<RespDataVO<DataFile>> upLoadFile(@RequestParam(value = "files", required = true)MultipartFile[] files,
-                                     @RequestParam(required = false) String remark,
-                                     @RequestParam(required = false)String tags) {
+    public RespVO<RespDataVO<DataFile>> upLoadFile(@RequestParam(value = "files", required = true) MultipartFile[] files,
+                                                   @RequestParam(required = false) String remark,
+                                                   @RequestParam(required = false) String tags) {
         return dataFileService.upLoadFile(files, remark, tags);
     }
-
 
 
     @ApiOperation(value = "testUpLoad", notes = "testUpLoad")
@@ -198,7 +234,7 @@ public class DataFileController {
     })
     @PostMapping(value = "/testUpLoad")
     @Operation(value = "testUpLoad", desc = "test多文件上传")
-    public RespVO testUpLoad(@RequestParam(value = "files", required = true)MultipartFile[] files) {
+    public RespVO testUpLoad(@RequestParam(value = "files", required = true) MultipartFile[] files) {
         return RespVOBuilder.success(files.length);
     }
 
@@ -206,7 +242,7 @@ public class DataFileController {
     @ApiImplicitParams({})
     @PostMapping(value = "/testOneUpLoad", headers = "content-type=multipart/form-data")
     @Operation(value = "testOneUpLoad", desc = "testOneUpLoad")
-    public RespVO testOneUpLoad(@RequestParam(value = "file", required = true)MultipartFile file) {
+    public RespVO testOneUpLoad(@RequestParam(value = "file", required = true) MultipartFile file) {
         return RespVOBuilder.success(file.getSize());
     }
 }

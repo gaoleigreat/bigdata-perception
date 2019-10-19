@@ -1,285 +1,751 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.lego.perception.file.mapper.DataFileMapper">
 
-    <sql id="find_columns">
-		id as id,
-		name as name,
-		file_type as fileType,
-		project_id as project_id,
-		file_url as file_url,
-		previewUrl as preview_url,
-        template_id as template_id
-        check_flag as check_flag,
-        check_date as check_date,
-        check_by as  check_by,
-        publish_flag as publish_flag,
-        publish_date as publish_date,
-        publish_by as  publish_by,
-        data_type as  data_type,
-        delete_flag as delete_flag,
-        remark as remark,
-		tags as tags,
-		batch_num as batchNum,
-		creation_date as creationDate,
-		created_by as createdBy,
-		last_update_date as lastUpdateDate,
-		last_updated_by as lastUpdatedBy
-	</sql>
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.lego.framework.system.model.entity.DataFile" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="fileType" column="file_type"/>
+        <result property="projectId" column="project_id"/>
+        <result property="fileUrl" column="file_url"/>
+        <result property="previewUrl" column="preview_url"/>
+        <result property="templateId" column="template_id"/>
+        <result property="checkFlag" column="check_flag"/>
+        <result property="checkDate" column="check_date"/>
+        <result property="checkBy" column="check_by"/>
+        <result property="publishFlag" column="publish_flag"/>
+        <result property="publishDate" column="publish_date"/>
+        <result property="publishBy" column="publish_by"/>
+        <result property="dataType" column="data_type"/>
+        <result property="deleteFlag" column="delete_flag"/>
+        <result property="remark" column="remark"/>
+        <result property="tags" column="tags"/>
+        <result property="batchNum" column="batch_num"/>
+        <result property="createdBy" column="created_by"/>
+        <result property="creationDate" column="creation_date"/>
+        <result property="lastUpdatedBy" column="last_updated_by"/>
+        <result property="lastUpdateDate" column="last_update_date"/>
+    </resultMap>
 
 
-    <sql id="condition">
-        <if test='id != null'>
-            and id = #{id, jdbcType=BIGINT}
-        </if>
-        <if test='name != null'>
-            and name = #{name, jdbcType=VARCHAR}
-        </if>
-
-        <if test='type != null'>
-            and file_type = #{fileType, jdbcType=VARCHAR}
-        </if>
-        <if test='projectId != null'>
-            and project_id = #{projectId, jdbcType=BIGINT}
-        </if>
-        <if test='fileUrl != null'>
-            and file_url = #{fileUrl, jdbcType=VARCHAR}
-        </if>
-        <if test='previewUrl != null'>
-            and preview_url = #{previewUrl, jdbcType=VARCHAR}
-        </if>
-
-
-        <if test='templateId != null'>
-            and template_id = #{TemplateId, jdbcType=BIGINT}
-        </if>
-        <if test='checkFlag != null'>
-            and check_flag = #{checkFlag, jdbcType=int}
-        </if>
-
-
-        <if test='checkBy != null'>
-            and check_by = #{checkBy, jdbcType=BIGINT}
-        </if>
-
-        <if test='publishFlag != null'>
-            and publish_flag = #{publish_flag, jdbcType=int}
-        </if>
-
-        <if test='publishBy != null'>
-            and publish_by = #{publishBy, jdbcType=BIGINT}
-        </if>
-
-        <if test='dataType != null'>
-            and data_type = #{dataType, jdbcType=int}
-        </if>
-
-
-        <if test="deleteFlag != null">
-            and delete_flag = #{deleteFlag, jdbcType=INTEGER}
-        </if>
-        <if test="remark!=null">
-            and remark=#{remark,jdbcType=VARCHAR}
-        </if>
-        <if test="tag!=null">
-            and find_in_set(#{tags,jdbcType=VARCHAR},tags)
-        </if>
-        <if test="batchNum!=null">
-            and batch_num =#{batchNum,jdbcType=VARCHAR}
-        </if>
-
+    <!--数据库表的基本查询列名集合 -->
+    <sql id="Base_Column_List">
+        id ,
+        name ,
+        file_type ,
+        project_id ,
+        file_url ,
+        preview_url ,
+        template_id ,
+        check_flag ,
+        check_date ,
+        check_by ,
+        publish_flag ,
+        publish_date ,
+        publish_by ,
+        data_type ,
+        delete_flag ,
+        remark ,
+        tags ,
+        batch_num ,
+        created_by ,
+        creation_date ,
+        last_updated_by ,
+        last_update_date 
     </sql>
 
 
-    <select id="findList" parameterType="com.lego.framework.system.model.entity.DataFile"
-            resultType="com.lego.framework.system.model.entity.DataFile">
-        select
-        <include refid="find_columns"></include>
-        from tpl_data_file
-        <where>
-            <include refid="condition"></include>
-        </where>
-    </select>
+    <!--Where子句 -->
+    <sql id="Base_Query_Where">
+         <if test="dataFile.id != null">
+            and id = #{dataFile.id,jdbcType=BIGINT}
+         </if>
+         <if test="dataFile.name != null">
+            and name = #{dataFile.name,jdbcType=VARCHAR}
+         </if>
+         <if test="dataFile.fileType != null">
+            and file_type = #{dataFile.fileType,jdbcType=VARCHAR}
+         </if>
+         <if test="dataFile.projectId != null">
+            and project_id = #{dataFile.projectId,jdbcType=BIGINT}
+         </if>
+         <if test="dataFile.fileUrl != null">
+            and file_url = #{dataFile.fileUrl,jdbcType=VARCHAR}
+         </if>
+         <if test="dataFile.previewUrl != null">
+            and preview_url = #{dataFile.previewUrl,jdbcType=VARCHAR}
+         </if>
+         <if test="dataFile.templateId != null">
+            and template_id = #{dataFile.templateId,jdbcType=BIGINT}
+         </if>
+         <if test="dataFile.checkFlag != null">
+            and check_flag = #{dataFile.checkFlag,jdbcType=INTEGER}
+         </if>
+         <if test="dataFile.checkDate != null">
+            and check_date = #{dataFile.checkDate,jdbcType=TIMESTAMP}
+         </if>
+         <if test="dataFile.checkBy != null">
+            and check_by = #{dataFile.checkBy,jdbcType=BIGINT}
+         </if>
+         <if test="dataFile.publishFlag != null">
+            and publish_flag = #{dataFile.publishFlag,jdbcType=INTEGER}
+         </if>
+         <if test="dataFile.publishDate != null">
+            and publish_date = #{dataFile.publishDate,jdbcType=TIMESTAMP}
+         </if>
+         <if test="dataFile.publishBy != null">
+            and publish_by = #{dataFile.publishBy,jdbcType=BIGINT}
+         </if>
+         <if test="dataFile.dataType != null">
+            and data_type = #{dataFile.dataType,jdbcType=INTEGER}
+         </if>
+         <if test="dataFile.deleteFlag != null">
+            and delete_flag = #{dataFile.deleteFlag,jdbcType=INTEGER}
+         </if>
+         <if test="dataFile.remark != null">
+            and remark = #{dataFile.remark,jdbcType=VARCHAR}
+         </if>
+         <if test="dataFile.tags != null">
+            and tags = #{dataFile.tags,jdbcType=VARCHAR}
+         </if>
+         <if test="dataFile.batchNum != null">
+            and batch_num = #{dataFile.batchNum,jdbcType=VARCHAR}
+         </if>
+         <if test="dataFile.createdBy != null">
+            and created_by = #{dataFile.createdBy,jdbcType=BIGINT}
+         </if>
+         <if test="dataFile.creationDate != null">
+            and creation_date = #{dataFile.creationDate,jdbcType=TIMESTAMP}
+         </if>
+         <if test="dataFile.lastUpdatedBy != null">
+            and last_updated_by = #{dataFile.lastUpdatedBy,jdbcType=BIGINT}
+         </if>
+         <if test="dataFile.lastUpdateDate != null">
+            and last_update_date = #{dataFile.lastUpdateDate,jdbcType=TIMESTAMP}
+         </if>
+    </sql>
 
-    <insert id="insertList">
-        insert into tpl_data_file
-        ('name',
-        file_type,
-        project_id,
-        file_url,
-        preview_url,
-        template_id ,
-        data_type ,
-        remark,
-        tags,
-        batch_num,
-        creation_date,
-        created_by,
-        last_updated_by)
+
+
+
+    <!--基本更新字段-->
+    <sql id="Base_Update_Column">
+        <set>
+          <if test="dataFile.id != null">
+             id = #{dataFile.id,jdbcType=BIGINT},
+          </if>
+          <if test="dataFile.name != null">
+             name = #{dataFile.name,jdbcType=VARCHAR},
+          </if>
+          <if test="dataFile.fileType != null">
+             file_type = #{dataFile.fileType,jdbcType=VARCHAR},
+          </if>
+          <if test="dataFile.projectId != null">
+             project_id = #{dataFile.projectId,jdbcType=BIGINT},
+          </if>
+          <if test="dataFile.fileUrl != null">
+             file_url = #{dataFile.fileUrl,jdbcType=VARCHAR},
+          </if>
+          <if test="dataFile.previewUrl != null">
+             preview_url = #{dataFile.previewUrl,jdbcType=VARCHAR},
+          </if>
+          <if test="dataFile.templateId != null">
+             template_id = #{dataFile.templateId,jdbcType=BIGINT},
+          </if>
+          <if test="dataFile.checkFlag != null">
+             check_flag = #{dataFile.checkFlag,jdbcType=INTEGER},
+          </if>
+          <if test="dataFile.checkDate != null">
+             check_date = #{dataFile.checkDate,jdbcType=TIMESTAMP},
+          </if>
+          <if test="dataFile.checkBy != null">
+             check_by = #{dataFile.checkBy,jdbcType=INTEGER},
+          </if>
+          <if test="dataFile.publishFlag != null">
+             publish_flag = #{dataFile.publishFlag,jdbcType=INTEGER},
+          </if>
+          <if test="dataFile.publishDate != null">
+             publish_date = #{dataFile.publishDate,jdbcType=TIMESTAMP},
+          </if>
+          <if test="dataFile.publishBy != null">
+             publish_by = #{dataFile.publishBy,jdbcType=BIGINT},
+          </if>
+          <if test="dataFile.dataType != null">
+             data_type = #{dataFile.dataType,jdbcType=INTEGER},
+          </if>
+          <if test="dataFile.deleteFlag != null">
+             delete_flag = #{dataFile.deleteFlag,jdbcType=INTEGER},
+          </if>
+          <if test="dataFile.remark != null">
+             remark = #{dataFile.remark,jdbcType=VARCHAR},
+          </if>
+          <if test="dataFile.tags != null">
+             tags = #{dataFile.tags,jdbcType=VARCHAR},
+          </if>
+          <if test="dataFile.batchNum != null">
+             batch_num = #{dataFile.batchNum,jdbcType=VARCHAR},
+          </if>
+          <if test="dataFile.createdBy != null">
+             created_by = #{dataFile.createdBy,jdbcType=BIGINT},
+          </if>
+          <if test="dataFile.creationDate != null">
+             creation_date = #{dataFile.creationDate,jdbcType=TIMESTAMP},
+          </if>
+          <if test="dataFile.lastUpdatedBy != null">
+             last_updated_by = #{dataFile.lastUpdatedBy,jdbcType=BIGINT},
+          </if>
+          <if test="dataFile.lastUpdateDate != null">
+             last_update_date = #{dataFile.lastUpdateDate,jdbcType=TIMESTAMP}
+          </if>
+        </set>
+    </sql>
+
+
+    <sql id="Base_Insert_Selective">
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="dataFile.id != null">
+               id,
+            </if>
+            <if test="dataFile.name != null">
+               name,
+            </if>
+            <if test="dataFile.fileType != null">
+               file_type,
+            </if>
+            <if test="dataFile.projectId != null">
+               project_id,
+            </if>
+            <if test="dataFile.fileUrl != null">
+               file_url,
+            </if>
+            <if test="dataFile.previewUrl != null">
+               preview_url,
+            </if>
+            <if test="dataFile.templateId != null">
+               template_id,
+            </if>
+            <if test="dataFile.checkFlag != null">
+               check_flag,
+            </if>
+            <if test="dataFile.checkDate != null">
+               check_date,
+            </if>
+            <if test="dataFile.checkBy != null">
+               check_by,
+            </if>
+            <if test="dataFile.publishFlag != null">
+               publish_flag,
+            </if>
+            <if test="dataFile.publishDate != null">
+               publish_date,
+            </if>
+            <if test="dataFile.publishBy != null">
+               publish_by,
+            </if>
+            <if test="dataFile.dataType != null">
+               data_type,
+            </if>
+            <if test="dataFile.deleteFlag != null">
+               delete_flag,
+            </if>
+            <if test="dataFile.remark != null">
+               remark,
+            </if>
+            <if test="dataFile.tags != null">
+               tags,
+            </if>
+            <if test="dataFile.batchNum != null">
+               batch_num,
+            </if>
+            <if test="dataFile.createdBy != null">
+               created_by,
+            </if>
+            <if test="dataFile.creationDate != null">
+               creation_date,
+            </if>
+            <if test="dataFile.lastUpdatedBy != null">
+               last_updated_by,
+            </if>
+            <if test="dataFile.lastUpdateDate != null">
+               last_update_date
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+             <if test="dataFile.id != null">
+             #{dataFile.id,jdbcType=BIGINT},
+             </if>
+             <if test="dataFile.name != null">
+             #{dataFile.name,jdbcType=VARCHAR},
+             </if>
+             <if test="dataFile.fileType != null">
+             #{dataFile.fileType,jdbcType=VARCHAR},
+             </if>
+             <if test="dataFile.projectId != null">
+             #{dataFile.projectId,jdbcType=BIGINT},
+             </if>
+             <if test="dataFile.fileUrl != null">
+             #{dataFile.fileUrl,jdbcType=VARCHAR},
+             </if>
+             <if test="dataFile.previewUrl != null">
+             #{dataFile.previewUrl,jdbcType=VARCHAR},
+             </if>
+             <if test="dataFile.templateId != null">
+             #{dataFile.templateId,jdbcType=BIGINT},
+             </if>
+             <if test="dataFile.checkFlag != null">
+             #{dataFile.checkFlag,jdbcType=INTEGER},
+             </if>
+             <if test="dataFile.checkDate != null">
+             #{dataFile.checkDate,jdbcType=TIMESTAMP},
+             </if>
+             <if test="dataFile.checkBy != null">
+             #{dataFile.checkBy,jdbcType=BIGINT},
+             </if>
+             <if test="dataFile.publishFlag != null">
+             #{dataFile.publishFlag,jdbcType=INTEGER},
+             </if>
+             <if test="dataFile.publishDate != null">
+             #{dataFile.publishDate,jdbcType=TIMESTAMP},
+             </if>
+             <if test="dataFile.publishBy != null">
+             #{dataFile.publishBy,jdbcType=BIGINT},
+             </if>
+             <if test="dataFile.dataType != null">
+             #{dataFile.dataType,jdbcType=BIGINT},
+             </if>
+             <if test="dataFile.deleteFlag != null">
+             #{dataFile.deleteFlag,jdbcType=INTEGER},
+             </if>
+             <if test="dataFile.remark != null">
+             #{dataFile.remark,jdbcType=VARCHAR},
+             </if>
+             <if test="dataFile.tags != null">
+             #{dataFile.tags,jdbcType=VARCHAR},
+             </if>
+             <if test="dataFile.batchNum != null">
+             #{dataFile.batchNum,jdbcType=VARCHAR},
+             </if>
+             <if test="dataFile.createdBy != null">
+             #{dataFile.createdBy,jdbcType=BIGINT},
+             </if>
+             <if test="dataFile.creationDate != null">
+             #{dataFile.creationDate,jdbcType=TIMESTAMP},
+             </if>
+             <if test="dataFile.lastUpdatedBy != null">
+             #{dataFile.lastUpdatedBy,jdbcType=BIGINT},
+             </if>
+             <if test="dataFile.lastUpdateDate != null">
+             #{dataFile.lastUpdateDate,jdbcType=TIMESTAMP}
+             </if>
+        </trim>
+    </sql>
+
+
+
+    <!--批量添加记录到数据库表中-->
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into data_file
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+             id,
+             name,
+             file_type,
+             project_id,
+             file_url,
+             preview_url,
+             template_id,
+             check_flag,
+             check_date,
+             check_by,
+             publish_flag,
+             publish_date,
+             publish_by,
+             data_type,
+             delete_flag,
+             remark,
+             tags,
+             batch_num,
+             created_by,
+             creation_date,
+             last_updated_by,
+             last_update_date
+        </trim>
         values
-        <foreach collection="list" item="item" separator=",">
-            (
-            #{item.name, jdbcType=VARCHAR},
-            #{item.fileType, jdbcType=VARCHAR},
-            #{item.projectId, jdbcType=BIGINT},
-            #{item.fileUrl, jdbcType=VARCHAR},
-            #{item.previewUrl, jdbcType=VARCHAR},
-            #{item.templateId, jdbcType=BIGINT},
-            #{item.dataType, jdbcType=BIGINT},
-            #{item.remark, jdbcType=VARCHAR},
-            #{item.tags, jdbcType=VARCHAR},
-            #{item.batchNum, jdbcType=VARCHAR},
-            #{item.creationDate, jdbcType=TIMESTAMP},
-            #{item.createdBy, jdbcType=BIGINT},
-            #{item.lastUpdatedBy, jdbcType=BIGINT}
-            )
+        <foreach collection="list" index="index" item="item" separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{item.id,jdbcType=BIGINT},
+                #{item.name,jdbcType=VARCHAR},
+                #{item.fileType,jdbcType=VARCHAR},
+                #{item.projectId,jdbcType=BIGINT},
+                #{item.fileUrl,jdbcType=VARCHAR},
+                #{item.previewUrl,jdbcType=VARCHAR},
+                #{item.templateId,jdbcType=BIGINT},
+                #{item.checkFlag,jdbcType=INTEGER},
+                #{item.checkDate,jdbcType=TIMESTAMP},
+                #{item.checkBy,jdbcType=BIGINT},
+                #{item.publishFlag,jdbcType=INTEGER},
+                #{item.publishDate,jdbcType=TIMESTAMP},
+                #{item.publishBy,jdbcType=BIGINT},
+                #{item.dataType,jdbcType=BIGINT},
+                #{item.deleteFlag,jdbcType=INTEGER},
+                #{item.remark,jdbcType=VARCHAR},
+                #{item.tags,jdbcType=VARCHAR},
+                #{item.batchNum,jdbcType=VARCHAR},
+                #{item.createdBy,jdbcType=BIGINT},
+                #{item.creationDate,jdbcType=TIMESTAMP},
+                #{item.lastUpdatedBy,jdbcType=BIGINT},
+                #{item.lastUpdateDate,jdbcType=TIMESTAMP}
+            </trim>
         </foreach>
     </insert>
 
 
-    <update id="updateList">
-        <foreach collection="list" item="item">
-            update tpl_data_file
+
+    <!-- 根据主键批量更新数据库表中的记录-->
+    <update id="batchUpdate" parameterType="java.util.List">
+        <foreach collection="list" index="index" item="item" separator=";">
+            update data_file
             <set>
-                <if test='name != null and name != ""'>
-                     name = #{name, jdbcType=VARCHAR},
-                </if>
-
-                <if test='fileType != null and fileType != ""'>
-                     file_type = #{fileType, jdbcType=VARCHAR},
-                </if>
-                <if test='projectId != null and projectId != ""'>
-                     project_id = #{projectId, jdbcType=BIGINT},
-                </if>
-                <if test='fileUrl != null and fileUrl != ""'>
-                     file_url = #{fileUrl, jdbcType=VARCHAR},
-                </if>
-                <if test='previewUrl != null and previewUrl != ""'>
-                     preview_url = #{previewUrl, jdbcType=VARCHAR},
-                </if>
-
-
-                <if test='templateId != null and templateId != ""'>
-                     template_id = #{TemplateId, jdbcType=BIGINT},
-                </if>
-                <if test='checkFlag != null and checkFlag != ""'>
-                     check_flag = #{checkFlag, jdbcType=int},
-                </if>
-
-
-                <if test='checkBy != null and checkBy != ""'>
-                     check_by = #{checkBy, jdbcType=BIGINT},
-                </if>
-
-                <if test='publishFlag != null and publishFlag != ""'>
-                     publish_flag = #{publish_flag, jdbcType=int},
-                </if>
-
-                <if test='publishBy != null and publishBy != ""'>
-                     publish_by = #{publishBy, jdbcType=BIGINT},
-                </if>
-
-                <if test='dataType != null and dataType != ""'>
-                     data_type = #{dataType, jdbcType=int},
-                </if>
-
-
-                <if test="deleteFlag != null">
-                     delete_flag = #{deleteFlag, jdbcType=INTEGER},
-                </if>
-                <if test="remark!=null">
-                     remark=#{remark,jdbcType=VARCHAR},
-                </if>
-                <if test="tags!=null">
-                    tags=#{tags,jdbcType=VARCHAR},
-                </if>
-                <if test="batchNum!=null">
-                    and batch_num =#{batchNum,jdbcType=VARCHAR}
-                </if>
-                last_updated_by = #{item.lastUpdatedBy, jdbcType=VARCHAR},
+                <trim suffixOverrides=",">
+                    id = #{item.id,jdbcType=BIGINT},
+                    name = #{item.name,jdbcType=VARCHAR},
+                    file_type = #{item.fileType,jdbcType=VARCHAR},
+                    project_id = #{item.projectId,jdbcType=BIGINT},
+                    file_url = #{item.fileUrl,jdbcType=VARCHAR},
+                    preview_url = #{item.previewUrl,jdbcType=VARCHAR},
+                    template_id = #{item.templateId,jdbcType=BIGINT},
+                    check_flag = #{item.checkFlag,jdbcType=INTEGER},
+                    check_date = #{item.checkDate,jdbcType=TIMESTAMP},
+                    check_by = #{item.checkBy,jdbcType=BIGINT},
+                    publish_flag = #{item.publishFlag,jdbcType=INTEGER},
+                    publish_date = #{item.publishDate,jdbcType=TIMESTAMP},
+                    publish_by = #{item.publishBy,jdbcType=BIGINT},
+                    data_type = #{item.dataType,jdbcType=BIGINT},
+                    delete_flag = #{item.deleteFlag,jdbcType=INTEGER},
+                    remark = #{item.remark,jdbcType=VARCHAR},
+                    tags = #{item.tags,jdbcType=VARCHAR},
+                    batch_num = #{item.batchNum,jdbcType=VARCHAR},
+                    created_by = #{item.createdBy,jdbcType=BIGINT},
+                    creation_date = #{item.creationDate,jdbcType=TIMESTAMP},
+                    last_updated_by = #{item.lastUpdatedBy,jdbcType=BIGINT},
+                    last_update_date = #{item.lastUpdateDate,jdbcType=TIMESTAMP}
+                </trim>
             </set>
             <where>
-                <if test='item.id != null'>
-                    and id = #{item.id, jdbcType=BIGINT}
-                </if>
-                <if test='item.name != null '>
-                    and name = #{item.name, jdbcType=VARCHAR}
-                </if>
-
-                <if test='item.FileType != null'>
-                    and file_type = #{item..fileType, jdbcType=VARCHAR}
-                </if>
-                <if test='item.projectId != null'>
-                    and project_id = #{item.projectId, jdbcType=BIGINT}
-                </if>
-                <if test='item.fileUrl != null'>
-                    and file_url = #{item.fileUrl, jdbcType=VARCHAR}
-                </if>
-                <if test='previewUrl != null'>
-                    and preview_url = #{item.previewUrl, jdbcType=VARCHAR}
-                </if>
-
-
-                <if test='item.templateId != null and item.templateId != ""'>
-                    and template_id = #{item.templateId, jdbcType=BIGINT}
-                </if>
-                <if test='item.checkFlag != null and item.checkFlag != ""'>
-                    and check_flag = #{item.checkFlag, jdbcType=int}
-                </if>
-
-
-                <if test='item.checkBy != null and item.checkBy != ""'>
-                    and check_by = #{item.checkBy, jdbcType=BIGINT}
-                </if>
-
-                <if test='item.publishFlag != null and item.publishFlag != ""'>
-                    and publish_flag = #{item.publish_flag, jdbcType=int}
-                </if>
-
-                <if test='item.publishBy != null and item.publishBy != ""'>
-                    and publish_by = #{item.publishBy, jdbcType=BIGINT}
-                </if>
-
-                <if test='item.dataType != null and item.dataType != ""'>
-                    and data_type = #{item.dataType, jdbcType=int}
-                </if>
-
-
-                <if test="item.deleteFlag != null">
-                    and delete_flag = #{item.deleteFlag, jdbcType=INTEGER}
-                </if>
-                <if test="item.remark!=null">
-                    and remark=#{item.remark,jdbcType=VARCHAR}
-                </if>
-                <if test="item.tag!=null">
-                    and find_in_set(#{tags,jdbcType=VARCHAR},tags)
-                </if>
-                <if test="item.batchNum!=null">
-                    and batch_num =#{item.batchNum,jdbcType=VARCHAR}
-                </if>
+                <trim suffixOverrides=",">
+                    where id = #{item.id,jdbcType=BIGINT}
+                </trim>
             </where>
-
         </foreach>
     </update>
 
 
-    <update id="deleteList">
-        update tpl_data_file set delete_flag = 2
-        where id in
-        <foreach collection="list" item="item" separator="," open="(" close=")" index="index">
-            #{item, jdbcType=BIGINT}
-        </foreach>
+    <!--存在即更新否则插入-->
+    <update id="upsert" parameterType="com.lego.framework.system.model.entity.DataFile">
+        insert into data_file
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+             id ,
+             name ,
+             file_type ,
+             project_id ,
+             file_url ,
+             preview_url ,
+             template_id ,
+             check_flag ,
+             check_date ,
+             check_by ,
+             publish_flag ,
+             publish_date ,
+             publish_by ,
+             data_type ,
+             delete_flag ,
+             remark ,
+             tags ,
+             batch_num ,
+             created_by ,
+             creation_date ,
+             last_updated_by ,
+             last_update_date 
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+             #{dataFile.id,jdbcType=BIGINT},
+             #{dataFile.name,jdbcType=VARCHAR},
+             #{dataFile.fileType,jdbcType=VARCHAR},
+             #{dataFile.projectId,jdbcType=BIGINT},
+             #{dataFile.fileUrl,jdbcType=VARCHAR},
+             #{dataFile.previewUrl,jdbcType=VARCHAR},
+             #{dataFile.templateId,jdbcType=BIGINT},
+             #{dataFile.checkFlag,jdbcType=INTEGER},
+             #{dataFile.checkDate,jdbcType=TIMESTAMP},
+             #{dataFile.checkBy,jdbcType=BIGINT},
+             #{dataFile.publishFlag,jdbcType=INTEGER},
+             #{dataFile.publishDate,jdbcType=TIMESTAMP},
+             #{dataFile.publishBy,jdbcType=BIGINT},
+             #{dataFile.dataType,jdbcType=BIGINT},
+             #{dataFile.deleteFlag,jdbcType=INTEGER},
+             #{dataFile.remark,jdbcType=VARCHAR},
+             #{dataFile.tags,jdbcType=VARCHAR},
+             #{dataFile.batchNum,jdbcType=VARCHAR},
+             #{dataFile.createdBy,jdbcType=BIGINT},
+             #{dataFile.creationDate,jdbcType=TIMESTAMP},
+             #{dataFile.lastUpdatedBy,jdbcType=BIGINT},
+             #{dataFile.lastUpdateDate,jdbcType=TIMESTAMP}
+        </trim>
+        on duplicate key update
+        <trim suffixOverrides=",">
+          #{dataFile.id,jdbcType=BIGINT},
+          #{dataFile.name,jdbcType=VARCHAR},
+          #{dataFile.fileType,jdbcType=VARCHAR},
+          #{dataFile.projectId,jdbcType=BIGINT},
+          #{dataFile.fileUrl,jdbcType=VARCHAR},
+          #{dataFile.previewUrl,jdbcType=VARCHAR},
+          #{dataFile.templateId,jdbcType=BIGINT},
+          #{dataFile.checkFlag,jdbcType=INTEGER},
+          #{dataFile.checkDate,jdbcType=TIMESTAMP},
+          #{dataFile.checkBy,jdbcType=BIGINT},
+          #{dataFile.publishFlag,jdbcType=INTEGER},
+          #{dataFile.publishDate,jdbcType=TIMESTAMP},
+          #{dataFile.publishBy,jdbcType=BIGINT},
+          #{dataFile.dataType,jdbcType=BIGINT},
+          #{dataFile.deleteFlag,jdbcType=INTEGER},
+          #{dataFile.remark,jdbcType=VARCHAR},
+          #{dataFile.tags,jdbcType=VARCHAR},
+          #{dataFile.batchNum,jdbcType=VARCHAR},
+          #{dataFile.createdBy,jdbcType=BIGINT},
+          #{dataFile.creationDate,jdbcType=TIMESTAMP},
+          #{dataFile.lastUpdatedBy,jdbcType=BIGINT},
+          #{dataFile.lastUpdateDate,jdbcType=TIMESTAMP}
+        </trim>
     </update>
 
 
-    <select id="queryList" resultType="com.lego.framework.system.model.entity.DataFile">
-        SELECT
-        <include refid="find_columns"/>
-        from
-        tpl_data_file
-        <include refid="condition"/>
+    <!--带有空值检查的存在即更新否则插入-->
+    <update id="upsertSelective" parameterType="com.lego.framework.system.model.entity.DataFile">
+        insert into data_file
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="dataFile.id != null">
+                id,
+            </if>
+            <if test="dataFile.name != null">
+                name,
+            </if>
+            <if test="dataFile.fileType != null">
+                file_type,
+            </if>
+            <if test="dataFile.projectId != null">
+                project_id,
+            </if>
+            <if test="dataFile.fileUrl != null">
+                file_url,
+            </if>
+            <if test="dataFile.previewUrl != null">
+                preview_url,
+            </if>
+            <if test="dataFile.templateId != null">
+                template_id,
+            </if>
+            <if test="dataFile.checkFlag != null">
+                check_flag,
+            </if>
+            <if test="dataFile.checkDate != null">
+                check_date,
+            </if>
+            <if test="dataFile.checkBy != null">
+                check_by,
+            </if>
+            <if test="dataFile.publishFlag != null">
+                publish_flag,
+            </if>
+            <if test="dataFile.publishDate != null">
+                publish_date,
+            </if>
+            <if test="dataFile.publishBy != null">
+                publish_by,
+            </if>
+            <if test="dataFile.dataType != null">
+                data_type,
+            </if>
+            <if test="dataFile.deleteFlag != null">
+                delete_flag,
+            </if>
+            <if test="dataFile.remark != null">
+                remark,
+            </if>
+            <if test="dataFile.tags != null">
+                tags,
+            </if>
+            <if test="dataFile.batchNum != null">
+                batch_num,
+            </if>
+            <if test="dataFile.createdBy != null">
+                created_by,
+            </if>
+            <if test="dataFile.creationDate != null">
+                creation_date,
+            </if>
+            <if test="dataFile.lastUpdatedBy != null">
+                last_updated_by,
+            </if>
+            <if test="dataFile.lastUpdateDate != null">
+                last_update_date
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="dataFile.id !=null ">
+                #{dataFile.id,jdbcType=BIGINT},
+            </if>
+            <if test="dataFile.name !=null ">
+                #{dataFile.name,jdbcType=VARCHAR},
+            </if>
+            <if test="dataFile.fileType !=null ">
+                #{dataFile.fileType,jdbcType=VARCHAR},
+            </if>
+            <if test="dataFile.projectId !=null ">
+                #{dataFile.projectId,jdbcType=BIGINT},
+            </if>
+            <if test="dataFile.fileUrl !=null ">
+                #{dataFile.fileUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="dataFile.previewUrl !=null ">
+                #{dataFile.previewUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="dataFile.templateId !=null ">
+                #{dataFile.templateId,jdbcType=BIGINT},
+            </if>
+            <if test="dataFile.checkFlag !=null ">
+                #{dataFile.checkFlag,jdbcType=INTEGER},
+            </if>
+            <if test="dataFile.checkDate !=null ">
+                #{dataFile.checkDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="dataFile.checkBy !=null ">
+                #{dataFile.checkBy,jdbcType=BIGINT},
+            </if>
+            <if test="dataFile.publishFlag !=null ">
+                #{dataFile.publishFlag,jdbcType=INTEGER},
+            </if>
+            <if test="dataFile.publishDate !=null ">
+                #{dataFile.publishDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="dataFile.publishBy !=null ">
+                #{dataFile.publishBy,jdbcType=BIGINT},
+            </if>
+            <if test="dataFile.dataType !=null ">
+                #{dataFile.dataType,jdbcType=BIGINT},
+            </if>
+            <if test="dataFile.deleteFlag !=null ">
+                #{dataFile.deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="dataFile.remark !=null ">
+                #{dataFile.remark,jdbcType=VARCHAR},
+            </if>
+            <if test="dataFile.tags !=null ">
+                #{dataFile.tags,jdbcType=VARCHAR},
+            </if>
+            <if test="dataFile.batchNum !=null ">
+                #{dataFile.batchNum,jdbcType=VARCHAR},
+            </if>
+            <if test="dataFile.createdBy !=null ">
+                #{dataFile.createdBy,jdbcType=BIGINT},
+            </if>
+            <if test="dataFile.creationDate !=null ">
+                #{dataFile.creationDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="dataFile.lastUpdatedBy !=null ">
+                #{dataFile.lastUpdatedBy,jdbcType=BIGINT},
+            </if>
+            <if test="dataFile.lastUpdateDate !=null ">
+                #{dataFile.lastUpdateDate,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        on duplicate key update
+        <trim suffixOverrides=",">
+            <if test="dataFile.id !=null ">
+             #{id,jdbcType=BIGINT},
+            </if>
+            <if test="dataFile.name !=null ">
+             #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="dataFile.fileType !=null ">
+             #{fileType,jdbcType=VARCHAR},
+            </if>
+            <if test="dataFile.projectId !=null ">
+             #{projectId,jdbcType=BIGINT},
+            </if>
+            <if test="dataFile.fileUrl !=null ">
+             #{fileUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="dataFile.previewUrl !=null ">
+             #{previewUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="dataFile.templateId !=null ">
+             #{templateId,jdbcType=BIGINT},
+            </if>
+            <if test="dataFile.checkFlag !=null ">
+             #{checkFlag,jdbcType=INTEGER},
+            </if>
+            <if test="dataFile.checkDate !=null ">
+             #{checkDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="dataFile.checkBy !=null ">
+             #{checkBy,jdbcType=BIGINT},
+            </if>
+            <if test="dataFile.publishFlag !=null ">
+             #{publishFlag,jdbcType=INTEGER},
+            </if>
+            <if test="dataFile.publishDate !=null ">
+             #{publishDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="dataFile.publishBy !=null ">
+             #{publishBy,jdbcType=BIGINT},
+            </if>
+            <if test="dataFile.dataType !=null ">
+             #{dataType,jdbcType=BIGINT},
+            </if>
+            <if test="dataFile.deleteFlag !=null ">
+             #{deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="dataFile.remark !=null ">
+             #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="dataFile.tags !=null ">
+             #{tags,jdbcType=VARCHAR},
+            </if>
+            <if test="dataFile.batchNum !=null ">
+             #{batchNum,jdbcType=VARCHAR},
+            </if>
+            <if test="dataFile.createdBy !=null ">
+             #{createdBy,jdbcType=BIGINT},
+            </if>
+            <if test="dataFile.creationDate !=null ">
+             #{creationDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="dataFile.lastUpdatedBy !=null ">
+             #{lastUpdatedBy,jdbcType=BIGINT},
+            </if>
+            <if test="dataFile.lastUpdateDate !=null ">
+             #{lastUpdateDate,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+    </update>
+
+    <select id="query" resultMap="BaseResultMap" parameterType="com.lego.framework.system.model.entity.DataFile">
+        select
+        <include refid="Base_Column_List"/>
+        from data_file
         <where>
-            ${ew.sqlSegment}
+            <include refid="Base_Query_Where"></include>
         </where>
     </select>
+
+    <select id="queryTotalCount" resultType="long">
+        select count(*) from data_file
+    </select>
+
+
+
+
 </mapper>

@@ -6,6 +6,7 @@ import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
+import com.lego.framework.equipment.model.entity.EquipmentCost;
 import com.lego.framework.system.model.entity.DataFile;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,80 +18,97 @@ import java.util.Map;
 @Validated
 public interface IDataFileService {
     /**
-     * 根据ID查询
-     *
-     * @param id
-     * @return
-     */
-    DataFile findById(@NotNull Long id);
-
-
-
-
-
-    /**
-     * 分页查询列表
-     *
-     * @param DataFile
+     * 分页查询
+     * @param dataFile
      * @param page
      * @return
      */
-    PagedResult findPagedList(DataFile DataFile, Page page);
+
+    PagedResult<DataFile> selectPaged(DataFile dataFile, Page page);
 
     /**
-     * 新增
+     * 创建DataFile
      *
-     * @param DataFile
+     * @param dataFile
      * @return
      */
-    RespVO insert(DataFile DataFile);
+    Integer insert(@NotNull(message = "添加失败，参数不能为空")DataFile dataFile);
+
 
     /**
-     * 批量新增
-     *
-     * @param dictionaries
-     * @return
-     */
-    RespVO<RespDataVO<Long>> insertList(List<DataFile> dictionaries);
-
-    /**
-     * 更新
-     *
-     * @param DataFile
-     * @return
-     */
-    RespVO update(DataFile DataFile);
-
-    /**
-     * 批量更新
-     *
-     * @param dictionaries
-     * @return
-     */
-    RespVO updateList(List<DataFile> dictionaries);
-
-    /**
-     * 删除
+     * 根据主键删除
      *
      * @param id
      * @return
      */
-    RespVO delete(@NotNull Long id);
+    Integer deleteByPrimaryKey(@NotNull(message = "删除失败，参数不能为空")Long id);
+
+    /**
+     * 修改DataFile
+     *
+     * @param dataFile
+     * @return
+     */
+    Integer updateByPrimaryKey(@NotNull(message = "添加失败，参数不能为空")DataFile dataFile);
+
+
+    /**
+     * 根据主键查询
+     *
+     * @param id
+     * @return
+     */
+    DataFile selectByPrimaryKey(@NotNull(message = "查询失败，参数不能为空")Long id);
+
+
+
+    /**
+     * 批量插入
+     * @param list List<DataFile
+     * @return Integer
+     */
+    Integer batchInsert(List<DataFile> list);
+
+    /**
+     * 批量更新
+     * @param list List<DataFile>
+     * @return Integer
+     */
+    Integer batchUpdate(List<DataFile> list);
 
     /**
      * 批量删除
-     *
-     * @param ids
-     * @return
+     * @param list List<Long >
+     * @return Integer
      */
-    RespVO deleteList(List<Long> ids);
+    Integer deleteBatchIds(List<Long> list);
 
     /**
-     * 通过batchIda批量查询
-     *
-     * @param batchNums
-     * @return
+     * 存在即更新
+     * @param dataFile DataFile
+     * @return Integer
      */
+    Integer upsert(DataFile dataFile);
+
+    /**
+     * 存在即更新，可选择具体属性
+     * @param dataFile DataFile
+     * @return Integer
+     */
+    Integer upsertSelective(DataFile dataFile);
+
+    /**
+     * 条件查询
+     * @param dataFile DataFile
+     * @return List<DataFile>
+     */
+    List<DataFile> query(DataFile dataFile);
+
+    /**
+     * 查询总数
+     * @return Integer
+     */
+    Long queryTotalCount();
     RespVO selectBybatchNums(List<String> batchNums, String tags);
 
 
