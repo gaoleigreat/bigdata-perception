@@ -25,7 +25,6 @@ public class LoggingInterceptor implements Interceptor {
         long entTime = System.nanoTime();
         log.debug(String.format("Received response for %s in %.1fms%n%s",
                 response.request().url(), (entTime - startTime) / 1e6d, response.headers()));
-
         MediaType mediaType = response.body().contentType();
         String content = response.body().string();
 

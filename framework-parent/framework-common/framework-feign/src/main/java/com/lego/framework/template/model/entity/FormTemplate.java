@@ -4,10 +4,11 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.io.Serializable;
 import java.util.List;
 
 @TableName(value = "tpl_form_template_t")
-public class FormTemplate extends Template {
+public class FormTemplate extends Template implements Serializable {
 
     @ApiModelProperty("数据模板id")
     private Long dataTemplateId;

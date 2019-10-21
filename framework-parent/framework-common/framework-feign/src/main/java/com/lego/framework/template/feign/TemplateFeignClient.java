@@ -10,6 +10,7 @@ import com.lego.framework.template.model.entity.FormTemplate;
 import feign.hystrix.FallbackFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 

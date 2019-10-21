@@ -68,6 +68,7 @@ public class EquipmentTypeController {
         PagedResult<EquipmentType> pagedResult = iEquipmentTypeService.selectPaged(equipmentType, page);
         List<EquipmentType> resultList = pagedResult.getResultList();
         resultList.forEach(equipmentType1 -> {
+
             RespVO<FormTemplate> respDataVORespVO = templateFeignClient.findByDataType(Integer.valueOf(equipmentType1.getType()));
 
             if (respDataVORespVO == null) {

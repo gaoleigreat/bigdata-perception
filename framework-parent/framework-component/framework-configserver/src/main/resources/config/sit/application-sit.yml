@@ -9,20 +9,28 @@ define:
     password: admin123
   mysql:
     write:
-      url: jdbc:mysql://192.168.101.41:3306/perception_base?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
-      username: perception_master
-      password: perception_master
+      url: jdbc:mysql://192.168.105.22:3306/perception_base?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+      username: base_master
+      password: base_master
     read1:
-      url: jdbc:mysql://192.168.101.41:3306/perception_base?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
-      username: perception_slaver
-      password: perception_slaver
+      url: jdbc:mysql://192.168.105.22:3306/perception_base?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+      username: base_slaver
+      password: base_slaver
+    share:
+      url: jdbc:mysql://192.168.105.22:3306/share?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+      username: share_master
+      password: share_master
+    equipment:
+      url: jdbc:mysql://192.168.105.22:3306/perception_equipment?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+      username: equipment_master
+      password: equipment_master
 eureka:
   client:
     fetch-registry: true
     register-with-eureka: true
     registry-fetch-interval-seconds: 5
     serviceUrl:
-      defaultZone: http://${define.user.name}:${define.user.password}@192.168.101.41:18010/eureka/
+      defaultZone: http://${define.user.name}:${define.user.password}@192.168.105.22:18010/eureka/
   instance:
     prefer-ip-address: true
     instance-id: ${spring.cloud.client.ip-address}:${server.port}
@@ -34,6 +42,8 @@ eureka:
     lease-renewal-interval-in-seconds: 1
     lease-expiration-duration-in-seconds: 2
 spring:
+  main:
+    allow-bean-definition-overriding: true
   cloud:
     bus:
       trace:
@@ -44,15 +54,15 @@ spring:
       override-system-properties: false    # 是否覆盖Java运行时参数
   data:
     mongodb:
-      host: 192.168.101.41
+      host: 192.168.105.22
       port: 27017
       database: perception
       #username: admin
       #password: '{cipher}a1d30c1325f1b0cd2e4619bff2be57bc32ae0413c0ce1fee07153b60bfa3a782'
   redis:
-    host: 192.168.101.41
+    host: 192.168.105.22
     port: 6379
-    password: admin123
+    password: bigdb123
     database: 2
     jedis:
       pool:
@@ -62,10 +72,10 @@ spring:
         min-idle: 0
     timeout: 10000
   rabbitmq:
-    host: 192.168.101.41
+    host: 114.116.44.104
     port: 5672
     username: admin
-    password: admin123
+    password: legaoyun@2018
   zipkin:
     base-url: http://192.168.0.154:9411
   jackson:
@@ -161,6 +171,10 @@ fpfile:
 sso:
   name: sso-server
   url_prefix: http://t.weather.sojson.com/api/weather
+
+hdfs:
+  storePath: /home/work/file/
+  savePath: equipment
 
 
 

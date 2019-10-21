@@ -1,17 +1,17 @@
 spring:
   security:
     user:
-      name: ${define.security.name}
-      password: ${define.security.password}
+      name: admin
+      password: admin123
 
   cloud:
     config:
       #fail-fast: true
-      uri: http://192.168.0.86:48020
-      profile: sit
+      uri: http://192.168.105.22:18020
+      profile: dev
       label: master
       username: admin
-      password: admin123
+      password: admin123456
 
 eureka:
   server:
@@ -22,4 +22,5 @@ eureka:
     fetch-registry: false
     register-with-eureka: false
     service-url:
-      defaultZone: http://${spring.security.user.name}:${spring.security.user.password}@192.168.0.86:48010/eureka/
+      defaultZone: http://${spring.security.user.name}:${spring.security.user.password}@192.168.105.22:18010/eureka/
+    backup-registry-impl: BackupServerRegistry

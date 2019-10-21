@@ -7,6 +7,10 @@ zuul:
     user-service: /user-service/**
     template-service: /template-service/**
     business-service: /business-service/**
+    data-service: /data-service/**
+    equipment-service: /equipment-service/**
+    knowledge-service: /knowledge-service/**
+    statistics-service: /statistics-service/**
   ignored-services: '*'
 
 
