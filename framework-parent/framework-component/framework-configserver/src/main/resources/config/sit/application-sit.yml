@@ -9,28 +9,28 @@ define:
     password: admin123
   mysql:
     write:
-      url: jdbc:mysql://192.168.105.22:3306/perception_base?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
-      username: base_master
-      password: base_master
+      url: jdbc:mysql://10.101.201.164:3306/perception_base?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+      username: root
+      password: admin123
     read1:
-      url: jdbc:mysql://192.168.105.22:3306/perception_base?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
-      username: base_slaver
-      password: base_slaver
+      url: jdbc:mysql://10.101.201.164:3306/perception_base?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+      username: root
+      password: admin123
     share:
-      url: jdbc:mysql://192.168.105.22:3306/share?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
-      username: share_master
-      password: share_master
+      url: jdbc:mysql://10.101.201.164:3306/share?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+      username: root
+      password: admin123
     equipment:
-      url: jdbc:mysql://192.168.105.22:3306/perception_equipment?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
-      username: equipment_master
-      password: equipment_master
+      url: jdbc:mysql://10.101.201.164:3306/perception_equipment?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+      username: root
+      password: admin123
 eureka:
   client:
     fetch-registry: true
     register-with-eureka: true
     registry-fetch-interval-seconds: 5
     serviceUrl:
-      defaultZone: http://${define.user.name}:${define.user.password}@192.168.105.22:18010/eureka/
+      defaultZone: http://${define.user.name}:${define.user.password}@10.101.201.159:18010/eureka/
   instance:
     prefer-ip-address: true
     instance-id: ${spring.cloud.client.ip-address}:${server.port}
@@ -54,13 +54,13 @@ spring:
       override-system-properties: false    # 是否覆盖Java运行时参数
   data:
     mongodb:
-      host: 192.168.105.22
+      host: 10.101.201.164
       port: 27017
       database: perception
       #username: admin
       #password: '{cipher}a1d30c1325f1b0cd2e4619bff2be57bc32ae0413c0ce1fee07153b60bfa3a782'
   redis:
-    host: 192.168.105.22
+    host: 10.101.201.164
     port: 6379
     password: bigdb123
     database: 2
@@ -72,7 +72,7 @@ spring:
         min-idle: 0
     timeout: 10000
   rabbitmq:
-    host: 114.116.44.104
+    host: 10.101.201.164
     port: 5672
     username: admin
     password: legaoyun@2018
