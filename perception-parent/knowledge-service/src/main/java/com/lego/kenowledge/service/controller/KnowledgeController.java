@@ -10,6 +10,7 @@ import com.lego.kenowledge.service.model.entity.Answer;
 import com.lego.kenowledge.service.model.entity.Ask;
 import com.lego.kenowledge.service.model.entity.Knowledge;
 import com.lego.kenowledge.service.model.vo.AskVo;
+import com.lego.kenowledge.service.model.vo.KnowledgeVo;
 import com.lego.kenowledge.service.service.IKnowledgeService;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
@@ -93,8 +94,8 @@ public class KnowledgeController {
     })
     @Operation(value = "details", desc = "根据标签检索知识库内容")
     @RequestMapping(value = "/details/{askId}", method = RequestMethod.GET)
-    public RespVO<Knowledge> details(@PathVariable String askId) {
-        Knowledge knowledge = iKnowledgeService.details(askId);
+    public RespVO<KnowledgeVo> details(@PathVariable String askId) {
+        KnowledgeVo knowledge = iKnowledgeService.details(askId);
         return RespVOBuilder.success(knowledge);
     }
 
@@ -117,15 +118,15 @@ public class KnowledgeController {
     })
     @Operation(value = "searchTag", desc = "根据标签检索知识库内容")
     @RequestMapping(value = "/searchTag/{q}", method = RequestMethod.GET)
-    public RespVO<RespDataVO<Knowledge>> searchTag(@PathVariable String q, String tag) {
-        List<Knowledge> list = iKnowledgeService.searchTag(q, tag);
+    public RespVO<RespDataVO<KnowledgeVo>> searchTag(@PathVariable String q, String tag) {
+        List<KnowledgeVo> list = iKnowledgeService.searchTag(q, tag);
         return RespVOBuilder.success(list);
     }
 
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
-    public RespVO<RespDataVO<Knowledge>> findAll() {
-        List<Knowledge> knowledgeList = iKnowledgeService.all();
+    public RespVO<RespDataVO<KnowledgeVo>> findAll() {
+        List<KnowledgeVo> knowledgeList = iKnowledgeService.all();
         return RespVOBuilder.success(knowledgeList);
     }
 

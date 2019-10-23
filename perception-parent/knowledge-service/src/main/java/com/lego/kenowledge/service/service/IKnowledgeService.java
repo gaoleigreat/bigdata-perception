@@ -7,6 +7,7 @@ import com.lego.kenowledge.service.model.entity.Answer;
 import com.lego.kenowledge.service.model.entity.Ask;
 import com.lego.kenowledge.service.model.entity.Knowledge;
 import com.lego.kenowledge.service.model.vo.AskVo;
+import com.lego.kenowledge.service.model.vo.KnowledgeVo;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -54,7 +55,7 @@ public interface IKnowledgeService {
      * @param askId
      * @return
      */
-    Knowledge details(String askId);
+    KnowledgeVo details(String askId);
 
     /**
      * 我的提问
@@ -67,12 +68,12 @@ public interface IKnowledgeService {
      * @param tag
      * @return
      */
-    List<Knowledge> searchTag(String q, String tag);
+    List<KnowledgeVo> searchTag(String q, String tag);
 
     /**
      * @return
      */
-    List<Knowledge> all();
+    List<KnowledgeVo> all();
 
     /**
      * @param id

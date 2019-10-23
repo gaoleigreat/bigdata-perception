@@ -109,7 +109,7 @@ public class AuthFilter extends ZuulFilter {
                 RibbonVersionHolder.setContext(osType);
             }
             //  是否登录
-            if(req.getLocalAddr().equals("192.168.101.41")){
+            if(req.getLocalAddr().equals("192.168.101.76")){
                 return checkSsoLogin(ctx,pvId,traceInfo);
             }
             return checkLogin(ctx, pvId, traceInfo, userToken, deviceType);

@@ -25,9 +25,9 @@ public class MyRule extends AbstractLoadBalancerRule {
     private int currentIndex = 0;
     private int total = 0;
 
-    private String[] localhost = {"192.168.101.41"};
+    private String[] localhost = {"192.168.101.76"};
 
-    private String[] blackInstances = {"192.168.101.41:48090"};
+    private String[] blackInstances = {"192.168.101.76:48090"};
 
     @Override
     public void initWithNiwsConfig(IClientConfig iClientConfig) {
