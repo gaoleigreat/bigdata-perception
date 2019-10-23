@@ -81,7 +81,7 @@ public class DataController {
         if (template == null) {
             return RespVOBuilder.failure("所选模板不存在");
         }
-        RespVO<RespDataVO<DataFile>> uploads = fileClient.uploads(files, projectId, templateId, template.getType(),remark,tags);
+        RespVO<RespDataVO<DataFile>> uploads = fileClient.uploads(files, projectId, templateId, template.getDataType(), remark, tags);
         Set<DataFile> dataFileSet = new HashSet<>();
         Arrays.stream(files).forEach(mf -> {
 
@@ -104,7 +104,7 @@ public class DataController {
             });
 
         });
-        if (dataFileSet.size() != files.length){
+        if (dataFileSet.size() != files.length) {
             return RespVOBuilder.failure("上传文件失败");
         }
         return RespVOBuilder.success(uploads.getInfo().getList().get(0).getBatchNum());
@@ -117,7 +117,8 @@ public class DataController {
             @ApiImplicitParam(name = "files", value = "格式化文件上传，", paramType = "formData", allowMultiple = true, required = true, dataType = "file"),
             @ApiImplicitParam(name = "projectId", value = "工程Id，", paramType = "query", required = false, dataType = "long"),
             @ApiImplicitParam(name = "remark", value = "说明", paramType = "query", required = false, dataType = "String"),
-            @ApiImplicitParam(name = "tags", value = "标签", paramType = "query", required = false, dataType = "String",example = "文件,设备,建筑"),
+            @ApiImplicitParam(name = "dataType", value = "数据类型(1-地形地貌;2-水文环境;3-市政管线;4-勘察设计;5-工程施工;6-装备运行;7-运营维护;8-其他)", paramType = "query", dataType = "int"),
+            @ApiImplicitParam(name = "tags", value = "标签", paramType = "query", required = false, dataType = "String", example = "文件,设备,建筑"),
     })
     @PostMapping(value = "/upload/unformatted", headers = "content-type=multipart/form-data")
     @Operation(value = "unformatted", desc = "非格式化文件上传")
@@ -128,18 +129,16 @@ public class DataController {
         if (files == null || files.length <= 0) {
             return RespVOBuilder.failure("上传文件有误");
         }
-        RespVO<RespDataVO<DataFile>> uploads = fileClient.uploads(files, projectId, null, -1,remark,tags);
-       if (uploads.getRetCode() !=1){
-           return RespVOBuilder.failure("上传文件失败");
-       }
-       if (uploads.getInfo().getList().size() <=0 ){
-           return RespVOBuilder.failure("上传文件失败");
-       }
+        RespVO<RespDataVO<DataFile>> uploads = fileClient.uploads(files, projectId, null, -1, remark, tags);
+        if (uploads.getRetCode() != 1) {
+            return RespVOBuilder.failure("上传文件失败");
+        }
+        if (uploads.getInfo().getList().size() <= 0) {
+            return RespVOBuilder.failure("上传文件失败");
+        }
         return RespVOBuilder.success(uploads.getInfo().getList().get(0).getBatchNum());
 
     }
-
-
 
 
 }

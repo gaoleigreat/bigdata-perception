@@ -45,7 +45,7 @@ public class DataFileController {
             @ApiImplicitParam(name = "files", value = "多个文件，", paramType = "formData", allowMultiple = true, required = true, dataType = "file"),
             @ApiImplicitParam(name = "projectId", value = "项目id，", paramType = "query",  required = false, dataType = "Long"),
             @ApiImplicitParam(name = "templateId", value = "模板id，", paramType = "query",  required = false, dataType = "Long"),
-            @ApiImplicitParam(name = "sourceType", value = "数据源类型(0-MySql;1-Mongo)，",  allowMultiple = false, required = false, dataType = "int"),
+            @ApiImplicitParam(name = "sourceType", value = "数据类型，", required = false, dataType = "int"),
             @ApiImplicitParam(name = "remark", value = "备注", paramType = "query",  required = false, dataType = "String"),
             @ApiImplicitParam(name = "tags", value = "标签", paramType = "query",  required = false, dataType = "String"),
 
