@@ -57,12 +57,12 @@ spring:
       host: 10.101.201.164
       port: 27017
       database: perception
-      #username: admin
-      #password: '{cipher}a1d30c1325f1b0cd2e4619bff2be57bc32ae0413c0ce1fee07153b60bfa3a782'
+      username: admin
+      password: admin123
   redis:
     host: 10.101.201.164
     port: 6379
-    password: bigdb123
+    password: admin123
     database: 2
     jedis:
       pool:
