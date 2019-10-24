@@ -57,7 +57,7 @@ spring:
       host: 10.101.201.164
       port: 27017
       database: perception
-      username: admin
+      username: root
       password: admin123
   redis:
     host: 10.101.201.164
@@ -74,8 +74,8 @@ spring:
   rabbitmq:
     host: 10.101.201.164
     port: 5672
-    username: admin
-    password: legaoyun@2018
+    username: guest
+    password: guest
   zipkin:
     base-url: http://192.168.0.154:9411
   jackson:
