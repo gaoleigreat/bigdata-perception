@@ -2,7 +2,7 @@ spring:
   cloud:
     config:
       fail-fast: true
-      uri: http://192.168.101.41:18020
+      uri: http://192.168.101.76:18020
       profile: local
       label: master
       username: admin
