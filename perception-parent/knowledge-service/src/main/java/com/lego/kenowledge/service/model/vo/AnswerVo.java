@@ -28,4 +28,6 @@ public class AnswerVo {
     private Date createdDate;
     @ApiModelProperty("回复人姓名")
     private String createdName;
+    @ApiModelProperty("附件批次号")
+    private String annexNum;
 }

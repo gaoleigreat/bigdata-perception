@@ -29,7 +29,7 @@ spring:
   application:
     name: file-preview
   profiles:
-    active: zt
+    active: local
   servlet:
     multipart:
       max-request-size: 500MB

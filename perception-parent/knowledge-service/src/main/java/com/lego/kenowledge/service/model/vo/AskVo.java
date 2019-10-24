@@ -30,7 +30,8 @@ public class AskVo {
     private Date createdDate;
     @ApiModelProperty("回复数")
     private Integer answerCount;
-
     @ApiModelProperty("提问人姓名")
     private String createdName;
+    @ApiModelProperty("附件批次号")
+    private String annexNum;
 }

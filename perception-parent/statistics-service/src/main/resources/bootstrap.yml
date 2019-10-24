@@ -9,7 +9,7 @@ spring:
     name: statistics-service
 
   profiles:
-    active: zt
+    active: local
   cloud:
     stream:
       bindings:
