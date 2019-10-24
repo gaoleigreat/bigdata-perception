@@ -1,0 +1,50 @@
+zuul:
+  routes:
+    auth-service: /auth-service/**
+    file-service: /file-service/**
+    system-service: /system-service/**
+    log-service: /log-service/**
+    user-service: /user-service/**
+    template-service: /template-service/**
+    business-service: /business-service/**
+    data-service: /data-service/**
+    equipment-service: /equipment-service/**
+    knowledge-service: /knowledge-service/**
+    statistics-service: /statistics-service/**
+  ignored-services: '*'
+
+
+session:
+  domain: zuul-server
+
+feign:
+  hystrix:
+    enabled: true
+
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+    #instance-id: ${spring.cloud.client.ip-address}:${random.value}
+    metadata-map:
+      user.name: ${define.security.name}
+      user.password: ${define.security.password}
+      management.context-path: ${server.servlet.context-path}/actuator
+
+    lease-renewal-interval-in-seconds: 1
+    lease-expiration-duration-in-seconds: 2
+
+    ## 监控地址 拼接  context-path
+    home-page-url-path: ${server.servlet.context-path}
+    status-page-url-path: ${server.servlet.context-path}/actuator/info
+    health-check-url-path: ${server.servlet.context-path}/actuator/health
+
+
+
+jwt:
+  exclude:
+    urlPatterns:
+      #- .*api-docs.*
+      #- .*swagger.*
+      - .*.*

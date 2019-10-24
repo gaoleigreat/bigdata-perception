@@ -1,5 +1,14 @@
-hdfs:
-  url: hdfs://bdc-node-1:8020
+#配置生成token的参数
+jwt:
+  info:
+    clientId: 098f6bcd4621d373cade4e832627b4f6
+    base64Secret: PL8iU@vt&0tFWijuoi%zASgsLP1rKwks
+    name: security-api
+    appExpires: 432000
+    webExpires: 1800
+
+
+
 define:
   # mysql 主从库配置
   datasource:

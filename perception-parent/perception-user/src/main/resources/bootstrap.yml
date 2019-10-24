@@ -11,7 +11,7 @@ spring:
   application:
     name: user-service
   profiles:
-    active: local
+    active: zt
   cloud:
     stream:
       bindings:
@@ -36,10 +36,10 @@ sso:
   server:
     supervisor:
       url:
-        http://127.0.0.1:8092
+        http://10.101.201.154:9092
   local:
     url:
-      http://127.0.0.1:20010/perception/user-service
+      http://127.0.0.1:18050/
 
 
 

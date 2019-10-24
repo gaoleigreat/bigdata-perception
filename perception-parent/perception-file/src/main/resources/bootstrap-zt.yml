@@ -1,0 +1,41 @@
+spring:
+  cloud:
+    config:
+      fail-fast: true
+      uri: http://10.101.213.241:18020
+      profile: zt
+      label: master
+      username: admin
+      password: admin123456
+      retry:
+        max-attempts: 3
+
+file:
+  service:
+    url: http://192.168.0.95/
+
+
+ceph:
+  host: http://192.168.105.10:7480/
+  accessKey: 7BFAN4EX4ZCAT86V4Z65
+  secretKey: LW3h7jyYyk3HbbLDtcoAoA6KYeREQixcwxtzxkHK
+
+application:
+  description: 文件
+
+management:
+  endpoint:
+    shutdown:
+      enabled: true
+    env:
+      enabled: true
+    mappings:
+      enabled: true
+    health:
+      show-details: always
+    restart:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: ["health","info","shutdown","mappings","env","restart"]
