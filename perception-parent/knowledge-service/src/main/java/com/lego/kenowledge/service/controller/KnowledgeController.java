@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.util.*;
 
 /**
@@ -43,26 +44,37 @@ public class KnowledgeController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "tags", value = "标签", dataType = "String", allowMultiple = true, paramType = "query"),
             @ApiImplicitParam(name = "classify", value = "知识库分类(1-专家经验库;2-厂家一般故障库;3-特殊装备故障;4-其他故障)", dataType = "int", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "askBody", value = "提问内容", dataType = "String", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "askDesc", value = "提问描述", dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "tags", value = "标签", dataType = "String", allowMultiple = true, paramType = "query"),
+
     })
     @Operation(value = "saveAsk", desc = "新增知识库信息")
     @RequestMapping(value = "/saveAsk", method = RequestMethod.POST)
-    public RespVO saveAsk(@RequestBody Ask ask,
+    public RespVO saveAsk(@RequestParam String askBody,
+                          @RequestParam(required = false) String askDesc,
                           @RequestParam Integer classify,
                           @RequestParam(required = false) MultipartFile[] files,
                           @RequestParam(required = false) List<String> tags) {
+        Ask ask = new Ask();
+        ask.setAskBody(askBody);
+        ask.setAskDesc(askDesc);
         return iKnowledgeService.saveAsk(ask, classify, files, tags);
     }
 
 
     @ApiOperation(value = "新增知识库回答信息", httpMethod = "POST")
     @ApiImplicitParams({
+            @ApiImplicitParam(name = "answerBody", value = "回复内容", dataType = "String", required = true, paramType = "query"),
             @ApiImplicitParam(name = "askId", value = "提问id", dataType = "String", required = true, paramType = "query"),
     })
     @Operation(value = "saveAnswer", desc = "新增知识库回答信息")
     @RequestMapping(value = "/saveAnswer", method = RequestMethod.POST)
-    public RespVO saveAnswer(@RequestBody Answer answer,
+    public RespVO saveAnswer(@RequestParam String answerBody,
                              @RequestParam(required = false) MultipartFile[] files,
                              @RequestParam String askId) {
+        Answer answer = new Answer();
+        answer.setAnswerBody(answerBody);
         return iKnowledgeService.saveAnswer(answer, files, askId);
     }
 

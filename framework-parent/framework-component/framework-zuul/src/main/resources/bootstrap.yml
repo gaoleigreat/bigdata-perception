@@ -18,7 +18,7 @@ spring:
   application:
     name: zuul-server
   profiles:
-    active: zt
+    active: local
   servlet:
     multipart:
       max-file-size: 5MB
