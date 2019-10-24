@@ -1,8 +1,5 @@
 package com.lego.perception.file.mapper;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.framework.mybatis.mapper.Mapper;
 import com.lego.framework.system.model.entity.DataFile;
 import org.apache.ibatis.annotations.Param;

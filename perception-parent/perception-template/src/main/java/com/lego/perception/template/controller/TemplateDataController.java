@@ -8,7 +8,6 @@ import com.lego.framework.base.annotation.Resource;
 import com.lego.framework.base.exception.ExceptionBuilder;
 import com.lego.framework.business.feign.BusinessClient;
 import com.lego.framework.file.feign.FileClient;
-import com.lego.framework.file.model.UploadFile;
 import com.lego.framework.system.feign.DataFileClient;
 import com.lego.framework.system.model.entity.DataFile;
 import com.lego.framework.template.model.entity.FormTemplate;
@@ -37,7 +36,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.xml.sax.SAXException;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
