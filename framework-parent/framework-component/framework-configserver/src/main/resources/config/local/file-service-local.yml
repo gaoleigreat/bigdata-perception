@@ -1,5 +1,5 @@
 hdfs:
-  url: hdfs://114.115.233.31:9000
+  url: hdfs://bdc-node-1:9000
 define:
   # mysql 主从库配置
   datasource:

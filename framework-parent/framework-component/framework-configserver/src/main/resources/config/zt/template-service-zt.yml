@@ -1,14 +1,12 @@
-hdfs:
-  url: hdfs://bdc-node-1:8020
 define:
   # mysql 主从库配置
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     write:
       driverClassName: com.mysql.cj.jdbc.Driver
-      url: ${define.mysql.write.url}
-      username: ${define.mysql.write.username}
-      password: ${define.mysql.write.password}
+      url: jdbc:mysql://10.101.201.164:3306/perception_template?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+      username: root
+      password: admin123
       initialSize: 5    #初始化时建立连接个数
       minIdle: 5
       maxActive: 20     #连接池最大连接数
@@ -29,9 +27,9 @@ define:
       useGlobalDataSourceStat: true
     read1:
       driverClassName: com.mysql.cj.jdbc.Driver
-      url: ${define.mysql.read1.url}
-      username: ${define.mysql.read1.username}
-      password: ${define.mysql.read1.password}
+      url: jdbc:mysql://10.101.201.164:3306/perception_template?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+      username: root
+      password: admin123
       initialSize: 5
       minIdle: 5
       maxActive: 20

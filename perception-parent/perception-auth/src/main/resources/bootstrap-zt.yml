@@ -1,0 +1,17 @@
+spring:
+  cloud:
+    config:
+      fail-fast: true
+      uri: http://10.101.213.241:18020
+      profile: zt
+      label: master
+      username: admin
+      password: admin123456
+      retry:
+        max-attempts: 3
+
+
+  security:
+    user:
+      name: ${define.user.name}
+      password: ${define.user.password}

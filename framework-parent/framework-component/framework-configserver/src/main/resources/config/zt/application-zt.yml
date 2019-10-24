@@ -30,7 +30,7 @@ eureka:
     register-with-eureka: true
     registry-fetch-interval-seconds: 5
     serviceUrl:
-      defaultZone: http://${define.user.name}:${define.user.password}@10.101.201.159:18010/eureka/
+      defaultZone: http://${define.user.name}:${define.user.password}@10.101.213.241:18010/eureka/
   instance:
     prefer-ip-address: true
     instance-id: ${spring.cloud.client.ip-address}:${server.port}
@@ -57,7 +57,7 @@ spring:
       host: 10.101.201.164
       port: 27017
       database: perception
-      username: root
+      username: admin
       password: admin123
   redis:
     host: 10.101.201.164
