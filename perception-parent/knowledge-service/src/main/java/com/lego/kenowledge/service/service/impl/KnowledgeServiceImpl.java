@@ -10,13 +10,18 @@ import com.lego.framework.base.context.RequestContext;
 import com.lego.framework.base.exception.ExceptionBuilder;
 import com.lego.framework.base.utils.UuidUtils;
 import com.lego.framework.file.feign.FileClient;
+import com.lego.framework.system.feign.UserClient;
 import com.lego.framework.system.model.entity.DataFile;
+import com.lego.framework.system.model.entity.User;
 import com.lego.kenowledge.service.model.entity.Answer;
 import com.lego.kenowledge.service.model.entity.Ask;
 import com.lego.kenowledge.service.model.entity.Knowledge;
+import com.lego.kenowledge.service.model.vo.AnswerVo;
 import com.lego.kenowledge.service.model.vo.AskVo;
+import com.lego.kenowledge.service.model.vo.KnowledgeVo;
 import com.lego.kenowledge.service.repository.KnowledgeRepository;
 import com.lego.kenowledge.service.service.IKnowledgeService;
+import org.checkerframework.checker.units.qual.K;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -58,6 +63,9 @@ public class KnowledgeServiceImpl implements IKnowledgeService {
 
     @Autowired
     private FileClient fileClient;
+
+    @Autowired
+    private UserClient userClient;
 
 
     @Override
@@ -146,12 +154,21 @@ public class KnowledgeServiceImpl implements IKnowledgeService {
     }
 
     @Override
-    public Knowledge details(String askId) {
+    public KnowledgeVo details(String askId) {
         Knowledge knowledge = knowledgeRepository.findKnowledgeByAskId(askId);
         if (knowledge == null) {
             ExceptionBuilder.operateFailException("知识不存在");
         }
-        return knowledge;
+        List<Knowledge> knowledges = new ArrayList<>();
+        knowledges.add(knowledge);
+        List<KnowledgeVo> knowledgeVos = getKnowledgess(knowledges);
+        if (!CollectionUtils.isEmpty(knowledgeVos)) {
+            return knowledgeVos.get(0);
+        } else {
+            return null;
+        }
+
+
     }
 
     @Override
@@ -161,7 +178,7 @@ public class KnowledgeServiceImpl implements IKnowledgeService {
     }
 
     @Override
-    public List<Knowledge> searchTag(String q, String tag) {
+    public List<KnowledgeVo> searchTag(String q, String tag) {
         NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
         // queryStringQuery 全文检索
         //  matchQuery  multiMatchQuery 分词检索
@@ -181,18 +198,18 @@ public class KnowledgeServiceImpl implements IKnowledgeService {
         while (iterator.hasNext()) {
             list.add(iterator.next());
         }
-        return list;
+        return getKnowledgess(list);
     }
 
     @Override
-    public List<Knowledge> all() {
+    public List<KnowledgeVo> all() {
         List<Knowledge> knowledgeList = new ArrayList<>();
         Iterable<Knowledge> all = knowledgeRepository.findAll();
         Iterator<Knowledge> knowledgeIterator = all.iterator();
         while (knowledgeIterator.hasNext()) {
             knowledgeList.add(knowledgeIterator.next());
         }
-        return knowledgeList;
+        return getKnowledgess(knowledgeList);
     }
 
     @Override
@@ -213,6 +230,17 @@ public class KnowledgeServiceImpl implements IKnowledgeService {
                 Ask ask = know.getAsk();
                 AskVo askVo = new AskVo();
                 BeanUtils.copyProperties(ask, askVo);
+                User user = new User();
+                if (null != ask.getCreatedId()) {
+                    user.setId(ask.getCreatedId());
+                    RespVO<User> userRespVO = userClient.findUser(user);
+
+                    if (userRespVO.getRetCode() == 1) {
+                        String username = userRespVO.getInfo().getUsername();
+                        askVo.setCreatedName(username);
+                    }
+                }
+
                 List<Answer> answers = know.getAnswers();
                 askVo.setAnswerCount(answers != null ? answers.size() : 0);
                 askVos.add(askVo);
@@ -220,5 +248,81 @@ public class KnowledgeServiceImpl implements IKnowledgeService {
         }
         return askVos;
     }
+
+
+    private List<KnowledgeVo> getKnowledgess(List<Knowledge> knowledgeList) {
+        List<KnowledgeVo> knowledgeVos = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(knowledgeList)) {
+            for (Knowledge know : knowledgeList) {
+                KnowledgeVo knowledgeVo = new KnowledgeVo();
+                BeanUtils.copyProperties(know, knowledgeVo);
+
+                User user = new User();
+                if (null != know.getCreatedId()) {
+                    user.setId(know.getCreatedId());
+                    RespVO<User> userRespVO = userClient.findUser(user);
+                    if (userRespVO.getRetCode() == 1) {
+                        String username = userRespVO.getInfo().getUsername();
+                        knowledgeVo.setCreatedName(username);
+                    }
+
+                    user.setId(know.getUpdatedId());
+                    userRespVO = userClient.findUser(user);
+                    if (userRespVO.getRetCode() == 1) {
+                        String username = userRespVO.getInfo().getUsername();
+                        knowledgeVo.setLastUpdatedName(username);
+                    }
+                }
+                List<AnswerVo> answerVos = getAnswerVos(know.getAnswers());
+                knowledgeVo.setAnswerVos(answerVos);
+                AskVo askVo = getAskVo(know.getAsk());
+                knowledgeVo.setAskVo(askVo);
+                knowledgeVos.add(knowledgeVo);
+
+            }
+        }
+        return knowledgeVos;
+    }
+
+    private List<AnswerVo> getAnswerVos(List<Answer> answers) {
+        List<AnswerVo> answerVos = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(answers)) {
+            for (Answer answer : answers) {
+                AnswerVo answerVo = new AnswerVo();
+                BeanUtils.copyProperties(answer, answerVo);
+                User user = new User();
+                if (null != answer.getCreatedId()) {
+                    user.setId(answer.getCreatedId());
+                    RespVO<User> userRespVO = userClient.findUser(user);
+                    if (userRespVO.getRetCode() == 1) {
+                        String username = userRespVO.getInfo().getUsername();
+                        answerVo.setCreatedName(username);
+                        answerVos.add(answerVo);
+                    }
+
+                }
+
+            }
+        }
+        return answerVos;
+    }
+
+    private AskVo getAskVo(Ask ask) {
+        AskVo askVo = new AskVo();
+        BeanUtils.copyProperties(ask, askVo);
+        User user = new User();
+        if (null != ask.getCreatedId()) {
+            user.setId(ask.getCreatedId());
+            RespVO<User> userRespVO = userClient.findUser(user);
+            if (userRespVO.getRetCode() == 1) {
+                String username = userRespVO.getInfo().getUsername();
+                askVo.setCreatedName(username);
+            }
+
+        }
+
+        return askVo;
+    }
+
 
 }

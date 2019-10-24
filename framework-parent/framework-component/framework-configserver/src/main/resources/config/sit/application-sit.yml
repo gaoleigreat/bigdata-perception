@@ -57,7 +57,7 @@ spring:
       host: 10.101.201.164
       port: 27017
       database: perception
-      username: admin
+      username: root
       password: admin123
   redis:
     host: 10.101.201.164

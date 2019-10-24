@@ -40,4 +40,11 @@ public class KnowledgeVo {
     private Date lastUpdateDate;
     @ApiModelProperty("更新人id")
     private Long lastUpdatedBy;
+
+
+    @ApiModelProperty("创建人Name")
+    private String createdName;
+
+    @ApiModelProperty("更新人Name")
+    private String lastUpdatedName;
 }

@@ -47,4 +47,5 @@ public class Knowledge {
     @ApiModelProperty("更新人id")
     private Long updatedId;
 
+
 }

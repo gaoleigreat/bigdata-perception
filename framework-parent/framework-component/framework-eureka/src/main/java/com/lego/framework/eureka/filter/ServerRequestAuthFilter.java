@@ -21,7 +21,7 @@ import java.util.Arrays;
  **/
 @Slf4j
 @WebFilter(filterName = "authFilter", urlPatterns = "/*",initParams = {
-        @WebInitParam(name = "black_list",value = "192.168.101.41,",description = "blackList")
+        @WebInitParam(name = "black_list",value = "192.168.101.76,",description = "blackList")
 })
 @Order(1)
 public class ServerRequestAuthFilter implements Filter {

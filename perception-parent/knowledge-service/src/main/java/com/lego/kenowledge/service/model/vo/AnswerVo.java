@@ -26,4 +26,6 @@ public class AnswerVo {
     private Long createdId;
     @ApiModelProperty("回复时间")
     private Date createdDate;
+    @ApiModelProperty("回复人姓名")
+    private String createdName;
 }
