@@ -98,7 +98,8 @@ public class DataController {
                     dataFileSet.add(dataFile);
                     try {
                         List<Map<String, Object>> maps = TemplateDataUtil.analyticalData(mf, dataFile.getId(), template);
-                        if (template.getType().equals("0")) {
+                        Integer type = template.getType();
+                        if (type != null && type == 0) {
                             mySqlBusinessService.insertBusinessData(template, maps, dataFile.getId());
                         } else {
                             mongoBusinessService.insertBusinessData(template, maps, dataFile.getId());
