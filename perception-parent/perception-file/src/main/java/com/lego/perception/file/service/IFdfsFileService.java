@@ -1,6 +1,10 @@
 package com.lego.perception.file.service;
 import com.framework.common.sdto.RespVO;
 import com.lego.perception.file.model.UploadFile;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Map;
+
 public interface IFdfsFileService {
 
     /**
@@ -8,7 +12,7 @@ public interface IFdfsFileService {
      * @param file
      * @return
      */
-    RespVO upload(UploadFile file);
+    Map<String, Object> upload(UploadFile file);
 
     /**
      * 下载
@@ -17,4 +21,10 @@ public interface IFdfsFileService {
      * @return
      */
     byte[] download(String groupName, String remoteFile);
+
+    /**
+     * @param file
+     * @return
+     */
+    Map<String, Object> webUpload(MultipartFile file);
 }

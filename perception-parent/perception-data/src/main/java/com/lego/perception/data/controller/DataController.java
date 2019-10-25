@@ -1,5 +1,6 @@
 package com.lego.perception.data.controller;
 
+import com.framework.common.consts.RespConsts;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
@@ -18,8 +19,10 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.io.IOException;
@@ -80,11 +83,16 @@ public class DataController {
         }
         Integer dataType = template.getDataType();
         RespVO<RespDataVO<DataFile>> uploads = fileClient.uploads(files, projectId, templateId, template.getDataType(), remark, tags.get(dataType));
+        if (uploads.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
+            return uploads;
+        }
+        RespDataVO<DataFile> dataVO = uploads.getInfo();
+        if (dataVO == null || CollectionUtils.isEmpty(dataVO.getList())) {
+            return uploads;
+        }
         Set<DataFile> dataFileSet = new HashSet<>();
         Arrays.stream(files).forEach(mf -> {
-
             List<DataFile> dataFiles = uploads.getInfo().getList();
-
             dataFiles.forEach(dataFile -> {
                 if (mf.getOriginalFilename().endsWith(dataFile.getName())) {
                     dataFileSet.add(dataFile);

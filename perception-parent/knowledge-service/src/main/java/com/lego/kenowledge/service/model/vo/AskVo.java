@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author : yanglf
@@ -18,6 +19,8 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AskVo {
+    @ApiModelProperty("标签")
+    private List<String> tags;
     @ApiModelProperty("提问id")
     private String id;
     @ApiModelProperty("提问内容")

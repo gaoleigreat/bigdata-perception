@@ -85,7 +85,7 @@ public class FormTemplateServiceImpl implements IFormTemplateService {
             //查询数据项
             List<FormTemplateItem> itemList = formTemplateItemService.findList(queryParam);
 
-            DataTemplateItem query = new DataTemplateItem();
+          /*  DataTemplateItem query = new DataTemplateItem();
             query.setTemplateId(template.getDataTemplateId());
             List<DataTemplateItem> dataTemplateItems = dataTemplateItemService.findList(query);
             Map<String, String> map = new HashMap<>();
@@ -93,16 +93,16 @@ public class FormTemplateServiceImpl implements IFormTemplateService {
                 for (DataTemplateItem item : dataTemplateItems) {
                     map.put(item.getAbsoluteField(), item.getTitle());
                 }
-            }
+            }*/
 
-            if (!CollectionUtils.isEmpty(itemList)) {
+           /* if (!CollectionUtils.isEmpty(itemList)) {
                 for (FormTemplateItem item : itemList) {
                     item.setDataFieldName(map.get(item.getDataField()));
                     if (null != item.getEnumId()) {
                         item.setEnumName(enumerationMap.containsKey(item.getEnumId()) ? enumerationMap.get(item.getEnumId()).getEnumName() : "");
                     }
                 }
-            }
+            }*/
 
             //转为树形结构
             List<FormTemplateItem> itemTree = formTemplateItemService.convertList2Tree(itemList);

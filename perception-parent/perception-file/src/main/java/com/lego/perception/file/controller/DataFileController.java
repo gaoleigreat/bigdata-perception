@@ -35,19 +35,16 @@ import java.util.*;
 public class DataFileController {
 
     @Autowired
-    private IFdfsFileService fdfsFileService;
-
-    @Autowired
     private IDataFileService dataFileService;
 
     @ApiOperation(value = "多文件上传", notes = "多文件上传")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "files", value = "多个文件，", paramType = "formData", allowMultiple = true, required = true, dataType = "file"),
-            @ApiImplicitParam(name = "projectId", value = "项目id，", paramType = "query",  required = false, dataType = "Long"),
-            @ApiImplicitParam(name = "templateId", value = "模板id，", paramType = "query",  required = false, dataType = "Long"),
+            @ApiImplicitParam(name = "projectId", value = "项目id，", paramType = "query", required = false, dataType = "Long"),
+            @ApiImplicitParam(name = "templateId", value = "模板id，", paramType = "query", required = false, dataType = "Long"),
             @ApiImplicitParam(name = "sourceType", value = "数据类型，", required = false, dataType = "int"),
-            @ApiImplicitParam(name = "remark", value = "备注", paramType = "query",  required = false, dataType = "String"),
-            @ApiImplicitParam(name = "tags", value = "标签", paramType = "query",  required = false, dataType = "String"),
+            @ApiImplicitParam(name = "remark", value = "备注", paramType = "query", required = false, dataType = "String"),
+            @ApiImplicitParam(name = "tags", value = "标签", paramType = "query", required = false, dataType = "String"),
 
     })
     @PostMapping(value = "/uploads", headers = "content-type=multipart/form-data")
@@ -63,31 +60,23 @@ public class DataFileController {
 
         List<DataFile> returnList = new ArrayList<>();
         List<DataFile> dataFiles = new ArrayList<>();
-        Arrays.stream(files).forEach(f -> {
-            try {
-                UploadFile uploadFile = new UploadFile();
-                uploadFile.setFileName(f.getOriginalFilename());
-                uploadFile.setContent(f.getBytes());
-                if (!StringUtils.isEmpty(f.getOriginalFilename())) {
-                    int pos = f.getOriginalFilename().lastIndexOf(".");
-
-                    if (pos > -1 && pos + 1 < f.getOriginalFilename().length()) {
-                        uploadFile.setExt(f.getOriginalFilename().substring(pos + 1));
-                    }
+        Map<String, String> upload = dataFileService.uploadToHdfs(null, null, files);
+        for (MultipartFile f : files) {
+            String filename = f.getOriginalFilename();
+            if (upload != null && upload.containsKey(filename)) {
+                Map<String, Object> fileMap = new HashMap<>(2);
+                fileMap.put("fileName", filename);
+                fileMap.put("url", upload.get(filename));
+                int pos = f.getOriginalFilename().lastIndexOf(".");
+                String ext = null;
+                if (pos > -1 && pos + 1 < filename.length()) {
+                    ext = filename.substring(pos + 1);
                 }
-                RespVO<Map<String, Object>> upload = fdfsFileService.upload(uploadFile);
-                if (1 == upload.getRetCode()) {
-                    Map<String, Object> fileMap = new HashMap<>(2);
-                    fileMap.put("fileName", f.getOriginalFilename());
-                    fileMap.put("url", upload.getInfo().get("data"));
-                    DataFile dataFile = new DataFile(uploadFile.getFileName(), uploadFile.getExt(), projectId, upload.getInfo().get("data").toString(), upload.getInfo().get("data").toString(), templateId, 0, sourceType, 0, remark, tags, batchNum);
-                    dataFiles.add(dataFile);
-                    returnList.add(dataFile);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+                DataFile dataFile = new DataFile(filename, ext, projectId, upload.get(filename), upload.get(filename), templateId, 0, sourceType, 0, remark, tags, batchNum);
+                dataFiles.add(dataFile);
+                returnList.add(dataFile);
             }
-        });
+        }
         dataFileService.batchInsert(dataFiles);
         return RespVOBuilder.success(returnList);
     }
@@ -103,7 +92,7 @@ public class DataFileController {
     @Operation(value = "select_paged", desc = "查询维修费用")
     @RequestMapping(value = "/select_paged/{pageSize}/{pageIndex}", method = RequestMethod.GET)
     public RespVO<PagedResult<DataFile>> selectPaged(@ModelAttribute DataFile dataFile,
-                                                          @PathParam(value = "") Page page) {
+                                                     @PathParam(value = "") Page page) {
         PagedResult<DataFile> dataFilePagedResult = dataFileService.selectPaged(dataFile, page);
         return RespVOBuilder.success(dataFilePagedResult);
     }

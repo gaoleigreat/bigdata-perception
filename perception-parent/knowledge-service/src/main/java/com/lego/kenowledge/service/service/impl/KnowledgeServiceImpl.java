@@ -240,7 +240,7 @@ public class KnowledgeServiceImpl implements IKnowledgeService {
                         askVo.setCreatedName(username);
                     }
                 }
-
+                askVo.setTags(know.getTags());
                 List<Answer> answers = know.getAnswers();
                 askVo.setAnswerCount(answers != null ? answers.size() : 0);
                 askVos.add(askVo);
@@ -291,6 +291,7 @@ public class KnowledgeServiceImpl implements IKnowledgeService {
                 AnswerVo answerVo = new AnswerVo();
                 BeanUtils.copyProperties(answer, answerVo);
                 User user = new User();
+                answerVo.setAnnexNum(answer.getAnnexNum());
                 if (null != answer.getCreatedId()) {
                     user.setId(answer.getCreatedId());
                     RespVO<User> userRespVO = userClient.findUser(user);
@@ -318,7 +319,7 @@ public class KnowledgeServiceImpl implements IKnowledgeService {
                 String username = userRespVO.getInfo().getUsername();
                 askVo.setCreatedName(username);
             }
-
+            askVo.setAnnexNum(ask.getAnnexNum());
         }
 
         return askVo;

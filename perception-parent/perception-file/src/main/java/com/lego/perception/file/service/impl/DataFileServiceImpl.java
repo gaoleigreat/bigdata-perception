@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.framework.common.consts.RespConsts;
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
@@ -16,6 +17,8 @@ import com.lego.framework.system.model.entity.DataFile;
 
 import com.lego.perception.file.mapper.DataFileMapper;
 import com.lego.perception.file.service.IDataFileService;
+import com.lego.perception.file.service.IFdfsFileService;
+import com.lego.perception.file.service.IFpFileService;
 import com.lego.perception.file.service.IHdfsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,8 +37,20 @@ public class DataFileServiceImpl implements IDataFileService {
     @Autowired
     private DataFileMapper dataFileMapper;
 
+
+    @Value("${define.store.type}")
+    private Integer storeType;
+
+
     @Autowired
     private IHdfsService iHdfsService;
+
+    @Autowired
+    private IFdfsFileService iFdfsFileService;
+
+    @Autowired
+    private IFpFileService iFpFileService;
+
 
     @Value("${hdfs.storePath}")
     private String storePath;
@@ -47,7 +62,7 @@ public class DataFileServiceImpl implements IDataFileService {
 
     @Override
     public PagedResult<DataFile> selectPaged(DataFile dataFile, Page page) {
-        return PageUtil.queryPaged(page,dataFile,dataFileMapper);
+        return PageUtil.queryPaged(page, dataFile, dataFileMapper);
     }
 
     /**
@@ -242,10 +257,10 @@ public class DataFileServiceImpl implements IDataFileService {
             ExceptionBuilder.operateFailException("上传文件不能为空");
         }
         //返回文件名为键值 文件url为key的map
-     /*   Map<String, String> uploadsInfo = uploadToHdfs(storePath, savePath, files);
+        Map<String, String> uploadsInfo = uploadToHdfs(storePath, savePath, files);
         if (uploadsInfo.isEmpty()) {
             ExceptionBuilder.operateFailException("上传文件失败");
-        }*/
+        }
         List<DataFile> dataFileList = new ArrayList<>();
         Arrays.stream(files).forEach(f -> {
             //文件名
@@ -279,23 +294,41 @@ public class DataFileServiceImpl implements IDataFileService {
         if (files == null || files.length == 0) {
             ExceptionBuilder.operateFailException("上传文件files不能为空");
         }
-        Arrays.stream(files).forEach(f -> {
+        for (MultipartFile f : files) {
             String name = f.getOriginalFilename();
-            String subffix = name.substring(name.lastIndexOf(".") + 1, name.length());//我这里取得文件后缀
-            String fileName = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-            File file = new File(storePath);
-            if (!file.exists()) {//目录不存在就创建
-                file.mkdirs();
-            }
             try {
-                f.transferTo(new File(storePath + "/" + fileName + "." + subffix));//保存文件
-                iHdfsService.uploadFileToHdfs(storePath + "/" + fileName + "." + subffix, savePath);
-                fileNamemap.put(name, storePath + "/" + fileName + "." + subffix);
+                if (storeType == 0) {
+                    // 本地保存
+                    Map<String, Object> objectMap = iFpFileService.upload(f);
+                    if (objectMap == null || !objectMap.containsKey("data")) {
+                        ExceptionBuilder.operateFailException("上传本地文件失败");
+                    }
+                    fileNamemap.put(name, objectMap.get("data").toString());
+                } else if (storeType == 1) {
+                    // fastdfs
+                    Map<String, Object> objectMap = iFdfsFileService.webUpload(f);
+                    if (objectMap == null || !objectMap.containsKey("data")) {
+                        ExceptionBuilder.operateFailException("上传本地文件失败");
+                    }
+                    fileNamemap.put(name, objectMap.get("data").toString());
+                } else if (storeType == 2) {
+                    // HDFS
+                    String subffix = name.substring(name.lastIndexOf(".") + 1, name.length());//我这里取得文件后缀
+                    String fileName = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+                    File file = new File(storePath);
+                    if (!file.exists()) {//目录不存在就创建
+                        file.mkdirs();
+                    }
+                    iHdfsService.uploadFileToHdfs(storePath + "/" + fileName + "." + subffix, savePath);
+                    fileNamemap.put(name, storePath + "/" + fileName + "." + subffix);
+                } else {
+                    ExceptionBuilder.operateFailException("未定义存储方式");
+                }
             } catch (IOException e) {
                 e.printStackTrace();
                 ExceptionBuilder.operateFailException("上传HDFS文件失败");
             }
-        });
+        }
         return fileNamemap;
     }
 

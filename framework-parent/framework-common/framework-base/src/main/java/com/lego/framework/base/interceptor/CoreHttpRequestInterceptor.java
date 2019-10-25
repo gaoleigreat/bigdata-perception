@@ -16,8 +16,10 @@ import java.util.Enumeration;
  * @author yanglf
  * @description
  * @since 2019/7/16
+ * @see org.springframework.web.client.RestTemplate
  **/
-@Component
+
+//@Component
 public class CoreHttpRequestInterceptor implements ClientHttpRequestInterceptor {
 
 

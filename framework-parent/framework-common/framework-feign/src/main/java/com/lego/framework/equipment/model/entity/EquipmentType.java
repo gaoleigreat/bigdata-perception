@@ -34,6 +34,8 @@ public class EquipmentType extends BaseModel {
     private String description;
     @ApiModelProperty("业务类型对应表单模板")
     private Integer type;
+    @ApiModelProperty("设备icon")
+    private String icon;
     @NotNull(message = "请选择设备类型模板")
     @ApiModelProperty("模板code")
     @TableField(exist = false)

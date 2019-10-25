@@ -20,33 +20,35 @@ public class TemplateDataValidataUtil {
             String field = item.getField();
             Integer category = item.getCategory();
             Object o = jsonObject.get(field);
-            if (category <9){
-                toJsonObj.put(field, o.toString());
-                continue;
-            }else if (category == 9){
-                toJsonObj.put(field, Integer.valueOf(o.toString()));
-                continue;
-            }else if (category == 12){
-                toJsonObj.put(field, o.toString());
-                continue;
-            }else if (category == 13){
-                toJsonObj.put(field, Boolean.valueOf(o.toString()));
-                continue;
-            }else if (category == 14){
-                toJsonObj.put(field, Double.parseDouble(o.toString()));
+            if (o == null) {
                 continue;
             }
-            else if (category == 10) {
+            if (category < 9) {
+                toJsonObj.put(field, o.toString());
+                continue;
+            } else if (category == 9) {
+                toJsonObj.put(field, Integer.valueOf(o.toString()));
+                continue;
+            } else if (category == 12) {
+                toJsonObj.put(field, o.toString());
+                continue;
+            } else if (category == 13) {
+                toJsonObj.put(field, Boolean.valueOf(o.toString()));
+                continue;
+            } else if (category == 14) {
+                toJsonObj.put(field, Double.parseDouble(o.toString()));
+                continue;
+            } else if (category == 10) {
                 JSONObject object = new JSONObject();
                 toJsonObj.put(field, object);
                 transformFormObjectData(item.getItems(), JSONObject.parseObject(JSONObject.toJSONString(o)), object);
                 continue;
-            }else if (category == 11) {
+            } else if (category == 11) {
                 JSONArray array = new JSONArray();
                 toJsonObj.put(field, array);
                 transformFormArrayData(item.getItems(), JSONObject.parseArray(JSONObject.toJSONString(o)), array);
                 continue;
-            }else{
+            } else {
                 toJsonObj.put(field, o);
                 continue;
             }
@@ -63,33 +65,32 @@ public class TemplateDataValidataUtil {
             String field = formTemplateItem.getField();
             Integer category = formTemplateItem.getCategory();
             Object o = jsonObject.get(field);
-            if (category <9){
+            if (category < 9) {
                 toJsonObject.put(field, o.toString());
                 continue;
-            }else if (category == 9){
+            } else if (category == 9) {
                 toJsonObject.put(field, Integer.valueOf(o.toString()));
                 continue;
-            }else if (category == 12){
+            } else if (category == 12) {
                 toJsonObject.put(field, o.toString());
                 continue;
-            }else if (category == 13){
+            } else if (category == 13) {
                 toJsonObject.put(field, Boolean.valueOf(o.toString()));
                 continue;
-            }else if (category == 14){
+            } else if (category == 14) {
                 toJsonObject.put(field, Double.parseDouble(o.toString()));
                 continue;
-            }
-            else if (category == 10) {
+            } else if (category == 10) {
                 JSONObject object = new JSONObject();
                 toJsonObject.put(field, object);
                 transformFormObjectData(formTemplateItem.getItems(), JSONObject.parseObject(JSONObject.toJSONString(o)), object);
                 continue;
-            }else if (category == 11) {
+            } else if (category == 11) {
                 JSONArray array = new JSONArray();
                 toJsonObject.put(field, array);
                 transformFormArrayData(formTemplateItem.getItems(), JSONObject.parseArray(JSONObject.toJSONString(o)), array);
                 continue;
-            }else{
+            } else {
                 toJsonObject.put(field, o);
             }
 
@@ -112,39 +113,38 @@ public class TemplateDataValidataUtil {
                     if (o == null) {
                         continue;
                     }
-                    if (category <9){
+                    if (category < 9) {
                         object.put(field, o.toString());
                         continue;
-                    }else if (category == 9){
+                    } else if (category == 9) {
                         object.put(field, Integer.valueOf(o.toString()));
                         continue;
-                    }else if (category == 12){
+                    } else if (category == 12) {
                         object.put(field, o.toString());
                         continue;
-                    }else if (category == 13){
+                    } else if (category == 13) {
                         object.put(field, Boolean.valueOf(o.toString()));
                         continue;
-                    }else if (category == 14){
+                    } else if (category == 14) {
                         object.put(field, Double.parseDouble(o.toString()));
                         continue;
-                    }
-                    else if (category == 10) {
+                    } else if (category == 10) {
                         JSONObject objectNew = new JSONObject();
                         object.put(field, object);
                         transformFormObjectData(templateItem.getItems(), JSONObject.parseObject(JSONObject.toJSONString(o)), objectNew);
                         continue;
-                    }else if (category == 11) {
+                    } else if (category == 11) {
                         JSONArray array = new JSONArray();
                         object.put(field, array);
                         transformFormArrayData(templateItem.getItems(), JSONObject.parseArray(JSONObject.toJSONString(o)), array);
                         continue;
-                    }else{
+                    } else {
                         object.put(field, o);
                         continue;
                     }
                 }
                 toJsonArray.add(object);
-            }else{
+            } else {
                 toJsonArray.add(obj);
             }
 
@@ -174,7 +174,6 @@ public class TemplateDataValidataUtil {
         formTemplateItem20.setCategory(14);
 
 
-
         List<FormTemplateItem> formTemplateItems = new ArrayList<>();
 
         List<FormTemplateItem> formTemplateItems1 = new ArrayList<>();
@@ -193,14 +192,14 @@ public class TemplateDataValidataUtil {
         JSONObject jsonObject = new JSONObject();
         JSONObject jsonObjectnew = new JSONObject();
         JSONObject jsonObjectnew1 = new JSONObject();
-       JSONArray jsonArray = new JSONArray();
-       jsonArray.add(jsonObjectnew);
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.add(jsonObjectnew);
 
-        jsonObjectnew.put("lalalla","5.6");
-        jsonObjectnew1.put("test","test1");
-        jsonObject.put("json",jsonObjectnew);
-        jsonObject.put("project",9.1);
-        jsonObject.put("array",jsonArray);
+        jsonObjectnew.put("lalalla", "5.6");
+        jsonObjectnew1.put("test", "test1");
+        jsonObject.put("json", jsonObjectnew);
+        jsonObject.put("project", 9.1);
+        jsonObject.put("array", jsonArray);
 
         JSONObject jsonObject1 = TemplateDataValidataUtil.transformFormDataItem(formTemplate, jsonObject);
         System.out.println(jsonObject1);

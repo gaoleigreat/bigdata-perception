@@ -40,7 +40,7 @@ public class FileController {
     })
     @RequestMapping(value = "/app/upload", method = RequestMethod.POST)
     public RespVO appUpload(@RequestBody UploadFile uploadFile) {
-        return fdfsFileService.upload(uploadFile);
+        return RespVOBuilder.success(fdfsFileService.upload(uploadFile));
     }
 
 
@@ -54,31 +54,17 @@ public class FileController {
             fileList = ((MultipartHttpServletRequest) req).getFiles("file");
         }
         Map<String, Object> resultMap = new HashMap<>(16);
-        try {
-            List<Map<String, Object>> returnList = new ArrayList<>();
-            for (MultipartFile file : fileList) {
-                UploadFile uploadFile = new UploadFile();
-                uploadFile.setFileName(file.getOriginalFilename());
-
-                uploadFile.setContent(file.getBytes());
-                if (!StringUtils.isEmpty(file.getOriginalFilename())) {
-                    int pos = file.getOriginalFilename().lastIndexOf(".");
-                    if (pos > -1 && pos + 1 < file.getOriginalFilename().length()) {
-                        uploadFile.setExt(file.getOriginalFilename().substring(pos + 1));
-                    }
-                }
-                RespVO<Map<String, Object>> upload = fdfsFileService.upload(uploadFile);
-                if (1 == upload.getRetCode()) {
-                    Map<String, Object> f = new HashMap<>(2);
-                    f.put("fileName", file.getOriginalFilename());
-                    f.put("url", upload.getInfo().get("data"));
-                    returnList.add(f);
-                }
+        List<Map<String, Object>> returnList = new ArrayList<>();
+        for (MultipartFile file : fileList) {
+            Map<String, Object> upload = fdfsFileService.webUpload(file);
+            if (upload != null && upload.containsKey("data")) {
+                Map<String, Object> f = new HashMap<>(2);
+                f.put("fileName", file.getOriginalFilename());
+                f.put("url", upload.get("data"));
+                returnList.add(f);
             }
-            resultMap.put("datas", returnList);
-        } catch (IOException e) {
-            log.error("upload file error", e);
         }
+        resultMap.put("datas", returnList);
         if (!resultMap.isEmpty()) {
             return RespVOBuilder.success(resultMap);
         }

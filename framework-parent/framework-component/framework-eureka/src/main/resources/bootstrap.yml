@@ -6,4 +6,4 @@ spring:
   application:
     name: eureka-server
   profiles:
-    active: zt
+    active: local

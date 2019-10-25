@@ -9,6 +9,7 @@
         <result property="code" column="code"/>
         <result property="description" column="description"/>
         <result property="type" column="type"/>
+        <result property="icon" column="icon"/>
         <result property="creationDate" column="creation_date"/>
         <result property="createdBy" column="created_by"/>
         <result property="lastUpdateDate" column="last_update_date"/>
@@ -34,6 +35,9 @@
             </if>
             <if test="type != null">
                 type,
+            </if>
+            <if test="icon !=null">
+                icon,
             </if>
             <if test="creationDate != null">
                 creation_date,
@@ -64,6 +68,9 @@
             <if test="type != null">
                 #{type,jdbcType=VARCHAR},
             </if>
+            <if test="icon != null">
+                #{icon,jdbcType=VARCHAR},
+            </if>
             <if test="creationDate != null">
                 #{creationDate,jdbcType=TIMESTAMP},
             </if>
@@ -83,7 +90,7 @@
       数据库表的基本查询列名集合
     -->
     <sql id="Base_Column_List">
-        id, name, code, description, type, creation_date, created_by, last_update_date, last_updated_by
+        id, name, code, description, type,icon, creation_date, created_by, last_update_date, last_updated_by
     </sql>
 
     <!--
@@ -104,6 +111,9 @@
         </if>
         <if test="type != null">
             and type = #{type,jdbcType=VARCHAR}
+        </if>
+        <if test="icon != null">
+            and icon = #{icon,jdbcType=VARCHAR}
         </if>
         <if test="creationDate != null">
             and creation_date = #{creationDate,jdbcType=TIMESTAMP}
@@ -138,6 +148,9 @@
             </if>
             <if test="type != null">
                 type = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="icon != null">
+                icon = #{icon,jdbcType=VARCHAR},
             </if>
             <if test="creationDate != null">
                 creation_date = #{creationDate,jdbcType=TIMESTAMP},
@@ -178,7 +191,8 @@
       根据主键删除数据库表中的记录
     -->
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-        delete FROM tpl_equipment_type
+        delete
+        FROM tpl_equipment_type
         where id = #{id,jdbcType=BIGINT}
     </delete>
 
@@ -204,6 +218,9 @@
         </if>
         <if test="type != null">
             #{type,jdbcType=VARCHAR},
+        </if>
+        <if test="icon != null">
+            #{icon,jdbcType=VARCHAR},
         </if>
         <if test="creationDate != null">
             #{creationDate,jdbcType=TIMESTAMP},
@@ -269,6 +286,9 @@
             <if test="type != null">
                 type = #{type,jdbcType=VARCHAR},
             </if>
+            <if test="icon != null">
+                icon = #{icon,jdbcType=VARCHAR},
+            </if>
             <if test="creationDate != null">
                 creation_date = #{creationDate,jdbcType=TIMESTAMP},
             </if>
@@ -291,13 +311,14 @@
     <insert id="batchInsert" parameterType="java.util.List">
         insert into tpl_equipment_type
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            id, name, code, description, type, creation_date, created_by, last_update_date, last_updated_by
+            id, name, code, description, type,icon ,creation_date, created_by, last_update_date, last_updated_by
         </trim>
         values
         <foreach collection="list" index="index" item="item" separator=",">
             <trim prefix="(" suffix=")" suffixOverrides=",">
                 #{item.id,jdbcType=BIGINT}, #{item.name,jdbcType=VARCHAR}, #{item.code,jdbcType=VARCHAR},
                 #{item.description,jdbcType=VARCHAR}, #{item.type,jdbcType=VARCHAR},
+                #{item.icon,jdbcType=VARCHAR},
                 #{item.creationDate,jdbcType=TIMESTAMP}, #{item.createdBy,jdbcType=BIGINT},
                 #{item.lastUpdateDate,jdbcType=TIMESTAMP}, #{item.lastUpdatedBy,jdbcType=BIGINT}
             </trim>
@@ -326,6 +347,9 @@
                     </if>
                     <if test="item.type != null">
                         type = #{item.type,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.icon != null">
+                        icon = #{item.icon,jdbcType=VARCHAR},
                     </if>
                     <if test="item.creationDate != null">
                         creation_date = #{item.creationDate,jdbcType=TIMESTAMP},
@@ -390,18 +414,20 @@
     <update id="upsert" parameterType="com.lego.framework.equipment.model.entity.EquipmentType">
         insert into tpl_equipment_type
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            id, name, code, description, type, creation_date, created_by, last_update_date, last_updated_by
+            id, name, code, description, type,icon, creation_date, created_by, last_update_date, last_updated_by
         </trim>
         values
         <trim prefix="(" suffix=")" suffixOverrides=",">
             #{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR},
-            #{type,jdbcType=VARCHAR}, #{creationDate,jdbcType=TIMESTAMP}, #{createdBy,jdbcType=BIGINT},
+            #{type,jdbcType=VARCHAR}, #{icon,jdbcType=VARCHAR},#{creationDate,jdbcType=TIMESTAMP},
+            #{createdBy,jdbcType=BIGINT},
             #{lastUpdateDate,jdbcType=TIMESTAMP}, #{lastUpdatedBy,jdbcType=BIGINT}
         </trim>
         on duplicate key update
         <trim suffixOverrides=",">
             #{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR},
-            #{type,jdbcType=VARCHAR}, #{creationDate,jdbcType=TIMESTAMP}, #{createdBy,jdbcType=BIGINT},
+            #{type,jdbcType=VARCHAR}, #{icon,jdbcType=VARCHAR},#{creationDate,jdbcType=TIMESTAMP},
+            #{createdBy,jdbcType=BIGINT},
             #{lastUpdateDate,jdbcType=TIMESTAMP}, #{lastUpdatedBy,jdbcType=BIGINT}
         </trim>
     </update>
@@ -427,6 +453,9 @@
             </if>
             <if test="type !=null ">
                 type,
+            </if>
+            <if test="icon!=null">
+                icon,
             </if>
             <if test="creationDate !=null ">
                 creation_date,
@@ -458,6 +487,9 @@
             <if test="type !=null ">
                 type = #{type,jdbcType=VARCHAR},
             </if>
+            <if test="icon !=null ">
+                icon = #{icon,jdbcType=VARCHAR},
+            </if>
             <if test="creationDate !=null ">
                 creation_date = #{creationDate,jdbcType=TIMESTAMP},
             </if>
@@ -488,6 +520,9 @@
             <if test="type !=null ">
                 type = #{type,jdbcType=VARCHAR},
             </if>
+            <if test="icon !=null ">
+                icon = #{icon,jdbcType=VARCHAR},
+            </if>
             <if test="creationDate !=null ">
                 creation_date = #{creationDate,jdbcType=TIMESTAMP},
             </if>
@@ -503,7 +538,8 @@
         </trim>
     </update>
 
-    <select id="query" resultMap="BaseResultMap" parameterType="com.lego.framework.equipment.model.entity.EquipmentType">
+    <select id="query" resultMap="BaseResultMap"
+            parameterType="com.lego.framework.equipment.model.entity.EquipmentType">
         select
         <include refid="Base_Column_List"/>
         from tpl_equipment_type
@@ -513,7 +549,8 @@
     </select>
 
     <select id="queryTotal" resultType="long">
-        select count(*) from tpl_equipment_type
+        select count(*)
+        from tpl_equipment_type
     </select>
 
 

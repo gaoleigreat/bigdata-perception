@@ -1,6 +1,8 @@
 hdfs:
   url: hdfs://bdc-node-1:8020
 define:
+  store:
+    type: 0
   # mysql 主从库配置
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource

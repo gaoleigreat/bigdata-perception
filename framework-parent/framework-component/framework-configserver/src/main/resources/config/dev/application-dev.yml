@@ -164,8 +164,8 @@ hystrix:
 
 
 fpfile:
-  path: D:\业务文档\测量\file
-  url:  http://localhost:50010/survey/api-file/file/fpfile/download
+  path: /home/work/file
+  url:  http://localhost:20010/perception/file-service/file/fpfile/download
 
 
 sso:
