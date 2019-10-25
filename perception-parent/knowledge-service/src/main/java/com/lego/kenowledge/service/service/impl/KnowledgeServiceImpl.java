@@ -298,12 +298,13 @@ public class KnowledgeServiceImpl implements IKnowledgeService {
                     if (userRespVO.getRetCode() == 1) {
                         String username = userRespVO.getInfo().getUsername();
                         answerVo.setCreatedName(username);
-                        answerVos.add(answerVo);
+
                     }
 
                 }
-
+                answerVos.add(answerVo);
             }
+
         }
         return answerVos;
     }
