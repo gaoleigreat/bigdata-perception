@@ -1,16 +1,13 @@
 package com.lego.perception.template.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.api.R;
 import com.framework.common.consts.RespConsts;
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
-import com.framework.mybatis.tool.WhereEntityTool;
 import com.framework.mybatis.utils.PageUtil;
+import com.lego.framework.base.exception.ExceptionBuilder;
+import com.lego.framework.business.feign.CrudClient;
 import com.lego.framework.event.template.TemplateProcessorSender;
 import com.lego.framework.template.model.entity.*;
 import com.lego.perception.template.init.EnumerationInit;
@@ -21,10 +18,11 @@ import com.lego.perception.template.service.ITemplateValidateService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.integration.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,19 +37,19 @@ public class FormTemplateServiceImpl implements IFormTemplateService {
     @Autowired
     private ITemplateValidateService templateValidateService;
 
+
+    private Map<Integer, String> tags = new HashMap<>();
+
+    @Autowired
+    private CrudClient crudClient;
+
+
     @Autowired
     @Qualifier(value = "formTemplateItemServiceImpl")
     private ITemplateItemService formTemplateItemService;
 
     @Autowired
-    @Qualifier(value = "dataTemplateItemService")
-    private ITemplateItemService dataTemplateItemService;
-
-    @Autowired
     private EnumerationInit enumerationInit;
-
-    @Autowired
-    private TemplateProcessorSender templateProcessorSender;
 
     @Override
     public PagedResult<FormTemplate> findPagedList(FormTemplate template, Page page) {
@@ -135,8 +133,32 @@ public class FormTemplateServiceImpl implements IFormTemplateService {
                 return r;
             }
         }
-
+        if (tags.containsKey(template.getDataType())) {
+            RespVO respVO = crudClient.createBusiness(template.getTemplateCode());
+            if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
+                ExceptionBuilder.operateFailException("创建模板业务表失败");
+            }
+        }
         return RespVOBuilder.success();
+    }
+
+
+    @PostConstruct
+    public void initTags() {
+        tags.put(1, "地形地貌");
+        tags.put(2, "水文环境");
+        tags.put(3, "市政管线");
+        tags.put(4, "勘探设计");
+        tags.put(5, "工程施工");
+        tags.put(6, "装备运行");
+        tags.put(7, "运营维护");
+        tags.put(8, "其他");
+    }
+
+    @PreDestroy
+    public void destroy() {
+        tags.clear();
+        tags = null;
     }
 
 
