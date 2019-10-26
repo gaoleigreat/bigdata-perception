@@ -48,6 +48,18 @@ public class AuthFilter extends ZuulFilter {
     @Value("${server.servlet.context-path}")
     private String contextPath;
 
+    /**
+     * 单点登录服务器路径
+     */
+    @Value("${sso.server.supervisor.url}")
+    private String ssoSupServerUrl;
+
+    /**
+     * 单点登录服务器路径
+     */
+    @Value("${sso.server.local.url}")
+    private String ssoLocalUrl;
+
 
     @Value("${session.domain}")
     private String authDomain;
@@ -103,16 +115,11 @@ public class AuthFilter extends ZuulFilter {
                 return null;
             }
             String osType = req.getHeader(HttpConsts.OS_VERSION);
-            String userToken = req.getHeader(HttpConsts.HEADER_TOKEN);
-            String deviceType = req.getHeader(HttpConsts.DEVICE_TYPE);
             if (!StringUtils.isEmpty(osType)) {
                 RibbonVersionHolder.setContext(osType);
             }
             //  是否登录
-            if(req.getLocalAddr().equals("192.168.101.76")){
-                return checkSsoLogin(ctx,pvId,traceInfo);
-            }
-            return checkLogin(ctx, pvId, traceInfo, userToken, deviceType);
+            return checkSsoLogin(ctx, pvId, traceInfo);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
@@ -139,8 +146,7 @@ public class AuthFilter extends ZuulFilter {
                 return null;
             }
         }
-        RespVO<SsoLoginVo> failure = RespVOBuilder.failure(RespConsts.FAIL_LOGIN_CODE, "登录失败");
-        return RouteUtil.writeAndReturn(ctx, pvId, failure);
+        return RouteUtil.forward(ctx, pvId, ssoSupServerUrl + "/sso/login.html?ssoClientUrl=" + ssoLocalUrl);
     }
 
 

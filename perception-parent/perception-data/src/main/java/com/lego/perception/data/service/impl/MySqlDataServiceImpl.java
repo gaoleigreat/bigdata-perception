@@ -12,12 +12,11 @@ import com.lego.framework.template.model.entity.FormTemplate;
 import com.lego.framework.template.model.entity.FormTemplateItem;
 import com.lego.framework.template.model.entity.SearchParam;
 import com.lego.perception.data.mapper.DataMapper;
-import com.lego.perception.data.service.IBusinessService;
+import com.lego.perception.data.service.IDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-
 import java.util.List;
 import java.util.Map;
 
@@ -28,14 +27,14 @@ import java.util.Map;
  * @date : 2019/9/3 18:10
  * @desc :
  */
-@Service(value = "mySqlBusinessServiceImpl")
-public class MySqlBusinessServiceImpl implements IBusinessService {
+@Service(value = "mySqlDataServiceImpl")
+public class MySqlDataServiceImpl implements IDataService {
 
     @Autowired
     private DataMapper businessMapper;
 
     @Override
-    public RespVO createBusinessTable(FormTemplate formTemplate) {
+    public RespVO createDataTable(FormTemplate formTemplate) {
         String tableName = formTemplate.getDescription();
         List<FormTemplateItem> list = formTemplate.getItems();
         if (CollectionUtils.isEmpty(list)) {
@@ -72,7 +71,7 @@ public class MySqlBusinessServiceImpl implements IBusinessService {
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public RespVO insertBusinessData(FormTemplate formTemplate,
+    public RespVO insertData(FormTemplate formTemplate,
                                      List<Map<String, Object>> data,
                                      Long fileId) {
         String tableName = formTemplate.getDescription();
@@ -90,7 +89,7 @@ public class MySqlBusinessServiceImpl implements IBusinessService {
 
 
     @Override
-    public RespVO<RespDataVO<Map>> queryBusinessData(String tableName, List<SearchParam> params) {
+    public RespVO<RespDataVO<Map>> queryData(String tableName, List<SearchParam> params) {
         QueryWrapper wrapper = new QueryWrapper();
         if (!CollectionUtils.isEmpty(params)) {
             for (SearchParam param : params) {
@@ -114,7 +113,7 @@ public class MySqlBusinessServiceImpl implements IBusinessService {
     }
 
     @Override
-    public RespVO updateBusinessData(String tableName, Map<String, Object> data) {
+    public RespVO updateData(String tableName, Map<String, Object> data) {
         if (!data.containsKey("id")) {
             // 防止数据全部删除
             return RespVOBuilder.failure("修改条件缺失");
@@ -129,7 +128,7 @@ public class MySqlBusinessServiceImpl implements IBusinessService {
     }
 
     @Override
-    public RespVO delBusinessData(String tableName, Map<String, Object> data) {
+    public RespVO delData(String tableName, Map<String, Object> data) {
         if (!data.containsKey("id")) {
             return RespVOBuilder.failure("删除条件缺失");
         }

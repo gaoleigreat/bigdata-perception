@@ -10,7 +10,7 @@ import com.lego.framework.file.feign.FileClient;
 import com.lego.framework.system.model.entity.DataFile;
 import com.lego.framework.template.feign.TemplateFeignClient;
 import com.lego.framework.template.model.entity.FormTemplate;
-import com.lego.perception.data.service.IBusinessService;
+import com.lego.perception.data.service.IDataService;
 import com.lego.perception.data.utils.TemplateDataUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -22,7 +22,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.io.IOException;
@@ -47,12 +46,12 @@ public class DataController {
     private TemplateFeignClient templateFeignClient;
 
     @Autowired
-    @Qualifier(value = "mySqlBusinessServiceImpl")
-    private IBusinessService mySqlBusinessService;
+    @Qualifier(value = "mySqlDataServiceImpl")
+    private IDataService mySqlDataService;
 
     @Autowired
-    @Qualifier(value = "mongoBusinessServiceImpl")
-    private IBusinessService mongoBusinessService;
+    @Qualifier(value = "mongoDataServiceImpl")
+    private IDataService mongoDataService;
 
     @ApiOperation(value = "formatted", notes = "格式化文件上传")
     @ApiImplicitParams({
@@ -100,9 +99,9 @@ public class DataController {
                         List<Map<String, Object>> maps = TemplateDataUtil.analyticalData(mf, dataFile.getId(), template);
                         Integer type = template.getType();
                         if (type != null && type == 0) {
-                            mySqlBusinessService.insertBusinessData(template, maps, dataFile.getId());
+                            mySqlDataService.insertData(template, maps, dataFile.getId());
                         } else {
-                            mongoBusinessService.insertBusinessData(template, maps, dataFile.getId());
+                            mongoDataService.insertData(template, maps, dataFile.getId());
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -165,5 +164,25 @@ public class DataController {
         tags.clear();
         tags = null;
     }
+
+
+    @ApiOperation(value = "创建模板数据表", httpMethod = "POST")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "templateCode", value = "表单模板code", dataType = "String", required = true, paramType = "query"),
+    })
+    @RequestMapping(value = "/createTable", method = RequestMethod.POST)
+    @Operation(value = "createTable", desc = "创建模板数据表")
+    public RespVO createDataTable(@RequestParam String templateCode) {
+        RespVO<FormTemplate> respVO = templateFeignClient.findFormTemplateByCode(templateCode);
+        if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
+            return RespVOBuilder.failure("获取模板信息失败");
+        }
+        FormTemplate formTemplate = respVO.getInfo();
+        if (formTemplate == null) {
+            return RespVOBuilder.failure("找不到对应模板信息");
+        }
+        return mySqlDataService.createDataTable(formTemplate);
+    }
+
 
 }

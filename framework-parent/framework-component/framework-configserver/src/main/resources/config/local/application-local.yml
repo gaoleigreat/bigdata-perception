@@ -72,7 +72,7 @@ spring:
         min-idle: 0
     timeout: 10000
   rabbitmq:
-    host: 192.168.101.76
+    host: 49.235.172.6
     port: 5672
     username: admin
     password: admin123

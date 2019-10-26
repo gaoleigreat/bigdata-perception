@@ -45,6 +45,7 @@ eureka:
 jwt:
   exclude:
     urlPatterns:
-      - /user-service/sso/login/checkSession
-      - .*api-docs.*
-      - .*swagger.*
+      #  - /user-service/sso/login/checkSession
+      #  - .*api-docs.*
+      # - .*swagger.*
+      - .*.*

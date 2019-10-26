@@ -1,3 +1,4 @@
+/*
 package com.lego.perception.user.controller;
 
 import com.alibaba.fastjson.JSON;
@@ -15,7 +16,6 @@ import com.lego.framework.base.annotation.Resource;
 import com.lego.framework.base.utils.HeaderUtils;
 import com.lego.framework.base.utils.SecurityUtils;
 import com.lego.framework.event.log.LogSender;
-import com.lego.framework.sso.SsoClient;
 import com.lego.framework.system.feign.UserClient;
 import com.lego.framework.system.model.entity.User;
 import io.swagger.annotations.*;
@@ -35,11 +35,13 @@ import java.io.PrintWriter;
 import java.util.Date;
 import java.util.UUID;
 
+*/
 /**
  * @author yanglf
  * @descript
  * @since 2018/12/17
- **/
+ **//*
+
 @Validated
 @Controller
 @RequestMapping(DictConstant.Path.USER)
@@ -51,8 +53,6 @@ public class LoginController {
     @Autowired
     private AuthClient authClient;
 
-    @Autowired
-    private SsoClient ssoClient;
 
     @Autowired
     private UserClient userClient;
@@ -155,3 +155,4 @@ public class LoginController {
 
 
 }
+*/

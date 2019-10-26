@@ -15,7 +15,7 @@ import java.util.Map;
  * @date : 2019/9/3 18:05
  * @desc :
  */
-public interface IBusinessService {
+public interface IDataService {
 
     /**
      * 创建业务表
@@ -23,7 +23,7 @@ public interface IBusinessService {
      * @param formTemplate
      * @return
      */
-    RespVO createBusinessTable(FormTemplate formTemplate);
+    RespVO createDataTable(FormTemplate formTemplate);
 
 
     /**
@@ -33,7 +33,7 @@ public interface IBusinessService {
      * @param data
      * @return
      */
-    RespVO insertBusinessData(FormTemplate formTemplate, List<Map<String, Object>> data,Long fileId);
+    RespVO insertData(FormTemplate formTemplate, List<Map<String, Object>> data,Long fileId);
 
 
     /**
@@ -43,7 +43,7 @@ public interface IBusinessService {
      * @param params
      * @return
      */
-    RespVO<RespDataVO<Map>> queryBusinessData(String tableName, List<SearchParam> params);
+    RespVO<RespDataVO<Map>> queryData(String tableName, List<SearchParam> params);
 
 
     /**
@@ -53,7 +53,7 @@ public interface IBusinessService {
      * @param data
      * @return
      */
-    RespVO updateBusinessData(String tableName, Map<String, Object> data);
+    RespVO updateData(String tableName, Map<String, Object> data);
 
 
     /**
@@ -63,7 +63,7 @@ public interface IBusinessService {
      * @param data
      * @return
      */
-    RespVO delBusinessData(String tableName, Map<String, Object> data);
+    RespVO delData(String tableName, Map<String, Object> data);
 
 
 }

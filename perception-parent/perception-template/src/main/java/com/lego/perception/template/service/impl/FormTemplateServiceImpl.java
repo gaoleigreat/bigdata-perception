@@ -8,6 +8,7 @@ import com.framework.common.sdto.RespVOBuilder;
 import com.framework.mybatis.utils.PageUtil;
 import com.lego.framework.base.exception.ExceptionBuilder;
 import com.lego.framework.business.feign.CrudClient;
+import com.lego.framework.data.feign.DataClient;
 import com.lego.framework.event.template.TemplateProcessorSender;
 import com.lego.framework.template.model.entity.*;
 import com.lego.perception.template.init.EnumerationInit;
@@ -41,7 +42,7 @@ public class FormTemplateServiceImpl implements IFormTemplateService {
     private Map<Integer, String> tags = new HashMap<>();
 
     @Autowired
-    private CrudClient crudClient;
+    private DataClient dataClient;
 
 
     @Autowired
@@ -134,7 +135,7 @@ public class FormTemplateServiceImpl implements IFormTemplateService {
             }
         }
         if (tags.containsKey(template.getDataType())) {
-            RespVO respVO = crudClient.createBusiness(template.getTemplateCode());
+            RespVO respVO = dataClient.createDataTable(template.getTemplateCode());
             if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
                 ExceptionBuilder.operateFailException("创建模板业务表失败");
             }

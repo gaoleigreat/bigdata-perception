@@ -30,18 +30,5 @@ spring:
   resources:
     static-locations: classpath:/static/,classpath:/templates/
 
-
-
-sso:
-  server:
-    supervisor:
-      url:
-        http://10.101.231.240:9092
-  local:
-    url:
-      http://10.101.231.241:18050
-
-
-
 application:
   description: 用户服务

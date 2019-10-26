@@ -9,21 +9,21 @@ define:
     password: admin123
   mysql:
     write:
-      url: jdbc:mysql://172.16.19.15:3306/perception_base?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
-      username: ywgzuser
-      password: ywgz#(!)123
+      url: jdbc:mysql://10.101.201.164:3306/perception_base?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+      username: root
+      password: admin123
     read1:
-      url: jdbc:mysql://172.16.19.15:3306/perception_base?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
-      username: ywgzuser
-      password: ywgz#(!)123
+      url: jdbc:mysql://10.101.201.164:3306/perception_base?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+      username: root
+      password: admin123
     share:
-      url: jdbc:mysql://172.16.19.15:3306/share?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
-      username: ywgzuser
-      password: ywgz#(!)123
+      url: jdbc:mysql://10.101.201.164:3306/share?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+      username: root
+      password: admin123
     equipment:
-      url: jdbc:mysql://172.16.19.15:3306/perception_equipment?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
-      username: ywgzuser
-      password: ywgz#(!)123
+      url: jdbc:mysql://10.101.201.164:3306/perception_equipment?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+      username: root
+      password: admin123
 eureka:
   client:
     fetch-registry: true
@@ -54,15 +54,15 @@ spring:
       override-system-properties: false    # 是否覆盖Java运行时参数
   data:
     mongodb:
-      host: 172.16.19.16
+      host: 10.101.201.164
       port: 27017
       database: perception
-      username: ywgz.bigdata
-      password: ywgz#(o)!abc
+      username: admin
+      password: admin123
   redis:
-    host: 10.101.201.166
+    host: 10.101.201.164
     port: 6379
-    #password: admin123
+    password: admin123
     database: 2
     jedis:
       pool:
@@ -72,10 +72,10 @@ spring:
         min-idle: 0
     timeout: 10000
   rabbitmq:
-    host: 10.101.201.164
+    host: 49.235.172.6
     port: 5672
-    username: guest
-    password: guest
+    username: admin
+    password: admin123
   #zipkin:
   #  base-url: http://192.168.0.154:9411
   jackson:
@@ -168,13 +168,19 @@ fpfile:
   url:  http://localhost:20010/perception/file-service/file/fpfile/download
 
 
-sso:
-  name: sso-server
-  url_prefix: http://t.weather.sojson.com/api/weather
-
 hdfs:
   storePath: /home/work/file/
   savePath: equipment
+
+
+sso:
+  server:
+    supervisor:
+      url:
+        http://10.101.231.240:9092
+    local:
+      url:
+        http://10.101.231.241:18050
 
 
 

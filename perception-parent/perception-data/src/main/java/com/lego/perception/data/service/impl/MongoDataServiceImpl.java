@@ -5,7 +5,7 @@ import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.template.model.entity.FormTemplate;
 import com.lego.framework.template.model.entity.SearchParam;
-import com.lego.perception.data.service.IBusinessService;
+import com.lego.perception.data.service.IDataService;
 import com.lego.perception.data.utils.QueryUtils;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
@@ -29,20 +29,20 @@ import java.util.Map;
  * @date : 2019/9/5 11:41
  * @desc :
  */
-@Service(value = "mongoBusinessServiceImpl")
-public class MongoBusinessServiceImpl implements IBusinessService {
+@Service(value = "mongoDataServiceImpl")
+public class MongoDataServiceImpl implements IDataService {
 
 
     @Autowired
     private MongoTemplate mongoTemplate;
 
     @Override
-    public RespVO createBusinessTable(FormTemplate formTemplate) {
+    public RespVO createDataTable(FormTemplate formTemplate) {
         return RespVOBuilder.success();
     }
 
     @Override
-    public RespVO insertBusinessData(FormTemplate formTemplate,
+    public RespVO insertData(FormTemplate formTemplate,
                                      List<Map<String, Object>> data,
                                      Long fileId) {
         if (CollectionUtils.isEmpty(data)) {
@@ -54,7 +54,7 @@ public class MongoBusinessServiceImpl implements IBusinessService {
     }
 
     @Override
-    public RespVO<RespDataVO<Map>> queryBusinessData(String tableName,
+    public RespVO<RespDataVO<Map>> queryData(String tableName,
                                                      List<SearchParam> params) {
         Criteria criteria = new Criteria();
         if (!CollectionUtils.isEmpty(params)) {
@@ -81,7 +81,7 @@ public class MongoBusinessServiceImpl implements IBusinessService {
     }
 
     @Override
-    public RespVO updateBusinessData(String tableName, Map<String, Object> data) {
+    public RespVO updateData(String tableName, Map<String, Object> data) {
         if (!data.containsKey("id")) {
             return RespVOBuilder.failure("修改条件缺失");
         }
@@ -102,7 +102,7 @@ public class MongoBusinessServiceImpl implements IBusinessService {
     }
 
     @Override
-    public RespVO delBusinessData(String tableName, Map<String, Object> data) {
+    public RespVO delData(String tableName, Map<String, Object> data) {
         if (!data.containsKey("id")) {
             return RespVOBuilder.failure("删除条件缺失");
         }
