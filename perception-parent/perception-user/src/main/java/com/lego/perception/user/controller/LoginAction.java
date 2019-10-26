@@ -68,8 +68,8 @@ public class LoginAction {
      * @param ssoTicket 输入参数
      * @return 登录的结果
      */
-    @ApiOperation(value = "login", notes = "login", httpMethod = "GET")
-    @GetMapping(value = "login")
+    @ApiOperation(value = "verificationTicket", notes = "login", httpMethod = "GET")
+    @GetMapping(value = "verificationTicket")
     public void login(HttpServletRequest request,
                       HttpServletResponse response,
                       @ModelAttribute SsoTicket ssoTicket) {

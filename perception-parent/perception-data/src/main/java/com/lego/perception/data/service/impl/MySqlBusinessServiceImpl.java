@@ -61,7 +61,6 @@ public class MySqlBusinessServiceImpl implements IBusinessService {
             sb.append(",");
         }
         sb.append(" file_id BIGINT NOT NULL COMMENT '文件id '");
-        sb.replace(sb.length() - 1, sb.length(), "");
         businessMapper.createBusinessTable(tableName, sb.toString());
         Integer existTable = businessMapper.existTable(tableName);
         if (existTable != null) {
