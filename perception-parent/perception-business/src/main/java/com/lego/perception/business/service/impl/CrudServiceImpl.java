@@ -54,7 +54,7 @@ public class CrudServiceImpl implements ICrudService {
         String tableName = formTemplate.getDescription();
         List<FormTemplateItem> list = formTemplate.getItems();
         if (CollectionUtils.isEmpty(list)) {
-            return RespVOBuilder.failure("字段不能为空");
+            return RespVOBuilder.failure("该模板子字段不能为空");
         }
         StringBuilder sb = new StringBuilder(" id BIGINT NOT NULL PRIMARY KEY UNIQUE AUTO_INCREMENT COMMENT 'ID', ");
         for (FormTemplateItem templateItem : list) {
