@@ -19,7 +19,7 @@ public class TemplateDataValidataUtil {
         for (FormTemplateItem item : items) {
             String field = item.getField();
             Integer category = item.getCategory();
-            Object o = jsonObject.get(field);
+            Object o = jsonObject.get(item.getTitle());
             if (o == null) {
                 continue;
             }
@@ -64,7 +64,7 @@ public class TemplateDataValidataUtil {
             }
             String field = formTemplateItem.getField();
             Integer category = formTemplateItem.getCategory();
-            Object o = jsonObject.get(field);
+            Object o = jsonObject.get(formTemplateItem.getTitle());
             if (category < 9) {
                 toJsonObject.put(field, o.toString());
                 continue;
