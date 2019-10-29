@@ -47,6 +47,14 @@ public interface IDataService {
 
 
     /**
+     * @param tableName
+     * @param fileIds
+     * @return
+     */
+    RespVO<RespDataVO<Map>> queryDataByFileId(String tableName, List<Long> fileIds);
+
+
+    /**
      * 更新业务数据
      *
      * @param tableName

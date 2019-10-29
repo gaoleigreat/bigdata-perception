@@ -113,6 +113,14 @@ public class MySqlDataServiceImpl implements IDataService {
     }
 
     @Override
+    public RespVO<RespDataVO<Map>> queryDataByFileId(String tableName, List<Long> fileIds) {
+        QueryWrapper wrapper = new QueryWrapper();
+        wrapper.in("file_id",fileIds);
+        List<Map> data = businessMapper.queryBusinessData(tableName, wrapper);
+        return RespVOBuilder.success(data);
+    }
+
+    @Override
     public RespVO updateData(String tableName, Map<String, Object> data) {
         if (!data.containsKey("id")) {
             // 防止数据全部删除

@@ -14,6 +14,7 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.CriteriaDefinition;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
@@ -77,6 +78,17 @@ public class MongoDataServiceImpl implements IDataService {
                 map.remove("fileId");
             }
         }
+        return RespVOBuilder.success(mapList);
+    }
+
+
+    @Override
+    public RespVO<RespDataVO<Map>> queryDataByFileId(String tableName, List<Long> fileIds) {
+        Query query = new Query();
+        Criteria criteria=new Criteria();
+        criteria.and("file_id").in(fileIds);
+        query.addCriteria(criteria);
+        List<Map> mapList = mongoTemplate.find(query, Map.class, tableName);
         return RespVOBuilder.success(mapList);
     }
 

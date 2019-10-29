@@ -14,9 +14,11 @@ import com.lego.framework.file.feign.FileClient;
 import com.lego.framework.system.model.entity.DataFile;
 import com.lego.framework.template.feign.TemplateFeignClient;
 import com.lego.framework.template.model.entity.FormTemplate;
+import com.lego.framework.template.model.entity.SearchParam;
 import com.lego.perception.data.config.HdfsProperties;
 import com.lego.perception.data.config.MongoProperties;
 import com.lego.perception.data.config.MysqlProperties;
+import com.lego.perception.data.service.IDataService;
 import com.lego.perception.data.service.ILocalShareDataService;
 import com.lego.perception.data.service.IRemoteShareDataService;
 import io.swagger.annotations.Api;
@@ -25,6 +27,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -64,6 +67,14 @@ public class DatasharedtableController {
     private HdfsProperties hdfsProperties;
 
     @Autowired
+    @Qualifier(value = "mongoDataServiceImpl")
+    private IDataService mongoDataService;
+
+    @Autowired
+    @Qualifier(value = "mySqlDataServiceImpl")
+    private IDataService mySqlDataService;
+
+    @Autowired
     private FileClient fileClient;
 
 
@@ -84,8 +95,6 @@ public class DatasharedtableController {
         PagedResult<RemoteSharedData> list = iRemoteShareDataService.queryRemoteListPaged(datasharedtable, page);
         return RespVOBuilder.success(list);
     }
-
-
 
 
     @ApiOperation(value = "查询本地共享数据", httpMethod = "GET")
@@ -123,12 +132,11 @@ public class DatasharedtableController {
     @Operation(value = "shareData", desc = "共享数据")
     public RespVO shareData(@RequestParam List<String> batchNums) {
         //  获取所属数据源
-        RespVO<RespDataVO<DataFile>> respDataVORespVO = fileClient.selectByBatchNums(batchNums,null);
+        RespVO<RespDataVO<DataFile>> respDataVORespVO = fileClient.selectByBatchNums(batchNums, null);
         if (respDataVORespVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
             return RespVOBuilder.failure();
         }
         List<DataFile> dataFiles = respDataVORespVO.getInfo().getList();
-        Map<String, String> map = new HashMap<>();
         List<RemoteSharedData> remoteSharedDataList = new ArrayList<>();
         List<LocalSharedData> localSharedDataList = new ArrayList<>();
         if (CollectionUtils.isEmpty(dataFiles)) {
@@ -141,10 +149,6 @@ public class DatasharedtableController {
             Long templateId = dataFile.getTemplateId();
             if (templateId == null) {
                 // HDFS
-                if (map.containsKey("HDFS")) {
-                    continue;
-                }
-                map.put("HDFS", batchNum);
                 dataType = "文件夹类型";
             }
             RespVO<FormTemplate> respVO = templateFeignClient.findFormTemplateById(templateId);
@@ -156,19 +160,12 @@ public class DatasharedtableController {
                 return RespVOBuilder.failure("获取不到模板信息");
             }
             sourcesType = info.getType();
-            if (map.containsKey(String.valueOf(sourcesType))) {
-                continue;
-            }
-            map.put(String.valueOf(sourcesType), batchNum);
             String templateName = info.getTemplateName();
             String remark = dataFile.getRemark();
             RemoteSharedData remoteSharedData = getShareData(dataType, remark, templateName, sourcesType);
+            remoteSharedData.setFileId(dataFile.getId());
             if ("文件夹类型".equals(dataType)) {
                 remoteSharedData.setSchema(dataFile.getFileUrl());
-            }
-            List<RemoteSharedData> remoteList = iRemoteShareDataService.queryRemoteList(remoteSharedData);
-            if (!CollectionUtils.isEmpty(remoteList)) {
-                continue;
             }
             remoteSharedDataList.add(remoteSharedData);
             LocalSharedData localSharedData = remoteSharedData.remote2LocalSharedData();
