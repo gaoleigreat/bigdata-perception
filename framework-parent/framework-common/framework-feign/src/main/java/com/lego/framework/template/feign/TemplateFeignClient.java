@@ -124,7 +124,7 @@ public interface TemplateFeignClient {
      * @return
      */
     @RequestMapping(value = "/formTemplate/v1/findByDataType/{dataType}", method = RequestMethod.GET)
-    RespVO<FormTemplate> findByDataType(@PathVariable(value = "dataType") Integer dataType);
+    RespVO<RespDataVO<FormTemplate>> findByDataType(@PathVariable(value = "dataType") Integer dataType);
 
 
 }
@@ -188,7 +188,7 @@ class TemplateFallBackFactory implements FallbackFactory<TemplateFeignClient> {
             }
 
             @Override
-            public RespVO<FormTemplate> findByDataType(Integer dataType) {
+            public RespVO<RespDataVO<FormTemplate>> findByDataType(Integer dataType) {
                 return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "template服务不可用");
             }
         };

@@ -1,6 +1,7 @@
 package com.lego.equipment.service.controller;
 
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.framework.common.consts.RespConsts;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
@@ -90,17 +91,14 @@ public class EquipmentController {
     @Operation(value = "selectEquipmentByType", desc = "查询设备下面子设备")
     @RequestMapping(value = "/selectEquipmentByType", method = RequestMethod.GET)
     public RespVO selectByPrimaryKey(@RequestParam(value = "type") String type) {
-        RespVO<FormTemplate> respDataVORespVO = templateFeignClient.findByDataType(Integer.valueOf(type));
-        if (respDataVORespVO == null) {
-            ExceptionBuilder.operateFailException("模板服务不可用");
-        }
-        if (respDataVORespVO.getRetCode() != 1) {
+        RespVO<RespDataVO<FormTemplate>> respDataVORespVO = templateFeignClient.findByDataType(Integer.valueOf(type));
+
+        boolean b = respDataVORespVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE || respDataVORespVO.getInfo() == null && CollectionUtils.isEmpty(respDataVORespVO.getInfo().getList());
+
+        if (b) {
             ExceptionBuilder.operateFailException("获取模板失败");
         }
-        FormTemplate formTemplateGet = respDataVORespVO.getInfo();
-        if (formTemplateGet == null) {
-            ExceptionBuilder.operateFailException("没有对应的表单模板");
-        }
+        FormTemplate formTemplateGet = respDataVORespVO.getInfo().getList().get(0);
         return crudClient.queryBusinessData(formTemplateGet.getTemplateCode(), new ArrayList<>());
     }
 

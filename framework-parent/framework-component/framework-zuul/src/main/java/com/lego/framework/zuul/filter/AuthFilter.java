@@ -93,8 +93,7 @@ public class AuthFilter extends ZuulFilter {
         HttpServletResponse res = ctx.getResponse();
         StringBuilder sb = new StringBuilder();
         //web 跨域 上线注释
-        res.addHeader("Access-Control-Allow-Origin", req.getHeader("Origin"));
-        res.addHeader("Access-Control-Allow-Credentials", "true");
+        requestCross(res, req);
         try {
             String uri = req.getRequestURI();
             String remoteIp = HttpUtils.getClientIp(req);
@@ -126,6 +125,19 @@ public class AuthFilter extends ZuulFilter {
         return null;
     }
 
+    private void requestCross(HttpServletResponse httpServletResponse,
+                              HttpServletRequest httpServletRequest) {
+        httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
+        httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
+        httpServletResponse.setHeader("Access-Control-Allow-Methods", "PUT, POST, GET, OPTIONS, DELETE");
+        httpServletResponse.setHeader("Access-Control-Max-Age", "3600");
+        httpServletResponse.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Authorization,"
+                + "Content-Type, Accept, Connection, User-Agent, Cookie");
+        if (httpServletRequest.getMethod().equals("OPTIONS")) {
+            httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+        }
+    }
+
 
     /**
      * 单点登录
@@ -137,6 +149,7 @@ public class AuthFilter extends ZuulFilter {
      */
     private Object checkSsoLogin(RequestContext ctx, String pvId, String traceInfo) {
         RespVO<SsoLoginVo> respVO = loginClient.checkSession();
+        logger.info("check session :{}", respVO);
         if (respVO.getRetCode() == RespConsts.SUCCESS_RESULT_CODE) {
             SsoLoginVo ssoLoginVo = respVO.getInfo();
             if (ssoLoginVo != null && "check_session_success".equals(ssoLoginVo.getResult())) {

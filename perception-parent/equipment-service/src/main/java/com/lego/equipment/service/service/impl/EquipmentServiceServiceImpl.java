@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.framework.common.consts.RespConsts;
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
+import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.mybatis.tool.WhereEntityTool;
 import com.framework.mybatis.utils.PageUtil;
@@ -59,11 +60,12 @@ public class EquipmentServiceServiceImpl extends ServiceImpl<EquipmentServiceMap
         if (!CollectionUtils.isEmpty(records)) {
             for (EquipmentService record : records) {
                 Integer templateType = record.getTemplateType();
-                RespVO<FormTemplate> respVO = templateFeignClient.findByDataType(templateType);
-                if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE || respVO.getInfo() == null) {
+                RespVO<RespDataVO<FormTemplate>> respVO = templateFeignClient.findByDataType(templateType);
+                boolean b = respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE || respVO.getInfo() == null && CollectionUtils.isEmpty(respVO.getInfo().getList());
+                if (b) {
                     continue;
                 }
-                FormTemplate formTemplate = respVO.getInfo();
+                FormTemplate formTemplate = respVO.getInfo().getList().get(0);
                 String equipmentCode = record.getEquipmentCode();
                 RespVO<Map<String, Object>> dataByCode = crudClient.queryBusinessDataByCode(formTemplate.getTemplateCode(), equipmentCode);
                 if (dataByCode.getRetCode() == RespConsts.SUCCESS_RESULT_CODE

@@ -23,12 +23,12 @@ public class EurekaUtil {
      *
      * @param eurekaIp
      * @param eurekaPort
-     * @param servicename
+     * @param serviceName
      * @return
      */
-    public static List<String> getAllServiceAddr(String eurekaIp, String eurekaPort, String servicename) {
+    public static List<String> getAllServiceAddr(String eurekaIp, String eurekaPort, String serviceName) {
         List<String> result = new ArrayList<>();
-        String url = "http://" + eurekaIp + ":" + eurekaPort + "/eureka/apps/" + servicename;
+        String url = "http://" + eurekaIp + ":" + eurekaPort + "/eureka/apps/" + serviceName;
         OkHttpClient okHttpClient = new OkHttpClient();
         Request request = new Request.Builder()
                 //请求接口。如果需要传参拼接到接口后面。
@@ -62,9 +62,9 @@ public class EurekaUtil {
      * @param servicename
      * @return
      */
-    public static String getOneServiceAddr(String eurekaIp, String eurekaPort, String servicename) {
+    public static String getOneServiceAddr(String eurekaIp, String eurekaPort, String serviceName) {
         List<String> result = new ArrayList<>();
-        String url = "http://" + eurekaIp + ":" + eurekaPort + "/eureka/apps/" + servicename;
+        String url = "http://" + eurekaIp + ":" + eurekaPort + "/eureka/apps/" + serviceName;
         OkHttpClient okHttpClient = new OkHttpClient();
         Request request = new Request.Builder()
                 //请求接口。如果需要传参拼接到接口后面。

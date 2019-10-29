@@ -140,15 +140,18 @@ public class FormTemplateController {
 
 
     @RequestMapping(value = "/findByDataType/{dataType}", method = RequestMethod.GET)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "dataType", value = "数据类型(1-地形地貌;2-水文环境;3-市政管线;4-勘察设计;5-工程施工;6-装备运行;7-运营维护;8-其他)", dataType = "int", required = true, paramType = "path"),
+    })
     @Operation(value = "find", desc = "根据dataType查询")
     @ApiOperation("根据dataType查询")
-    public RespVO<FormTemplate> findByDataType(@PathVariable Integer dataType) {
+    public RespVO<RespDataVO<FormTemplate>> findByDataType(@PathVariable Integer dataType) {
         FormTemplate template = new FormTemplate();
         template.setDataType(dataType);
         List<FormTemplate> formTemplates = formTemplateService.findList(template);
         if (CollectionUtils.isEmpty(formTemplates)) {
             return RespVOBuilder.failure("查询不到模板数据");
         }
-        return RespVOBuilder.success(formTemplates.get(0));
+        return RespVOBuilder.success(formTemplates);
     }
 }

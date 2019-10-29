@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>写入session</title>
+    <script type="text/javascript" src="/js/sso.js" charset="utf-8"></script>
+</head>
+<body>
+<script type="text/javascript" charset="utf-8">
+    var sessionId = getUrlParam("sessionId");
+    setCookie(JSESSIONID_KEY, sessionId);
+    // window.location.href = "/index.html";
+</script>
+</body>
+</html>

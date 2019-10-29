@@ -1,7 +1,7 @@
-package com.lego.framework.base.utils;/*
-package com.survey.lib.common.utils;
+package com.lego.framework.base.utils;
+
 import com.alibaba.fastjson.JSONObject;
-import com.survey.lib.common.vo.AuthVo;
+import com.framework.common.sdto.AuthVo;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import javax.crypto.spec.SecretKeySpec;
@@ -9,25 +9,24 @@ import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
 import java.util.Date;
 
-*/
 /**
  * @author yanglf
  * @description
  * @since 2019/1/24
- **//*
+ **/
 
 @Slf4j
 public class JWTUtils {
 
     private static String securityKey = "ijweuiwherewiurhw9890u9jhi";
 
-    */
-/**
+
+    /**
      * 获取Token
      *
      * @param authVo
      * @return
-     *//*
+     */
 
     public static String getToken(AuthVo authVo) {
         // 使用加密算法  HS256
@@ -39,10 +38,10 @@ public class JWTUtils {
         Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
 
         JwtBuilder jwtBuilder = Jwts.builder().setHeaderParam("type", "JWT")
-                .claim("role", authVo.getRole())
-                .claim("permissions", JSONObject.toJSONString(authVo.getPermissions()))
-                .claim("userName", authVo.getUserName())
-                .claim("userId", authVo.getUserId())
+                .claim("role", authVo.getCurrentVo().getProjectRoles())
+                .claim("permissions", JSONObject.toJSONString(authVo.getCurrentVo().getPermissions()))
+                .claim("userName", authVo.getCurrentVo().getUserName())
+                .claim("userId", authVo.getCurrentVo().getUserId())
                 // 设置 jwt 的签发者
                 // 设置 接收 jwt 的名称
                 //  设置  jwt 所面向的对象
@@ -61,18 +60,18 @@ public class JWTUtils {
         return jwtBuilder.compact();
     }
 
-    */
-/**
+
+    /**
      * 检查Token是否合法
      *
      * @param token
      * @return JWTResult
-     *//*
+     */
 
     public static void checkToken(String token) {
         try {
             Claims claims = Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(securityKey)).parseClaimsJws(token).getBody();
-            String sub = claims.get("userId", String.class);
+            Long sub = claims.get("userId", Long.class);
             log.error("userId:" + sub);
         } catch (ExpiredJwtException e) {
             e.printStackTrace();
@@ -87,4 +86,3 @@ public class JWTUtils {
     }
 }
 
-*/
