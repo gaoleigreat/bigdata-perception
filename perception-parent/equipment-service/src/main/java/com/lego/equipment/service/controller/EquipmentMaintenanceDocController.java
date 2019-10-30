@@ -7,6 +7,7 @@ import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.framework.excel.ExcelService;
+import com.framework.excel.utils.ExcelUtil;
 import com.lego.equipment.service.listener.DocExcelReadListener;
 import com.lego.equipment.service.service.IEquipmentMaintenanceDocService;
 import com.lego.framework.base.annotation.Operation;
@@ -26,8 +27,10 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.websocket.server.PathParam;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -170,6 +173,29 @@ public class EquipmentMaintenanceDocController {
             e.printStackTrace();
         }
         return RespVOBuilder.failure("上传失败");
+    }
+
+
+
+    @RequestMapping(value = "/downloadEquipmentMaintenanceDocTemplate", method = RequestMethod.GET)
+    @Operation(value = "downloadTemplate", desc = "下载模板")
+    @ApiOperation("下载模板")
+    public void downloadEquipmentMaintenanceDocTemplate(HttpServletResponse response){
+        List<List<String>> datas = new ArrayList<>();
+        List<String> data =  new ArrayList<>();
+        data.add("保养系统");
+        data.add("保养部位");
+        data.add("保养方法及措施");
+        data.add("保养辅料");
+        data.add("保养周期");
+        data.add("保养分类(1-初保;2-日保；3-周保；4-月保)");
+        datas.add(data);
+        try {
+            ExcelUtil.excelWriter(datas,"sheet1","系统保养数据",0,response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
 }
