@@ -6,7 +6,6 @@ import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
-import com.framework.excel.utils.ExcelUtil;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
 import com.lego.framework.base.exception.ExceptionBuilder;
@@ -19,16 +18,12 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpServletResponse;
 import javax.websocket.server.PathParam;
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -75,7 +70,6 @@ public class CrudController {
     @ApiOperation(value = "新增业务数据", httpMethod = "POST")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "templateCode", value = "表单模板code", dataType = "String", required = true, paramType = "query"),
-            @ApiImplicitParam(name = "fileId", value = "文件ID", dataType = "long", required = true, paramType = "query"),
             @ApiImplicitParam(name = "data", value = "业务数据", dataType = "list", required = true, paramType = "body"),
     })
     @RequestMapping(value = "/insert", method = RequestMethod.POST)
