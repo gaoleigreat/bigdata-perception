@@ -162,7 +162,6 @@ public class AuthFilter extends ZuulFilter {
         }
         RespVO failure = RespVOBuilder.failure(RespConsts.FAIL_LOGIN_CODE, ssoSupServerUrl + "/sso/login.html?ssoClientUrl=" + ssoLocalUrl);
         return RouteUtil.writeAndReturn(ctx, pvId, failure);
-     //   return RouteUtil.forward(ctx, pvId, ssoSupServerUrl + "/sso/login.html?ssoClientUrl=" + ssoLocalUrl);
     }
 
 

@@ -176,11 +176,11 @@ hdfs:
 sso:
   server:
     supervisor:
-      url:
-        http://10.101.231.240:9092
+      url: http://10.101.201.154:9092
     local:
-      url:
-        http://10.101.231.241:18050
+      url: http://10.101.201.159:9092
+      index:
+        url: http://10.101.201.159
 
 
 

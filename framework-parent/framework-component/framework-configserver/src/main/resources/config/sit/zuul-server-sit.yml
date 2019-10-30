@@ -46,6 +46,7 @@ jwt:
   exclude:
     urlPatterns:
       - /user-service/sso/login/checkSession
+      - /user-service/sso/login/login
       - /template-service/.*
       - /data-service/.*
       - /file-service/.*
