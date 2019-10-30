@@ -75,7 +75,7 @@ public class MongoDataServiceImpl implements IDataService {
         List<Map> mapList = mongoTemplate.find(query, Map.class, tableName);
         if (!CollectionUtils.isEmpty(mapList)) {
             for (Map map : mapList) {
-                map.remove("fileId");
+                map.remove("file_id");
             }
         }
         return RespVOBuilder.success(mapList);

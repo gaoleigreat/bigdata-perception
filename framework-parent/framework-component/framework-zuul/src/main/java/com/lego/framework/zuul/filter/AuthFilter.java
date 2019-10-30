@@ -83,7 +83,8 @@ public class AuthFilter extends ZuulFilter {
 
     @Override
     public boolean shouldFilter() {
-        return true;
+        RequestContext ctx = RequestContext.getCurrentContext();
+        return ctx.sendZuulResponse();
     }
 
     @Override
@@ -93,7 +94,7 @@ public class AuthFilter extends ZuulFilter {
         HttpServletResponse res = ctx.getResponse();
         StringBuilder sb = new StringBuilder();
         //web 跨域 上线注释
-        requestCross(res, req);
+        //requestCross(res, req);
         try {
             String uri = req.getRequestURI();
             String remoteIp = HttpUtils.getClientIp(req);
@@ -125,9 +126,9 @@ public class AuthFilter extends ZuulFilter {
         return null;
     }
 
-    private void requestCross(HttpServletResponse httpServletResponse,
+  /*  private void requestCross(HttpServletResponse httpServletResponse,
                               HttpServletRequest httpServletRequest) {
-        httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
+        httpServletResponse.setHeader("Access-Control-Allow-Origin", "Origin");
         httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
         httpServletResponse.setHeader("Access-Control-Allow-Methods", "PUT, POST, GET, OPTIONS, DELETE");
         httpServletResponse.setHeader("Access-Control-Max-Age", "3600");
@@ -137,7 +138,7 @@ public class AuthFilter extends ZuulFilter {
             httpServletResponse.setStatus(HttpServletResponse.SC_OK);
         }
     }
-
+*/
 
     /**
      * 单点登录
@@ -159,7 +160,9 @@ public class AuthFilter extends ZuulFilter {
                 return null;
             }
         }
-        return RouteUtil.forward(ctx, pvId, ssoSupServerUrl + "/sso/login.html?ssoClientUrl=" + ssoLocalUrl);
+        RespVO failure = RespVOBuilder.failure(RespConsts.FAIL_LOGIN_CODE, ssoSupServerUrl + "/sso/login.html?ssoClientUrl=" + ssoLocalUrl);
+        return RouteUtil.writeAndReturn(ctx, pvId, failure);
+     //   return RouteUtil.forward(ctx, pvId, ssoSupServerUrl + "/sso/login.html?ssoClientUrl=" + ssoLocalUrl);
     }
 
 

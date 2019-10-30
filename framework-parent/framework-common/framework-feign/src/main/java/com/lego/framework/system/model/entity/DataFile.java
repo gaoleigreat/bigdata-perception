@@ -196,6 +196,10 @@ public class DataFile extends BaseModel {
     private Date lastUpdateDate;
 
 
+    @ApiModelProperty("文件大小")
+    private Long dataSize;
+
+
     public DataFile(String name, String fileType, Long projectId, String fileUrl, String previewUrl, Long templateId, int checkFlag, int dataType, Integer deleteFlag, String remark, String tags, String batchNum) {
         Date currentTime = new Date();
         this.name = name;

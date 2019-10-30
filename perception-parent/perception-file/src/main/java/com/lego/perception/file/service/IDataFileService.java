@@ -1,7 +1,6 @@
 package com.lego.perception.file.service;
 
 
-
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
@@ -19,6 +18,7 @@ import java.util.Map;
 public interface IDataFileService {
     /**
      * 分页查询
+     *
      * @param dataFile
      * @param page
      * @return
@@ -32,7 +32,7 @@ public interface IDataFileService {
      * @param dataFile
      * @return
      */
-    Integer insert(@NotNull(message = "添加失败，参数不能为空")DataFile dataFile);
+    Integer insert(@NotNull(message = "添加失败，参数不能为空") DataFile dataFile);
 
 
     /**
@@ -41,7 +41,7 @@ public interface IDataFileService {
      * @param id
      * @return
      */
-    Integer deleteByPrimaryKey(@NotNull(message = "删除失败，参数不能为空")Long id);
+    Integer deleteByPrimaryKey(@NotNull(message = "删除失败，参数不能为空") Long id);
 
     /**
      * 修改DataFile
@@ -49,7 +49,7 @@ public interface IDataFileService {
      * @param dataFile
      * @return
      */
-    Integer updateByPrimaryKey(@NotNull(message = "添加失败，参数不能为空")DataFile dataFile);
+    Integer updateByPrimaryKey(@NotNull(message = "添加失败，参数不能为空") DataFile dataFile);
 
 
     /**
@@ -58,12 +58,12 @@ public interface IDataFileService {
      * @param id
      * @return
      */
-    DataFile selectByPrimaryKey(@NotNull(message = "查询失败，参数不能为空")Long id);
-
+    DataFile selectByPrimaryKey(@NotNull(message = "查询失败，参数不能为空") Long id);
 
 
     /**
      * 批量插入
+     *
      * @param list List<DataFile
      * @return Integer
      */
@@ -71,6 +71,7 @@ public interface IDataFileService {
 
     /**
      * 批量更新
+     *
      * @param list List<DataFile>
      * @return Integer
      */
@@ -78,6 +79,7 @@ public interface IDataFileService {
 
     /**
      * 批量删除
+     *
      * @param list List<Long >
      * @return Integer
      */
@@ -85,6 +87,7 @@ public interface IDataFileService {
 
     /**
      * 存在即更新
+     *
      * @param dataFile DataFile
      * @return Integer
      */
@@ -92,6 +95,7 @@ public interface IDataFileService {
 
     /**
      * 存在即更新，可选择具体属性
+     *
      * @param dataFile DataFile
      * @return Integer
      */
@@ -99,6 +103,7 @@ public interface IDataFileService {
 
     /**
      * 条件查询
+     *
      * @param dataFile DataFile
      * @return List<DataFile>
      */
@@ -106,9 +111,11 @@ public interface IDataFileService {
 
     /**
      * 查询总数
+     *
      * @return Integer
      */
     Long queryTotalCount();
+
     RespVO selectBybatchNums(List<String> batchNums, String tags);
 
 
@@ -129,4 +136,17 @@ public interface IDataFileService {
      * @return
      */
     Map<String, String> uploadToHdfs(String storePath, String savePath, MultipartFile[] files);
+
+    /**
+     * @param dataFile
+     * @return
+     */
+    PagedResult<DataFile> queryByListBatch(DataFile dataFile,Page page);
+
+    /**
+     * @param batchNums
+     * @param tags
+     * @return
+     */
+    RespVO updateCheckStatusByBatchNums(List<String> batchNums, String tags);
 }

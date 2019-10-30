@@ -126,12 +126,14 @@ public class DatasharedtableController {
 
     @ApiOperation(value = "共享数据", httpMethod = "POST")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "batchNums", value = "批次号", paramType = "query", allowMultiple = true, required = true, dataType = "String"),
+            @ApiImplicitParam(name = "batchNum", value = "批次号", paramType = "query", required = true, dataType = "String"),
     })
     @RequestMapping(value = "/shareData", method = RequestMethod.POST)
     @Operation(value = "shareData", desc = "共享数据")
-    public RespVO shareData(@RequestParam List<String> batchNums) {
+    public RespVO shareData(@RequestParam String batchNum) {
         //  获取所属数据源
+        List<String> batchNums = new ArrayList<>();
+        batchNums.add(batchNum);
         RespVO<RespDataVO<DataFile>> respDataVORespVO = fileClient.selectByBatchNums(batchNums, null);
         if (respDataVORespVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
             return RespVOBuilder.failure();
@@ -145,7 +147,7 @@ public class DatasharedtableController {
         for (DataFile dataFile : dataFiles) {
             String dataType = "数据库类型";
             Integer sourcesType;
-            String batchNum = dataFile.getBatchNum();
+            String batchNum1 = dataFile.getBatchNum();
             Long templateId = dataFile.getTemplateId();
             if (templateId == null) {
                 // HDFS
@@ -169,7 +171,7 @@ public class DatasharedtableController {
             }
             remoteSharedDataList.add(remoteSharedData);
             LocalSharedData localSharedData = remoteSharedData.remote2LocalSharedData();
-            localSharedData.setBatchNum(batchNum);
+            localSharedData.setBatchNum(batchNum1);
             localSharedDataList.add(localSharedData);
         }
         Integer dataBatch = iRemoteShareDataService.saveRemoteDataBatch(remoteSharedDataList);
@@ -177,8 +179,11 @@ public class DatasharedtableController {
             log.info("更新共享共享数据成功:{}", batchNums);
             Integer saveLocalDataBatch = iLocalShareDataService.saveLocalDataBatch(localSharedDataList);
             if (saveLocalDataBatch > 0) {
-                log.info("更新本地共享数据成功:{}", batchNums);
-                return RespVOBuilder.success();
+                RespVO respVO = fileClient.updateCheckStatusByBatchNums(batchNums, null);
+                if(respVO.getRetCode()==RespConsts.SUCCESS_RESULT_CODE){
+                    log.info("更新本地共享数据成功:{}", batchNums);
+                    return RespVOBuilder.success();
+                }
             }
         }
         return RespVOBuilder.failure();

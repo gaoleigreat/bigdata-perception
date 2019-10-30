@@ -4,13 +4,13 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.framework.common.consts.RespConsts;
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.framework.common.utils.UuidUtils;
+import com.framework.mybatis.tool.WhereEntityTool;
 import com.framework.mybatis.utils.PageUtil;
 import com.lego.framework.base.exception.ExceptionBuilder;
 import com.lego.framework.system.model.entity.DataFile;
@@ -29,7 +29,6 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class DataFileServiceImpl implements IDataFileService {
@@ -330,6 +329,34 @@ public class DataFileServiceImpl implements IDataFileService {
             }
         }
         return fileNamemap;
+    }
+
+    @Override
+    public PagedResult<DataFile> queryByListBatch(DataFile dataFile, Page page) {
+
+        IPage<DataFile> iPage = PageUtil.page2IPage(page);
+        QueryWrapper<DataFile> wrapper = new QueryWrapper<>();
+        WhereEntityTool.invoke(dataFile, wrapper);
+        wrapper.groupBy("batch_num");
+        IPage<DataFile> dataFileIPage = dataFileMapper.selectPage(iPage, wrapper);
+        return PageUtil.iPage2Result(dataFileIPage);
+    }
+
+    @Override
+    public RespVO updateCheckStatusByBatchNums(List<String> batchNums, String tags) {
+        QueryWrapper<DataFile> wrapper = new QueryWrapper<>();
+        wrapper.in("batch_num", batchNums);
+        List<DataFile> dataFiles = dataFileMapper.selectList(wrapper);
+        if (!CollectionUtils.isEmpty(dataFiles)) {
+            for (DataFile dataFile : dataFiles) {
+                dataFile.setCheckFlag(1);
+            }
+            Integer integer = dataFileMapper.batchUpdate(dataFiles);
+            if (integer > 0) {
+                return RespVOBuilder.success();
+            }
+        }
+        return RespVOBuilder.failure();
     }
 
 

@@ -25,10 +25,10 @@ import java.util.Map;
  * @description
  * @since 2019/8/27
  **/
-@FeignClient(value = "file-service", path = "/datefile/v1", fallbackFactory = FileClientFallbackFactory.class,configuration = MultipartSupportConfig.class)
+@FeignClient(value = "file-service", path = "/datefile/v1", fallbackFactory = FileClientFallbackFactory.class, configuration = MultipartSupportConfig.class)
 public interface FileClient {
 
-    @PostMapping(value = "/uploads", headers = "content-type=multipart/form-data",consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/uploads", headers = "content-type=multipart/form-data", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     RespVO<RespDataVO<DataFile>> uploads(@RequestPart(value = "files", required = true) MultipartFile[] files,
                                          @RequestParam(value = "projectId", required = false) Long projectId,
                                          @RequestParam(value = "templateId", required = false) Long templateId,
@@ -44,8 +44,8 @@ public interface FileClient {
      * @return
      */
     @RequestMapping(value = "/selectByBatchNums", method = RequestMethod.GET)
-    RespVO selectByBatchNums(@RequestParam(value = "bathNums") List<String> batchNums,
-                             @RequestParam(required = false, value = "tags") String tags);
+    RespVO<RespDataVO<DataFile>> selectByBatchNums(@RequestParam(value = "bathNums") List<String> batchNums,
+                                                   @RequestParam(required = false, value = "tags") String tags);
 
 
     /**
@@ -56,10 +56,10 @@ public interface FileClient {
      * @param tags   标签（多标签使用逗号隔开）
      * @return
      */
-    @PostMapping(value = "/upLoadFile",consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/upLoadFile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     RespVO<RespDataVO<DataFile>> upLoadFile(@RequestPart(value = "files") MultipartFile[] files,
-                              @RequestParam(required = false, value = "remark") String remark,
-                              @RequestParam(required = false,value = "tags") String tags);
+                                            @RequestParam(required = false, value = "remark") String remark,
+                                            @RequestParam(required = false, value = "tags") String tags);
 
 
     /**
@@ -75,12 +75,22 @@ public interface FileClient {
                                         @RequestParam(required = false, value = "fileId") Long fileId);
 
 
-
-    @RequestMapping(method = RequestMethod.POST , value = "/testUpLoad", headers = "content-type=multipart/form-data",consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST, value = "/testUpLoad", headers = "content-type=multipart/form-data", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     RespVO testUpLoad(@RequestPart(value = "files", required = true) MultipartFile[] files);
 
-    @RequestMapping(method = RequestMethod.POST ,value = "/testOneUpLoad", headers = "content-type=multipart/form-data",consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    RespVO  testOneUpLoad(@RequestPart(value = "file", required = true) MultipartFile file);
+    @RequestMapping(method = RequestMethod.POST, value = "/testOneUpLoad", headers = "content-type=multipart/form-data", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    RespVO testOneUpLoad(@RequestPart(value = "file", required = true) MultipartFile file);
+
+    /**
+     * 更新审核状态
+     *
+     * @param batchNums
+     * @param tags
+     * @return
+     */
+    @RequestMapping(value = "/updateCheckStatusByBatchNums", method = RequestMethod.POST)
+    RespVO updateCheckStatusByBatchNums(@RequestParam(value = "bathNums") List<String> batchNums,
+                                        @RequestParam(required = false, value = "tags") String tags);
 }
 
 @Slf4j
@@ -102,7 +112,7 @@ class FileClientFallbackFactory implements FallbackFactory<FileClient> {
             }
 
             @Override
-           public RespVO<RespDataVO<DataFile>> upLoadFile(MultipartFile[] files, String remark, String tags) {
+            public RespVO<RespDataVO<DataFile>> upLoadFile(MultipartFile[] files, String remark, String tags) {
                 return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "file服务不可用");
             }
 
@@ -118,6 +128,11 @@ class FileClientFallbackFactory implements FallbackFactory<FileClient> {
 
             @Override
             public RespVO<RespDataVO<DataFile>> testOneUpLoad(MultipartFile file) {
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "file服务不可用");
+            }
+
+            @Override
+            public RespVO updateCheckStatusByBatchNums(List<String> batchNums, String tags) {
                 return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "file服务不可用");
             }
         };

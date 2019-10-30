@@ -34,8 +34,7 @@ public class PostFilter extends ZuulFilter {
 
     @Override
     public boolean shouldFilter() {
-        RequestContext ctx = RequestContext.getCurrentContext();
-        return ctx.sendZuulResponse();
+        return false;
     }
 
     @Override

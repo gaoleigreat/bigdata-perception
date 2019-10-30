@@ -48,6 +48,6 @@ jwt:
       - /user-service/sso/login/checkSession
       - /template-service/.*
       - /data-service/.*
-      - file-service/.*
+      - /file-service/.*
       - .*api-docs.*
       - .*swagger.*
