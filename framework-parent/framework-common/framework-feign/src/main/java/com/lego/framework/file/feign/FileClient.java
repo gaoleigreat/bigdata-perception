@@ -81,16 +81,7 @@ public interface FileClient {
     @RequestMapping(method = RequestMethod.POST, value = "/testOneUpLoad", headers = "content-type=multipart/form-data", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     RespVO testOneUpLoad(@RequestPart(value = "file", required = true) MultipartFile file);
 
-    /**
-     * 更新审核状态
-     *
-     * @param batchNums
-     * @param tags
-     * @return
-     */
-    @RequestMapping(value = "/updateCheckStatusByBatchNums", method = RequestMethod.POST)
-    RespVO updateCheckStatusByBatchNums(@RequestParam(value = "bathNums") List<String> batchNums,
-                                        @RequestParam(required = false, value = "tags") String tags);
+
 }
 
 @Slf4j
@@ -131,10 +122,6 @@ class FileClientFallbackFactory implements FallbackFactory<FileClient> {
                 return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "file服务不可用");
             }
 
-            @Override
-            public RespVO updateCheckStatusByBatchNums(List<String> batchNums, String tags) {
-                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "file服务不可用");
-            }
         };
     }
 }

@@ -1,3 +1,4 @@
+/*
 package com.lego.perception.data.service.impl;
 
 import com.framework.common.page.Page;
@@ -13,7 +14,6 @@ import com.lego.perception.data.config.MongoProperties;
 import com.lego.perception.data.config.MysqlProperties;
 import com.lego.perception.data.mapper.LocalSharedDataMapper;
 import com.lego.perception.data.mapper.RemoteSharedDataMapper;
-import com.lego.perception.data.service.ILocalShareDataService;
 import com.lego.perception.data.service.IRemoteShareDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,12 +23,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+*/
 /**
  * @author itar
  * @email wuhandzy@gmail.com
  * @date 2019-09-19 12:36:38
  * @since jdk 1.8
- */
+ *//*
+
 @Service
 public class LocalShareDataServiceImpl implements ILocalShareDataService {
 
@@ -81,3 +83,4 @@ public class LocalShareDataServiceImpl implements ILocalShareDataService {
 
 
 
+*/

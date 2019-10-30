@@ -212,7 +212,7 @@ public class DataFileController {
     })
     @RequestMapping(value = "/selectByBatchNums", method = RequestMethod.GET)
     @Operation(value = "select", desc = "通过批次号查询")
-    public RespVO selectByBatchNums(@RequestParam(value = "bathNums") List<String> batchNums,
+    public RespVO<RespDataVO<DataFile>> selectByBatchNums(@RequestParam(value = "bathNums") List<String> batchNums,
                                     @RequestParam(required = false) String tags) {
         return dataFileService.selectBybatchNums(batchNums, tags);
     }

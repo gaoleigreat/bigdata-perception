@@ -11,6 +11,7 @@ import com.lego.framework.base.annotation.Resource;
 import com.lego.framework.data.model.entity.LocalSharedData;
 import com.lego.framework.data.model.entity.RemoteSharedData;
 import com.lego.framework.file.feign.FileClient;
+import com.lego.framework.file.feign.ShareDataClient;
 import com.lego.framework.system.model.entity.DataFile;
 import com.lego.framework.template.feign.TemplateFeignClient;
 import com.lego.framework.template.model.entity.FormTemplate;
@@ -18,8 +19,6 @@ import com.lego.framework.template.model.entity.SearchParam;
 import com.lego.perception.data.config.HdfsProperties;
 import com.lego.perception.data.config.MongoProperties;
 import com.lego.perception.data.config.MysqlProperties;
-import com.lego.perception.data.service.IDataService;
-import com.lego.perception.data.service.ILocalShareDataService;
 import com.lego.perception.data.service.IRemoteShareDataService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -52,9 +51,6 @@ public class DatasharedtableController {
     private IRemoteShareDataService iRemoteShareDataService;
 
     @Autowired
-    private ILocalShareDataService iLocalShareDataService;
-
-    @Autowired
     private TemplateFeignClient templateFeignClient;
 
     @Autowired
@@ -67,12 +63,7 @@ public class DatasharedtableController {
     private HdfsProperties hdfsProperties;
 
     @Autowired
-    @Qualifier(value = "mongoDataServiceImpl")
-    private IDataService mongoDataService;
-
-    @Autowired
-    @Qualifier(value = "mySqlDataServiceImpl")
-    private IDataService mySqlDataService;
+    private ShareDataClient shareDataClient;
 
     @Autowired
     private FileClient fileClient;
@@ -94,33 +85,6 @@ public class DatasharedtableController {
                                                                 @PathParam(value = "") Page page) {
         PagedResult<RemoteSharedData> list = iRemoteShareDataService.queryRemoteListPaged(datasharedtable, page);
         return RespVOBuilder.success(list);
-    }
-
-
-    @ApiOperation(value = "查询本地共享数据", httpMethod = "GET")
-    @RequestMapping(value = "/myList", method = RequestMethod.GET)
-    @Operation(value = "myList", desc = "查询本地共享数据")
-    public RespVO<RespDataVO<LocalSharedData>> myList(@ModelAttribute LocalSharedData datasharedtable) {
-        List<LocalSharedData> list = iLocalShareDataService.queryLocalList(datasharedtable);
-        return RespVOBuilder.success(list);
-    }
-
-
-    @ApiOperation(value = "查询本地共享数据", httpMethod = "GET")
-    @RequestMapping(value = "/myListPaged/{pageSize}/{pageIndex}", method = RequestMethod.GET)
-    @Operation(value = "myListPaged", desc = "查询共享数据库数据")
-    public RespVO<PagedResult<LocalSharedData>> myListPaged(@ModelAttribute LocalSharedData datasharedtable,
-                                                            @PathParam(value = "") Page page) {
-        PagedResult<LocalSharedData> list = iLocalShareDataService.queryLocalListPaged(datasharedtable, page);
-        return RespVOBuilder.success(list);
-    }
-
-
-    @ApiOperation(value = "删除本地共享数据", httpMethod = "DELETE")
-    @RequestMapping(value = "/deleteMyData", method = RequestMethod.DELETE)
-    @Operation(value = "deleteMyData", desc = "删除本地共享数据")
-    public RespVO deleteMyData(@ModelAttribute LocalSharedData datasharedtable) {
-        return iLocalShareDataService.deleteLocalData(datasharedtable);
     }
 
 
@@ -174,16 +138,15 @@ public class DatasharedtableController {
             localSharedData.setBatchNum(batchNum1);
             localSharedDataList.add(localSharedData);
         }
-        Integer dataBatch = iRemoteShareDataService.saveRemoteDataBatch(remoteSharedDataList);
-        if (dataBatch > 0) {
-            log.info("更新共享共享数据成功:{}", batchNums);
-            Integer saveLocalDataBatch = iLocalShareDataService.saveLocalDataBatch(localSharedDataList);
-            if (saveLocalDataBatch > 0) {
-                RespVO respVO = fileClient.updateCheckStatusByBatchNums(batchNums, null);
-                if(respVO.getRetCode()==RespConsts.SUCCESS_RESULT_CODE){
-                    log.info("更新本地共享数据成功:{}", batchNums);
-                    return RespVOBuilder.success();
-                }
+
+        log.info("更新共享共享数据成功:{}", batchNums);
+        RespVO respVO1 = shareDataClient.insertByBatchNums(batchNums, null);
+        if (respVO1.getRetCode() == RespConsts.SUCCESS_RESULT_CODE) {
+            log.info("更新本地共享数据成功:{}", batchNums);
+            Integer dataBatch = iRemoteShareDataService.saveRemoteDataBatch(remoteSharedDataList);
+            if (dataBatch > 0) {
+                log.info("更新共享共享数据成功:{}", batchNums);
+                return RespVOBuilder.success();
             }
         }
         return RespVOBuilder.failure();

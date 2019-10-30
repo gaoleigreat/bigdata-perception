@@ -232,7 +232,7 @@ public class DataFileServiceImpl implements IDataFileService {
 
 
     @Override
-    public RespVO selectBybatchNums(List<String> batchNums, String tags) {
+    public RespVO<RespDataVO<DataFile>> selectBybatchNums(List<String> batchNums, String tags) {
         QueryWrapper<DataFile> wrapper = Wrappers.query();
         if (tags != null) {
             String[] tag = tags.split(",");
@@ -350,8 +350,14 @@ public class DataFileServiceImpl implements IDataFileService {
         if (!CollectionUtils.isEmpty(dataFiles)) {
             for (DataFile dataFile : dataFiles) {
                 dataFile.setCheckFlag(1);
+                Date date = new Date();
+                dataFile.setCheckDate(date);
+                //TODO  审批人ID
+                dataFile.setCheckBy(1L);
+                dataFile.setLastUpdateDate(date);
+                dataFile.setLastUpdatedBy(1L);
             }
-            Integer integer = dataFileMapper.batchUpdate(dataFiles);
+            Integer integer = dataFileMapper.batchUpdateCheckFlag(dataFiles);
             if (integer > 0) {
                 return RespVOBuilder.success();
             }

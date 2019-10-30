@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.lego.perception.file.mapper.DataFileMapper">
+<mapper namespace="com.lego.perception.file.mapper.ShareDataMapper">
 
     <!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="com.lego.framework.system.model.entity.DataFile" id="BaseResultMap">
+    <resultMap type="com.lego.framework.system.model.entity.ShareData" id="BaseResultMap">
         <result property="id" column="id"/>
         <result property="name" column="name"/>
         <result property="fileType" column="file_type"/>
@@ -12,12 +12,6 @@
         <result property="fileUrl" column="file_url"/>
         <result property="previewUrl" column="preview_url"/>
         <result property="templateId" column="template_id"/>
-        <result property="checkFlag" column="check_flag"/>
-        <result property="checkDate" column="check_date"/>
-        <result property="checkBy" column="check_by"/>
-        <result property="publishFlag" column="publish_flag"/>
-        <result property="publishDate" column="publish_date"/>
-        <result property="publishBy" column="publish_by"/>
         <result property="dataType" column="data_type"/>
         <result property="deleteFlag" column="delete_flag"/>
         <result property="remark" column="remark"/>
@@ -40,12 +34,6 @@
         file_url ,
         preview_url ,
         template_id ,
-        check_flag ,
-        check_date ,
-        check_by ,
-        publish_flag ,
-        publish_date ,
-        publish_by ,
         data_type ,
         delete_flag ,
         remark ,
@@ -81,24 +69,6 @@
         </if>
         <if test="dataFile.templateId != null">
             and template_id = #{dataFile.templateId,jdbcType=BIGINT}
-        </if>
-        <if test="dataFile.checkFlag != null">
-            and check_flag = #{dataFile.checkFlag,jdbcType=INTEGER}
-        </if>
-        <if test="dataFile.checkDate != null">
-            and check_date = #{dataFile.checkDate,jdbcType=TIMESTAMP}
-        </if>
-        <if test="dataFile.checkBy != null">
-            and check_by = #{dataFile.checkBy,jdbcType=BIGINT}
-        </if>
-        <if test="dataFile.publishFlag != null">
-            and publish_flag = #{dataFile.publishFlag,jdbcType=INTEGER}
-        </if>
-        <if test="dataFile.publishDate != null">
-            and publish_date = #{dataFile.publishDate,jdbcType=TIMESTAMP}
-        </if>
-        <if test="dataFile.publishBy != null">
-            and publish_by = #{dataFile.publishBy,jdbcType=BIGINT}
         </if>
         <if test="dataFile.dataType != null">
             and data_type = #{dataFile.dataType,jdbcType=INTEGER}
@@ -154,24 +124,6 @@
             <if test="dataFile.templateId != null">
                 template_id = #{dataFile.templateId,jdbcType=BIGINT},
             </if>
-            <if test="dataFile.checkFlag != null">
-                check_flag = #{dataFile.checkFlag,jdbcType=INTEGER},
-            </if>
-            <if test="dataFile.checkDate != null">
-                check_date = #{dataFile.checkDate,jdbcType=TIMESTAMP},
-            </if>
-            <if test="dataFile.checkBy != null">
-                check_by = #{dataFile.checkBy,jdbcType=BIGINT},
-            </if>
-            <if test="dataFile.publishFlag != null">
-                publish_flag = #{dataFile.publishFlag,jdbcType=INTEGER},
-            </if>
-            <if test="dataFile.publishDate != null">
-                publish_date = #{dataFile.publishDate,jdbcType=TIMESTAMP},
-            </if>
-            <if test="dataFile.publishBy != null">
-                publish_by = #{dataFile.publishBy,jdbcType=BIGINT},
-            </if>
             <if test="dataFile.dataType != null">
                 data_type = #{dataFile.dataType,jdbcType=INTEGER},
             </if>
@@ -226,24 +178,6 @@
             <if test="dataFile.templateId != null">
                 template_id,
             </if>
-            <if test="dataFile.checkFlag != null">
-                check_flag,
-            </if>
-            <if test="dataFile.checkDate != null">
-                check_date,
-            </if>
-            <if test="dataFile.checkBy != null">
-                check_by,
-            </if>
-            <if test="dataFile.publishFlag != null">
-                publish_flag,
-            </if>
-            <if test="dataFile.publishDate != null">
-                publish_date,
-            </if>
-            <if test="dataFile.publishBy != null">
-                publish_by,
-            </if>
             <if test="dataFile.dataType != null">
                 data_type,
             </if>
@@ -297,24 +231,6 @@
             <if test="dataFile.templateId != null">
                 #{dataFile.templateId,jdbcType=BIGINT},
             </if>
-            <if test="dataFile.checkFlag != null">
-                #{dataFile.checkFlag,jdbcType=INTEGER},
-            </if>
-            <if test="dataFile.checkDate != null">
-                #{dataFile.checkDate,jdbcType=TIMESTAMP},
-            </if>
-            <if test="dataFile.checkBy != null">
-                #{dataFile.checkBy,jdbcType=BIGINT},
-            </if>
-            <if test="dataFile.publishFlag != null">
-                #{dataFile.publishFlag,jdbcType=INTEGER},
-            </if>
-            <if test="dataFile.publishDate != null">
-                #{dataFile.publishDate,jdbcType=TIMESTAMP},
-            </if>
-            <if test="dataFile.publishBy != null">
-                #{dataFile.publishBy,jdbcType=BIGINT},
-            </if>
             <if test="dataFile.dataType != null">
                 #{dataFile.dataType,jdbcType=BIGINT},
             </if>
@@ -351,7 +267,7 @@
 
     <!--批量添加记录到数据库表中-->
     <insert id="batchInsert" parameterType="java.util.List">
-        insert into tpl_data_file
+        insert into tpl_share_data
         <trim prefix="(" suffix=")" suffixOverrides=",">
             id,
             name,
@@ -360,12 +276,6 @@
             file_url,
             preview_url,
             template_id,
-            check_flag,
-            check_date,
-            check_by,
-            publish_flag,
-            publish_date,
-            publish_by,
             data_type,
             delete_flag,
             remark,
@@ -387,12 +297,6 @@
                 #{item.fileUrl,jdbcType=VARCHAR},
                 #{item.previewUrl,jdbcType=VARCHAR},
                 #{item.templateId,jdbcType=BIGINT},
-                #{item.checkFlag,jdbcType=INTEGER},
-                #{item.checkDate,jdbcType=TIMESTAMP},
-                #{item.checkBy,jdbcType=BIGINT},
-                #{item.publishFlag,jdbcType=INTEGER},
-                #{item.publishDate,jdbcType=TIMESTAMP},
-                #{item.publishBy,jdbcType=BIGINT},
                 #{item.dataType,jdbcType=BIGINT},
                 #{item.deleteFlag,jdbcType=INTEGER},
                 #{item.remark,jdbcType=VARCHAR},
@@ -408,22 +312,10 @@
     </insert>
 
 
-    <update id="batchUpdateCheckFlag" parameterType="java.util.List">
-        <foreach collection="list" index="index" item="item" separator=";">
-            update tpl_data_file set
-            check_flag = #{item.checkFlag,jdbcType=INTEGER},
-            check_by = #{item.checkBy,jdbcType=BIGINT},
-            last_updated_by = #{item.lastUpdatedBy,jdbcType=BIGINT},
-            last_update_date = #{item.lastUpdateDate,jdbcType=TIMESTAMP}
-            where id = #{item.id,jdbcType=BIGINT}
-        </foreach>
-    </update>
-
-
     <!-- 根据主键批量更新数据库表中的记录-->
     <update id="batchUpdate" parameterType="java.util.List">
         <foreach collection="list" index="index" item="item" separator=";">
-            update tpl_data_file
+            update tpl_share_data
             <set>
                 <trim suffixOverrides=",">
                     id = #{item.id,jdbcType=BIGINT},
@@ -433,12 +325,6 @@
                     file_url = #{item.fileUrl,jdbcType=VARCHAR},
                     preview_url = #{item.previewUrl,jdbcType=VARCHAR},
                     template_id = #{item.templateId,jdbcType=BIGINT},
-                    check_flag = #{item.checkFlag,jdbcType=INTEGER},
-                    check_date = #{item.checkDate,jdbcType=TIMESTAMP},
-                    check_by = #{item.checkBy,jdbcType=BIGINT},
-                    publish_flag = #{item.publishFlag,jdbcType=INTEGER},
-                    publish_date = #{item.publishDate,jdbcType=TIMESTAMP},
-                    publish_by = #{item.publishBy,jdbcType=BIGINT},
                     data_type = #{item.dataType,jdbcType=BIGINT},
                     delete_flag = #{item.deleteFlag,jdbcType=INTEGER},
                     remark = #{item.remark,jdbcType=VARCHAR},
@@ -460,8 +346,8 @@
 
 
     <!--存在即更新否则插入-->
-    <update id="upsert" parameterType="com.lego.framework.system.model.entity.DataFile">
-        insert into tpl_data_file
+    <update id="upsert" parameterType="com.lego.framework.system.model.entity.ShareData">
+        insert into tpl_share_data
         <trim prefix="(" suffix=")" suffixOverrides=",">
             id ,
             name ,
@@ -470,12 +356,6 @@
             file_url ,
             preview_url ,
             template_id ,
-            check_flag ,
-            check_date ,
-            check_by ,
-            publish_flag ,
-            publish_date ,
-            publish_by ,
             data_type ,
             delete_flag ,
             remark ,
@@ -495,12 +375,6 @@
             #{dataFile.fileUrl,jdbcType=VARCHAR},
             #{dataFile.previewUrl,jdbcType=VARCHAR},
             #{dataFile.templateId,jdbcType=BIGINT},
-            #{dataFile.checkFlag,jdbcType=INTEGER},
-            #{dataFile.checkDate,jdbcType=TIMESTAMP},
-            #{dataFile.checkBy,jdbcType=BIGINT},
-            #{dataFile.publishFlag,jdbcType=INTEGER},
-            #{dataFile.publishDate,jdbcType=TIMESTAMP},
-            #{dataFile.publishBy,jdbcType=BIGINT},
             #{dataFile.dataType,jdbcType=BIGINT},
             #{dataFile.deleteFlag,jdbcType=INTEGER},
             #{dataFile.remark,jdbcType=VARCHAR},
@@ -520,12 +394,6 @@
             #{dataFile.fileUrl,jdbcType=VARCHAR},
             #{dataFile.previewUrl,jdbcType=VARCHAR},
             #{dataFile.templateId,jdbcType=BIGINT},
-            #{dataFile.checkFlag,jdbcType=INTEGER},
-            #{dataFile.checkDate,jdbcType=TIMESTAMP},
-            #{dataFile.checkBy,jdbcType=BIGINT},
-            #{dataFile.publishFlag,jdbcType=INTEGER},
-            #{dataFile.publishDate,jdbcType=TIMESTAMP},
-            #{dataFile.publishBy,jdbcType=BIGINT},
             #{dataFile.dataType,jdbcType=BIGINT},
             #{dataFile.deleteFlag,jdbcType=INTEGER},
             #{dataFile.remark,jdbcType=VARCHAR},
@@ -540,8 +408,8 @@
 
 
     <!--带有空值检查的存在即更新否则插入-->
-    <update id="upsertSelective" parameterType="com.lego.framework.system.model.entity.DataFile">
-        insert into tpl_data_file
+    <update id="upsertSelective" parameterType="com.lego.framework.system.model.entity.ShareData">
+        insert into tpl_share_data
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="dataFile.id != null">
                 id,
@@ -563,24 +431,6 @@
             </if>
             <if test="dataFile.templateId != null">
                 template_id,
-            </if>
-            <if test="dataFile.checkFlag != null">
-                check_flag,
-            </if>
-            <if test="dataFile.checkDate != null">
-                check_date,
-            </if>
-            <if test="dataFile.checkBy != null">
-                check_by,
-            </if>
-            <if test="dataFile.publishFlag != null">
-                publish_flag,
-            </if>
-            <if test="dataFile.publishDate != null">
-                publish_date,
-            </if>
-            <if test="dataFile.publishBy != null">
-                publish_by,
             </if>
             <if test="dataFile.dataType != null">
                 data_type,
@@ -633,24 +483,6 @@
             <if test="dataFile.templateId !=null ">
                 #{dataFile.templateId,jdbcType=BIGINT},
             </if>
-            <if test="dataFile.checkFlag !=null ">
-                #{dataFile.checkFlag,jdbcType=INTEGER},
-            </if>
-            <if test="dataFile.checkDate !=null ">
-                #{dataFile.checkDate,jdbcType=TIMESTAMP},
-            </if>
-            <if test="dataFile.checkBy !=null ">
-                #{dataFile.checkBy,jdbcType=BIGINT},
-            </if>
-            <if test="dataFile.publishFlag !=null ">
-                #{dataFile.publishFlag,jdbcType=INTEGER},
-            </if>
-            <if test="dataFile.publishDate !=null ">
-                #{dataFile.publishDate,jdbcType=TIMESTAMP},
-            </if>
-            <if test="dataFile.publishBy !=null ">
-                #{dataFile.publishBy,jdbcType=BIGINT},
-            </if>
             <if test="dataFile.dataType !=null ">
                 #{dataFile.dataType,jdbcType=BIGINT},
             </if>
@@ -702,24 +534,6 @@
             <if test="dataFile.templateId !=null ">
                 #{templateId,jdbcType=BIGINT},
             </if>
-            <if test="dataFile.checkFlag !=null ">
-                #{checkFlag,jdbcType=INTEGER},
-            </if>
-            <if test="dataFile.checkDate !=null ">
-                #{checkDate,jdbcType=TIMESTAMP},
-            </if>
-            <if test="dataFile.checkBy !=null ">
-                #{checkBy,jdbcType=BIGINT},
-            </if>
-            <if test="dataFile.publishFlag !=null ">
-                #{publishFlag,jdbcType=INTEGER},
-            </if>
-            <if test="dataFile.publishDate !=null ">
-                #{publishDate,jdbcType=TIMESTAMP},
-            </if>
-            <if test="dataFile.publishBy !=null ">
-                #{publishBy,jdbcType=BIGINT},
-            </if>
             <if test="dataFile.dataType !=null ">
                 #{dataType,jdbcType=BIGINT},
             </if>
@@ -750,17 +564,17 @@
         </trim>
     </update>
 
-    <select id="query" resultMap="BaseResultMap" parameterType="com.lego.framework.system.model.entity.DataFile">
+    <select id="query" resultMap="BaseResultMap" parameterType="com.lego.framework.system.model.entity.ShareData">
         select
         <include refid="Base_Column_List"/>
-        from tpl_data_file
+        from tpl_share_data
         <where>
             <include refid="Base_Query_Where"></include>
         </where>
     </select>
 
     <select id="queryTotalCount" resultType="long">
-        select count(*) from tpl_data_file
+        select count(*) from tpl_share_data
     </select>
 
 

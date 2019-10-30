@@ -5,8 +5,7 @@ import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
-import com.lego.framework.equipment.model.entity.EquipmentCost;
-import com.lego.framework.system.model.entity.DataFile;
+import com.lego.framework.system.model.entity.ShareData;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 @Validated
-public interface IDataFileService {
+public interface IShareDataService {
     /**
      * 分页查询
      *
@@ -24,7 +23,7 @@ public interface IDataFileService {
      * @return
      */
 
-    PagedResult<DataFile> selectPaged(DataFile dataFile, Page page);
+    PagedResult<ShareData> selectPaged(ShareData dataFile, Page page);
 
     /**
      * 创建DataFile
@@ -32,7 +31,7 @@ public interface IDataFileService {
      * @param dataFile
      * @return
      */
-    Integer insert(@NotNull(message = "添加失败，参数不能为空") DataFile dataFile);
+    Integer insert(@NotNull(message = "添加失败，参数不能为空") ShareData dataFile);
 
 
     /**
@@ -49,7 +48,7 @@ public interface IDataFileService {
      * @param dataFile
      * @return
      */
-    Integer updateByPrimaryKey(@NotNull(message = "添加失败，参数不能为空") DataFile dataFile);
+    Integer updateByPrimaryKey(@NotNull(message = "添加失败，参数不能为空") ShareData dataFile);
 
 
     /**
@@ -58,7 +57,7 @@ public interface IDataFileService {
      * @param id
      * @return
      */
-    DataFile selectByPrimaryKey(@NotNull(message = "查询失败，参数不能为空") Long id);
+    ShareData selectByPrimaryKey(@NotNull(message = "查询失败，参数不能为空") Long id);
 
 
     /**
@@ -67,7 +66,7 @@ public interface IDataFileService {
      * @param list List<DataFile
      * @return Integer
      */
-    Integer batchInsert(List<DataFile> list);
+    Integer batchInsert(List<ShareData> list);
 
     /**
      * 批量更新
@@ -75,7 +74,7 @@ public interface IDataFileService {
      * @param list List<DataFile>
      * @return Integer
      */
-    Integer batchUpdate(List<DataFile> list);
+    Integer batchUpdate(List<ShareData> list);
 
     /**
      * 批量删除
@@ -88,26 +87,26 @@ public interface IDataFileService {
     /**
      * 存在即更新
      *
-     * @param dataFile DataFile
+     * @param dataFile ShareData
      * @return Integer
      */
-    Integer upsert(DataFile dataFile);
+    Integer upsert(ShareData dataFile);
 
     /**
      * 存在即更新，可选择具体属性
      *
-     * @param dataFile DataFile
+     * @param dataFile ShareData
      * @return Integer
      */
-    Integer upsertSelective(DataFile dataFile);
+    Integer upsertSelective(ShareData dataFile);
 
     /**
      * 条件查询
      *
-     * @param dataFile DataFile
+     * @param dataFile ShareData
      * @return List<DataFile>
      */
-    List<DataFile> query(DataFile dataFile);
+    List<ShareData> query(ShareData dataFile);
 
     /**
      * 查询总数
@@ -116,37 +115,14 @@ public interface IDataFileService {
      */
     Long queryTotalCount();
 
-    RespVO<RespDataVO<DataFile>> selectBybatchNums(List<String> batchNums, String tags);
+    RespVO<RespDataVO<ShareData>>  selectBybatchNums(List<String> batchNums, String tags);
 
 
-    /**
-     * 上传业务文件
-     *
-     * @param files
-     * @param remark
-     * @param tags
-     * @return
-     */
-    RespVO<RespDataVO<DataFile>> upLoadFile(MultipartFile[] files, String remark, String tags);
-
-    /**
-     * @param storePath
-     * @param savePath
-     * @param files
-     * @return
-     */
-    Map<String, String> uploadToHdfs(String storePath, String savePath, MultipartFile[] files);
 
     /**
      * @param dataFile
      * @return
      */
-    PagedResult<DataFile> queryByListBatch(DataFile dataFile,Page page);
+    PagedResult<ShareData> queryByListBatch(ShareData dataFile, Page page);
 
-    /**
-     * @param batchNums
-     * @param tags
-     * @return
-     */
-    RespVO updateCheckStatusByBatchNums(List<String> batchNums, String tags);
 }
