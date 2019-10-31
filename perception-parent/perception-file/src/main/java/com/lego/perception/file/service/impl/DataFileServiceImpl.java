@@ -20,6 +20,7 @@ import com.lego.perception.file.service.IDataFileService;
 import com.lego.perception.file.service.IFdfsFileService;
 import com.lego.perception.file.service.IFpFileService;
 import com.lego.perception.file.service.IHdfsService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -235,7 +236,7 @@ public class DataFileServiceImpl implements IDataFileService {
     @Override
     public RespVO selectBybatchNums(List<String> batchNums, String tags) {
         QueryWrapper<DataFile> wrapper = Wrappers.query();
-        if (tags != null) {
+        if (StringUtils.isNotBlank(tags)) {
             String[] tag = tags.split(",");
             if (tag.length > 0) {
                 wrapper.in("tags", tag);
