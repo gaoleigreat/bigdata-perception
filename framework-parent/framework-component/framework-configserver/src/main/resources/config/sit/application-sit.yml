@@ -178,7 +178,7 @@ sso:
     supervisor:
       url: http://10.101.201.154:9092
     local:
-      url: http://10.101.201.159:20010
+      url: http://10.101.201.159
       index:
         url: http://10.101.201.159
 

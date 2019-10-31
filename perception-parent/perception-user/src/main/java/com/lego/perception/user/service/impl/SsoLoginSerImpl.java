@@ -1,23 +1,20 @@
 package com.lego.perception.user.service.impl;
 
-
-import com.alibaba.fastjson.JSON;
 import com.framework.common.consts.RespConsts;
 import com.framework.common.sdto.CurrentVo;
 import com.framework.common.sdto.RespVO;
-import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.auth.feign.AuthClient;
 import com.lego.framework.user.model.vo.SsoLoginVo;
 import com.lego.perception.user.constant.InitConst;
 import com.lego.perception.user.constant.LoginConst;
 import com.lego.perception.user.model.User;
 import com.lego.perception.user.service.SsoLoginService;
+import com.ym.sso.supervisor.client.dao.SsoLoginDao;
+import com.ym.sso.supervisor.client.dao.impl.SsoLoginDaoImpl;
 import com.ym.sso.supervisor.common.bean.SsoLogin;
 import com.ym.sso.supervisor.common.bean.SsoTicket;
-import com.ym.sso.supervisor.common.constant.ClientResultEnum;
 import com.ym.sso.supervisor.common.constant.LoginResultEnum;
 import com.ym.sso.supervisor.common.constant.TicketResultEnum;
-import com.ym.sso.supervisor.common.util.SsoHttpClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,89 +43,49 @@ public class SsoLoginSerImpl implements SsoLoginService {
     @Autowired
     private AuthClient authClient;
 
-    /**
-     * 检查门票是否存在
-     *
-     * @param ssoTicket       输入参数
-     * @param ssoSupServerUrl 单点登录服务的访问路径
-     * @param sessionId       session的id
-     * @return 门票是否存在 true 是 false 否
-     */
-    @Override
-    public SsoTicket checkTicket(SsoTicket ssoTicket, String ssoSupServerUrl, String sessionId) {
-        log.debug("checkTicket:ssoTicket={},ssoSupServerUrl={},sessionId={}", ssoTicket,
-                ssoSupServerUrl, sessionId);
-        if (ssoTicket == null) {
-            ssoTicket = new SsoTicket();
-            ssoTicket.setResult(ClientResultEnum.LOCAL_MISS_PARAM.getNo());
-            ssoTicket.setMessage(ClientResultEnum.LOCAL_MISS_PARAM.getMessage());
-            return ssoTicket;
-        }
-        if (ssoTicket.getIdNumber() == null || ssoTicket.getTicket() == null) {
-            ssoTicket.setResult(ClientResultEnum.LOCAL_MISS_PARAM.getNo());
-            ssoTicket.setMessage(ClientResultEnum.LOCAL_MISS_PARAM.getMessage());
-            return ssoTicket;
-        }
-        if (ssoSupServerUrl.endsWith("/")) {
-            ssoSupServerUrl = ssoSupServerUrl.substring(0, ssoSupServerUrl.indexOf("/"));
-        }
-        String json = SsoHttpClient.doPost(ssoSupServerUrl + "/000000/sso/ticket/check.do",
-                JSON.toJSONString(ssoTicket));
-        if (json == null || json.trim().length() < 3) {
-            ssoTicket.setResult(ClientResultEnum.LOCAL_TICKET_ERROR.getNo());
-            ssoTicket.setMessage(ClientResultEnum.LOCAL_TICKET_ERROR.getMessage());
-            return ssoTicket;
-        }
-        return JSON.parseObject(json, SsoTicket.class);
-    }
+
+    private SsoLoginDao ssoLoginDao = new SsoLoginDaoImpl();
 
 
     /**
      * 登录方法
      *
-     * @param session         HttpSession
-     * @param ssoTicket       输入参数
-     * @param ssoSupServerUrl 单点登录服务的访问路径
+     * @param session   HttpSession
+     * @param ssoTicket 输入参数
      */
     @Override
-    public SsoTicket loginRedis(HttpSession session, SsoTicket ssoTicket, String ssoSupServerUrl) {
-        log.debug("login:ssoTicket={},ssoSupServerUrl={}", ssoTicket, ssoSupServerUrl);
-        //保存 session-user 到  redis
-        authClient.saveUserToken(ssoTicket.getIdNumber(), ssoTicket.getSessionId());
-        // 上报  session
-        ssoTicket.setSessionId(session.getId());
-        String json = SsoHttpClient.doPost(
-                ssoSupServerUrl + "/000000/sso/ticket/receiveSessionId.do",
-                JSON.toJSONString(ssoTicket));
-        if (json != null && json.length() > 2) {
-            ssoTicket = JSON.parseObject(json, SsoTicket.class);
-            if (TicketResultEnum.RECEIVE_ID_SUCCESS.getNo().equals(ssoTicket.getResult())) {
-                ssoTicket.setResult(ClientResultEnum.LOCAL_SUCCESS.getNo());
-            } else {
-                session.removeAttribute(LoginConst.SESSION_USER_KEY);
-            }
-        } else {
-            ssoTicket.setResult(ClientResultEnum.LOCAL_SESSION_ERROR.getNo());
-            ssoTicket.setMessage(ClientResultEnum.LOCAL_SESSION_ERROR.getMessage());
-            session.removeAttribute(LoginConst.SESSION_USER_KEY);
-        }
-        return ssoTicket;
-    }
-
-
-    /**
-     * 登录方法
-     *
-     * @param session         HttpSession
-     * @param ssoTicket       输入参数
-     * @param ssoSupServerUrl 单点登录服务的访问路径
-     */
-    @Override
-    public SsoTicket login(HttpSession session, SsoTicket ssoTicket, String ssoSupServerUrl) {
-        log.debug("login:ssoTicket={},ssoSupServerUrl={}", ssoTicket, ssoSupServerUrl);
-        //TODO 本地保存  session
+    public SsoTicket loginRedis(HttpSession session, SsoTicket ssoTicket) {
+        log.debug("login:ssoTicket={}", ssoTicket);
         User user = new User();
-        user.setUserName("王富贵");
+        user.setUserName(LoginConst.SESSION_USER_NAME);
+        user.setIdNumber(ssoTicket.getIdNumber());
+        session.setAttribute(LoginConst.SESSION_USER_KEY, user);
+        authClient.saveUserToken(ssoTicket.getIdNumber(), session.getId());
+        ssoTicket.setSessionId(session.getId());
+        SsoTicket resultTicket = ssoLoginDao.receiveSessionId(ssoTicket);
+        log.info("resultTicket:{}",resultTicket);
+        if (!TicketResultEnum.RECEIVE_ID_SUCCESS.getNo().equals(resultTicket.getResult())) {
+            authClient.removeUserToken(session.getId());
+            session.removeAttribute(LoginConst.SESSION_USER_KEY);
+        } else {
+            log.info("login:session={}", session.getId());
+        }
+        return resultTicket;
+    }
+
+
+    @Override
+    public SsoTicket checkTicket(SsoTicket ssoTicket) {
+        log.debug("checkTicket:ssoTicket={}", ssoTicket);
+        return ssoLoginDao.checkTicket(ssoTicket);
+    }
+
+
+    @Override
+    public SsoTicket login(HttpSession session, SsoTicket ssoTicket) {
+        log.debug("login:ssoTicket={}", ssoTicket);
+        User user = new User();
+        user.setUserName(LoginConst.SESSION_USER_NAME);
         user.setIdNumber(ssoTicket.getIdNumber());
         session.setAttribute(LoginConst.SESSION_USER_KEY, user);
         Map<String, HttpSession> sessionMap = initConst.getSessionMap();
@@ -137,41 +94,31 @@ public class SsoLoginSerImpl implements SsoLoginService {
         }
         sessionMap.put(session.getId(), session);
         initConst.setSessionMap(sessionMap);
-        // 上报  session
         ssoTicket.setSessionId(session.getId());
-        String json = SsoHttpClient.doPost(
-                ssoSupServerUrl + "/000000/sso/ticket/receiveSessionId.do",
-                JSON.toJSONString(ssoTicket));
-        if (json != null && json.length() > 2) {
-            ssoTicket = JSON.parseObject(json, SsoTicket.class);
-            if (TicketResultEnum.RECEIVE_ID_SUCCESS.getNo().equals(ssoTicket.getResult())) {
-                ssoTicket.setResult(ClientResultEnum.LOCAL_SUCCESS.getNo());
-            } else {
-                session.removeAttribute(LoginConst.SESSION_USER_KEY);
-            }
-        } else {
-            ssoTicket.setResult(ClientResultEnum.LOCAL_SESSION_ERROR.getNo());
-            ssoTicket.setMessage(ClientResultEnum.LOCAL_SESSION_ERROR.getMessage());
+        SsoTicket resultTicket = ssoLoginDao.receiveSessionId(ssoTicket);
+        if (!TicketResultEnum.RECEIVE_ID_SUCCESS.getNo().equals(resultTicket.getResult())) {
+            sessionMap.remove(session.getId());
             session.removeAttribute(LoginConst.SESSION_USER_KEY);
+        } else {
+            log.info("login:session.getId()={},session={}", session.getId(),
+                    initConst.getSessionMap().get(session.getId()).getAttribute(
+                            LoginConst.SESSION_USER_KEY));
         }
-        return ssoTicket;
+        return resultTicket;
     }
 
 
     @Override
-    public SsoLogin logoutRedis(SsoLogin ssoLogin, String sessionId) {
-        log.debug("logout:ssoLogin={},sessionId={}", ssoLogin, sessionId);
+    public SsoLogin logoutRedis(String sessionId) {
+        log.debug("logout:sessionId={}", sessionId);
         Long time = System.currentTimeMillis();
-        if (ssoLogin == null) {
-            ssoLogin = new SsoLogin();
-        }
+        SsoLogin ssoLogin = new SsoLogin();
         if (sessionId == null) {
             ssoLogin.setResult(LoginResultEnum.LOGIN_OUT_MISS_PARAM.getNo());
             ssoLogin.setMessage(LoginResultEnum.LOGIN_OUT_MISS_PARAM.getMessage());
             ssoLogin.setTime(time);
             return ssoLogin;
         }
-        //  删除  本地  token
         authClient.removeUserToken(sessionId);
         ssoLogin.setResult(LoginResultEnum.LOGIN_OUT_SUCCESS.getNo());
         ssoLogin.setMessage(LoginResultEnum.LOGIN_OUT_SUCCESS.getMessage());
@@ -183,17 +130,14 @@ public class SsoLoginSerImpl implements SsoLoginService {
     /**
      * 注销的方法
      *
-     * @param ssoLogin  输入的参数
      * @param sessionId session的id
      * @return 注销的结果
      */
     @Override
-    public SsoLogin logout(SsoLogin ssoLogin, String sessionId) {
-        log.debug("logout:ssoLogin={},sessionId={}", ssoLogin, sessionId);
+    public SsoLogin logout(String sessionId) {
+        log.debug("logout:sessionId={}", sessionId);
         Long time = System.currentTimeMillis();
-        if (ssoLogin == null) {
-            ssoLogin = new SsoLogin();
-        }
+        SsoLogin ssoLogin = new SsoLogin();
         if (sessionId == null) {
             ssoLogin.setResult(LoginResultEnum.LOGIN_OUT_MISS_PARAM.getNo());
             ssoLogin.setMessage(LoginResultEnum.LOGIN_OUT_MISS_PARAM.getMessage());
@@ -218,6 +162,7 @@ public class SsoLoginSerImpl implements SsoLoginService {
         try {
             userSession = session.getAttribute(LoginConst.SESSION_USER_KEY);
         } catch (IllegalStateException ex) {
+            log.error("logout={}", ex.toString());
             sessionMap.remove(sessionId);
             initConst.setSessionMap(sessionMap);
             ssoLogin.setResult(LoginResultEnum.LOGIN_OUT_SUCCESS.getNo());
@@ -231,13 +176,16 @@ public class SsoLoginSerImpl implements SsoLoginService {
             ssoLogin.setTime(time);
             return ssoLogin;
         }
+        if (sessionMap.get(session.getId()) != null) {
+            log.info("logout:session.removeAttribute:sessionId={},session={}", sessionId,
+                    sessionMap.get(session.getId()).getAttribute(LoginConst.SESSION_USER_KEY));
+        }
         session.removeAttribute(LoginConst.SESSION_USER_KEY);
         ssoLogin.setResult(LoginResultEnum.LOGIN_OUT_SUCCESS.getNo());
         ssoLogin.setMessage(LoginResultEnum.LOGIN_OUT_SUCCESS.getMessage());
         ssoLogin.setTime(time);
         return ssoLogin;
     }
-
 
     @Override
     public SsoLoginVo checkRedisSession(String sessionId) {
