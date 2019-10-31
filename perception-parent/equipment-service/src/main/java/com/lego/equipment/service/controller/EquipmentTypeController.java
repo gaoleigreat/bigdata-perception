@@ -69,15 +69,14 @@ public class EquipmentTypeController {
         List<EquipmentType> resultList = pagedResult.getResultList();
         resultList.forEach(equipmentType1 -> {
 
-            RespVO<FormTemplate> respDataVORespVO = templateFeignClient.findByDataType(Integer.valueOf(equipmentType1.getType()));
+            RespVO<RespDataVO<FormTemplate>> respDataVORespVO = templateFeignClient.findByDataType(Integer.valueOf(equipmentType1.getType()));
 
-            if (respDataVORespVO == null) {
-                ExceptionBuilder.operateFailException("模板服务不可用");
-            }
-            if (respDataVORespVO.getRetCode() != 1) {
+            boolean b = respDataVORespVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE || respDataVORespVO.getInfo() == null && CollectionUtils.isEmpty(respDataVORespVO.getInfo().getList());
+
+            if (b) {
                 ExceptionBuilder.operateFailException("获取模板失败");
             }
-            FormTemplate formTemplateGet = respDataVORespVO.getInfo();
+            FormTemplate formTemplateGet = respDataVORespVO.getInfo().getList().get(0);
             if (formTemplateGet == null) {
                 ExceptionBuilder.operateFailException("没有对应的表单模板");
             }
@@ -101,18 +100,14 @@ public class EquipmentTypeController {
     public RespVO<EquipmentType> selectByPrimaryKey(@RequestParam(value = "id") Long id) {
         EquipmentType po = iEquipmentTypeService.selectByPrimaryKey(id);
 
-        RespVO<FormTemplate> respDataVORespVO = templateFeignClient.findByDataType(Integer.valueOf(po.getType()));
+        RespVO<RespDataVO<FormTemplate>> respDataVORespVO = templateFeignClient.findByDataType(Integer.valueOf(po.getType()));
 
-        if (respDataVORespVO == null) {
-            ExceptionBuilder.operateFailException("模板服务不可用");
-        }
-        if (respDataVORespVO.getRetCode() != 1) {
+        boolean b = respDataVORespVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE || respDataVORespVO.getInfo() == null && CollectionUtils.isEmpty(respDataVORespVO.getInfo().getList());
+
+        if (b) {
             ExceptionBuilder.operateFailException("获取模板失败");
         }
-        FormTemplate formTemplateGet = respDataVORespVO.getInfo();
-        if (formTemplateGet == null) {
-            ExceptionBuilder.operateFailException("没有对应的表单模板");
-        }
+        FormTemplate formTemplateGet = respDataVORespVO.getInfo().getList().get(0);
         po.setTemplateCode(formTemplateGet.getTemplateCode());
         return RespVOBuilder.success(po);
     }

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+    <script type="text/javascript" src="/js/vue.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/js/axios.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/js/sso.js" charset="utf-8"></script>
+    <script type="text/javascript" charset="utf-8">
+        var ticket = getUrlParam("ticket");
+        var idNumber = getUrlParam("idNumber");
+        var systemId = getUrlParam("systemId");
+
+        function initForm() {
+            new Vue({
+                el: '#login_div',
+                data: {
+                    formData: {},
+                    paramError: "",
+                    loginUrl: ""
+                },
+                methods: {
+                    checkSession: function () {
+                        axios.get("/sso/login/checkSession.do")
+                            .then(function (response) {
+                                this.formData = response.data;
+                                if (checkSessionResult(this.formData.result)) {
+                                    window.location.href = "/index.html";
+                                } else {
+                                    this.login();
+
+                                }
+                            }.bind(this))
+                            .catch(function (response) {
+                                this.paramError = "checkSession——>" + response;
+                            }.bind(this));
+                    },
+                    login: function () {
+                        if (isEmpty(ticket) || isEmpty(idNumber) || isEmpty(systemId)) {
+                            window.location.href = getLoginUrl(this.formData.ssoSupServerUrl);
+                        } else {
+                            this.formData = {"ticket": ticket, "idNumber": idNumber, "systemId": systemId};
+                            axios.post("/sso/login/login.do", this.formData)
+                                .then(function (response) {
+                                    this.formData = response.data;
+                                    if (checkLoginResult(this.formData.result)) {
+                                        window.location.href = "/index.html";
+                                    } else {
+                                        this.loginUrl = getLoginUrl(this.formData);
+                                        this.paramError = this.formData.message + "，错误码：（" + this.formData.result + "）";
+                                    }
+
+                                }.bind(this))
+                                .catch(function (response) {
+                                    this.paramError = "login——>" + response;
+                                }.bind(this));
+                        }
+                    },
+                    reLogin: function () {
+                        window.location.href = this.loginUrl;
+                    }
+                },
+                mounted: function () {
+                    this.$nextTick(function () {
+                        this.checkSession();
+                    })
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<div id="login_div">
+    {{paramError}}&nbsp;&nbsp;&nbsp;<a href="javascript:" @click="reLogin">再次登录</a>
+</div>
+<script type="text/javascript" charset="utf-8">
+    initForm();
+</script>
+</body>
+</html>

@@ -6,22 +6,11 @@ import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.framework.mybatis.annotation.DB;
 import com.framework.mybatis.utils.PageUtil;
-import com.lego.framework.base.exception.ExceptionBuilder;
-import com.lego.framework.data.model.entity.LocalSharedData;
 import com.lego.framework.data.model.entity.RemoteSharedData;
-import com.lego.perception.data.config.HdfsProperties;
-import com.lego.perception.data.config.MongoProperties;
-import com.lego.perception.data.config.MysqlProperties;
-import com.lego.perception.data.mapper.LocalSharedDataMapper;
 import com.lego.perception.data.mapper.RemoteSharedDataMapper;
-import com.lego.perception.data.service.ILocalShareDataService;
 import com.lego.perception.data.service.IRemoteShareDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**

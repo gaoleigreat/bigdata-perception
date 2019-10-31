@@ -73,6 +73,7 @@ public class DataFileController {
                     ext = filename.substring(pos + 1);
                 }
                 DataFile dataFile = new DataFile(filename, ext, projectId, upload.get(filename), upload.get(filename), templateId, 0, sourceType, 0, remark, tags, batchNum);
+                dataFile.setDataSize(f.getSize());
                 dataFiles.add(dataFile);
                 returnList.add(dataFile);
             }
@@ -189,6 +190,21 @@ public class DataFileController {
     }
 
 
+    @ApiOperation(value = "条件查询DataFile", notes = "条件查询DataFile")
+    @ApiImplicitParams({
+
+    })
+    @GetMapping("/queryPaged/{pageSize}/{pageIndex}")
+    public RespVO<PagedResult<DataFile>> queryByListBatch(@ModelAttribute DataFile dataFile,
+                                                          @PathParam(value = "") Page page) {
+        if (dataFile == null) {
+            return RespVOBuilder.failure("参数不能为空");
+        }
+        PagedResult<DataFile> listBatch = dataFileService.queryByListBatch(dataFile, page);
+        return RespVOBuilder.success(listBatch);
+    }
+
+
     @ApiOperation(value = "通过批次号查询", notes = "通过批次号查询")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "batchNums", value = "批次号，", paramType = "query", allowMultiple = true, required = true, dataType = "String"),
@@ -196,10 +212,24 @@ public class DataFileController {
     })
     @RequestMapping(value = "/selectByBatchNums", method = RequestMethod.GET)
     @Operation(value = "select", desc = "通过批次号查询")
-    public RespVO selectByBatchNums(@RequestParam(value = "bathNums") List<String> batchNums,
+    public RespVO<RespDataVO<DataFile>> selectByBatchNums(@RequestParam(value = "bathNums") List<String> batchNums,
                                     @RequestParam(required = false) String tags) {
         return dataFileService.selectBybatchNums(batchNums, tags);
     }
+
+
+
+    @ApiOperation(value = "通过批次号查询", notes = "通过批次号查询")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "batchNums", value = "批次号，", paramType = "query", allowMultiple = true, required = true, dataType = "String"),
+            @ApiImplicitParam(name = "tags", value = "标签(多标签用逗号隔开)", paramType = "query", dataType = "String")
+    })
+    @RequestMapping(value = "/updateCheckStatusByBatchNums", method = RequestMethod.POST)
+    public RespVO updateCheckStatusByBatchNums(@RequestParam(value = "bathNums") List<String> batchNums,
+                                        @RequestParam(required = false, value = "tags") String tags){
+        return dataFileService.updateCheckStatusByBatchNums(batchNums, tags);
+    }
+
 
 
     @ApiOperation(value = "上传业务文件", notes = "上传业务文件")

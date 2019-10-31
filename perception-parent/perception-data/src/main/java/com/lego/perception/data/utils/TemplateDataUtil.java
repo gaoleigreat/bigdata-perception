@@ -83,7 +83,7 @@ public class TemplateDataUtil {
         mapArrayList.forEach(map -> {
             JSONObject jsonObject = new JSONObject(map);
             jsonObject = TemplateDataValidataUtil.transformFormDataItem(formTemplate, jsonObject);
-            jsonObject.put("fileId", fileId);
+            jsonObject.put("file_id", fileId);
             jsonObjects.add(jsonObject);
         });
         List<Map<String, Object>> mapArrayListResult = new ArrayList<>();

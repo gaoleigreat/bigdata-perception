@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.io.IOException;
@@ -135,7 +136,7 @@ public class DataController {
         if (files == null || files.length <= 0) {
             return RespVOBuilder.failure("上传文件有误");
         }
-        RespVO<RespDataVO<DataFile>> uploads = fileClient.uploads(files, projectId, null, -1, remark, tags.get(dataType));
+        RespVO<RespDataVO<DataFile>> uploads = fileClient.uploads(files, projectId, null, dataType, remark, tags.get(dataType));
         if (uploads.getRetCode() != 1) {
             return RespVOBuilder.failure("上传文件失败");
         }

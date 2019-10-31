@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>主页面</title>
+    <script type="text/javascript" src="/js/vue.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/js/axios.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/js/sso.js" charset="utf-8"></script>
+    <script type="text/javascript" charset="utf-8">
+        function initForm() {
+            new Vue({
+                el: '#login_div',
+                data: {
+                    formData: {},
+                    paramError: "",
+                    loginUrl: ""
+                },
+                methods: {
+                    checkSession: function () {
+                        axios.get("/sso/login/checkSession.do")
+                            .then(function (response) {
+                                this.formData = response.data;
+                                if (!checkSessionResult(this.formData.result)) {
+                                    window.location.href = getLoginUrl(this.formData);
+                                } else {
+                                    this.paramError = "单点登录成功，欢迎您！";
+                                }
+                            }.bind(this))
+                            .catch(function (response) {
+                                document.getElementById("login_div").innerHTML = "checkSession——>" + response;
+                            }.bind(this));
+                    },
+                    logout: function () {
+                        axios.get("/sso/login/getLogParam.do")
+                            .then(function (response) {
+                                this.formData = response.data;
+                                if (!checkSessionResult(this.formData.result)) {
+                                    this.paramError = this.formData.message + "，错误码：（" + this.formData.result + "）";
+                                } else {
+                                    window.location.href = getLogoutUrl(this.formData);
+                                }
+                            }.bind(this))
+                            .catch(function (response) {
+                                this.paramError = "checkSession——>" + response;
+                            }.bind(this));
+                    }
+                },
+                mounted: function () {
+                    this.$nextTick(function () {
+                        this.checkSession();
+                    })
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<div id="login_div">
+    {{paramError}}<br/><br/><br/><br/>
+    <a href="javascript:" @click="logout">注销</a>
+</div>
+<script type="text/javascript" charset="utf-8">
+    initForm();
+</script>
+</body>
+</html>

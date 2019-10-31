@@ -106,5 +106,5 @@ hs_err_pid*
 .idea
 /.idea/inspectionProfiles/Project_Default.xml
 
-*.html
 *.pdf
+perception-parent/perception-user/src/main/resources/templates/

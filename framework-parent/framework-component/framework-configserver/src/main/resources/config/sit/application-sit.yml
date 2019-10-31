@@ -17,7 +17,7 @@ define:
       username: ywgzuser
       password: ywgz#(!)123
     share:
-      url: jdbc:mysql://172.16.19.15:3306/share?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+      url: jdbc:mysql://172.16.19.15:3306/perception_business?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
       username: ywgzuser
       password: ywgz#(!)123
     equipment:
@@ -72,10 +72,10 @@ spring:
         min-idle: 0
     timeout: 10000
   rabbitmq:
-    host: 10.101.201.164
+    host: 49.235.172.6
     port: 5672
-    username: guest
-    password: guest
+    username: admin
+    password: admin123
   #zipkin:
   #  base-url: http://192.168.0.154:9411
   jackson:
@@ -168,13 +168,19 @@ fpfile:
   url:  http://localhost:20010/perception/file-service/file/fpfile/download
 
 
-sso:
-  name: sso-server
-  url_prefix: http://t.weather.sojson.com/api/weather
-
 hdfs:
   storePath: /home/work/file/
   savePath: equipment
+
+
+sso:
+  server:
+    supervisor:
+      url: http://10.101.201.154:9092
+    local:
+      url: http://10.101.201.159:20010
+      index:
+        url: http://10.101.201.159
 
 
 

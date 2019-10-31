@@ -77,7 +77,7 @@ public class MySqlDataServiceImpl implements IDataService {
         String tableName = formTemplate.getDescription();
         // 参数校验
         for (Map<String, Object> objectMap : data) {
-            objectMap.put("fileId", fileId);
+            objectMap.put("file_id", fileId);
             BusinessTable businessTable = new BusinessTable(null, tableName, objectMap);
             Integer insertBusinessData = businessMapper.insertBusinessData(businessTable);
             if (insertBusinessData <= 0) {
@@ -106,9 +106,17 @@ public class MySqlDataServiceImpl implements IDataService {
         List<Map> data = businessMapper.queryBusinessData(tableName, wrapper);
         if (!CollectionUtils.isEmpty(data)) {
             for (Map datum : data) {
-                datum.remove("fileId");
+                datum.remove("file_id");
             }
         }
+        return RespVOBuilder.success(data);
+    }
+
+    @Override
+    public RespVO<RespDataVO<Map>> queryDataByFileId(String tableName, List<Long> fileIds) {
+        QueryWrapper wrapper = new QueryWrapper();
+        wrapper.in("file_id",fileIds);
+        List<Map> data = businessMapper.queryBusinessData(tableName, wrapper);
         return RespVOBuilder.success(data);
     }
 

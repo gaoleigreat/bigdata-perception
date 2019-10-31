@@ -127,7 +127,7 @@ public class CrudServiceImpl implements ICrudService {
         List<Map<String, Object>> data = crudMapper.queryBusinessData(tableName, wrapper);
         if (!CollectionUtils.isEmpty(data)) {
             for (Map datum : data) {
-                datum.remove("fileId");
+                datum.remove("file_id");
             }
         }
         return RespVOBuilder.success(data);
@@ -153,7 +153,7 @@ public class CrudServiceImpl implements ICrudService {
         IPage<Map<String, Object>> data = crudMapper.queryBusinessData(iPage, tableName, wrapper);
         if (!CollectionUtils.isEmpty(data.getRecords())) {
             for (Map datum : data.getRecords()) {
-                datum.remove("fileId");
+                datum.remove("file_id");
             }
         }
         return RespVOBuilder.success(PageUtil.iPage2Result(data));

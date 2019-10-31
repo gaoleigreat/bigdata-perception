@@ -15,6 +15,7 @@
         <result property="serverPort" column="server_port"/>
         <result property="username" column="username"/>
         <result property="pw" column="pw"/>
+        <result property="fileId" column="file_id"/>
     </resultMap>
 
     <!--
@@ -50,7 +51,10 @@
                 username,
             </if>
             <if test="pw != null">
-                pw
+                pw,
+            </if>
+            <if test="fileId != null">
+                file_id
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -82,7 +86,10 @@
                 #{username,jdbcType=VARCHAR},
             </if>
             <if test="pw != null">
-                #{pw,jdbcType=VARCHAR}
+                #{pw,jdbcType=VARCHAR},
+            </if>
+            <if test="fileId != null">
+                #{fileId,jdbcType=BIGINT}
             </if>
         </trim>
     </sql>
@@ -91,7 +98,7 @@
       数据库表的基本查询列名集合
     -->
     <sql id="Base_Column_List">
-        sharedtime, `type`, `name`, `schema`, `desc`, server_type, server_ip, server_port, username, pw
+        sharedtime, `type`, `name`, `schema`, `desc`, server_type, server_ip, server_port, username, pw,file_id
     </sql>
 
     <!--
@@ -127,6 +134,9 @@
         </if>
         <if test="pw != null">
             and pw = #{pw,jdbcType=VARCHAR}
+        </if>
+        <if test="fileId != null">
+            and file_id = #{fileId,jdbcType=BIGINT}
         </if>
     </sql>
 
@@ -164,6 +174,9 @@
             </if>
             <if test="pw != null">
                 pw = #{pw,jdbcType=VARCHAR},
+            </if>
+            <if test="fileId != null">
+                file_id = #{fileId,jdbcType=BIGINT},
             </if>
         </set>
     </sql>
@@ -214,7 +227,10 @@
             #{username,jdbcType=VARCHAR},
         </if>
         <if test="pw != null">
-            #{pw,jdbcType=VARCHAR}
+            #{pw,jdbcType=VARCHAR},
+        </if>
+        <if test="fileId != null">
+            #{fileId,jdbcType=BIGINT}
         </if>
         )
     </insert>
@@ -244,7 +260,7 @@
     <insert id="batchInsert" parameterType="java.util.List">
         insert into datasharedtable
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            sharedtime, type, name, `schema`, `desc`, server_type, server_ip, server_port, username, pw
+            sharedtime, type, name, `schema`, `desc`, server_type, server_ip, server_port, username, pw,file_id
         </trim>
         values
         <foreach collection="list" index="index" item="item" separator=",">
@@ -252,7 +268,7 @@
                 #{item.sharedtime,jdbcType=TIMESTAMP}, #{item.type,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR},
                 #{item.schema,jdbcType=VARCHAR}, #{item.desc,jdbcType=VARCHAR}, #{item.serverType,jdbcType=CHAR},
                 #{item.serverIp,jdbcType=CHAR}, #{item.serverPort,jdbcType=CHAR}, #{item.username,jdbcType=VARCHAR},
-                #{item.pw,jdbcType=VARCHAR}
+                #{item.pw,jdbcType=VARCHAR},#{item.fileId,jdbcType=BIGINT}
             </trim>
         </foreach>
     </insert>
@@ -293,7 +309,10 @@
                         username = #{item.username,jdbcType=VARCHAR},
                     </if>
                     <if test="item.pw != null">
-                        pw = #{item.pw,jdbcType=VARCHAR}
+                        pw = #{item.pw,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.fileId != null">
+                        file_id = #{item.fileId,jdbcType=BIGINT}
                     </if>
                 </trim>
             </set>
@@ -339,6 +358,9 @@
             </if>
             <if test="item == 'pw'">
                 pw = #{pw,jdbcType=VARCHAR}
+            </if>
+            <if test="item == 'fileId'">
+                file_id = #{fileId,jdbcType=BIGINT}
             </if>
             <if test="item == 'id'">
                 id = #{id,jdbcType=BIGINT}

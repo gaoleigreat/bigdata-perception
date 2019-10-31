@@ -45,6 +45,7 @@ eureka:
 jwt:
   exclude:
     urlPatterns:
+      #- /template-service/.*
       #- .*api-docs.*
       #- .*swagger.*
       - .*.*

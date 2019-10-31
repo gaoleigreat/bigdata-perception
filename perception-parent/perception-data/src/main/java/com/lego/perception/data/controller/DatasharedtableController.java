@@ -11,13 +11,14 @@ import com.lego.framework.base.annotation.Resource;
 import com.lego.framework.data.model.entity.LocalSharedData;
 import com.lego.framework.data.model.entity.RemoteSharedData;
 import com.lego.framework.file.feign.FileClient;
+import com.lego.framework.file.feign.ShareDataClient;
 import com.lego.framework.system.model.entity.DataFile;
 import com.lego.framework.template.feign.TemplateFeignClient;
 import com.lego.framework.template.model.entity.FormTemplate;
+import com.lego.framework.template.model.entity.SearchParam;
 import com.lego.perception.data.config.HdfsProperties;
 import com.lego.perception.data.config.MongoProperties;
 import com.lego.perception.data.config.MysqlProperties;
-import com.lego.perception.data.service.ILocalShareDataService;
 import com.lego.perception.data.service.IRemoteShareDataService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -25,6 +26,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,9 +51,6 @@ public class DatasharedtableController {
     private IRemoteShareDataService iRemoteShareDataService;
 
     @Autowired
-    private ILocalShareDataService iLocalShareDataService;
-
-    @Autowired
     private TemplateFeignClient templateFeignClient;
 
     @Autowired
@@ -62,6 +61,9 @@ public class DatasharedtableController {
 
     @Autowired
     private HdfsProperties hdfsProperties;
+
+    @Autowired
+    private ShareDataClient shareDataClient;
 
     @Autowired
     private FileClient fileClient;
@@ -86,49 +88,21 @@ public class DatasharedtableController {
     }
 
 
-
-
-    @ApiOperation(value = "查询本地共享数据", httpMethod = "GET")
-    @RequestMapping(value = "/myList", method = RequestMethod.GET)
-    @Operation(value = "myList", desc = "查询本地共享数据")
-    public RespVO<RespDataVO<LocalSharedData>> myList(@ModelAttribute LocalSharedData datasharedtable) {
-        List<LocalSharedData> list = iLocalShareDataService.queryLocalList(datasharedtable);
-        return RespVOBuilder.success(list);
-    }
-
-
-    @ApiOperation(value = "查询本地共享数据", httpMethod = "GET")
-    @RequestMapping(value = "/myListPaged/{pageSize}/{pageIndex}", method = RequestMethod.GET)
-    @Operation(value = "myListPaged", desc = "查询共享数据库数据")
-    public RespVO<PagedResult<LocalSharedData>> myListPaged(@ModelAttribute LocalSharedData datasharedtable,
-                                                            @PathParam(value = "") Page page) {
-        PagedResult<LocalSharedData> list = iLocalShareDataService.queryLocalListPaged(datasharedtable, page);
-        return RespVOBuilder.success(list);
-    }
-
-
-    @ApiOperation(value = "删除本地共享数据", httpMethod = "DELETE")
-    @RequestMapping(value = "/deleteMyData", method = RequestMethod.DELETE)
-    @Operation(value = "deleteMyData", desc = "删除本地共享数据")
-    public RespVO deleteMyData(@ModelAttribute LocalSharedData datasharedtable) {
-        return iLocalShareDataService.deleteLocalData(datasharedtable);
-    }
-
-
     @ApiOperation(value = "共享数据", httpMethod = "POST")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "batchNums", value = "批次号", paramType = "query", allowMultiple = true, required = true, dataType = "String"),
+            @ApiImplicitParam(name = "batchNum", value = "批次号", paramType = "query", required = true, dataType = "String"),
     })
     @RequestMapping(value = "/shareData", method = RequestMethod.POST)
     @Operation(value = "shareData", desc = "共享数据")
-    public RespVO shareData(@RequestParam List<String> batchNums) {
+    public RespVO shareData(@RequestParam String batchNum) {
         //  获取所属数据源
-        RespVO<RespDataVO<DataFile>> respDataVORespVO = fileClient.selectByBatchNums(batchNums,null);
+        List<String> batchNums = new ArrayList<>();
+        batchNums.add(batchNum);
+        RespVO<RespDataVO<DataFile>> respDataVORespVO = fileClient.selectByBatchNums(batchNums, null);
         if (respDataVORespVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
             return RespVOBuilder.failure();
         }
         List<DataFile> dataFiles = respDataVORespVO.getInfo().getList();
-        Map<String, String> map = new HashMap<>();
         List<RemoteSharedData> remoteSharedDataList = new ArrayList<>();
         List<LocalSharedData> localSharedDataList = new ArrayList<>();
         if (CollectionUtils.isEmpty(dataFiles)) {
@@ -137,14 +111,10 @@ public class DatasharedtableController {
         for (DataFile dataFile : dataFiles) {
             String dataType = "数据库类型";
             Integer sourcesType;
-            String batchNum = dataFile.getBatchNum();
+            String batchNum1 = dataFile.getBatchNum();
             Long templateId = dataFile.getTemplateId();
             if (templateId == null) {
                 // HDFS
-                if (map.containsKey("HDFS")) {
-                    continue;
-                }
-                map.put("HDFS", batchNum);
                 dataType = "文件夹类型";
             }
             RespVO<FormTemplate> respVO = templateFeignClient.findFormTemplateById(templateId);
@@ -156,31 +126,26 @@ public class DatasharedtableController {
                 return RespVOBuilder.failure("获取不到模板信息");
             }
             sourcesType = info.getType();
-            if (map.containsKey(String.valueOf(sourcesType))) {
-                continue;
-            }
-            map.put(String.valueOf(sourcesType), batchNum);
             String templateName = info.getTemplateName();
             String remark = dataFile.getRemark();
             RemoteSharedData remoteSharedData = getShareData(dataType, remark, templateName, sourcesType);
+            remoteSharedData.setFileId(dataFile.getId());
             if ("文件夹类型".equals(dataType)) {
                 remoteSharedData.setSchema(dataFile.getFileUrl());
             }
-            List<RemoteSharedData> remoteList = iRemoteShareDataService.queryRemoteList(remoteSharedData);
-            if (!CollectionUtils.isEmpty(remoteList)) {
-                continue;
-            }
             remoteSharedDataList.add(remoteSharedData);
             LocalSharedData localSharedData = remoteSharedData.remote2LocalSharedData();
-            localSharedData.setBatchNum(batchNum);
+            localSharedData.setBatchNum(batchNum1);
             localSharedDataList.add(localSharedData);
         }
-        Integer dataBatch = iRemoteShareDataService.saveRemoteDataBatch(remoteSharedDataList);
-        if (dataBatch > 0) {
-            log.info("更新共享共享数据成功:{}", batchNums);
-            Integer saveLocalDataBatch = iLocalShareDataService.saveLocalDataBatch(localSharedDataList);
-            if (saveLocalDataBatch > 0) {
-                log.info("更新本地共享数据成功:{}", batchNums);
+
+        log.info("更新共享共享数据成功:{}", batchNums);
+        RespVO respVO1 = shareDataClient.insertByBatchNums(batchNums, null);
+        if (respVO1.getRetCode() == RespConsts.SUCCESS_RESULT_CODE) {
+            log.info("更新本地共享数据成功:{}", batchNums);
+            Integer dataBatch = iRemoteShareDataService.saveRemoteDataBatch(remoteSharedDataList);
+            if (dataBatch > 0) {
+                log.info("更新共享共享数据成功:{}", batchNums);
                 return RespVOBuilder.success();
             }
         }
