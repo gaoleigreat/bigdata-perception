@@ -107,6 +107,43 @@ public class EquipmentController {
         return crudClient.queryBusinessData(formTemplateGet.getTemplateCode(), new ArrayList<>());
     }
 
+
+    /**
+     * 通过设备类型code查询该类型下面的设备信息
+     *
+     * @return
+     */
+    @ApiOperation(value = "通过设备类型code查询该类型下面的设备信息", httpMethod = "GET")
+    @ApiImplicitParams({
+
+    })
+    @Operation(value = "query_equipment_by_code", desc = "通过设备类型code查询该类型下面的设备信息")
+    @RequestMapping(value = "/query_equipment_by_code", method = RequestMethod.GET)
+    public RespVO<RespDataVO<Map<String, Object>>> queryEquipmentByCode(@RequestParam(value = "code") String code) {
+        if (StringUtils.isEmpty(code)) {
+            return RespVOBuilder.failure("设备code不能为空");
+        }
+        EquipmentType equipmentType = new EquipmentType();
+        equipmentType.setCode(code);
+
+        List<EquipmentType> list = equipmentTypeService.query(equipmentType);
+        if (CollectionUtils.isEmpty(list)) {
+            return RespVOBuilder.success();
+        } else {
+            EquipmentType equipmentType1 = list.get(0);
+            RespVO<RespDataVO<FormTemplate>> data = templateFeignClient.findByDataType(equipmentType1.getType());
+            if (data.getRetCode() != 1) {
+                return RespVOBuilder.failure("查询失败");
+            } else {
+                FormTemplate formTemplateGet = data.getInfo().getList().get(0);
+                return crudClient.queryBusinessData(formTemplateGet.getTemplateCode(), new ArrayList<>());
+            }
+
+        }
+
+    }
+
+
     /**
      * 新增设备
      *

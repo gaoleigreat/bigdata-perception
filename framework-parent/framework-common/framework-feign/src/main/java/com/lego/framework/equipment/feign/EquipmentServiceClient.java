@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface EquipmentServiceClient {
 
     /**
-     * 查询设备文档轨迹
+     * 查询设备
      *
      * @param id
      * @return
@@ -36,7 +36,7 @@ public interface EquipmentServiceClient {
 
 
     /**
-     * 查询设备文档轨迹
+     * 查询设备
      *
      * @param equipmentService
      * @return

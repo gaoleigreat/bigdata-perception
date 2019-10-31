@@ -131,8 +131,14 @@ public class DataController {
     public RespVO uplodeFormatted(@RequestParam(value = "projectId", required = false) Long projectId,
                                   @RequestParam(value = "files", required = true) MultipartFile[] files,
                                   @RequestParam(value = "remark", required = false) String remark,
-                                  @RequestParam(value = "dataType", required = false) Integer dataType
+                                  @RequestParam(value = "dataType", required = true) Integer dataType
     ) {
+        if (dataType == null || dataType >8 || dataType <0){
+            return RespVOBuilder.failure("数据类型不能为空");
+        }
+        if (dataType >8 || dataType <0){
+            return RespVOBuilder.failure("请选择正确的数据类型");
+        }
         if (files == null || files.length <= 0) {
             return RespVOBuilder.failure("上传文件有误");
         }
