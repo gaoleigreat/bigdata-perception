@@ -3,7 +3,6 @@ package com.lego.framework.data.model.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
 import java.util.Date;
 
 /**
@@ -14,7 +13,7 @@ import java.util.Date;
  * @desc :
  */
 @Data
-public class ShareData {
+public class BaseData {
 
     @ApiModelProperty("共享时间")
     private Date sharedtime;

@@ -169,13 +169,19 @@ fpfile:
   url:  http://localhost:50010/survey/api-file/file/fpfile/download
 
 
-sso:
-  name: sso-server
-  url_prefix: http://t.weather.sojson.com/api/weather
-
-
 hdfs:
   storePath: /home/work/file/
   savePath: equipment
+
+
+
+sso:
+  server:
+    supervisor:
+      url: http://10.101.201.154:9092
+    local:
+      url: http://10.101.201.159:20010
+      index:
+        url: http://10.101.201.159
 
 

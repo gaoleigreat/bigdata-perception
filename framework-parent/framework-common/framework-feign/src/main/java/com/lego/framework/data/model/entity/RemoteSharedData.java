@@ -11,7 +11,7 @@ import org.springframework.beans.BeanUtils;
  */
 @Data
 @TableName(value = "datasharedtable")
-public class RemoteSharedData extends ShareData {
+public class RemoteSharedData extends BaseData {
     /**
      * remoteSharedData to localSharedData
      *
