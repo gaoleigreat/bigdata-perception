@@ -164,7 +164,7 @@ public class EquipmentStasticController {
 
     @Operation(value = "find", desc = "查询")
     @ApiOperation("查询单个设备调动次数")
-    @GetMapping("/numberOfAccidents")
+    @GetMapping("/numberOfTransfer")
     public RespVO numberOfTransfer(String equipmentCode) {
         return RespVOBuilder.success(8);
     }
