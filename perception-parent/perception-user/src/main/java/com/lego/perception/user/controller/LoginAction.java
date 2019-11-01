@@ -9,15 +9,12 @@ import javax.servlet.http.HttpSession;
 import com.lego.framework.user.model.vo.SsoLoginVo;
 import com.lego.perception.user.service.SsoLoginService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.servlet.server.Session;
 import org.springframework.web.bind.annotation.*;
 import com.ym.sso.supervisor.common.bean.SsoLogin;
 import com.ym.sso.supervisor.common.bean.SsoTicket;
 import com.ym.sso.supervisor.common.constant.TicketResultEnum;
-
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
-
 import java.io.IOException;
 
 
@@ -90,7 +87,7 @@ public class LoginAction {
             Cookie cookie = new Cookie("sessionId", sessionId);
             cookie.setMaxAge(36000);
             response.addCookie(cookie);
-            response.sendRedirect(localIndex);
+            response.sendRedirect("");
         }
     }
 
