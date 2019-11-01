@@ -153,5 +153,37 @@ public class EquipmentStasticController {
 
     }
 
+    @Operation(value = "find", desc = "查询")
+    @ApiOperation("查询单个设备事故次数")
+    @GetMapping("/numberOfAccidents")
+    public RespVO numberOfAccidents(String equipmentCode) {
+       return RespVOBuilder.success(8);
+
+    }
+
+
+    @Operation(value = "find", desc = "查询")
+    @ApiOperation("查询单个设备调动次数")
+    @GetMapping("/numberOfAccidents")
+    public RespVO numberOfTransfer(String equipmentCode) {
+        return RespVOBuilder.success(8);
+    }
+
+
+    @Operation(value = "find", desc = "查询")
+    @ApiOperation("查询单个设备掘进量")
+    @GetMapping("/numberOfExcavation")
+    public RespVO numberOfExcavation(String equipmentCode) {
+        Map<String,Double> data  = new HashMap<>();
+        data.put("2018-12",9.0);
+        data.put("2019-1",9.0);
+        data.put("2019-2",8.0);
+        data.put("2019-3",7.0);
+        data.put("2019-4",6.0);
+        data.put("2019-5",5.0);
+        data.put("2019-6",4.0);
+
+        return RespVOBuilder.success(8);
+    }
 
 }

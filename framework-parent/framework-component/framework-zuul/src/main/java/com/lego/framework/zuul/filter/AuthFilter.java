@@ -107,8 +107,17 @@ public class AuthFilter extends ZuulFilter {
                     .append(localIp).append("\t").append(remoteIp).append("\t").append(uri).append("\t");
             logger.info(sb.toString());
 
+            boolean equals = uri.contains("/user-service/sso/login/login");
+            logger.info("equals:{}",equals);
+            if (equals) {
+                setRequest(ctx, null, traceInfo);
+                ctx.set("pvId", pvId);
+                return null;
+            }
+
             // url 是否需要 token 认证
             Boolean isIgnore = isIgnore(uri);
+            logger.info("isIgnore:{}", isIgnore);
             if (isIgnore) {
                 setRequest(ctx, null, traceInfo);
                 ctx.set("pvId", pvId);
@@ -153,6 +162,7 @@ public class AuthFilter extends ZuulFilter {
         logger.info("check session :{}", respVO);
         if (respVO.getRetCode() == RespConsts.SUCCESS_RESULT_CODE) {
             SsoLoginVo ssoLoginVo = respVO.getInfo();
+            logger.info("check session :{}", ssoLoginVo);
             if (ssoLoginVo != null && "check_session_success".equals(ssoLoginVo.getResult())) {
                 CurrentVo currentVo = ssoLoginVo.getCurrentVo();
                 setRequest(ctx, currentVo, traceInfo);

@@ -177,27 +177,4 @@ public class EquipmentServiceController {
         return RespVOBuilder.failure();
     }
 
-
-    /**
-     * 上传附件
-     */
-    @ApiOperation(value = "testUpLoad", httpMethod = "POST")
-    @ApiImplicitParams({
-    })
-    @RequestMapping(value = "/testUpLoad", method = RequestMethod.POST)
-    public RespVO testUpLoad(@RequestParam(value = "files") MultipartFile[] files) {
-        return fileClient.testUpLoad(files);
-    }
-
-
-    /**
-     * 上传附件
-     */
-    @ApiOperation(value = "testOneUpLoad", httpMethod = "POST")
-    @ApiImplicitParams({
-    })
-    @RequestMapping(value = "/testOneUpLoad", method = RequestMethod.POST, headers = "content-type=multipart/form-data")
-    public RespVO testOneUpLoad(@RequestPart(value = "file") MultipartFile file) {
-        return fileClient.testOneUpLoad(file);
-    }
 }

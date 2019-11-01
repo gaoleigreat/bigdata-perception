@@ -12,4 +12,9 @@ public interface LoginConst
      * 用户登录的session key值
      */
     String SESSION_USER_KEY = "session-user";
+
+    /**
+     * 用户登录的用户名
+     */
+    String SESSION_USER_NAME = "王富贵";
 }
