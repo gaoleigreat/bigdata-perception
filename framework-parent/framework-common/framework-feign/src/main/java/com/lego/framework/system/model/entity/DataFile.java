@@ -219,6 +219,8 @@ public class DataFile extends BaseModel {
         this.remark = remark;
         this.tags = tags;
         this.batchNum = batchNum;
+        this.creationDate = currentTime;
+        this.createdBy = 1L;
         super.setCreateInfo();
         super.setUpdateInfo();
     }

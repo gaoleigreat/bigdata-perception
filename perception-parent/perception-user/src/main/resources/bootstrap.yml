@@ -11,7 +11,7 @@ spring:
   application:
     name: user-service
   profiles:
-    active: sit
+    active: local
   cloud:
     stream:
       bindings:

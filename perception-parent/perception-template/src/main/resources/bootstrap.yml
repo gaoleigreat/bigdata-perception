@@ -8,7 +8,7 @@ spring:
   application:
     name: template-service
   profiles:
-    active: zt
+    active: local
   cloud:
     stream:
       bindings:

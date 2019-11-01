@@ -24,10 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.websocket.server.PathParam;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @Api(value = "ShareDataController", description = "共享数据")
@@ -176,10 +173,13 @@ public class ShareDataController {
         if (respVO.getRetCode() == RespConsts.SUCCESS_RESULT_CODE) {
             RespDataVO<DataFile> dataVO = respVO.getInfo();
             if (dataVO != null && !CollectionUtils.isEmpty(dataVO.getList())) {
-               List<ShareData> shareDatas=new ArrayList<>();
+                List<ShareData> shareDatas = new ArrayList<>();
                 for (DataFile dataFile : dataVO.getList()) {
-                    ShareData sd=new ShareData();
-                    BeanUtils.copyProperties(dataFile,sd);
+                    ShareData sd = new ShareData();
+                    BeanUtils.copyProperties(dataFile, sd);
+                    //TODO  更新审核时间   审核人信息
+                    sd.setLastUpdateDate(new Date());
+                    sd.setLastUpdatedBy(1L);
                     shareDatas.add(sd);
                 }
                 Integer batchInsert = shareDataService.batchInsert(shareDatas);

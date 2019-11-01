@@ -13,7 +13,7 @@ import org.springframework.beans.BeanUtils;
  */
 @Data
 @TableName(value = "tpl_share_data")
-public class LocalSharedData extends ShareData {
+public class LocalSharedData extends BaseData {
     @ApiModelProperty("id")
     private Long id;
     @ApiModelProperty("批次号")

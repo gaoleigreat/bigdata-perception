@@ -8,7 +8,7 @@ spring:
   application:
     name: data-service
   profiles:
-    active: zt
+    active: local
   cloud:
     stream:
       bindings:
