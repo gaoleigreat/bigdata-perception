@@ -95,8 +95,9 @@ public class AuthFilter extends ZuulFilter {
         HttpServletRequest req = ctx.getRequest();
         HttpServletResponse res = ctx.getResponse();
         StringBuilder sb = new StringBuilder();
-        //web 跨域 上线注释
-        //requestCross(res, req);
+        //web 跨域
+        res.addHeader("Access-Control-Allow-Origin", req.getHeader("Origin"));
+        res.addHeader("Access-Control-Allow-Credentials", "true");
         try {
             String uri = req.getRequestURI();
             String remoteIp = HttpUtils.getClientIp(req);
@@ -139,22 +140,9 @@ public class AuthFilter extends ZuulFilter {
         return null;
     }
 
-  /*  private void requestCross(HttpServletResponse httpServletResponse,
-                              HttpServletRequest httpServletRequest) {
-        httpServletResponse.setHeader("Access-Control-Allow-Origin", "Origin");
-        httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
-        httpServletResponse.setHeader("Access-Control-Allow-Methods", "PUT, POST, GET, OPTIONS, DELETE");
-        httpServletResponse.setHeader("Access-Control-Max-Age", "3600");
-        httpServletResponse.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Authorization,"
-                + "Content-Type, Accept, Connection, User-Agent, Cookie");
-        if (httpServletRequest.getMethod().equals("OPTIONS")) {
-            httpServletResponse.setStatus(HttpServletResponse.SC_OK);
-        }
-    }
-*/
-
     /**
      * 单点登录
+     *
      * @param ctx
      * @param pvId
      * @param traceInfo
