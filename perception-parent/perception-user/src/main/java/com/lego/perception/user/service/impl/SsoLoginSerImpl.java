@@ -50,26 +50,28 @@ public class SsoLoginSerImpl implements SsoLoginService {
     /**
      * 登录方法
      *
-     * @param session   HttpSession
+     * @param token
      * @param ssoTicket 输入参数
      */
     @Override
-    public SsoTicket loginRedis(HttpSession session, SsoTicket ssoTicket) {
-        log.debug("login:ssoTicket={}", ssoTicket);
+    public SsoTicket loginRedis(String token, SsoTicket ssoTicket) {
+        log.debug("loginRedis Ticket:{}", ssoTicket);
         User user = new User();
         user.setUserName(LoginConst.SESSION_USER_NAME);
         user.setIdNumber(ssoTicket.getIdNumber());
-        session.setAttribute(LoginConst.SESSION_USER_KEY, user);
-        authClient.saveUserToken(ssoTicket.getIdNumber(), session.getId());
-        ssoTicket.setSessionId(session.getId());
-        SsoTicket resultTicket = ssoLoginDao.receiveSessionId(ssoTicket);
-        log.info("resultTicket:{}",resultTicket);
-        if (!TicketResultEnum.RECEIVE_ID_SUCCESS.getNo().equals(resultTicket.getResult())) {
-            authClient.removeUserToken(session.getId());
-            session.removeAttribute(LoginConst.SESSION_USER_KEY);
-        } else {
-            log.info("login:session={}", session.getId());
+        RespVO respVO = authClient.saveUserToken(ssoTicket.getIdNumber(), token);
+        if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
+            return null;
         }
+        ssoTicket.setSessionId(token);
+        SsoTicket resultTicket = ssoLoginDao.receiveSessionId(ssoTicket);
+        log.info("loginRedis resultTicket:{}", resultTicket);
+        if (!TicketResultEnum.RECEIVE_ID_SUCCESS.getNo().equals(resultTicket.getResult())) {
+            authClient.removeUserToken(token);
+        } else {
+            log.info("login:session={}", token);
+        }
+        log.info("loginRedis login:session={}", token);
         return resultTicket;
     }
 

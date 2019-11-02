@@ -1,23 +1,11 @@
 package com.lego.perception.auth.controller;
 
 import com.framework.common.consts.DictConstant;
-import com.framework.common.consts.HttpConsts;
-import com.framework.common.consts.RespConsts;
 import com.framework.common.sdto.*;
-import com.lego.framework.base.exception.ExceptionBuilder;
-import com.lego.framework.system.feign.UserClient;
-import com.lego.framework.system.model.entity.User;
 import com.lego.perception.auth.service.IAuthService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-
 /**
  * @author yanglf
  * @descript
@@ -31,10 +19,7 @@ public class AuthController {
     @Autowired
     private IAuthService iAuthService;
 
-    @Autowired
-    private UserClient userClient;
-
-
+/*
     @ApiOperation(value = "生成用户登录token", httpMethod = "POST", notes = "生成登录token")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "deviceType", value = "设备类型", dataType = "String", required = true, paramType = "query")
@@ -48,7 +33,7 @@ public class AuthController {
             return RespVOBuilder.success(RespConsts.FAIL_RESULT_CODE, "生成token失败");
         }
         return RespVOBuilder.success(tokenVo);
-    }
+    }*/
 
 
     /**
@@ -77,7 +62,7 @@ public class AuthController {
     }
 
 
-    @ApiOperation(value = "验证用户登录token", httpMethod = "GET", notes = "验证用户登录token")
+ /*   @ApiOperation(value = "验证用户登录token", httpMethod = "GET", notes = "验证用户登录token")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "token", value = "用户登录Token", dataType = "String", required = true, paramType = "query"),
     })
@@ -92,10 +77,10 @@ public class AuthController {
             return RespVOBuilder.failure();
         }
         return RespVOBuilder.success(authVo.getCurrentVo());
-    }
+    }*/
 
 
-    @ApiOperation(value = "刷新用户token", httpMethod = "POST", notes = "刷新token")
+   /* @ApiOperation(value = "刷新用户token", httpMethod = "POST", notes = "刷新token")
     @ApiImplicitParams({
 
     })
@@ -196,7 +181,7 @@ public class AuthController {
     ) {
         TokenVo tokenVo = iAuthService.generateServiceToken(fromService, toService);
 
-    }
+    }*/
 
 
 }

@@ -1,4 +1,5 @@
 package com.lego.perception.auth.service.imp;
+
 import com.alibaba.fastjson.JSONObject;
 import com.framework.common.consts.RespConsts;
 import com.framework.common.sdto.*;
@@ -40,7 +41,9 @@ public class AuthServiceImpl implements IAuthService {
     @Autowired
     private JwtProperty jwtProperty;
 
-    private String prefix = "survey:loginToken:";
+    private String TOKEN_PREFIX = "perception_loginToken_";
+
+    private String USER_DATA_PREFIX = "perception_user_";
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
@@ -56,7 +59,7 @@ public class AuthServiceImpl implements IAuthService {
     private UserClient userClient;
 
 
-    @Override
+  /*  @Override
     public TokenVo generateUserToken(User user, String deviceType) {
         if (user == null) {
             return null;
@@ -81,7 +84,7 @@ public class AuthServiceImpl implements IAuthService {
         //tokenVo.setRole(user.getRole());
         tokenVo.setUserId(user.getId());
         return tokenVo;
-    }
+    }*/
 
     private CurrentVo generateCurrentVo(User user, String deviceType) {
         CurrentVo currentVo = new CurrentVo();
@@ -110,7 +113,7 @@ public class AuthServiceImpl implements IAuthService {
     }
 
 
-    @Override
+   /* @Override
     public AuthVo verifyUserToken(String token, String deviceType) {
         try {
             if (StringUtils.isEmpty(token)) {
@@ -232,6 +235,7 @@ public class AuthServiceImpl implements IAuthService {
         }
         return null;
     }
+    */
 
     @Override
     public RespVO saveUserToken(String idNumber, String sessionId) {
@@ -249,7 +253,8 @@ public class AuthServiceImpl implements IAuthService {
             CurrentVo currentVo = generateCurrentVo(info, "2");
             ValueOperations<String, String> ops = stringRedisTemplate.opsForValue();
             long webExpires = jwtProperty.getWebExpires();
-            ops.set(sessionId, JSONObject.toJSONString(currentVo), webExpires, TimeUnit.MINUTES);
+            ops.set(USER_DATA_PREFIX + sessionId, JSONObject.toJSONString(currentVo), webExpires, TimeUnit.SECONDS);
+            ops.set(TOKEN_PREFIX + idNumber, sessionId, webExpires, TimeUnit.SECONDS);
         } catch (Exception e) {
             e.printStackTrace();
             ExceptionBuilder.operateFailException("token保存失败");
@@ -264,13 +269,13 @@ public class AuthServiceImpl implements IAuthService {
             if (StringUtils.isEmpty(sessionId)) {
                 return RespVOBuilder.failure();
             }
-            Boolean aBoolean = stringRedisTemplate.hasKey(sessionId);
+            Boolean aBoolean = stringRedisTemplate.hasKey(USER_DATA_PREFIX + sessionId);
             if (aBoolean == null || !aBoolean) {
                 return RespVOBuilder.failure();
             }
             ValueOperations<String, String> ops = stringRedisTemplate.opsForValue();
-            String session = ops.get(sessionId);
-            currentVo = JSONObject.parseObject(session, CurrentVo.class);
+            String user = ops.get(USER_DATA_PREFIX + sessionId);
+            currentVo = JSONObject.parseObject(user, CurrentVo.class);
         } catch (Exception e) {
             e.printStackTrace();
             ExceptionBuilder.operateFailException("获取session失败");
@@ -284,11 +289,21 @@ public class AuthServiceImpl implements IAuthService {
             if (StringUtils.isEmpty(sessionId)) {
                 return RespVOBuilder.failure();
             }
-            Boolean aBoolean = stringRedisTemplate.hasKey(sessionId);
-            if (aBoolean == null || !aBoolean) {
-                return RespVOBuilder.success();
+            Boolean aBoolean = stringRedisTemplate.hasKey(USER_DATA_PREFIX + sessionId);
+            CurrentVo currentVo;
+            if (aBoolean != null && aBoolean) {
+                ValueOperations<String, String> ops = stringRedisTemplate.opsForValue();
+                String user = ops.get(USER_DATA_PREFIX + sessionId);
+                currentVo = JSONObject.parseObject(user, CurrentVo.class);
+                stringRedisTemplate.delete(USER_DATA_PREFIX + sessionId);
+                if (currentVo != null) {
+                    Boolean aBoolean1 = stringRedisTemplate.hasKey(TOKEN_PREFIX + currentVo.getIdCardNumber());
+                    if (aBoolean1 != null && aBoolean1) {
+                        stringRedisTemplate.delete(TOKEN_PREFIX + currentVo.getIdCardNumber());
+                    }
+                }
             }
-            stringRedisTemplate.delete(sessionId);
+            return RespVOBuilder.success();
         } catch (Exception e) {
             e.printStackTrace();
             ExceptionBuilder.operateFailException("获取session失败");

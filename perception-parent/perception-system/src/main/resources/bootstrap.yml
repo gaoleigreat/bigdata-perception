@@ -8,7 +8,7 @@ spring:
   application:
     name: system-service
   profiles:
-    active: sit
+    active: local
   cloud:
     stream:
       bindings:

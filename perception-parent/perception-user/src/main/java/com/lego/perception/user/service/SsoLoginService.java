@@ -42,7 +42,7 @@ public interface SsoLoginService {
     SsoLogin logoutRedis(String sessionId);
 
 
-    SsoTicket loginRedis(HttpSession session, SsoTicket ssoTicket);
+    SsoTicket loginRedis(String token, SsoTicket ssoTicket);
 
 
 

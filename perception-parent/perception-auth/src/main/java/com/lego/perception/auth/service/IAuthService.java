@@ -19,7 +19,7 @@ public interface IAuthService {
      * @param user 用户信息
      * @return
      */
-    TokenVo generateUserToken(User user, String deviceType);
+    //TokenVo generateUserToken(User user, String deviceType);
 
 
     /**
@@ -28,7 +28,7 @@ public interface IAuthService {
      * @param token 用户 token
      * @return
      */
-    AuthVo verifyUserToken(String token, String deviceType);
+   // AuthVo verifyUserToken(String token, String deviceType);
 
 
     /**
@@ -37,7 +37,7 @@ public interface IAuthService {
      * @param userToken
      * @return
      */
-    Boolean deleteUserToken(String userToken, String deviceType);
+   // Boolean deleteUserToken(String userToken, String deviceType);
 
 
     /**
@@ -47,7 +47,7 @@ public interface IAuthService {
      * @param deviceType
      * @return
      */
-    String hasLogin(Long userId, String deviceType);
+  //  String hasLogin(Long userId, String deviceType);
 
     /**
      * 更新  session 数据
@@ -56,7 +56,7 @@ public interface IAuthService {
      * @param deviceType
      * @return
      */
-    Integer setUserToken(User user, String deviceType, String token);
+    //Integer setUserToken(User user, String deviceType, String token);
 
     /**
      * 生成服务 token
@@ -65,7 +65,7 @@ public interface IAuthService {
      * @param toService
      * @return
      */
-    TokenVo generateServiceToken(String fromService, String toService);
+   // TokenVo generateServiceToken(String fromService, String toService);
 
 
     /**
@@ -74,7 +74,7 @@ public interface IAuthService {
      * @param token
      * @return
      */
-    Boolean verifyServiceToken(String token);
+ //   Boolean verifyServiceToken(String token);
 
     /**
      * sso 保存用户  token信息

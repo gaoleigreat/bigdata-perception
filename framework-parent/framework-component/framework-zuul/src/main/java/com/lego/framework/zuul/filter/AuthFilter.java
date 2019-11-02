@@ -22,12 +22,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.UUID;
 
 import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.PRE_TYPE;
 
@@ -107,8 +109,10 @@ public class AuthFilter extends ZuulFilter {
                     .append(localIp).append("\t").append(remoteIp).append("\t").append(uri).append("\t");
             logger.info(sb.toString());
 
+            //ctx.getResponse().addHeader("set-cookie","JSESSIONID="+ UUID.randomUUID().toString());
+
             boolean equals = uri.contains("/user-service/sso/login/login");
-            logger.info("equals:{}",equals);
+            logger.info("equals:{}", equals);
             if (equals) {
                 setRequest(ctx, null, traceInfo);
                 ctx.set("pvId", pvId);
@@ -151,7 +155,6 @@ public class AuthFilter extends ZuulFilter {
 
     /**
      * 单点登录
-     *
      * @param ctx
      * @param pvId
      * @param traceInfo
@@ -187,7 +190,7 @@ public class AuthFilter extends ZuulFilter {
      */
     private Object checkLogin(RequestContext ctx, String pvId, String traceInfo, String userToken, String deviceType) {
         if (!StringUtils.isEmpty(userToken) && !StringUtils.isEmpty(deviceType)) {
-            RespVO<CurrentVo> currentVoRespVO = authClient.parseUserToken(userToken, deviceType);
+            RespVO<CurrentVo> currentVoRespVO = authClient.getUserToken(userToken);
             if (currentVoRespVO.getRetCode() == RespConsts.SUCCESS_RESULT_CODE) {
                 CurrentVo currentVo = currentVoRespVO.getInfo();
                 if (currentVo != null) {

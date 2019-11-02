@@ -9,6 +9,6 @@ public interface IAuthCheckService {
      * @param token
      * @return
      */
-    CurrentVo getData(String token, String deviceType);
+    CurrentVo getData(String token);
 
 }

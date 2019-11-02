@@ -35,7 +35,7 @@ public class RequestContext {
                 if (null == authCheckService) {
                     authCheckService = (IAuthCheckService) AppContext.getBean("authCheckServiceImpl");
                 }
-                CurrentVo data = authCheckService.getData(token, deviceType);
+                CurrentVo data = authCheckService.getData(token);
                 if (data != null) {
                     currentVo.setIsInit(true);
                     data.setIsInit(true);

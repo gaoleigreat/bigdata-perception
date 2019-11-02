@@ -1,6 +1,7 @@
 package com.lego.perception.auth;
-
-import com.framework.common.consts.HttpConsts;
+import com.framework.common.consts.RespConsts;
+import com.framework.common.sdto.CurrentVo;
+import com.framework.common.sdto.RespVO;
 import com.lego.perception.auth.service.IAuthService;
 import org.junit.Assert;
 import org.junit.Test;
@@ -23,8 +24,8 @@ public class AuthServiceTest {
 
     @Test
     public void test() {
-        Boolean aBoolean = iAuthService.deleteUserToken("1212121", HttpConsts.DeviceType.DEVICE_WEB);
-        Assert.assertTrue(aBoolean);
+        RespVO<CurrentVo> userToken = iAuthService.getUserToken("1212121");
+        Assert.assertEquals(userToken.getRetCode(), RespConsts.SUCCESS_RESULT_CODE);
     }
 
 

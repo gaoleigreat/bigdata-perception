@@ -1,16 +1,39 @@
 zuul:
   routes:
-    auth-service: /auth-service/**
-    file-service: /file-service/**
-    system-service: /system-service/**
-    log-service: /log-service/**
-    user-service: /user-service/**
-    template-service: /template-service/**
-    business-service: /business-service/**
-    data-service: /data-service/**
-    equipment-service: /equipment-service/**
-    knowledge-service: /knowledge-service/**
-    statistics-service: /statistics-service/**
+    auth:
+      path: /auth-service/**
+      serviceId: auth-service
+    file:
+      path: /file-service/**
+      serviceId: file-service
+    system:
+      path: /system-service/**
+      serviceId: system-service
+    log:
+      path: /log-service/**
+      serviceId: log-service
+    user:
+      path: /user-service/**
+      serviceId: user-service
+      sensitiveHeaders:
+    template:
+      path: /template-service/**
+      serviceId: template-service
+    business:
+      path: /business-service/**
+      serviceId: business-service
+    data:
+      path: /data-service/**
+      serviceId: data-service
+    equipment:
+      path: /equipment-service/**
+      serviceId: equipment-service
+    knowledge:
+      path: /knowledge-service/**
+      serviceId: knowledge-service
+    statistics:
+      path: /statistics-service/**
+      serviceId: statistics-service
   ignored-services: '*'
 
 

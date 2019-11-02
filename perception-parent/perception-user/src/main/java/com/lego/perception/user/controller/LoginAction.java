@@ -1,11 +1,12 @@
 package com.lego.perception.user.controller;
 
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
+import com.framework.common.consts.HttpConsts;
+import com.framework.common.consts.RespConsts;
+import com.framework.common.utils.UuidUtils;
 import com.lego.framework.user.model.vo.SsoLoginVo;
 import com.lego.perception.user.service.SsoLoginService;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +16,7 @@ import com.ym.sso.supervisor.common.bean.SsoTicket;
 import com.ym.sso.supervisor.common.constant.TicketResultEnum;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
+
 import java.io.IOException;
 
 
@@ -25,7 +27,7 @@ import java.io.IOException;
  * @version 2019-09-24 16:15
  */
 @RestController
-@RequestMapping("/sso/login/*")
+@RequestMapping("/sso/login/")
 @Api(value = "登录")
 @Slf4j
 public class LoginAction {
@@ -63,45 +65,50 @@ public class LoginAction {
     /**
      * 单点登录代码
      *
-     * @param request   HttpServletRequest
      * @param ssoTicket 输入参数
      * @return 登录的结果
      */
     @GetMapping(value = "login")
-    public void login(HttpServletRequest request,
-                      HttpServletResponse response,
-                      @ModelAttribute SsoTicket ssoTicket) throws Exception {
+    public void login(HttpServletResponse response,
+                      @ModelAttribute SsoTicket ssoTicket) throws IOException {
         log.debug("login:ssoTicket={}", ssoTicket);
-        String sessionId = request.getRequestedSessionId();
+        String token = UuidUtils.generate16Uuid();
         ssoTicket.setSsoSupServerUrl(ssoSupServerUrl);
-        ssoTicket.setSessionId(sessionId);
+        ssoTicket.setSessionId(token);
         ssoTicket = ssoLoginService.checkTicket(ssoTicket);
         ssoTicket.setSsoSupServerUrl(ssoSupServerUrl);
         log.info("ssoTicket result:{}", ssoTicket.toString());
         if (TicketResultEnum.SSO_TICKET_SUCCESS.getNo().equals(ssoTicket.getResult())) {
-            HttpSession session = request.getSession();
-            ssoTicket.setSessionId(sessionId);
+            ssoTicket.setSessionId(token);
             ssoTicket.setSessionKey(sessionKey);
-            ssoTicket = ssoLoginService.loginRedis(session, ssoTicket);
+            log.info("start login redis~~~~~~~~~~~");
+            SsoTicket loginRedis = ssoLoginService.loginRedis(token, ssoTicket);
             // ssoTicket.getResult()
-            Cookie cookie = new Cookie("sessionId", sessionId);
-            cookie.setMaxAge(36000);
-            response.addCookie(cookie);
-            response.sendRedirect("");
+            log.info("ssoTicket:{}------------", ssoTicket.toString());
+            if (loginRedis != null) {
+                log.info("test---------------------");
+                Cookie cookie = new Cookie("token", token);
+                cookie.setMaxAge(36000);
+                cookie.setPath("/");
+                cookie.setDomain(localUrl.replace("http://", ""));
+                cookie.setHttpOnly(true);
+                response.addCookie(cookie);
+                response.sendRedirect(localUrl);
+                return;
+            }
         }
+        log.info("ticket fail", ssoTicket.toString());
     }
 
     /**
      * 检查session的是否存在
      *
-     * @param request HttpServletRequest
      * @return session的是否存在的返回值
      */
     @GetMapping(value = "checkSession")
-    public SsoLoginVo checkSession(HttpServletRequest request,
-                                   @CookieValue(required = false) String sessionId) {
-        log.debug("checkSession");
-        SsoLoginVo ssoLogin = ssoLoginService.checkRedisSession(sessionId);
+    public SsoLoginVo checkSession(@RequestHeader(value = HttpConsts.HEADER_TOKEN, required = false) String token) {
+        log.debug("checkSession:{}", token);
+        SsoLoginVo ssoLogin = ssoLoginService.checkRedisSession(token);
         ssoLogin.setSsoSupServerUrl(ssoSupServerUrl);
         ssoLogin.setSsoClientUrl(localUrl);
         return ssoLogin;
@@ -110,27 +117,23 @@ public class LoginAction {
     /**
      * 登出接口
      *
-     * @param request HttpServletRequest
      * @return 登出的结果
      */
     @GetMapping(value = "logout")
-    public SsoLogin logout(HttpServletRequest request) {
-        String sessionId = request.getRequestedSessionId();
-        log.debug("logout:sessionId={}", sessionId);
-        return ssoLoginService.logoutRedis(sessionId);
+    public SsoLogin logout(@RequestHeader(required = false, value = HttpConsts.HEADER_TOKEN) String token) {
+        log.debug("logout:sessionId={}", token);
+        return ssoLoginService.logoutRedis(token);
     }
 
     /**
      * 获取登录数据
      *
-     * @param request HttpServletRequest
      * @return 登录数据
      */
     @GetMapping(value = "getLogParam")
-    public SsoLogin getLogParam(HttpServletRequest request) {
+    public SsoLogin getLogParam(@RequestHeader(required = true, value = HttpConsts.HEADER_TOKEN) String token) {
         log.debug("getLogParam");
-        String sessionId = request.getRequestedSessionId();
-        SsoLogin ssoLogin = ssoLoginService.getLogParam(sessionId);
+        SsoLogin ssoLogin = ssoLoginService.getLogParam(token);
         ssoLogin.setSsoClientUrl(localUrl);
         ssoLogin.setSsoSupServerUrl(ssoSupServerUrl);
         return ssoLogin;
