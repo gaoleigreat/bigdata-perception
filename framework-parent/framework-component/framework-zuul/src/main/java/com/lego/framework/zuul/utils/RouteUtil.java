@@ -3,9 +3,7 @@ package com.lego.framework.zuul.utils;
 import com.alibaba.fastjson.JSON;
 import com.framework.common.sdto.RespVO;
 import com.netflix.zuul.context.RequestContext;
-
 import java.io.IOException;
-
 /**
  * @author yanglf
  * @description

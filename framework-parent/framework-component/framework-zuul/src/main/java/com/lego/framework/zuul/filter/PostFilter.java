@@ -1,4 +1,5 @@
 package com.lego.framework.zuul.filter;
+
 import com.lego.framework.base.utils.HttpUtils;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
@@ -9,6 +10,7 @@ import org.springframework.cloud.netflix.ribbon.RibbonHttpResponse;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
+
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
@@ -20,7 +22,7 @@ import static org.springframework.cloud.netflix.zuul.filters.support.FilterConst
 @Component
 public class PostFilter extends ZuulFilter {
 
-    private static final Logger accessLog = LoggerFactory.getLogger("access");
+    private static final Logger accessLog = LoggerFactory.getLogger("return");
 
     @Override
     public String filterType() {
@@ -34,7 +36,8 @@ public class PostFilter extends ZuulFilter {
 
     @Override
     public boolean shouldFilter() {
-        return false;
+        RequestContext ctx = RequestContext.getCurrentContext();
+        return ctx.sendZuulResponse();
     }
 
     @Override
@@ -61,9 +64,7 @@ public class PostFilter extends ZuulFilter {
         sb.append(System.currentTimeMillis()).append("\t").append("RETURN").append("\t").append(pvId).append("\t").append(res.getStatus())
                 .append("\t").append(body).append("\t").append(HttpUtils.getResponseHeaders(res));
         accessLog.info(sb.toString());
-
         ctx.setSendZuulResponse(true);
-        ctx.setResponseStatusCode(200);
         ctx.set("pvId", pvId);
         return null;
     }

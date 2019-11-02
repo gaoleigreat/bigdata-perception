@@ -55,23 +55,25 @@ public class SsoLoginSerImpl implements SsoLoginService {
      */
     @Override
     public SsoTicket loginRedis(String token, SsoTicket ssoTicket) {
-        log.debug("loginRedis Ticket:{}", ssoTicket);
+        log.debug("loginRedis Ticket:{},token:{}", ssoTicket, token);
         User user = new User();
         user.setUserName(LoginConst.SESSION_USER_NAME);
         user.setIdNumber(ssoTicket.getIdNumber());
         RespVO respVO = authClient.saveUserToken(ssoTicket.getIdNumber(), token);
         if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
+            log.error("save   user  token fail :{}", respVO);
             return null;
         }
         ssoTicket.setSessionId(token);
         SsoTicket resultTicket = ssoLoginDao.receiveSessionId(ssoTicket);
         log.info("loginRedis resultTicket:{}", resultTicket);
         if (!TicketResultEnum.RECEIVE_ID_SUCCESS.getNo().equals(resultTicket.getResult())) {
+            log.error("receive session error:{}", resultTicket.toString());
             authClient.removeUserToken(token);
+            return null;
         } else {
-            log.info("login:session={}", token);
+            log.info("receive:session success:{}", token);
         }
-        log.info("loginRedis login:session={}", token);
         return resultTicket;
     }
 

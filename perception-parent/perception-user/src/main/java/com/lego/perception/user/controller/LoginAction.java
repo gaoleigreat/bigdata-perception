@@ -71,22 +71,20 @@ public class LoginAction {
     @GetMapping(value = "login")
     public void login(HttpServletResponse response,
                       @ModelAttribute SsoTicket ssoTicket) throws IOException {
-        log.debug("login:ssoTicket={}", ssoTicket);
+        log.debug("loginResult:ssoTicket={}", ssoTicket);
         String token = UuidUtils.generate16Uuid();
         ssoTicket.setSsoSupServerUrl(ssoSupServerUrl);
         ssoTicket.setSessionId(token);
         ssoTicket = ssoLoginService.checkTicket(ssoTicket);
+        log.info("checkTicket result:{}", ssoTicket.toString());
         ssoTicket.setSsoSupServerUrl(ssoSupServerUrl);
-        log.info("ssoTicket result:{}", ssoTicket.toString());
         if (TicketResultEnum.SSO_TICKET_SUCCESS.getNo().equals(ssoTicket.getResult())) {
             ssoTicket.setSessionId(token);
             ssoTicket.setSessionKey(sessionKey);
-            log.info("start login redis~~~~~~~~~~~");
             SsoTicket loginRedis = ssoLoginService.loginRedis(token, ssoTicket);
             // ssoTicket.getResult()
-            log.info("ssoTicket:{}------------", ssoTicket.toString());
+            log.info("loginRedis ssoTicket:{}------------", loginRedis);
             if (loginRedis != null) {
-                log.info("test---------------------");
                 Cookie cookie = new Cookie("token", token);
                 cookie.setMaxAge(36000);
                 cookie.setPath("/");
@@ -94,10 +92,8 @@ public class LoginAction {
                 cookie.setHttpOnly(true);
                 response.addCookie(cookie);
                 response.sendRedirect(localUrl);
-                return;
             }
         }
-        log.info("ticket fail", ssoTicket.toString());
     }
 
     /**
