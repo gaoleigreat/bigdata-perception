@@ -46,21 +46,4 @@ public class PerceptionDataController {
         List<ShareData> dataList = iShareDataService.selectDataByBatchNum(batchNums, null);
         return RespVOBuilder.success(dataList);
     }
-
-    @ApiOperation(value = "通过批次号更新", notes = "通过批次号更新")
-    @ApiImplicitParams({
-    })
-    @Operation(value = "update_perception_by_batchnum", desc = "通过批次号更新")
-    @GetMapping(value = "/update_perception_by_batchnum")
-    public RespVO updatePerceptionByBatchNum(@RequestParam(value = "batchNum") String batchNum) {
-        List<String> batchNums = new ArrayList<>();
-        batchNums.add(batchNum);
-        int result = iShareDataService.updatePerceptionByBatchNum(batchNums, null);
-        if(result>0){
-            return RespVOBuilder.success();
-        }
-        return RespVOBuilder.failure();
-    }
-
-
 }

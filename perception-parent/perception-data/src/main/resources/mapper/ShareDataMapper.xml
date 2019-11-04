@@ -314,7 +314,7 @@
 
     <!-- 根据主键批量更新数据库表中的记录-->
     <update id="batchUpdate" parameterType="java.util.List">
-        <foreach collection="list" index="index" item="item" separator=";">
+        <foreach collection="list" index="index" item="item" separator=",">
             update tpl_share_data
             <set>
                 <trim suffixOverrides=",">
@@ -331,16 +331,12 @@
                     last_updated_by = #{item.lastUpdatedBy,jdbcType=VARCHAR},
                     last_update_date = #{item.lastUpdateDate,jdbcType=TIMESTAMP},
                     source_module= #{item.sourceModule,jdbcType=VARCHAR},
-                    business_module= #{item.businessMudule,jdbcType=VARCHAR},
+                    business_module= #{item.businessModule,jdbcType=VARCHAR},
                     is_recall =#{item.isRecall,jdbcType=INTEGER},
                     template_id=#{item.templateId,jdbcType=BIGINT}
                 </trim>
             </set>
-            <where>
-                <trim suffixOverrides=",">
-                    where id = #{item.id,jdbcType=BIGINT}
-                </trim>
-            </where>
+            where id = #{item.id,jdbcType=BIGINT}
         </foreach>
     </update>
 

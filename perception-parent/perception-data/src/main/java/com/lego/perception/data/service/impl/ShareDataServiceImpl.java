@@ -177,7 +177,7 @@ public class ShareDataServiceImpl implements IShareDataService {
         if (CollectionUtils.isEmpty(list)) {
             return 0;
         } else {
-            return dataFileMapper.batchInsert(list);
+            return dataFileMapper.batchUpdate(list);
         }
     }
 
@@ -255,7 +255,7 @@ public class ShareDataServiceImpl implements IShareDataService {
 
 
     @Override
-    public RespVO<RespDataVO<ShareData>> selectBybatchNums(List<String> batchNums, String tags) {
+    public RespVO<RespDataVO<ShareData>> selectByBatchNums(List<String> batchNums, String tags, int isRecall) {
         QueryWrapper<ShareData> wrapper = Wrappers.query();
         if (tags != null) {
             String[] tag = tags.split(",");
@@ -266,6 +266,8 @@ public class ShareDataServiceImpl implements IShareDataService {
         if (CollectionUtils.isEmpty(batchNums)) {
             return RespVOBuilder.failure("批次号为空");
         }
+        wrapper.eq("is_recall", isRecall);
+        wrapper.eq("delete_flag", 0);
         wrapper.in("batch_num", batchNums).orderByDesc("creation_date");
         List<ShareData> dataFiles = dataFileMapper.selectList(wrapper);
         return RespVOBuilder.success(dataFiles);
@@ -278,25 +280,23 @@ public class ShareDataServiceImpl implements IShareDataService {
         IPage<ShareData> iPage = PageUtil.page2IPage(page);
         QueryWrapper<ShareData> wrapper = new QueryWrapper<>();
         WhereEntityTool.invoke(dataFile, wrapper);
+        wrapper.eq("is_recall", 0);
+        wrapper.eq("delete_flag", 0);
         wrapper.orderByDesc("creation_date");
         IPage<ShareData> dataFileIPage = dataFileMapper.selectPage(iPage, wrapper);
         return PageUtil.iPage2Result(dataFileIPage);
     }
 
     @Override
-    public int updatePerceptionByBatchNum(List<String> batchNums, String tags) {
+    public int updatePerceptionByBatchNum(List<String> batchNums, String tags, int isRecall) {
         List<PerceptionStructuredData> perceptionStructuredDataList = iPerceptionStructuredDataService.selectDataByBatchNum(batchNums, tags);
         if (!CollectionUtils.isEmpty(perceptionStructuredDataList)) {
-            perceptionStructuredDataList.forEach(perceptionStructuredData -> {
-                perceptionStructuredData.setPublishFlag(1);
-            });
+            perceptionStructuredDataList.forEach(perceptionStructuredData -> perceptionStructuredData.setPublishFlag(isRecall));
         }
         iPerceptionStructuredDataService.batchUpdate(perceptionStructuredDataList);
         List<PerceptionUnstructuredData> perceptionUnstructuredDataList = iPerceptionUnstructuredDataService.selectDataByBatchNum(batchNums, tags);
         if (!CollectionUtils.isEmpty(perceptionUnstructuredDataList)) {
-            perceptionUnstructuredDataList.forEach(perceptionUnstructuredData -> {
-                perceptionUnstructuredData.setPublishFlag(1);
-            });
+            perceptionUnstructuredDataList.forEach(perceptionUnstructuredData -> perceptionUnstructuredData.setPublishFlag(isRecall));
         }
         iPerceptionUnstructuredDataService.batchUpdate(perceptionUnstructuredDataList);
         return 1;

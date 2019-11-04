@@ -128,7 +128,7 @@ public interface IShareDataService {
      * @param tags
      * @return
      */
-    RespVO<RespDataVO<ShareData>> selectBybatchNums(List<String> batchNums, String tags);
+    RespVO<RespDataVO<ShareData>> selectByBatchNums(List<String> batchNums, String tags,int isRecall);
 
 
     /**
@@ -140,7 +140,8 @@ public interface IShareDataService {
     /**
      * @param batchNums
      * @param tags
+     * @param isRecall
      * @return
      */
-    int updatePerceptionByBatchNum(List<String> batchNums, String tags);
+    int updatePerceptionByBatchNum(List<String> batchNums, String tags,int isRecall);
 }

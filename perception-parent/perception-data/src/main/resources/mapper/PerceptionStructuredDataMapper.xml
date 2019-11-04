@@ -51,122 +51,120 @@
 
     <!--Where子句 -->
     <sql id="Base_Query_Where">
-         <if test="perceptionStructuredData.id != null">
+        <if test="perceptionStructuredData.id != null">
             and id = #{perceptionStructuredData.id,jdbcType=BIGINT}
-         </if>
-         <if test="perceptionStructuredData.batchNum != null">
+        </if>
+        <if test="perceptionStructuredData.batchNum != null">
             and batch_num = #{perceptionStructuredData.batchNum,jdbcType=VARCHAR}
-         </if>
-         <if test="perceptionStructuredData.businessModule != null">
+        </if>
+        <if test="perceptionStructuredData.businessModule != null">
             and business_module = #{perceptionStructuredData.businessModule,jdbcType=VARCHAR}
-         </if>
-         <if test="perceptionStructuredData.templateId != null">
+        </if>
+        <if test="perceptionStructuredData.templateId != null">
             and template_id = #{perceptionStructuredData.templateId,jdbcType=BIGINT}
-         </if>
-         <if test="perceptionStructuredData.sourceModule != null">
+        </if>
+        <if test="perceptionStructuredData.sourceModule != null">
             and source_module = #{perceptionStructuredData.sourceModule,jdbcType=VARCHAR}
-         </if>
-         <if test="perceptionStructuredData.name != null">
+        </if>
+        <if test="perceptionStructuredData.name != null">
             and name = #{perceptionStructuredData.name,jdbcType=VARCHAR}
-         </if>
-         <if test="perceptionStructuredData.size != null">
+        </if>
+        <if test="perceptionStructuredData.size != null">
             and size = #{perceptionStructuredData.size,jdbcType=BIGINT}
-         </if>
-         <if test="perceptionStructuredData.projectId != null">
+        </if>
+        <if test="perceptionStructuredData.projectId != null">
             and project_id = #{perceptionStructuredData.projectId,jdbcType=BIGINT}
-         </if>
-         <if test="perceptionStructuredData.publishFlag != null">
+        </if>
+        <if test="perceptionStructuredData.publishFlag != null">
             and publish_flag = #{perceptionStructuredData.publishFlag,jdbcType=INTEGER}
-         </if>
-         <if test="perceptionStructuredData.publishDate != null">
+        </if>
+        <if test="perceptionStructuredData.publishDate != null">
             and publish_date = #{perceptionStructuredData.publishDate,jdbcType=TIMESTAMP}
-         </if>
-         <if test="perceptionStructuredData.publishBy != null">
+        </if>
+        <if test="perceptionStructuredData.publishBy != null">
             and publish_by = #{perceptionStructuredData.publishBy,jdbcType=VARCHAR}
-         </if>
-         <if test="perceptionStructuredData.deleteFlag != null">
+        </if>
+        <if test="perceptionStructuredData.deleteFlag != null">
             and delete_flag = #{perceptionStructuredData.deleteFlag,jdbcType=INTEGER}
-         </if>
-         <if test="perceptionStructuredData.tags != null">
+        </if>
+        <if test="perceptionStructuredData.tags != null">
             and tags = #{perceptionStructuredData.tags,jdbcType=VARCHAR}
-         </if>
-         <if test="perceptionStructuredData.remark != null">
+        </if>
+        <if test="perceptionStructuredData.remark != null">
             and remark = #{perceptionStructuredData.remark,jdbcType=VARCHAR}
-         </if>
-         <if test="perceptionStructuredData.createdBy != null">
+        </if>
+        <if test="perceptionStructuredData.createdBy != null">
             and created_by = #{perceptionStructuredData.createdBy,jdbcType=VARCHAR}
-         </if>
-         <if test="perceptionStructuredData.creationDate != null">
+        </if>
+        <if test="perceptionStructuredData.creationDate != null">
             and creation_date = #{perceptionStructuredData.creationDate,jdbcType=TIMESTAMP}
-         </if>
-         <if test="perceptionStructuredData.lastUpdatedBy != null">
+        </if>
+        <if test="perceptionStructuredData.lastUpdatedBy != null">
             and last_updated_by = #{perceptionStructuredData.lastUpdatedBy,jdbcType=VARCHAR}
-         </if>
-         <if test="perceptionStructuredData.lastUpdateDate != null">
+        </if>
+        <if test="perceptionStructuredData.lastUpdateDate != null">
             and last_update_date = #{perceptionStructuredData.lastUpdateDate,jdbcType=TIMESTAMP}
-         </if>
+        </if>
     </sql>
-
-
 
 
     <!--基本更新字段-->
     <sql id="Base_Update_Column">
         <set>
-          <if test="perceptionStructuredData.id != null">
-             id = #{perceptionStructuredData.id,jdbcType=BIGINT},
-          </if>
-          <if test="perceptionStructuredData.batchNum != null">
-             batch_num = #{perceptionStructuredData.batchNum,jdbcType=VARCHAR},
-          </if>
-          <if test="perceptionStructuredData.businessModule != null">
-             business_module = #{perceptionStructuredData.businessModule,jdbcType=VARCHAR},
-          </if>
-          <if test="perceptionStructuredData.templateId != null">
-             template_id = #{perceptionStructuredData.templateId,jdbcType=BIGINT},
-          </if>
-          <if test="perceptionStructuredData.sourceModule != null">
-             source_module = #{perceptionStructuredData.sourceModule,jdbcType=VARCHAR},
-          </if>
-          <if test="perceptionStructuredData.name != null">
-             name = #{perceptionStructuredData.name,jdbcType=VARCHAR},
-          </if>
-          <if test="perceptionStructuredData.size != null">
-             size = #{perceptionStructuredData.size,jdbcType=BIGINT},
-          </if>
-          <if test="perceptionStructuredData.projectId != null">
-             project_id = #{perceptionStructuredData.projectId,jdbcType=BIGINT},
-          </if>
-          <if test="perceptionStructuredData.publishFlag != null">
-             publish_flag = #{perceptionStructuredData.publishFlag,jdbcType=INTEGER},
-          </if>
-          <if test="perceptionStructuredData.publishDate != null">
-             publish_date = #{perceptionStructuredData.publishDate,jdbcType=TIMESTAMP},
-          </if>
-          <if test="perceptionStructuredData.publishBy != null">
-             publish_by = #{perceptionStructuredData.publishBy,jdbcType=VARCHAR},
-          </if>
-          <if test="perceptionStructuredData.deleteFlag != null">
-             delete_flag = #{perceptionStructuredData.deleteFlag,jdbcType=INTEGER},
-          </if>
-          <if test="perceptionStructuredData.tags != null">
-             tags = #{perceptionStructuredData.tags,jdbcType=VARCHAR},
-          </if>
-          <if test="perceptionStructuredData.remark != null">
-             remark = #{perceptionStructuredData.remark,jdbcType=VARCHAR},
-          </if>
-          <if test="perceptionStructuredData.createdBy != null">
-             created_by = #{perceptionStructuredData.createdBy,jdbcType=VARCHAR},
-          </if>
-          <if test="perceptionStructuredData.creationDate != null">
-             creation_date = #{perceptionStructuredData.creationDate,jdbcType=TIMESTAMP},
-          </if>
-          <if test="perceptionStructuredData.lastUpdatedBy != null">
-             last_updated_by = #{perceptionStructuredData.lastUpdatedBy,jdbcType=VARCHAR},
-          </if>
-          <if test="perceptionStructuredData.lastUpdateDate != null">
-             last_update_date = #{perceptionStructuredData.lastUpdateDate,jdbcType=TIMESTAMP}
-          </if>
+            <if test="perceptionStructuredData.id != null">
+                id = #{perceptionStructuredData.id,jdbcType=BIGINT},
+            </if>
+            <if test="perceptionStructuredData.batchNum != null">
+                batch_num = #{perceptionStructuredData.batchNum,jdbcType=VARCHAR},
+            </if>
+            <if test="perceptionStructuredData.businessModule != null">
+                business_module = #{perceptionStructuredData.businessModule,jdbcType=VARCHAR},
+            </if>
+            <if test="perceptionStructuredData.templateId != null">
+                template_id = #{perceptionStructuredData.templateId,jdbcType=BIGINT},
+            </if>
+            <if test="perceptionStructuredData.sourceModule != null">
+                source_module = #{perceptionStructuredData.sourceModule,jdbcType=VARCHAR},
+            </if>
+            <if test="perceptionStructuredData.name != null">
+                name = #{perceptionStructuredData.name,jdbcType=VARCHAR},
+            </if>
+            <if test="perceptionStructuredData.size != null">
+                size = #{perceptionStructuredData.size,jdbcType=BIGINT},
+            </if>
+            <if test="perceptionStructuredData.projectId != null">
+                project_id = #{perceptionStructuredData.projectId,jdbcType=BIGINT},
+            </if>
+            <if test="perceptionStructuredData.publishFlag != null">
+                publish_flag = #{perceptionStructuredData.publishFlag,jdbcType=INTEGER},
+            </if>
+            <if test="perceptionStructuredData.publishDate != null">
+                publish_date = #{perceptionStructuredData.publishDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="perceptionStructuredData.publishBy != null">
+                publish_by = #{perceptionStructuredData.publishBy,jdbcType=VARCHAR},
+            </if>
+            <if test="perceptionStructuredData.deleteFlag != null">
+                delete_flag = #{perceptionStructuredData.deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="perceptionStructuredData.tags != null">
+                tags = #{perceptionStructuredData.tags,jdbcType=VARCHAR},
+            </if>
+            <if test="perceptionStructuredData.remark != null">
+                remark = #{perceptionStructuredData.remark,jdbcType=VARCHAR},
+            </if>
+            <if test="perceptionStructuredData.createdBy != null">
+                created_by = #{perceptionStructuredData.createdBy,jdbcType=VARCHAR},
+            </if>
+            <if test="perceptionStructuredData.creationDate != null">
+                creation_date = #{perceptionStructuredData.creationDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="perceptionStructuredData.lastUpdatedBy != null">
+                last_updated_by = #{perceptionStructuredData.lastUpdatedBy,jdbcType=VARCHAR},
+            </if>
+            <if test="perceptionStructuredData.lastUpdateDate != null">
+                last_update_date = #{perceptionStructuredData.lastUpdateDate,jdbcType=TIMESTAMP}
+            </if>
         </set>
     </sql>
 
@@ -174,142 +172,141 @@
     <sql id="Base_Insert_Selective">
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="perceptionStructuredData.id != null">
-               id,
+                id,
             </if>
             <if test="perceptionStructuredData.batchNum != null">
-               batch_num,
+                batch_num,
             </if>
             <if test="perceptionStructuredData.businessModule != null">
-               business_module,
+                business_module,
             </if>
             <if test="perceptionStructuredData.templateId != null">
-               template_id,
+                template_id,
             </if>
             <if test="perceptionStructuredData.sourceModule != null">
-               source_module,
+                source_module,
             </if>
             <if test="perceptionStructuredData.name != null">
-               name,
+                name,
             </if>
             <if test="perceptionStructuredData.size != null">
-               size,
+                size,
             </if>
             <if test="perceptionStructuredData.projectId != null">
-               project_id,
+                project_id,
             </if>
             <if test="perceptionStructuredData.publishFlag != null">
-               publish_flag,
+                publish_flag,
             </if>
             <if test="perceptionStructuredData.publishDate != null">
-               publish_date,
+                publish_date,
             </if>
             <if test="perceptionStructuredData.publishBy != null">
-               publish_by,
+                publish_by,
             </if>
             <if test="perceptionStructuredData.deleteFlag != null">
-               delete_flag,
+                delete_flag,
             </if>
             <if test="perceptionStructuredData.tags != null">
-               tags,
+                tags,
             </if>
             <if test="perceptionStructuredData.remark != null">
-               remark,
+                remark,
             </if>
             <if test="perceptionStructuredData.createdBy != null">
-               created_by,
+                created_by,
             </if>
             <if test="perceptionStructuredData.creationDate != null">
-               creation_date,
+                creation_date,
             </if>
             <if test="perceptionStructuredData.lastUpdatedBy != null">
-               last_updated_by,
+                last_updated_by,
             </if>
             <if test="perceptionStructuredData.lastUpdateDate != null">
-               last_update_date
+                last_update_date
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-             <if test="perceptionStructuredData.id != null">
-             #{perceptionStructuredData.id,jdbcType=BIGINT},
-             </if>
-             <if test="perceptionStructuredData.batchNum != null">
-             #{perceptionStructuredData.batchNum,jdbcType=VARCHAR},
-             </if>
-             <if test="perceptionStructuredData.businessModule != null">
-             #{perceptionStructuredData.businessModule,jdbcType=VARCHAR},
-             </if>
-             <if test="perceptionStructuredData.templateId != null">
-             #{perceptionStructuredData.templateId,jdbcType=BIGINT},
-             </if>
-             <if test="perceptionStructuredData.sourceModule != null">
-             #{perceptionStructuredData.sourceModule,jdbcType=VARCHAR},
-             </if>
-             <if test="perceptionStructuredData.name != null">
-             #{perceptionStructuredData.name,jdbcType=VARCHAR},
-             </if>
-             <if test="perceptionStructuredData.size != null">
-             #{perceptionStructuredData.size,jdbcType=BIGINT},
-             </if>
-             <if test="perceptionStructuredData.projectId != null">
-             #{perceptionStructuredData.projectId,jdbcType=BIGINT},
-             </if>
-             <if test="perceptionStructuredData.publishFlag != null">
-             #{perceptionStructuredData.publishFlag,jdbcType=INTEGER},
-             </if>
-             <if test="perceptionStructuredData.publishDate != null">
-             #{perceptionStructuredData.publishDate,jdbcType=TIMESTAMP},
-             </if>
-             <if test="perceptionStructuredData.publishBy != null">
-             #{perceptionStructuredData.publishBy,jdbcType=VARCHAR},
-             </if>
-             <if test="perceptionStructuredData.deleteFlag != null">
-             #{perceptionStructuredData.deleteFlag,jdbcType=INTEGER},
-             </if>
-             <if test="perceptionStructuredData.tags != null">
-             #{perceptionStructuredData.tags,jdbcType=VARCHAR},
-             </if>
-             <if test="perceptionStructuredData.remark != null">
-             #{perceptionStructuredData.remark,jdbcType=VARCHAR},
-             </if>
-             <if test="perceptionStructuredData.createdBy != null">
-             #{perceptionStructuredData.createdBy,jdbcType=VARCHAR},
-             </if>
-             <if test="perceptionStructuredData.creationDate != null">
-             #{perceptionStructuredData.creationDate,jdbcType=TIMESTAMP},
-             </if>
-             <if test="perceptionStructuredData.lastUpdatedBy != null">
-             #{perceptionStructuredData.lastUpdatedBy,jdbcType=VARCHAR},
-             </if>
-             <if test="perceptionStructuredData.lastUpdateDate != null">
-             #{perceptionStructuredData.lastUpdateDate,jdbcType=TIMESTAMP}
-             </if>
+            <if test="perceptionStructuredData.id != null">
+                #{perceptionStructuredData.id,jdbcType=BIGINT},
+            </if>
+            <if test="perceptionStructuredData.batchNum != null">
+                #{perceptionStructuredData.batchNum,jdbcType=VARCHAR},
+            </if>
+            <if test="perceptionStructuredData.businessModule != null">
+                #{perceptionStructuredData.businessModule,jdbcType=VARCHAR},
+            </if>
+            <if test="perceptionStructuredData.templateId != null">
+                #{perceptionStructuredData.templateId,jdbcType=BIGINT},
+            </if>
+            <if test="perceptionStructuredData.sourceModule != null">
+                #{perceptionStructuredData.sourceModule,jdbcType=VARCHAR},
+            </if>
+            <if test="perceptionStructuredData.name != null">
+                #{perceptionStructuredData.name,jdbcType=VARCHAR},
+            </if>
+            <if test="perceptionStructuredData.size != null">
+                #{perceptionStructuredData.size,jdbcType=BIGINT},
+            </if>
+            <if test="perceptionStructuredData.projectId != null">
+                #{perceptionStructuredData.projectId,jdbcType=BIGINT},
+            </if>
+            <if test="perceptionStructuredData.publishFlag != null">
+                #{perceptionStructuredData.publishFlag,jdbcType=INTEGER},
+            </if>
+            <if test="perceptionStructuredData.publishDate != null">
+                #{perceptionStructuredData.publishDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="perceptionStructuredData.publishBy != null">
+                #{perceptionStructuredData.publishBy,jdbcType=VARCHAR},
+            </if>
+            <if test="perceptionStructuredData.deleteFlag != null">
+                #{perceptionStructuredData.deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="perceptionStructuredData.tags != null">
+                #{perceptionStructuredData.tags,jdbcType=VARCHAR},
+            </if>
+            <if test="perceptionStructuredData.remark != null">
+                #{perceptionStructuredData.remark,jdbcType=VARCHAR},
+            </if>
+            <if test="perceptionStructuredData.createdBy != null">
+                #{perceptionStructuredData.createdBy,jdbcType=VARCHAR},
+            </if>
+            <if test="perceptionStructuredData.creationDate != null">
+                #{perceptionStructuredData.creationDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="perceptionStructuredData.lastUpdatedBy != null">
+                #{perceptionStructuredData.lastUpdatedBy,jdbcType=VARCHAR},
+            </if>
+            <if test="perceptionStructuredData.lastUpdateDate != null">
+                #{perceptionStructuredData.lastUpdateDate,jdbcType=TIMESTAMP}
+            </if>
         </trim>
     </sql>
-
 
 
     <!--批量添加记录到数据库表中-->
     <insert id="batchInsert" parameterType="java.util.List">
         insert into perception_structured_data
         <trim prefix="(" suffix=")" suffixOverrides=",">
-             id,
-             batch_num,
-             business_module,
-             template_id,
-             source_module,
-             name,
-             size,
-             project_id,
-             publish_flag,
-             publish_date,
-             publish_by,
-             delete_flag,
-             tags,
-             remark,
-             created_by,
-             creation_date,
-             last_updated_by,
-             last_update_date
+            id,
+            batch_num,
+            business_module,
+            template_id,
+            source_module,
+            name,
+            size,
+            project_id,
+            publish_flag,
+            publish_date,
+            publish_by,
+            delete_flag,
+            tags,
+            remark,
+            created_by,
+            creation_date,
+            last_updated_by,
+            last_update_date
         </trim>
         values
         <foreach collection="list" index="index" item="item" separator=",">
@@ -335,7 +332,6 @@
             </trim>
         </foreach>
     </insert>
-
 
 
     <!-- 根据主键批量更新数据库表中的记录-->
@@ -364,11 +360,7 @@
                     last_update_date = #{item.lastUpdateDate,jdbcType=TIMESTAMP}
                 </trim>
             </set>
-            <where>
-                <trim suffixOverrides=",">
-                    where id = #{item.id,jdbcType=BIGINT}
-                </trim>
-            </where>
+            where id = #{item.id,jdbcType=BIGINT}
         </foreach>
     </update>
 
@@ -377,66 +369,66 @@
     <update id="upsert" parameterType="com.lego.framework.data.model.entity.PerceptionStructuredData">
         insert into perception_structured_data
         <trim prefix="(" suffix=")" suffixOverrides=",">
-             id ,
-             batch_num ,
-             business_module ,
-             template_id ,
-             source_module ,
-             name ,
-             size ,
-             project_id ,
-             publish_flag ,
-             publish_date ,
-             publish_by ,
-             delete_flag ,
-             tags ,
-             remark ,
-             created_by ,
-             creation_date ,
-             last_updated_by ,
-             last_update_date 
+            id ,
+            batch_num ,
+            business_module ,
+            template_id ,
+            source_module ,
+            name ,
+            size ,
+            project_id ,
+            publish_flag ,
+            publish_date ,
+            publish_by ,
+            delete_flag ,
+            tags ,
+            remark ,
+            created_by ,
+            creation_date ,
+            last_updated_by ,
+            last_update_date
         </trim>
         values
         <trim prefix="(" suffix=")" suffixOverrides=",">
-             #{perceptionStructuredData.id,jdbcType=BIGINT},
-             #{perceptionStructuredData.batchNum,jdbcType=VARCHAR},
-             #{perceptionStructuredData.businessModule,jdbcType=VARCHAR},
-             #{perceptionStructuredData.templateId,jdbcType=BIGINT},
-             #{perceptionStructuredData.sourceModule,jdbcType=VARCHAR},
-             #{perceptionStructuredData.name,jdbcType=VARCHAR},
-             #{perceptionStructuredData.size,jdbcType=BIGINT},
-             #{perceptionStructuredData.projectId,jdbcType=BIGINT},
-             #{perceptionStructuredData.publishFlag,jdbcType=INTEGER},
-             #{perceptionStructuredData.publishDate,jdbcType=TIMESTAMP},
-             #{perceptionStructuredData.publishBy,jdbcType=VARCHAR},
-             #{perceptionStructuredData.deleteFlag,jdbcType=INTEGER},
-             #{perceptionStructuredData.tags,jdbcType=VARCHAR},
-             #{perceptionStructuredData.remark,jdbcType=VARCHAR},
-             #{perceptionStructuredData.createdBy,jdbcType=VARCHAR},
-             #{perceptionStructuredData.creationDate,jdbcType=TIMESTAMP},
-             #{perceptionStructuredData.lastUpdatedBy,jdbcType=VARCHAR},
-             #{perceptionStructuredData.lastUpdateDate,jdbcType=TIMESTAMP}
+            #{perceptionStructuredData.id,jdbcType=BIGINT},
+            #{perceptionStructuredData.batchNum,jdbcType=VARCHAR},
+            #{perceptionStructuredData.businessModule,jdbcType=VARCHAR},
+            #{perceptionStructuredData.templateId,jdbcType=BIGINT},
+            #{perceptionStructuredData.sourceModule,jdbcType=VARCHAR},
+            #{perceptionStructuredData.name,jdbcType=VARCHAR},
+            #{perceptionStructuredData.size,jdbcType=BIGINT},
+            #{perceptionStructuredData.projectId,jdbcType=BIGINT},
+            #{perceptionStructuredData.publishFlag,jdbcType=INTEGER},
+            #{perceptionStructuredData.publishDate,jdbcType=TIMESTAMP},
+            #{perceptionStructuredData.publishBy,jdbcType=VARCHAR},
+            #{perceptionStructuredData.deleteFlag,jdbcType=INTEGER},
+            #{perceptionStructuredData.tags,jdbcType=VARCHAR},
+            #{perceptionStructuredData.remark,jdbcType=VARCHAR},
+            #{perceptionStructuredData.createdBy,jdbcType=VARCHAR},
+            #{perceptionStructuredData.creationDate,jdbcType=TIMESTAMP},
+            #{perceptionStructuredData.lastUpdatedBy,jdbcType=VARCHAR},
+            #{perceptionStructuredData.lastUpdateDate,jdbcType=TIMESTAMP}
         </trim>
         on duplicate key update
         <trim suffixOverrides=",">
-          #{perceptionStructuredData.id,jdbcType=BIGINT},
-          #{perceptionStructuredData.batchNum,jdbcType=VARCHAR},
-          #{perceptionStructuredData.businessModule,jdbcType=VARCHAR},
-          #{perceptionStructuredData.templateId,jdbcType=BIGINT},
-          #{perceptionStructuredData.sourceModule,jdbcType=VARCHAR},
-          #{perceptionStructuredData.name,jdbcType=VARCHAR},
-          #{perceptionStructuredData.size,jdbcType=BIGINT},
-          #{perceptionStructuredData.projectId,jdbcType=BIGINT},
-          #{perceptionStructuredData.publishFlag,jdbcType=INTEGER},
-          #{perceptionStructuredData.publishDate,jdbcType=TIMESTAMP},
-          #{perceptionStructuredData.publishBy,jdbcType=VARCHAR},
-          #{perceptionStructuredData.deleteFlag,jdbcType=INTEGER},
-          #{perceptionStructuredData.tags,jdbcType=VARCHAR},
-          #{perceptionStructuredData.remark,jdbcType=VARCHAR},
-          #{perceptionStructuredData.createdBy,jdbcType=VARCHAR},
-          #{perceptionStructuredData.creationDate,jdbcType=TIMESTAMP},
-          #{perceptionStructuredData.lastUpdatedBy,jdbcType=VARCHAR},
-          #{perceptionStructuredData.lastUpdateDate,jdbcType=TIMESTAMP}
+            #{perceptionStructuredData.id,jdbcType=BIGINT},
+            #{perceptionStructuredData.batchNum,jdbcType=VARCHAR},
+            #{perceptionStructuredData.businessModule,jdbcType=VARCHAR},
+            #{perceptionStructuredData.templateId,jdbcType=BIGINT},
+            #{perceptionStructuredData.sourceModule,jdbcType=VARCHAR},
+            #{perceptionStructuredData.name,jdbcType=VARCHAR},
+            #{perceptionStructuredData.size,jdbcType=BIGINT},
+            #{perceptionStructuredData.projectId,jdbcType=BIGINT},
+            #{perceptionStructuredData.publishFlag,jdbcType=INTEGER},
+            #{perceptionStructuredData.publishDate,jdbcType=TIMESTAMP},
+            #{perceptionStructuredData.publishBy,jdbcType=VARCHAR},
+            #{perceptionStructuredData.deleteFlag,jdbcType=INTEGER},
+            #{perceptionStructuredData.tags,jdbcType=VARCHAR},
+            #{perceptionStructuredData.remark,jdbcType=VARCHAR},
+            #{perceptionStructuredData.createdBy,jdbcType=VARCHAR},
+            #{perceptionStructuredData.creationDate,jdbcType=TIMESTAMP},
+            #{perceptionStructuredData.lastUpdatedBy,jdbcType=VARCHAR},
+            #{perceptionStructuredData.lastUpdateDate,jdbcType=TIMESTAMP}
         </trim>
     </update>
 
@@ -560,63 +552,64 @@
         on duplicate key update
         <trim suffixOverrides=",">
             <if test="perceptionStructuredData.id !=null ">
-             #{id,jdbcType=BIGINT},
+                #{id,jdbcType=BIGINT},
             </if>
             <if test="perceptionStructuredData.batchNum !=null ">
-             #{batchNum,jdbcType=VARCHAR},
+                #{batchNum,jdbcType=VARCHAR},
             </if>
             <if test="perceptionStructuredData.businessModule !=null ">
-             #{businessModule,jdbcType=VARCHAR},
+                #{businessModule,jdbcType=VARCHAR},
             </if>
             <if test="perceptionStructuredData.templateId !=null ">
-             #{templateId,jdbcType=BIGINT},
+                #{templateId,jdbcType=BIGINT},
             </if>
             <if test="perceptionStructuredData.sourceModule !=null ">
-             #{sourceModule,jdbcType=VARCHAR},
+                #{sourceModule,jdbcType=VARCHAR},
             </if>
             <if test="perceptionStructuredData.name !=null ">
-             #{name,jdbcType=VARCHAR},
+                #{name,jdbcType=VARCHAR},
             </if>
             <if test="perceptionStructuredData.size !=null ">
-             #{size,jdbcType=BIGINT},
+                #{size,jdbcType=BIGINT},
             </if>
             <if test="perceptionStructuredData.projectId !=null ">
-             #{projectId,jdbcType=BIGINT},
+                #{projectId,jdbcType=BIGINT},
             </if>
             <if test="perceptionStructuredData.publishFlag !=null ">
-             #{publishFlag,jdbcType=INTEGER},
+                #{publishFlag,jdbcType=INTEGER},
             </if>
             <if test="perceptionStructuredData.publishDate !=null ">
-             #{publishDate,jdbcType=TIMESTAMP},
+                #{publishDate,jdbcType=TIMESTAMP},
             </if>
             <if test="perceptionStructuredData.publishBy !=null ">
-             #{publishBy,jdbcType=VARCHAR},
+                #{publishBy,jdbcType=VARCHAR},
             </if>
             <if test="perceptionStructuredData.deleteFlag !=null ">
-             #{deleteFlag,jdbcType=INTEGER},
+                #{deleteFlag,jdbcType=INTEGER},
             </if>
             <if test="perceptionStructuredData.tags !=null ">
-             #{tags,jdbcType=VARCHAR},
+                #{tags,jdbcType=VARCHAR},
             </if>
             <if test="perceptionStructuredData.remark !=null ">
-             #{remark,jdbcType=VARCHAR},
+                #{remark,jdbcType=VARCHAR},
             </if>
             <if test="perceptionStructuredData.createdBy !=null ">
-             #{createdBy,jdbcType=VARCHAR},
+                #{createdBy,jdbcType=VARCHAR},
             </if>
             <if test="perceptionStructuredData.creationDate !=null ">
-             #{creationDate,jdbcType=TIMESTAMP},
+                #{creationDate,jdbcType=TIMESTAMP},
             </if>
             <if test="perceptionStructuredData.lastUpdatedBy !=null ">
-             #{lastUpdatedBy,jdbcType=VARCHAR},
+                #{lastUpdatedBy,jdbcType=VARCHAR},
             </if>
             <if test="perceptionStructuredData.lastUpdateDate !=null ">
-             #{lastUpdateDate,jdbcType=TIMESTAMP}
+                #{lastUpdateDate,jdbcType=TIMESTAMP}
             </if>
         </trim>
     </update>
 
-    <select id="query" resultMap="BaseResultMap" parameterType="com.lego.framework.data.model.entity.PerceptionStructuredData">
+    <select id="query" resultMap="BaseResultMap"
+            parameterType="com.lego.framework.data.model.entity.PerceptionStructuredData">
         select
         <include refid="Base_Column_List"/>
         from perception_structured_data
@@ -626,10 +619,9 @@
     </select>
 
     <select id="queryTotalCount" resultType="long">
-        select count(*) from perception_structured_data
+        select count(*)
+        from perception_structured_data
     </select>
-
-
 
 
 </mapper>

@@ -25,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+
 import javax.websocket.server.PathParam;
 import java.util.ArrayList;
 import java.util.Date;
@@ -54,9 +55,6 @@ public class ShareDataController {
 
     @Autowired
     private HdfsProperties hdfsProperties;
-
-    @Autowired
-    private ShareDataClient shareDataClient;
 
     @Autowired
     private IRemoteShareDataService iRemoteShareDataService;
@@ -178,7 +176,7 @@ public class ShareDataController {
     @Operation(value = "select", desc = "通过批次号查询")
     public RespVO<RespDataVO<ShareData>> selectByBatchNums(@RequestParam(value = "bathNums") List<String> batchNums,
                                                            @RequestParam(required = false) String tags) {
-        return shareDataService.selectBybatchNums(batchNums, tags);
+        return shareDataService.selectByBatchNums(batchNums, tags, 0);
     }
 
 
@@ -209,16 +207,11 @@ public class ShareDataController {
     }
 
 
-    @ApiOperation(value = "撤回", notes = "撤回")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "batchNums", value = "批次号，", paramType = "query", allowMultiple = true, required = true, dataType = "String"),
-            @ApiImplicitParam(name = "tags", value = "标签(多标签用逗号隔开)", paramType = "query", dataType = "String")
-    })
     @RequestMapping(value = "/recallByBatchAndTags", method = RequestMethod.GET)
     @Operation(value = "recallByBatchAndTags", desc = "通过批次号撤回")
     public RespVO recallByBatchAndTags(@RequestParam(value = "bathNums") List<String> batchNums,
                                        @RequestParam(required = false, value = "tags") String tags) {
-        RespVO<RespDataVO<ShareData>> dataVORespVO = shareDataService.selectBybatchNums(batchNums, tags);
+        RespVO<RespDataVO<ShareData>> dataVORespVO = shareDataService.selectByBatchNums(batchNums, tags, 0);
         if (dataVORespVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
             return RespVOBuilder.failure();
         }
@@ -249,7 +242,7 @@ public class ShareDataController {
         if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
             return respVO;
         }
-        int byBatchNum = shareDataService.updatePerceptionByBatchNum(batchNums, null);
+        int byBatchNum = shareDataService.updatePerceptionByBatchNum(batchNums, null, 0);
         if (byBatchNum > 0) {
             return RespVOBuilder.success();
         }
@@ -274,37 +267,41 @@ public class ShareDataController {
         }
         for (ShareData dataFile : dataList) {
             String dataType = "数据库类型";
-            Integer sourcesType;
+            Integer sourcesType = null;
             Integer type = dataFile.getDataType();
             if (type == 2) {
                 // HDFS
                 dataType = "文件夹类型";
+            } else {
+                Long templateId = dataFile.getTemplateId();
+                RespVO<FormTemplate> respVO = templateFeignClient.findFormTemplateById(templateId);
+                if (RespConsts.SUCCESS_RESULT_CODE != respVO.getRetCode()) {
+                    return RespVOBuilder.failure("获取模板失败");
+                }
+                FormTemplate info = respVO.getInfo();
+                if (info == null) {
+                    return RespVOBuilder.failure("获取不到模板信息");
+                }
+                sourcesType = info.getType();
             }
-            Long templateId = dataFile.getTemplateId();
-            RespVO<FormTemplate> respVO = templateFeignClient.findFormTemplateById(templateId);
-            if (RespConsts.SUCCESS_RESULT_CODE != respVO.getRetCode()) {
-                return RespVOBuilder.failure("获取模板失败");
-            }
-            FormTemplate info = respVO.getInfo();
-            if (info == null) {
-                return RespVOBuilder.failure("获取不到模板信息");
-            }
-            sourcesType = info.getType();
-            String templateName = info.getTemplateName();
             String remark = dataFile.getRemark();
-            RemoteSharedData remoteSharedData = getShareData(dataType, remark, templateName, sourcesType);
+            RemoteSharedData remoteSharedData = getShareData(dataType, remark, dataFile.getName(), sourcesType);
             remoteSharedData.setFileId(dataFile.getId());
             remoteSharedDataList.add(remoteSharedData);
         }
 
         log.info("更新共享数据成功:{}", batchNums);
-        RespVO respVO1 = shareDataClient.insertByBatchNums(batchNums, null);
+        RespVO respVO1 = insertByBatchNums(batchNums, null);
         if (respVO1.getRetCode() == RespConsts.SUCCESS_RESULT_CODE) {
             log.info("更新本地共享数据成功:{}", batchNums);
             Integer dataBatch = iRemoteShareDataService.saveRemoteDataBatch(remoteSharedDataList);
             if (dataBatch > 0) {
                 log.info("更新共享数据成功:{}", batchNums);
-                return RespVOBuilder.success();
+                int byBatchNum = shareDataService.updatePerceptionByBatchNum(batchNums, null, 1);
+                if (byBatchNum > 0) {
+                    log.info("更新数据表状态成功----------");
+                    return RespVOBuilder.success();
+                }
             }
         }
         return RespVOBuilder.failure();
