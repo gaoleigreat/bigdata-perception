@@ -3,6 +3,7 @@ package com.lego.perception.data.mapper;
 import com.framework.mybatis.mapper.Mapper;
 import com.lego.framework.data.model.entity.PerceptionStructuredData;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
  * @author¸ßÀÚ
  * @since jdk1.8
  */
+@Repository
 public interface PerceptionStructuredDataMapper extends Mapper<PerceptionStructuredData> {
 
     /**

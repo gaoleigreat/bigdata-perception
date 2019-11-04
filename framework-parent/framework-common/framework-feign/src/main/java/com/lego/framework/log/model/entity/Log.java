@@ -1,12 +1,10 @@
 package com.lego.framework.log.model.entity;
 
-import com.alibaba.fastjson.annotation.JSONField;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.util.Date;
 
 /**
@@ -21,9 +19,6 @@ import java.util.Date;
 public class Log {
     @ApiModelProperty("日志id")
     private String id;
-
-    @ApiModelProperty("业务系统id")
-    private Long systemId;
 
     @ApiModelProperty("日志分类")
     private String type;

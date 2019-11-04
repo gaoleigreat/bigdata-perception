@@ -57,11 +57,13 @@
     </sql>
 
     <select id="findPagedList" resultType="com.lego.framework.system.model.entity.Sitemap">
-        select <include refid="find_columns"></include>
+        select
+        <include refid="find_columns"></include>
         from tpl_sitemap_t
         <where>
             <include refid="page_condition"></include>
         </where>
+        ORDER BY sort ASC
         limit #{arg1.startIndex, jdbcType=INTEGER}, #{arg1.pageSize, jdbcType=INTEGER}
     </select>
 
@@ -71,20 +73,24 @@
         <where>
             <include refid="page_condition"></include>
         </where>
+        ORDER BY sort ASC
     </select>
 
     <select id="findList" parameterType="com.lego.framework.system.model.entity.Sitemap"
             resultType="com.lego.framework.system.model.entity.Sitemap">
-        select <include refid="find_columns"></include>
+        select
+        <include refid="find_columns"></include>
         from tpl_sitemap_t
         <where>
             <include refid="condition"></include>
         </where>
+        ORDER BY sort ASC
     </select>
 
     <insert id="insertList">
         insert into tpl_sitemap_t
-        (parent_id, sub_system, `name`, url, `type`, permision, sort, icon, scope, status, created_by, last_update_date, last_updated_by)
+        (parent_id, sub_system, `name`, url, `type`, permision, sort, icon, scope, status, created_by, last_update_date,
+        last_updated_by)
         values
         <foreach collection="list" item="item" separator=",">
             (
@@ -107,26 +113,24 @@
     </insert>
 
     <insert id="save">
-		insert into tpl_sitemap_t
-		(parent_id, sub_system, `name`, url, `type`, permission, sort, icon, scope, status, creation_date, created_by, last_update_date, last_updated_by)
-		values
-		(
-          #{parentId, jdbcType=BIGINT},
-          #{subSystem, jdbcType=VARCHAR},
-          #{name, jdbcType=VARCHAR},
-          #{url, jdbcType=VARCHAR},
-          #{type, jdbcType=INTEGER},
-          #{permission, jdbcType=VARCHAR},
-          #{sort, jdbcType=INTEGER},
-          #{icon, jdbcType=VARCHAR},
-          #{scope, jdbcType=VARCHAR},
-          #{status, jdbcType=INTEGER},
-          #{creationDate, jdbcType=TIMESTAMP},
-          #{createdBy, jdbcType=BIGINT},
-          #{lastUpdateDate, jdbcType=TIMESTAMP},
-          #{lastUpdatedBy, jdbcType=BIGINT}
-          )
-	</insert>
+        insert into tpl_sitemap_t
+        (parent_id, sub_system, `name`, url, `type`, permission, sort, icon, scope, status, creation_date, created_by,
+         last_update_date, last_updated_by)
+        values (#{parentId, jdbcType=BIGINT},
+                #{subSystem, jdbcType=VARCHAR},
+                #{name, jdbcType=VARCHAR},
+                #{url, jdbcType=VARCHAR},
+                #{type, jdbcType=INTEGER},
+                #{permission, jdbcType=VARCHAR},
+                #{sort, jdbcType=INTEGER},
+                #{icon, jdbcType=VARCHAR},
+                #{scope, jdbcType=VARCHAR},
+                #{status, jdbcType=INTEGER},
+                #{creationDate, jdbcType=TIMESTAMP},
+                #{createdBy, jdbcType=BIGINT},
+                #{lastUpdateDate, jdbcType=TIMESTAMP},
+                #{lastUpdatedBy, jdbcType=BIGINT})
+    </insert>
 
     <update id="update">
         update tpl_sitemap_t
@@ -193,12 +197,13 @@
     </update>
 
     <delete id="delete">
-        delete from tpl_sitemap_t
+        delete
+        from tpl_sitemap_t
         where id = #{id, jdbcType=BIGINT}
     </delete>
 
     <delete id="deleteList">
-        delete from  tpl_sitemap_t
+        delete from tpl_sitemap_t
         where id in
         <foreach collection="list" item="item" separator="," open="(" close=")" index="index">
             #{list[${index}], jdbcType=BIGINT}

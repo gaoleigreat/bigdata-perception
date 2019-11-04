@@ -34,11 +34,6 @@ class DataClientFallbackFactory implements FallbackFactory<DataClient> {
 
     @Override
     public DataClient create(Throwable throwable) {
-        return new DataClient() {
-            @Override
-            public RespVO createDataTable(String templateCode) {
-                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "数据服务不可用");
-            }
-        };
+        return templateCode -> RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "数据服务不可用");
     }
 }

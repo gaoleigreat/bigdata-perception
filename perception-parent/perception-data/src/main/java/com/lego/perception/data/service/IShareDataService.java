@@ -1,17 +1,15 @@
-package com.lego.perception.file.service;
+package com.lego.perception.data.service;
 
 
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
-import com.lego.framework.system.model.entity.ShareData;
+import com.lego.framework.data.model.entity.ShareData;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Map;
 
 @Validated
 public interface IShareDataService {
@@ -24,6 +22,15 @@ public interface IShareDataService {
      */
 
     PagedResult<ShareData> selectPaged(ShareData dataFile, Page page);
+
+
+    /**
+     * @param batchNum
+     * @param tags
+     * @return
+     */
+    List<ShareData> selectDataByBatchNum(List<String> batchNum,String tags);
+
 
     /**
      * 创建DataFile
@@ -115,8 +122,13 @@ public interface IShareDataService {
      */
     Long queryTotalCount();
 
-    RespVO<RespDataVO<ShareData>>  selectBybatchNums(List<String> batchNums, String tags);
 
+    /**
+     * @param batchNums
+     * @param tags
+     * @return
+     */
+    RespVO<RespDataVO<ShareData>> selectBybatchNums(List<String> batchNums, String tags);
 
 
     /**
@@ -125,4 +137,10 @@ public interface IShareDataService {
      */
     PagedResult<ShareData> queryByListBatch(ShareData dataFile, Page page);
 
+    /**
+     * @param batchNums
+     * @param tags
+     * @return
+     */
+    int updatePerceptionByBatchNum(List<String> batchNums, String tags);
 }

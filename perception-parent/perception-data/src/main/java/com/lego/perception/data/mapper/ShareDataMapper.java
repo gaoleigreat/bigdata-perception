@@ -1,14 +1,15 @@
-package com.lego.perception.file.mapper;
+package com.lego.perception.data.mapper;
 
 import com.framework.mybatis.mapper.Mapper;
-import com.lego.framework.system.model.entity.ShareData;
+import com.lego.framework.data.model.entity.ShareData;
 import org.apache.ibatis.annotations.Param;
-
+import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
  * @author xunai
  */
+@Repository
 public interface ShareDataMapper extends Mapper<ShareData> {
     /**
      * 批量插入

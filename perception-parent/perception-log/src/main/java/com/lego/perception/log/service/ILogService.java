@@ -4,6 +4,7 @@ import com.framework.common.sdto.RespVO;
 import com.lego.framework.log.model.entity.Log;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * @author yanglf
@@ -44,4 +45,13 @@ public interface ILogService {
      * @return
      */
     RespVO exportLog(String type, String tag, Long startTime, Long endTime, HttpServletResponse response);
+
+    /**
+     * @param type
+     * @param tag
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    List<Log> list(String type, String tag, Long startTime, Long endTime,Integer limit);
 }

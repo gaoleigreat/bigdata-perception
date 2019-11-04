@@ -1,5 +1,6 @@
 package com.lego.perception.data.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.lego.framework.data.model.entity.PerceptionStructuredData;
@@ -14,7 +15,7 @@ import java.util.List;
  * @author ¸ßÀÚ
  * @since jdk1.8
  */
-public interface IPerceptionStructuredDataService {
+public interface IPerceptionStructuredDataService extends IService<PerceptionStructuredData> {
 
 
 
@@ -105,6 +106,7 @@ public interface IPerceptionStructuredDataService {
     */
     List<PerceptionStructuredData> query(PerceptionStructuredData perceptionStructuredData);
 
+
     /**
      * 查询总数
      * @return Integer
@@ -112,4 +114,10 @@ public interface IPerceptionStructuredDataService {
     Long queryTotalCount();
 
 
+    /**
+     * @param batchNums
+     * @param tags
+     * @return
+     */
+    List<PerceptionStructuredData> selectDataByBatchNum(List<String> batchNums, String tags);
 }

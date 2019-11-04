@@ -1,5 +1,4 @@
 package com.lego.perception.log.service.impl;
-
 import com.framework.common.consts.RespConsts;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespVO;
@@ -29,7 +28,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 /**
  * @author yanglf
  * @description
@@ -121,6 +119,17 @@ public class LogServiceImpl implements ILogService {
                 null,
                 response);
         return RespVOBuilder.success();
+    }
+
+    @Override
+    public List<Log> list(String type, String tag, Long startTime, Long endTime,Integer limit) {
+        Criteria criteria = getCriteria(type, tag, startTime, endTime);
+        Query query = new Query(criteria);
+        query.with(Sort.by(Sort.Direction.DESC, "time"));
+        if(limit!=null){
+            query.limit(limit);
+        }
+        return mongoTemplate.find(query, Log.class);
     }
 
     private Criteria getCriteria(String type, String tag, Long startTime, Long endTime) {

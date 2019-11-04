@@ -1,11 +1,8 @@
-package com.lego.framework.system.model.entity;
-
+package com.lego.framework.data.model.entity;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.lego.framework.config.BaseModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
 import java.util.Date;
 
 /**
@@ -16,7 +13,7 @@ import java.util.Date;
 
 @Data
 @TableName("tpl_share_data")
-public class ShareData extends BaseModel {
+public class ShareData {
 
     /**
      * 文件Id
@@ -90,7 +87,7 @@ public class ShareData extends BaseModel {
      * 创建人
      */
     @ApiModelProperty("创建人")
-    private Long createdBy;
+    private String createdBy;
 
 
     /**
@@ -106,7 +103,7 @@ public class ShareData extends BaseModel {
      */
 
     @ApiModelProperty("最后修改人")
-    private Long lastUpdatedBy;
+    private String lastUpdatedBy;
 
 
     /**
@@ -121,8 +118,15 @@ public class ShareData extends BaseModel {
     private Long dataSize;
 
 
+    @ApiModelProperty("模板id")
+    private Long templateId;
+
+
     public ShareData() {
 
     }
 
+    public void setUpdateInfo() {
+        this.lastUpdateDate = new Date();
+    }
 }

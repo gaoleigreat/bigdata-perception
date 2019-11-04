@@ -6,6 +6,7 @@ import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
+import com.framework.common.utils.HttpUtils;
 import com.lego.equipment.service.service.IEquipmentBusinessService;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
@@ -13,6 +14,7 @@ import com.lego.framework.business.feign.BusinessClient;
 import com.lego.framework.business.feign.CrudClient;
 import com.lego.framework.business.model.entity.Business;
 import com.lego.framework.equipment.model.entity.EquipmentBusiness;
+import com.lego.framework.event.log.LogSender;
 import com.lego.framework.template.feign.TemplateFeignClient;
 import com.lego.framework.template.model.entity.FormTemplate;
 import io.swagger.annotations.Api;
@@ -26,7 +28,9 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.websocket.server.PathParam;
+import java.util.Date;
 import java.util.List;
 
 
@@ -48,13 +52,13 @@ public class EquipmentBusinessController {
     private IEquipmentBusinessService equipmentBusinessService;
 
     @Autowired
-    private CrudClient crudClient;
-
-    @Autowired
     private BusinessClient businessClient;
 
     @Autowired
     private TemplateFeignClient templateFeignClient;
+
+    @Autowired
+    private LogSender logSender;
 
     /**
      * 分页查询数据
@@ -65,7 +69,7 @@ public class EquipmentBusinessController {
     })
     @Operation(value = "select_paged", desc = "查询设备业务信息")
     @RequestMapping(value = "/select_paged/{pageSize}/{pageIndex}", method = RequestMethod.GET)
-    public RespVO<PagedResult<EquipmentBusiness>> selectPaged(EquipmentBusiness equipmentBusiness,
+    public RespVO<PagedResult<EquipmentBusiness>> selectPaged(@ModelAttribute EquipmentBusiness equipmentBusiness,
                                                               @PathParam(value = "") Page page) {
         PagedResult<EquipmentBusiness> pageResult = equipmentBusinessService.selectPaged(equipmentBusiness, page);
         return RespVOBuilder.success(pageResult);
@@ -98,13 +102,15 @@ public class EquipmentBusinessController {
     })
     @Operation(value = "delete_by_id", desc = "删除设备业务信息")
     @RequestMapping(value = "/delete_by_id", method = RequestMethod.DELETE)
-    public RespVO deleteByPrimaryKey(Long id) {
+    public RespVO deleteByPrimaryKey(@RequestParam Long id,
+                                     HttpServletRequest request) {
         Integer num = equipmentBusinessService.deleteByPrimaryKey(id);
         if (num > 0) {
+            logSender.sendLogEvent(request, "删除设备业务信息",
+                    "删除设备业务信息", "equipment-service", "设备子系统,删除设备业务信息", "DELETE");
             return RespVOBuilder.success();
         }
         return RespVOBuilder.failure();
-
     }
 
     /**
@@ -118,7 +124,8 @@ public class EquipmentBusinessController {
     @Operation(value = "save_equipmentBusiness", desc = "新增设备业务信息")
     @RequestMapping(value = "/save_equipmentBusiness", method = RequestMethod.POST)
     @Transactional(rollbackFor = RuntimeException.class)
-    public RespVO insert(@RequestBody EquipmentBusiness equipmentBusiness) {
+    public RespVO insert(@RequestBody EquipmentBusiness equipmentBusiness,
+                         HttpServletRequest request) {
         Long businessId = equipmentBusiness.getBusinessId();
         Long equipmentId = equipmentBusiness.getEquipmentId();
         EquipmentBusiness queryEquipmentBusiness = new EquipmentBusiness();
@@ -152,6 +159,8 @@ public class EquipmentBusinessController {
         }
         Integer num = equipmentBusinessService.insertSelective(equipmentBusiness);
         if (num > 0) {
+            logSender.sendLogEvent(request, "新增设备业务信息",
+                    "新增设备业务信息", "equipment-service", "设备子系统,新增设备业务", "INSERT");
             return RespVOBuilder.success();
         }
         return RespVOBuilder.failure();
@@ -168,9 +177,12 @@ public class EquipmentBusinessController {
     })
     @Operation(value = "update_equipmentBusiness", desc = "修改设备业务信息")
     @RequestMapping(value = "/update_equipmentBusiness", method = RequestMethod.PUT)
-    public RespVO updateByPrimaryKeySelective(@RequestBody EquipmentBusiness equipmentBusiness) {
+    public RespVO updateByPrimaryKeySelective(@RequestBody EquipmentBusiness equipmentBusiness,
+                                              HttpServletRequest request) {
         Integer num = equipmentBusinessService.updateByPrimaryKeySelective(equipmentBusiness);
         if (num > 0) {
+            logSender.sendLogEvent(request, "修改设备业务信息",
+                    "修改设备业务信息", "equipment-service", "设备子系统,修改设备业务信息", "UPDATE");
             return RespVOBuilder.success();
         }
         return RespVOBuilder.failure();

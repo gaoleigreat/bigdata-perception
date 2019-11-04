@@ -111,4 +111,10 @@ public interface IPerceptionUnstructuredDataService {
     Long queryTotalCount();
 
 
+    /**
+     * @param batchNums
+     * @param tags
+     * @return
+     */
+    List<PerceptionUnstructuredData> selectDataByBatchNum(List<String> batchNums, String tags);
 }

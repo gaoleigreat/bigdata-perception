@@ -1,11 +1,13 @@
 package com.lego.framework.event.log;
 
-import com.framework.common.utils.UuidUtils;
+import com.framework.common.consts.HttpConsts;
+import com.framework.common.utils.HttpUtils;
 import com.lego.framework.log.model.entity.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.stereotype.Component;
-
+import org.springframework.util.StringUtils;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 /**
@@ -20,39 +22,36 @@ public class LogSender {
     private LogSource logSource;
 
     /**
-     * @param ip            请求ID
-     * @param userId        操作用户ID
-     * @param desc          描述
-     * @param content       日志内容
-     * @param service       发送者所属服务
-     * @param tag           日志 tag
-     * @param type          日志类型
-     * @param operatingTime 日志操作时间
-     * @param userName      操作用户用户名
-     * @param systemId      系统id
+     * @param request request
+     * @param desc    描述信息
+     * @param content 日志内容
+     * @param service 所属服务
+     * @param tag     标签
+     * @param type    类型
      */
-    public void sendLogEvent(String ip,
-                             Long userId,
+    public void sendLogEvent(HttpServletRequest request,
                              String desc,
                              String content,
                              String service,
                              String tag,
-                             String type,
-                             Date operatingTime,
-                             String userName,
-                             Long systemId) {
+                             String type) {
+        String userId = request.getHeader(HttpConsts.USER_ID);
+        String userName = request.getHeader(HttpConsts.USER_NAME);
         Log log = Log.builder()
-                .ip(ip)
-                .userId(userId)
-                .userName(userName)
+                .ip(HttpUtils.getClientIp(request))
                 .desc(desc)
-                .operatingTime(operatingTime)
+                .operatingTime(new Date())
                 .content(content)
                 .service(service)
                 .tag(tag)
                 .type(type)
-                .systemId(systemId)
                 .build();
+        if (StringUtils.isEmpty(userId)) {
+            log.setUserId(Long.valueOf(userId));
+        }
+        if (StringUtils.isEmpty(userName)) {
+            log.setUserName(userName);
+        }
         logSource.printLog().send(MessageBuilder.withPayload(log).build());
     }
 

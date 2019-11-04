@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.lego.perception.file.mapper.ShareDataMapper">
+<mapper namespace="com.lego.perception.data.mapper.ShareDataMapper">
 
     <!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="com.lego.framework.system.model.entity.ShareData" id="BaseResultMap">
+    <resultMap type="com.lego.framework.data.model.entity.ShareData" id="BaseResultMap">
         <result property="id" column="id"/>
         <result property="name" column="name"/>
         <result property="projectId" column="project_id"/>
@@ -21,6 +21,7 @@
         <result property="businessModule" column="business_module"/>
         <result property="sourceModule" column="source_module"/>
         <result property="isRecall" column="is_recall"/>
+        <result property="templateId" column="template_id"/>
     </resultMap>
 
 
@@ -41,7 +42,8 @@
         data_size,
         source_module,
         business_module,
-        is_recall
+        is_recall,
+        template_id
     </sql>
 
 
@@ -72,13 +74,13 @@
             and batch_num = #{dataFile.batchNum,jdbcType=VARCHAR}
         </if>
         <if test="dataFile.createdBy != null">
-            and created_by = #{dataFile.createdBy,jdbcType=BIGINT}
+            and created_by = #{dataFile.createdBy,jdbcType=VARCHAR}
         </if>
         <if test="dataFile.creationDate != null">
             and creation_date = #{dataFile.creationDate,jdbcType=TIMESTAMP}
         </if>
         <if test="dataFile.lastUpdatedBy != null">
-            and last_updated_by = #{dataFile.lastUpdatedBy,jdbcType=BIGINT}
+            and last_updated_by = #{dataFile.lastUpdatedBy,jdbcType=VARCHAR}
         </if>
         <if test="dataFile.lastUpdateDate != null">
             and last_update_date = #{dataFile.lastUpdateDate,jdbcType=TIMESTAMP}
@@ -90,9 +92,11 @@
             and business_module =#{dataFile.businessModule,jdbcType=VARCHAR},
         </if>
         <if test="dataFile.isRecall !=null">
-            and is_recall =#{dataFile.isRecall,jdbcType=INTEGER}
+            and is_recall =#{dataFile.isRecall,jdbcType=INTEGER},
         </if>
-
+        <if test="dataFile.templateId!=null">
+            and template_id =#{dataFile.templateId,jdbcType=BIGINT}
+        </if>
     </sql>
 
 
@@ -124,13 +128,13 @@
                 batch_num = #{dataFile.batchNum,jdbcType=VARCHAR},
             </if>
             <if test="dataFile.createdBy != null">
-                created_by = #{dataFile.createdBy,jdbcType=BIGINT},
+                created_by = #{dataFile.createdBy,jdbcType=VARCHAR},
             </if>
             <if test="dataFile.creationDate != null">
                 creation_date = #{dataFile.creationDate,jdbcType=TIMESTAMP},
             </if>
             <if test="dataFile.lastUpdatedBy != null">
-                last_updated_by = #{dataFile.lastUpdatedBy,jdbcType=BIGINT},
+                last_updated_by = #{dataFile.lastUpdatedBy,jdbcType=VARCHAR},
             </if>
             <if test="dataFile.lastUpdateDate != null">
                 last_update_date = #{dataFile.lastUpdateDate,jdbcType=TIMESTAMP},
@@ -143,6 +147,9 @@
             </if>
             <if test="dataFile.isRecall !=null">
                 is_recall =#{dataFile.isRecall,jdbcType=INTEGER}
+            </if>
+            <if test="dataFile.templateId!=null">
+                template_id =#{dataFile.templateId,jdbcType=BIGINT}
             </if>
         </set>
     </sql>
@@ -196,7 +203,10 @@
                 business_module,
             </if>
             <if test=" isRecall!=null">
-                is_recall
+                is_recall,
+            </if>
+            <if test=" templateId !=null">
+                template_id
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -225,13 +235,13 @@
                 #{dataFile.batchNum,jdbcType=VARCHAR},
             </if>
             <if test="dataFile.createdBy != null">
-                #{dataFile.createdBy,jdbcType=BIGINT},
+                #{dataFile.createdBy,jdbcType=VARCHAR},
             </if>
             <if test="dataFile.creationDate != null">
                 #{dataFile.creationDate,jdbcType=TIMESTAMP},
             </if>
             <if test="dataFile.lastUpdatedBy != null">
-                #{dataFile.lastUpdatedBy,jdbcType=BIGINT},
+                #{dataFile.lastUpdatedBy,jdbcType=VARCHAR},
             </if>
             <if test="dataFile.lastUpdateDate != null">
                 #{dataFile.lastUpdateDate,jdbcType=TIMESTAMP},
@@ -246,9 +256,11 @@
                 #{dataFile.businessModule,jdbcType=VARCHAR},
             </if>
             <if test=" dtaFile.isRecall !=null">
-                #{dataFile.isRecall,jdbcType=INTEGER}
+                #{dataFile.isRecall,jdbcType=INTEGER},
             </if>
-
+            <if test="dataFile.templateId!=null">
+                #{dataFile.templateId,jdbcType=BIGINT}
+            </if>
         </trim>
     </sql>
 
@@ -272,7 +284,8 @@
             data_size,
             source_module,
             business_module,
-            is_recall
+            is_recall,
+            template_id
         </trim>
         values
         <foreach collection="list" index="index" item="item" separator=",">
@@ -285,14 +298,15 @@
                 #{item.remark,jdbcType=VARCHAR},
                 #{item.tags,jdbcType=VARCHAR},
                 #{item.batchNum,jdbcType=VARCHAR},
-                #{item.createdBy,jdbcType=BIGINT},
+                #{item.createdBy,jdbcType=VARCHAR},
                 #{item.creationDate,jdbcType=TIMESTAMP},
-                #{item.lastUpdatedBy,jdbcType=BIGINT},
+                #{item.lastUpdatedBy,jdbcType=VARCHAR},
                 #{item.lastUpdateDate,jdbcType=TIMESTAMP},
                 #{item.dataSize,jdbcType=BIGINT},
                 #{item.sourceModule,jdbcType=VARCHAR},
                 #{item.businessModule,jdbcType=VARCHAR},
-                #{item.isRecall,jdbcType=INTEGER}
+                #{item.isRecall,jdbcType=INTEGER},
+                #{item.templateId,jdbcType=BIGINT}
             </trim>
         </foreach>
     </insert>
@@ -312,13 +326,14 @@
                     remark = #{item.remark,jdbcType=VARCHAR},
                     tags = #{item.tags,jdbcType=VARCHAR},
                     batch_num = #{item.batchNum,jdbcType=VARCHAR},
-                    created_by = #{item.createdBy,jdbcType=BIGINT},
+                    created_by = #{item.createdBy,jdbcType=VARCHAR},
                     creation_date = #{item.creationDate,jdbcType=TIMESTAMP},
-                    last_updated_by = #{item.lastUpdatedBy,jdbcType=BIGINT},
+                    last_updated_by = #{item.lastUpdatedBy,jdbcType=VARCHAR},
                     last_update_date = #{item.lastUpdateDate,jdbcType=TIMESTAMP},
                     source_module= #{item.sourceModule,jdbcType=VARCHAR},
                     business_module= #{item.businessMudule,jdbcType=VARCHAR},
-                    is_recall =#{item.isRecall,jdbcType=INTEGER}
+                    is_recall =#{item.isRecall,jdbcType=INTEGER},
+                    template_id=#{item.templateId,jdbcType=BIGINT}
                 </trim>
             </set>
             <where>
@@ -331,7 +346,7 @@
 
 
     <!--存在即更新否则插入-->
-    <update id="upsert" parameterType="com.lego.framework.system.model.entity.ShareData">
+    <update id="upsert" parameterType="com.lego.framework.data.model.entity.ShareData">
         insert into tpl_share_data
         <trim prefix="(" suffix=")" suffixOverrides=",">
             id ,
@@ -348,7 +363,8 @@
             last_update_date,
             source_module,
             business_module,
-            is_recall
+            is_recall,
+            template_id
         </trim>
         values
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -360,13 +376,14 @@
             #{dataFile.remark,jdbcType=VARCHAR},
             #{dataFile.tags,jdbcType=VARCHAR},
             #{dataFile.batchNum,jdbcType=VARCHAR},
-            #{dataFile.createdBy,jdbcType=BIGINT},
+            #{dataFile.createdBy,jdbcType=VARCHAR},
             #{dataFile.creationDate,jdbcType=TIMESTAMP},
-            #{dataFile.lastUpdatedBy,jdbcType=BIGINT},
+            #{dataFile.lastUpdatedBy,jdbcType=VARCHAR},
             #{dataFile.lastUpdateDate,jdbcType=TIMESTAMP},
             #{dataFile.sourceModule,jdbcType=VARCHAR},
             #{dataFile.businessModule,jdbcType=VARCHAR},
-            #{dataFile.isRecall,jdbcType=INTEGER}
+            #{dataFile.isRecall,jdbcType=INTEGER},
+            #{dataFile.templateId,jdbcType=BIGINT}
         </trim>
         on duplicate key update
         <trim suffixOverrides=",">
@@ -378,19 +395,20 @@
             #{dataFile.remark,jdbcType=VARCHAR},
             #{dataFile.tags,jdbcType=VARCHAR},
             #{dataFile.batchNum,jdbcType=VARCHAR},
-            #{dataFile.createdBy,jdbcType=BIGINT},
+            #{dataFile.createdBy,jdbcType=VARCHAR},
             #{dataFile.creationDate,jdbcType=TIMESTAMP},
-            #{dataFile.lastUpdatedBy,jdbcType=BIGINT},
+            #{dataFile.lastUpdatedBy,jdbcType=VARCHAR},
             #{dataFile.lastUpdateDate,jdbcType=TIMESTAMP},
             #{dataFile.sourceModule,jdbcType=VARCHAR},
             #{dataFile.businessModule,jdbcType=VARCHAR},
-            #{dataFile.isRecall,jdbcType=INTEGER}
+            #{dataFile.isRecall,jdbcType=INTEGER},
+            #{dataFile.templateId,jdbcType=BIGINT},
         </trim>
     </update>
 
 
     <!--带有空值检查的存在即更新否则插入-->
-    <update id="upsertSelective" parameterType="com.lego.framework.system.model.entity.ShareData">
+    <update id="upsertSelective" parameterType="com.lego.framework.data.model.entity.ShareData">
         insert into tpl_share_data
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="dataFile.id != null">
@@ -433,7 +451,10 @@
                 business_module,
             </if>
             <if test="dataFile.isRecall !=null">
-                is_recall
+                is_recall,
+            </if>
+            <if test="dataFile.templateId !=null">
+                template_id
             </if>
         </trim>
         values
@@ -463,13 +484,13 @@
                 #{dataFile.batchNum,jdbcType=VARCHAR},
             </if>
             <if test="dataFile.createdBy !=null ">
-                #{dataFile.createdBy,jdbcType=BIGINT},
+                #{dataFile.createdBy,jdbcType=VARCHAR},
             </if>
             <if test="dataFile.creationDate !=null ">
                 #{dataFile.creationDate,jdbcType=TIMESTAMP},
             </if>
             <if test="dataFile.lastUpdatedBy !=null ">
-                #{dataFile.lastUpdatedBy,jdbcType=BIGINT},
+                #{dataFile.lastUpdatedBy,jdbcType=VARCHAR},
             </if>
             <if test="dataFile.lastUpdateDate !=null ">
                 #{dataFile.lastUpdateDate,jdbcType=TIMESTAMP},
@@ -481,7 +502,10 @@
                 #{dataFile.businessModule,jdbcType=VARCHAR},
             </if>
             <if test="dataFile.isRecall !=null">
-                #{dataFile.isRecall,jdbcType=INTEGER}
+                #{dataFile.isRecall,jdbcType=INTEGER},
+            </if>
+            <if test="dataFile.templateId!=null">
+                #{dataFile.templateId,jdbcType=BIGINT}
             </if>
         </trim>
         on duplicate key update
@@ -511,13 +535,13 @@
                 #{batchNum,jdbcType=VARCHAR},
             </if>
             <if test="dataFile.createdBy !=null ">
-                #{createdBy,jdbcType=BIGINT},
+                #{createdBy,jdbcType=VARCHAR},
             </if>
             <if test="dataFile.creationDate !=null ">
                 #{creationDate,jdbcType=TIMESTAMP},
             </if>
             <if test="dataFile.lastUpdatedBy !=null ">
-                #{lastUpdatedBy,jdbcType=BIGINT},
+                #{lastUpdatedBy,jdbcType=VARCHAR},
             </if>
             <if test="dataFile.lastUpdateDate !=null ">
                 #{lastUpdateDate,jdbcType=TIMESTAMP},
@@ -529,12 +553,15 @@
                 #{dataFile.businessModule,jdbcType=VARCHAR},
             </if>
             <if test="dataFile.isRecall !=null">
-                #{dataFile.isRecall,jdbcType=INTEGER}
+                #{dataFile.isRecall,jdbcType=INTEGER},
+            </if>
+            <if test="dataFile.templateId!=null">
+                #{dataFile.templateId,jdbcType=BIGINT}
             </if>
         </trim>
     </update>
 
-    <select id="query" resultMap="BaseResultMap" parameterType="com.lego.framework.system.model.entity.ShareData">
+    <select id="query" resultMap="BaseResultMap" parameterType="com.lego.framework.data.model.entity.ShareData">
         select
         <include refid="Base_Column_List"/>
         from tpl_share_data

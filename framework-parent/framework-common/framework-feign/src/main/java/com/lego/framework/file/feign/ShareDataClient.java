@@ -5,16 +5,12 @@ import com.framework.common.consts.RespConsts;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
-import com.lego.framework.config.MultipartSupportConfig;
-import com.lego.framework.system.model.entity.DataFile;
-import com.lego.framework.system.model.entity.ShareData;
+import com.lego.framework.data.model.entity.ShareData;
 import feign.hystrix.FallbackFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
