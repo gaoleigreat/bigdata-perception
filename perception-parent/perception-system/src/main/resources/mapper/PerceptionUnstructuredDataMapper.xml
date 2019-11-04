@@ -1,0 +1,577 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lego.perception.system.mapper.PerceptionUnstructuredDataMapper">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.lego.framework.data.model.entity.PerceptionUnstructuredData" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="batchNum" column="batch_num"/>
+        <result property="businessModule" column="business_module"/>
+        <result property="sourceModule" column="source_module"/>
+        <result property="size" column="size"/>
+        <result property="projectId" column="project_id"/>
+        <result property="publishFlag" column="publish_flag"/>
+        <result property="publishDate" column="publish_date"/>
+        <result property="publishBy" column="publish_by"/>
+        <result property="deleteFlag" column="delete_flag"/>
+        <result property="remark" column="remark"/>
+        <result property="tags" column="tags"/>
+        <result property="createdBy" column="created_by"/>
+        <result property="creationDate" column="creation_date"/>
+        <result property="lastUpdatedBy" column="last_updated_by"/>
+        <result property="lastUpdateDate" column="last_update_date"/>
+    </resultMap>
+
+
+    <!--数据库表的基本查询列名集合 -->
+    <sql id="Base_Column_List">
+        id ,
+        batch_num ,
+        business_module ,
+        source_module ,
+        size ,
+        project_id ,
+        publish_flag ,
+        publish_date ,
+        publish_by ,
+        delete_flag ,
+        remark ,
+        tags ,
+        created_by ,
+        creation_date ,
+        last_updated_by ,
+        last_update_date 
+    </sql>
+
+
+    <!--Where子句 -->
+    <sql id="Base_Query_Where">
+         <if test="perceptionUnstructuredData.id != null">
+            and id = #{perceptionUnstructuredData.id,jdbcType=BIGINT}
+         </if>
+         <if test="perceptionUnstructuredData.batchNum != null">
+            and batch_num = #{perceptionUnstructuredData.batchNum,jdbcType=VARCHAR}
+         </if>
+         <if test="perceptionUnstructuredData.businessModule != null">
+            and business_module = #{perceptionUnstructuredData.businessModule,jdbcType=VARCHAR}
+         </if>
+         <if test="perceptionUnstructuredData.sourceModule != null">
+            and source_module = #{perceptionUnstructuredData.sourceModule,jdbcType=VARCHAR}
+         </if>
+         <if test="perceptionUnstructuredData.size != null">
+            and size = #{perceptionUnstructuredData.size,jdbcType=BIGINT}
+         </if>
+         <if test="perceptionUnstructuredData.projectId != null">
+            and project_id = #{perceptionUnstructuredData.projectId,jdbcType=BIGINT}
+         </if>
+         <if test="perceptionUnstructuredData.publishFlag != null">
+            and publish_flag = #{perceptionUnstructuredData.publishFlag,jdbcType=INTEGER}
+         </if>
+         <if test="perceptionUnstructuredData.publishDate != null">
+            and publish_date = #{perceptionUnstructuredData.publishDate,jdbcType=TIMESTAMP}
+         </if>
+         <if test="perceptionUnstructuredData.publishBy != null">
+            and publish_by = #{perceptionUnstructuredData.publishBy,jdbcType=VARCHAR}
+         </if>
+         <if test="perceptionUnstructuredData.deleteFlag != null">
+            and delete_flag = #{perceptionUnstructuredData.deleteFlag,jdbcType=INTEGER}
+         </if>
+         <if test="perceptionUnstructuredData.remark != null">
+            and remark = #{perceptionUnstructuredData.remark,jdbcType=VARCHAR}
+         </if>
+         <if test="perceptionUnstructuredData.tags != null">
+            and tags = #{perceptionUnstructuredData.tags,jdbcType=VARCHAR}
+         </if>
+         <if test="perceptionUnstructuredData.createdBy != null">
+            and created_by = #{perceptionUnstructuredData.createdBy,jdbcType=VARCHAR}
+         </if>
+         <if test="perceptionUnstructuredData.creationDate != null">
+            and creation_date = #{perceptionUnstructuredData.creationDate,jdbcType=TIMESTAMP}
+         </if>
+         <if test="perceptionUnstructuredData.lastUpdatedBy != null">
+            and last_updated_by = #{perceptionUnstructuredData.lastUpdatedBy,jdbcType=VARCHAR}
+         </if>
+         <if test="perceptionUnstructuredData.lastUpdateDate != null">
+            and last_update_date = #{perceptionUnstructuredData.lastUpdateDate,jdbcType=TIMESTAMP}
+         </if>
+    </sql>
+
+
+
+
+    <!--基本更新字段-->
+    <sql id="Base_Update_Column">
+        <set>
+          <if test="perceptionUnstructuredData.id != null">
+             id = #{perceptionUnstructuredData.id,jdbcType=BIGINT},
+          </if>
+          <if test="perceptionUnstructuredData.batchNum != null">
+             batch_num = #{perceptionUnstructuredData.batchNum,jdbcType=VARCHAR},
+          </if>
+          <if test="perceptionUnstructuredData.businessModule != null">
+             business_module = #{perceptionUnstructuredData.businessModule,jdbcType=VARCHAR},
+          </if>
+          <if test="perceptionUnstructuredData.sourceModule != null">
+             source_module = #{perceptionUnstructuredData.sourceModule,jdbcType=VARCHAR},
+          </if>
+          <if test="perceptionUnstructuredData.size != null">
+             size = #{perceptionUnstructuredData.size,jdbcType=BIGINT},
+          </if>
+          <if test="perceptionUnstructuredData.projectId != null">
+             project_id = #{perceptionUnstructuredData.projectId,jdbcType=BIGINT},
+          </if>
+          <if test="perceptionUnstructuredData.publishFlag != null">
+             publish_flag = #{perceptionUnstructuredData.publishFlag,jdbcType=INTEGER},
+          </if>
+          <if test="perceptionUnstructuredData.publishDate != null">
+             publish_date = #{perceptionUnstructuredData.publishDate,jdbcType=TIMESTAMP},
+          </if>
+          <if test="perceptionUnstructuredData.publishBy != null">
+             publish_by = #{perceptionUnstructuredData.publishBy,jdbcType=VARCHAR},
+          </if>
+          <if test="perceptionUnstructuredData.deleteFlag != null">
+             delete_flag = #{perceptionUnstructuredData.deleteFlag,jdbcType=INTEGER},
+          </if>
+          <if test="perceptionUnstructuredData.remark != null">
+             remark = #{perceptionUnstructuredData.remark,jdbcType=VARCHAR},
+          </if>
+          <if test="perceptionUnstructuredData.tags != null">
+             tags = #{perceptionUnstructuredData.tags,jdbcType=VARCHAR},
+          </if>
+          <if test="perceptionUnstructuredData.createdBy != null">
+             created_by = #{perceptionUnstructuredData.createdBy,jdbcType=VARCHAR},
+          </if>
+          <if test="perceptionUnstructuredData.creationDate != null">
+             creation_date = #{perceptionUnstructuredData.creationDate,jdbcType=TIMESTAMP},
+          </if>
+          <if test="perceptionUnstructuredData.lastUpdatedBy != null">
+             last_updated_by = #{perceptionUnstructuredData.lastUpdatedBy,jdbcType=VARCHAR},
+          </if>
+          <if test="perceptionUnstructuredData.lastUpdateDate != null">
+             last_update_date = #{perceptionUnstructuredData.lastUpdateDate,jdbcType=TIMESTAMP}
+          </if>
+        </set>
+    </sql>
+
+
+    <sql id="Base_Insert_Selective">
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="perceptionUnstructuredData.id != null">
+               id,
+            </if>
+            <if test="perceptionUnstructuredData.batchNum != null">
+               batch_num,
+            </if>
+            <if test="perceptionUnstructuredData.businessModule != null">
+               business_module,
+            </if>
+            <if test="perceptionUnstructuredData.sourceModule != null">
+               source_module,
+            </if>
+            <if test="perceptionUnstructuredData.size != null">
+               size,
+            </if>
+            <if test="perceptionUnstructuredData.projectId != null">
+               project_id,
+            </if>
+            <if test="perceptionUnstructuredData.publishFlag != null">
+               publish_flag,
+            </if>
+            <if test="perceptionUnstructuredData.publishDate != null">
+               publish_date,
+            </if>
+            <if test="perceptionUnstructuredData.publishBy != null">
+               publish_by,
+            </if>
+            <if test="perceptionUnstructuredData.deleteFlag != null">
+               delete_flag,
+            </if>
+            <if test="perceptionUnstructuredData.remark != null">
+               remark,
+            </if>
+            <if test="perceptionUnstructuredData.tags != null">
+               tags,
+            </if>
+            <if test="perceptionUnstructuredData.createdBy != null">
+               created_by,
+            </if>
+            <if test="perceptionUnstructuredData.creationDate != null">
+               creation_date,
+            </if>
+            <if test="perceptionUnstructuredData.lastUpdatedBy != null">
+               last_updated_by,
+            </if>
+            <if test="perceptionUnstructuredData.lastUpdateDate != null">
+               last_update_date
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+             <if test="perceptionUnstructuredData.id != null">
+             #{perceptionUnstructuredData.id,jdbcType=BIGINT},
+             </if>
+             <if test="perceptionUnstructuredData.batchNum != null">
+             #{perceptionUnstructuredData.batchNum,jdbcType=VARCHAR},
+             </if>
+             <if test="perceptionUnstructuredData.businessModule != null">
+             #{perceptionUnstructuredData.businessModule,jdbcType=VARCHAR},
+             </if>
+             <if test="perceptionUnstructuredData.sourceModule != null">
+             #{perceptionUnstructuredData.sourceModule,jdbcType=VARCHAR},
+             </if>
+             <if test="perceptionUnstructuredData.size != null">
+             #{perceptionUnstructuredData.size,jdbcType=BIGINT},
+             </if>
+             <if test="perceptionUnstructuredData.projectId != null">
+             #{perceptionUnstructuredData.projectId,jdbcType=BIGINT},
+             </if>
+             <if test="perceptionUnstructuredData.publishFlag != null">
+             #{perceptionUnstructuredData.publishFlag,jdbcType=INTEGER},
+             </if>
+             <if test="perceptionUnstructuredData.publishDate != null">
+             #{perceptionUnstructuredData.publishDate,jdbcType=TIMESTAMP},
+             </if>
+             <if test="perceptionUnstructuredData.publishBy != null">
+             #{perceptionUnstructuredData.publishBy,jdbcType=VARCHAR},
+             </if>
+             <if test="perceptionUnstructuredData.deleteFlag != null">
+             #{perceptionUnstructuredData.deleteFlag,jdbcType=INTEGER},
+             </if>
+             <if test="perceptionUnstructuredData.remark != null">
+             #{perceptionUnstructuredData.remark,jdbcType=VARCHAR},
+             </if>
+             <if test="perceptionUnstructuredData.tags != null">
+             #{perceptionUnstructuredData.tags,jdbcType=VARCHAR},
+             </if>
+             <if test="perceptionUnstructuredData.createdBy != null">
+             #{perceptionUnstructuredData.createdBy,jdbcType=VARCHAR},
+             </if>
+             <if test="perceptionUnstructuredData.creationDate != null">
+             #{perceptionUnstructuredData.creationDate,jdbcType=TIMESTAMP},
+             </if>
+             <if test="perceptionUnstructuredData.lastUpdatedBy != null">
+             #{perceptionUnstructuredData.lastUpdatedBy,jdbcType=VARCHAR},
+             </if>
+             <if test="perceptionUnstructuredData.lastUpdateDate != null">
+             #{perceptionUnstructuredData.lastUpdateDate,jdbcType=TIMESTAMP}
+             </if>
+        </trim>
+    </sql>
+
+
+
+    <!--批量添加记录到数据库表中-->
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into perception_unstructured_data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+             id,
+             batch_num,
+             business_module,
+             source_module,
+             size,
+             project_id,
+             publish_flag,
+             publish_date,
+             publish_by,
+             delete_flag,
+             remark,
+             tags,
+             created_by,
+             creation_date,
+             last_updated_by,
+             last_update_date
+        </trim>
+        values
+        <foreach collection="list" index="index" item="item" separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{item.id,jdbcType=BIGINT},
+                #{item.batchNum,jdbcType=VARCHAR},
+                #{item.businessModule,jdbcType=VARCHAR},
+                #{item.sourceModule,jdbcType=VARCHAR},
+                #{item.size,jdbcType=BIGINT},
+                #{item.projectId,jdbcType=BIGINT},
+                #{item.publishFlag,jdbcType=INTEGER},
+                #{item.publishDate,jdbcType=TIMESTAMP},
+                #{item.publishBy,jdbcType=VARCHAR},
+                #{item.deleteFlag,jdbcType=INTEGER},
+                #{item.remark,jdbcType=VARCHAR},
+                #{item.tags,jdbcType=VARCHAR},
+                #{item.createdBy,jdbcType=VARCHAR},
+                #{item.creationDate,jdbcType=TIMESTAMP},
+                #{item.lastUpdatedBy,jdbcType=VARCHAR},
+                #{item.lastUpdateDate,jdbcType=TIMESTAMP}
+            </trim>
+        </foreach>
+    </insert>
+
+
+
+    <!-- 根据主键批量更新数据库表中的记录-->
+    <update id="batchUpdate" parameterType="java.util.List">
+        <foreach collection="list" index="index" item="item" separator=";">
+            update perception_unstructured_data
+            <set>
+                <trim suffixOverrides=",">
+                    id = #{item.id,jdbcType=BIGINT},
+                    batch_num = #{item.batchNum,jdbcType=VARCHAR},
+                    business_module = #{item.businessModule,jdbcType=VARCHAR},
+                    source_module = #{item.sourceModule,jdbcType=VARCHAR},
+                    size = #{item.size,jdbcType=BIGINT},
+                    project_id = #{item.projectId,jdbcType=BIGINT},
+                    publish_flag = #{item.publishFlag,jdbcType=INTEGER},
+                    publish_date = #{item.publishDate,jdbcType=TIMESTAMP},
+                    publish_by = #{item.publishBy,jdbcType=VARCHAR},
+                    delete_flag = #{item.deleteFlag,jdbcType=INTEGER},
+                    remark = #{item.remark,jdbcType=VARCHAR},
+                    tags = #{item.tags,jdbcType=VARCHAR},
+                    created_by = #{item.createdBy,jdbcType=VARCHAR},
+                    creation_date = #{item.creationDate,jdbcType=TIMESTAMP},
+                    last_updated_by = #{item.lastUpdatedBy,jdbcType=VARCHAR},
+                    last_update_date = #{item.lastUpdateDate,jdbcType=TIMESTAMP}
+                </trim>
+            </set>
+            <where>
+                <trim suffixOverrides=",">
+                    where id = #{item.id,jdbcType=BIGINT}
+                </trim>
+            </where>
+        </foreach>
+    </update>
+
+
+    <!--存在即更新否则插入-->
+    <update id="upsert" parameterType="com.lego.framework.data.model.entity.PerceptionUnstructuredData">
+        insert into perception_unstructured_data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+             id ,
+             batch_num ,
+             business_module ,
+             source_module ,
+             size ,
+             project_id ,
+             publish_flag ,
+             publish_date ,
+             publish_by ,
+             delete_flag ,
+             remark ,
+             tags ,
+             created_by ,
+             creation_date ,
+             last_updated_by ,
+             last_update_date 
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+             #{perceptionUnstructuredData.id,jdbcType=BIGINT},
+             #{perceptionUnstructuredData.batchNum,jdbcType=VARCHAR},
+             #{perceptionUnstructuredData.businessModule,jdbcType=VARCHAR},
+             #{perceptionUnstructuredData.sourceModule,jdbcType=VARCHAR},
+             #{perceptionUnstructuredData.size,jdbcType=BIGINT},
+             #{perceptionUnstructuredData.projectId,jdbcType=BIGINT},
+             #{perceptionUnstructuredData.publishFlag,jdbcType=INTEGER},
+             #{perceptionUnstructuredData.publishDate,jdbcType=TIMESTAMP},
+             #{perceptionUnstructuredData.publishBy,jdbcType=VARCHAR},
+             #{perceptionUnstructuredData.deleteFlag,jdbcType=INTEGER},
+             #{perceptionUnstructuredData.remark,jdbcType=VARCHAR},
+             #{perceptionUnstructuredData.tags,jdbcType=VARCHAR},
+             #{perceptionUnstructuredData.createdBy,jdbcType=VARCHAR},
+             #{perceptionUnstructuredData.creationDate,jdbcType=TIMESTAMP},
+             #{perceptionUnstructuredData.lastUpdatedBy,jdbcType=VARCHAR},
+             #{perceptionUnstructuredData.lastUpdateDate,jdbcType=TIMESTAMP}
+        </trim>
+        on duplicate key update
+        <trim suffixOverrides=",">
+          #{perceptionUnstructuredData.id,jdbcType=BIGINT},
+          #{perceptionUnstructuredData.batchNum,jdbcType=VARCHAR},
+          #{perceptionUnstructuredData.businessModule,jdbcType=VARCHAR},
+          #{perceptionUnstructuredData.sourceModule,jdbcType=VARCHAR},
+          #{perceptionUnstructuredData.size,jdbcType=BIGINT},
+          #{perceptionUnstructuredData.projectId,jdbcType=BIGINT},
+          #{perceptionUnstructuredData.publishFlag,jdbcType=INTEGER},
+          #{perceptionUnstructuredData.publishDate,jdbcType=TIMESTAMP},
+          #{perceptionUnstructuredData.publishBy,jdbcType=VARCHAR},
+          #{perceptionUnstructuredData.deleteFlag,jdbcType=INTEGER},
+          #{perceptionUnstructuredData.remark,jdbcType=VARCHAR},
+          #{perceptionUnstructuredData.tags,jdbcType=VARCHAR},
+          #{perceptionUnstructuredData.createdBy,jdbcType=VARCHAR},
+          #{perceptionUnstructuredData.creationDate,jdbcType=TIMESTAMP},
+          #{perceptionUnstructuredData.lastUpdatedBy,jdbcType=VARCHAR},
+          #{perceptionUnstructuredData.lastUpdateDate,jdbcType=TIMESTAMP}
+        </trim>
+    </update>
+
+
+    <!--带有空值检查的存在即更新否则插入-->
+    <update id="upsertSelective" parameterType="com.lego.framework.data.model.entity.PerceptionUnstructuredData">
+        insert into perception_unstructured_data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="perceptionUnstructuredData.id != null">
+                id,
+            </if>
+            <if test="perceptionUnstructuredData.batchNum != null">
+                batch_num,
+            </if>
+            <if test="perceptionUnstructuredData.businessModule != null">
+                business_module,
+            </if>
+            <if test="perceptionUnstructuredData.sourceModule != null">
+                source_module,
+            </if>
+            <if test="perceptionUnstructuredData.size != null">
+                size,
+            </if>
+            <if test="perceptionUnstructuredData.projectId != null">
+                project_id,
+            </if>
+            <if test="perceptionUnstructuredData.publishFlag != null">
+                publish_flag,
+            </if>
+            <if test="perceptionUnstructuredData.publishDate != null">
+                publish_date,
+            </if>
+            <if test="perceptionUnstructuredData.publishBy != null">
+                publish_by,
+            </if>
+            <if test="perceptionUnstructuredData.deleteFlag != null">
+                delete_flag,
+            </if>
+            <if test="perceptionUnstructuredData.remark != null">
+                remark,
+            </if>
+            <if test="perceptionUnstructuredData.tags != null">
+                tags,
+            </if>
+            <if test="perceptionUnstructuredData.createdBy != null">
+                created_by,
+            </if>
+            <if test="perceptionUnstructuredData.creationDate != null">
+                creation_date,
+            </if>
+            <if test="perceptionUnstructuredData.lastUpdatedBy != null">
+                last_updated_by,
+            </if>
+            <if test="perceptionUnstructuredData.lastUpdateDate != null">
+                last_update_date
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="perceptionUnstructuredData.id !=null ">
+                #{perceptionUnstructuredData.id,jdbcType=BIGINT},
+            </if>
+            <if test="perceptionUnstructuredData.batchNum !=null ">
+                #{perceptionUnstructuredData.batchNum,jdbcType=VARCHAR},
+            </if>
+            <if test="perceptionUnstructuredData.businessModule !=null ">
+                #{perceptionUnstructuredData.businessModule,jdbcType=VARCHAR},
+            </if>
+            <if test="perceptionUnstructuredData.sourceModule !=null ">
+                #{perceptionUnstructuredData.sourceModule,jdbcType=VARCHAR},
+            </if>
+            <if test="perceptionUnstructuredData.size !=null ">
+                #{perceptionUnstructuredData.size,jdbcType=BIGINT},
+            </if>
+            <if test="perceptionUnstructuredData.projectId !=null ">
+                #{perceptionUnstructuredData.projectId,jdbcType=BIGINT},
+            </if>
+            <if test="perceptionUnstructuredData.publishFlag !=null ">
+                #{perceptionUnstructuredData.publishFlag,jdbcType=INTEGER},
+            </if>
+            <if test="perceptionUnstructuredData.publishDate !=null ">
+                #{perceptionUnstructuredData.publishDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="perceptionUnstructuredData.publishBy !=null ">
+                #{perceptionUnstructuredData.publishBy,jdbcType=VARCHAR},
+            </if>
+            <if test="perceptionUnstructuredData.deleteFlag !=null ">
+                #{perceptionUnstructuredData.deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="perceptionUnstructuredData.remark !=null ">
+                #{perceptionUnstructuredData.remark,jdbcType=VARCHAR},
+            </if>
+            <if test="perceptionUnstructuredData.tags !=null ">
+                #{perceptionUnstructuredData.tags,jdbcType=VARCHAR},
+            </if>
+            <if test="perceptionUnstructuredData.createdBy !=null ">
+                #{perceptionUnstructuredData.createdBy,jdbcType=VARCHAR},
+            </if>
+            <if test="perceptionUnstructuredData.creationDate !=null ">
+                #{perceptionUnstructuredData.creationDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="perceptionUnstructuredData.lastUpdatedBy !=null ">
+                #{perceptionUnstructuredData.lastUpdatedBy,jdbcType=VARCHAR},
+            </if>
+            <if test="perceptionUnstructuredData.lastUpdateDate !=null ">
+                #{perceptionUnstructuredData.lastUpdateDate,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        on duplicate key update
+        <trim suffixOverrides=",">
+            <if test="perceptionUnstructuredData.id !=null ">
+             #{id,jdbcType=BIGINT},
+            </if>
+            <if test="perceptionUnstructuredData.batchNum !=null ">
+             #{batchNum,jdbcType=VARCHAR},
+            </if>
+            <if test="perceptionUnstructuredData.businessModule !=null ">
+             #{businessModule,jdbcType=VARCHAR},
+            </if>
+            <if test="perceptionUnstructuredData.sourceModule !=null ">
+             #{sourceModule,jdbcType=VARCHAR},
+            </if>
+            <if test="perceptionUnstructuredData.size !=null ">
+             #{size,jdbcType=BIGINT},
+            </if>
+            <if test="perceptionUnstructuredData.projectId !=null ">
+             #{projectId,jdbcType=BIGINT},
+            </if>
+            <if test="perceptionUnstructuredData.publishFlag !=null ">
+             #{publishFlag,jdbcType=INTEGER},
+            </if>
+            <if test="perceptionUnstructuredData.publishDate !=null ">
+             #{publishDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="perceptionUnstructuredData.publishBy !=null ">
+             #{publishBy,jdbcType=VARCHAR},
+            </if>
+            <if test="perceptionUnstructuredData.deleteFlag !=null ">
+             #{deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="perceptionUnstructuredData.remark !=null ">
+             #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="perceptionUnstructuredData.tags !=null ">
+             #{tags,jdbcType=VARCHAR},
+            </if>
+            <if test="perceptionUnstructuredData.createdBy !=null ">
+             #{createdBy,jdbcType=VARCHAR},
+            </if>
+            <if test="perceptionUnstructuredData.creationDate !=null ">
+             #{creationDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="perceptionUnstructuredData.lastUpdatedBy !=null ">
+             #{lastUpdatedBy,jdbcType=VARCHAR},
+            </if>
+            <if test="perceptionUnstructuredData.lastUpdateDate !=null ">
+             #{lastUpdateDate,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+    </update>
+
+    <select id="query" resultMap="BaseResultMap" parameterType="com.lego.framework.data.model.entity.PerceptionUnstructuredData">
+        select
+        <include refid="Base_Column_List"/>
+        from perception_unstructured_data
+        <where>
+            <include refid="Base_Query_Where"></include>
+        </where>
+    </select>
+
+    <select id="queryTotalCount" resultType="long">
+        select count(*) from perception_unstructured_data
+    </select>
+
+
+
+
+</mapper>

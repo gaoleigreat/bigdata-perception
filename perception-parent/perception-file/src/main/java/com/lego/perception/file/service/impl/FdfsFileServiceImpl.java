@@ -45,7 +45,7 @@ public class FdfsFileServiceImpl implements IFdfsFileService {
             String[] ary = storageClient.upload_file(file.getContent(), file.getExt(), null);
             String groupName = ary[0];
             String remoteName = ary[1];
-            map.put("data", fileServiceUrl + groupName + "/" + remoteName + "?fileName=" + file.getFileName());
+            map.put("data", fileServiceUrl + groupName + "/" + remoteName);
         } catch (IOException | MyException e) {
             log.error("upload file to [fastdfs] system error", e);
             ExceptionBuilder.operateFailException("上传失败");
