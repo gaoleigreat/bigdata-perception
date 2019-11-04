@@ -129,7 +129,7 @@ public class PerceptionStructuredDataServiceImpl implements IPerceptionStructure
             return 0;
         }
         else{
-            return perceptionStructuredDataMapper.batchInsert(list);
+            return perceptionStructuredDataMapper.batchUpdate(list);
         }
     }
 

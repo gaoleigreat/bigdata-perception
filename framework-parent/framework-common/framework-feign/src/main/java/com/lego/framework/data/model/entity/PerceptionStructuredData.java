@@ -104,7 +104,7 @@ public class PerceptionStructuredData  {
      *是否删除
      */
     
-    @ApiModelProperty("是否删除")
+    @ApiModelProperty("是否删除 0没有删除，1删除")
     private Integer deleteFlag;
 
 

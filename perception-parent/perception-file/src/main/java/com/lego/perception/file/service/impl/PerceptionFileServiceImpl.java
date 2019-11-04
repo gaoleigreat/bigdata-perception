@@ -122,7 +122,7 @@ public class PerceptionFileServiceImpl implements IPerceptionFileService {
         if (CollectionUtils.isEmpty(list)) {
             return 0;
         } else {
-            return perceptionFileMapper.batchInsert(list);
+            return perceptionFileMapper.batchUpdate(list);
         }
     }
 
