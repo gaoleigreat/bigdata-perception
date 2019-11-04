@@ -22,25 +22,12 @@ public class ShareData extends BaseModel {
      * 文件Id
      */
     @TableId
-    @ApiModelProperty("文件Id")
+    @ApiModelProperty("数据Id")
     private Long id;
 
 
-    /**
-     * 文件名称
-     */
-
-    @ApiModelProperty("文件名称")
+    @ApiModelProperty("数据名称")
     private String name;
-
-
-    /**
-     * 文件类型
-     */
-
-    @ApiModelProperty("文件类型")
-    private String fileType;
-
 
     /**
      * 工程id
@@ -48,30 +35,6 @@ public class ShareData extends BaseModel {
 
     @ApiModelProperty("工程id")
     private Long projectId;
-
-
-    /**
-     * 文件路径
-     */
-
-    @ApiModelProperty("文件路径")
-    private String fileUrl;
-
-
-    /**
-     * 预览url
-     */
-
-    @ApiModelProperty("预览url")
-    private String previewUrl;
-
-
-    /**
-     * 业务模板id
-     */
-
-    @ApiModelProperty("业务模板id")
-    private Long templateId;
 
     /**
      * 数据类型(1-结构化数据;2-非结构化数据)
@@ -89,11 +52,14 @@ public class ShareData extends BaseModel {
     private Integer deleteFlag;
 
 
-    /**
-     * 文件说明
-     */
+    @ApiModelProperty("是否撤回(0-否;1-是)")
+    private Integer isRecall;
 
-    @ApiModelProperty("文件说明")
+
+    /**
+     * 数据说明
+     */
+    @ApiModelProperty("数据说明")
     private String remark;
 
 
@@ -104,7 +70,6 @@ public class ShareData extends BaseModel {
     @ApiModelProperty("标签")
     private String tags;
 
-
     /**
      * 批次号
      */
@@ -113,10 +78,17 @@ public class ShareData extends BaseModel {
     private String batchNum;
 
 
+    @ApiModelProperty("业务模块")
+    private String businessModule;
+
+
+    @ApiModelProperty("数据来源")
+    private String sourceModule;
+
+
     /**
      * 创建人
      */
-
     @ApiModelProperty("创建人")
     private Long createdBy;
 
@@ -145,7 +117,7 @@ public class ShareData extends BaseModel {
     private Date lastUpdateDate;
 
 
-    @ApiModelProperty("文件大小")
+    @ApiModelProperty("数据大小")
     private Long dataSize;
 
 

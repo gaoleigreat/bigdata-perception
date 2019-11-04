@@ -16,14 +16,14 @@ define:
       url: jdbc:mysql://192.168.101.76:3306/perception_base?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
       username: perception_slaver
       password: perception_slaver
-    share:
-      url: jdbc:mysql://192.168.101.76:3306/share?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
-      username: share_master
-      password: share_master
     equipment:
       url: jdbc:mysql://192.168.101.76:3306/perception_equipment?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
       username: equipment_master
       password: equipment_master
+    business:
+      url: jdbc:mysql://192.168.101.76:3306/perception_business?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+      username: business_master
+      password: business_master
 eureka:
   client:
     fetch-registry: true

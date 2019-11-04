@@ -44,6 +44,5 @@ public class BaseModel {
 
     public void setUpdateInfo() {
         this.lastUpdateDate = new Date();
-
     }
 }

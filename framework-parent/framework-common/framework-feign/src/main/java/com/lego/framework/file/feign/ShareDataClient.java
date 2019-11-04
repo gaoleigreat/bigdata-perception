@@ -48,6 +48,17 @@ public interface ShareDataClient {
     @RequestMapping(value = "/insertByBatchNums", method = RequestMethod.GET)
     RespVO insertByBatchNums(@RequestParam(value = "bathNums") List<String> batchNums,
                              @RequestParam(required = false, value = "tags") String tags);
+
+    /**
+     * 数据撤回共享
+     *
+     * @param batchNums
+     * @param tags
+     * @return
+     */
+    @RequestMapping(value = "/recallByBatchAndTags", method = RequestMethod.GET)
+    RespVO recallByBatchAndTags(@RequestParam(value = "bathNums") List<String> batchNums,
+                                @RequestParam(required = false, value = "tags") String tags);
 }
 
 @Slf4j
@@ -66,6 +77,11 @@ class ShareDataClientFallbackFactory implements FallbackFactory<ShareDataClient>
 
             @Override
             public RespVO insertByBatchNums(List<String> batchNums, String tags) {
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "file服务不可用");
+            }
+
+            @Override
+            public RespVO recallByBatchAndTags(List<String> batchNums, String tags) {
                 return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "file服务不可用");
             }
 

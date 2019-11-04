@@ -7,11 +7,7 @@
     <resultMap type="com.lego.framework.system.model.entity.ShareData" id="BaseResultMap">
         <result property="id" column="id"/>
         <result property="name" column="name"/>
-        <result property="fileType" column="file_type"/>
         <result property="projectId" column="project_id"/>
-        <result property="fileUrl" column="file_url"/>
-        <result property="previewUrl" column="preview_url"/>
-        <result property="templateId" column="template_id"/>
         <result property="dataType" column="data_type"/>
         <result property="deleteFlag" column="delete_flag"/>
         <result property="remark" column="remark"/>
@@ -22,18 +18,17 @@
         <result property="lastUpdatedBy" column="last_updated_by"/>
         <result property="lastUpdateDate" column="last_update_date"/>
         <result property="dataSize" column="data_size"/>
+        <result property="businessModule" column="business_module"/>
+        <result property="sourceModule" column="source_module"/>
+        <result property="isRecall" column="is_recall"/>
     </resultMap>
 
 
     <!--数据库表的基本查询列名集合 -->
     <sql id="Base_Column_List">
         id ,
-        name ,
-        file_type ,
+        name,
         project_id ,
-        file_url ,
-        preview_url ,
-        template_id ,
         data_type ,
         delete_flag ,
         remark ,
@@ -43,7 +38,10 @@
         creation_date ,
         last_updated_by ,
         last_update_date ,
-        data_size
+        data_size,
+        source_module,
+        business_module,
+        is_recall
     </sql>
 
 
@@ -52,23 +50,11 @@
         <if test="dataFile.id != null">
             and id = #{dataFile.id,jdbcType=BIGINT}
         </if>
-        <if test="dataFile.name != null">
-            and name = #{dataFile.name,jdbcType=VARCHAR}
-        </if>
-        <if test="dataFile.fileType != null">
-            and file_type = #{dataFile.fileType,jdbcType=VARCHAR}
+        <if test="dateFile.name!=null">
+            and name =#{dataFile.name,jdbcType=VARCHAR}
         </if>
         <if test="dataFile.projectId != null">
             and project_id = #{dataFile.projectId,jdbcType=BIGINT}
-        </if>
-        <if test="dataFile.fileUrl != null">
-            and file_url = #{dataFile.fileUrl,jdbcType=VARCHAR}
-        </if>
-        <if test="dataFile.previewUrl != null">
-            and preview_url = #{dataFile.previewUrl,jdbcType=VARCHAR}
-        </if>
-        <if test="dataFile.templateId != null">
-            and template_id = #{dataFile.templateId,jdbcType=BIGINT}
         </if>
         <if test="dataFile.dataType != null">
             and data_type = #{dataFile.dataType,jdbcType=INTEGER}
@@ -97,6 +83,16 @@
         <if test="dataFile.lastUpdateDate != null">
             and last_update_date = #{dataFile.lastUpdateDate,jdbcType=TIMESTAMP}
         </if>
+        <if test="dataFile.sourceModule !=null">
+            and source_module =#{dataFile.sourceModule,jdbcType=VARCHAR}
+        </if>
+        <if test="dataFile.businessModule !=null">
+            and business_module =#{dataFile.businessModule,jdbcType=VARCHAR},
+        </if>
+        <if test="dataFile.isRecall !=null">
+            and is_recall =#{dataFile.isRecall,jdbcType=INTEGER}
+        </if>
+
     </sql>
 
 
@@ -106,23 +102,11 @@
             <if test="dataFile.id != null">
                 id = #{dataFile.id,jdbcType=BIGINT},
             </if>
-            <if test="dataFile.name != null">
-                name = #{dataFile.name,jdbcType=VARCHAR},
-            </if>
-            <if test="dataFile.fileType != null">
-                file_type = #{dataFile.fileType,jdbcType=VARCHAR},
+            <if test="dataFile.name !=null">
+                name=#{dataFile.name,jdbcType=VARCHAR},
             </if>
             <if test="dataFile.projectId != null">
                 project_id = #{dataFile.projectId,jdbcType=BIGINT},
-            </if>
-            <if test="dataFile.fileUrl != null">
-                file_url = #{dataFile.fileUrl,jdbcType=VARCHAR},
-            </if>
-            <if test="dataFile.previewUrl != null">
-                preview_url = #{dataFile.previewUrl,jdbcType=VARCHAR},
-            </if>
-            <if test="dataFile.templateId != null">
-                template_id = #{dataFile.templateId,jdbcType=BIGINT},
             </if>
             <if test="dataFile.dataType != null">
                 data_type = #{dataFile.dataType,jdbcType=INTEGER},
@@ -149,7 +133,16 @@
                 last_updated_by = #{dataFile.lastUpdatedBy,jdbcType=BIGINT},
             </if>
             <if test="dataFile.lastUpdateDate != null">
-                last_update_date = #{dataFile.lastUpdateDate,jdbcType=TIMESTAMP}
+                last_update_date = #{dataFile.lastUpdateDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="dataFile.sourceModule!=null">
+                source_module =#{dataFile.sourceModule,jdbcType=VARCHAR},
+            </if>
+            <if test="datFile.businessModule!=null">
+                business_module =#{dataFile.businessModule,jdbcType=VARCHAR},
+            </if>
+            <if test="dataFile.isRecall !=null">
+                is_recall =#{dataFile.isRecall,jdbcType=INTEGER}
             </if>
         </set>
     </sql>
@@ -163,20 +156,8 @@
             <if test="dataFile.name != null">
                 name,
             </if>
-            <if test="dataFile.fileType != null">
-                file_type,
-            </if>
             <if test="dataFile.projectId != null">
                 project_id,
-            </if>
-            <if test="dataFile.fileUrl != null">
-                file_url,
-            </if>
-            <if test="dataFile.previewUrl != null">
-                preview_url,
-            </if>
-            <if test="dataFile.templateId != null">
-                template_id,
             </if>
             <if test="dataFile.dataType != null">
                 data_type,
@@ -206,7 +187,16 @@
                 last_update_date,
             </if>
             <if test=" dataSize!=null">
-                data_size
+                data_size,
+            </if>
+            <if test=" sourceModule !=null">
+                source_module,
+            </if>
+            <if test=" businessModule !=null">
+                business_module,
+            </if>
+            <if test=" isRecall!=null">
+                is_recall
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -216,20 +206,8 @@
             <if test="dataFile.name != null">
                 #{dataFile.name,jdbcType=VARCHAR},
             </if>
-            <if test="dataFile.fileType != null">
-                #{dataFile.fileType,jdbcType=VARCHAR},
-            </if>
             <if test="dataFile.projectId != null">
                 #{dataFile.projectId,jdbcType=BIGINT},
-            </if>
-            <if test="dataFile.fileUrl != null">
-                #{dataFile.fileUrl,jdbcType=VARCHAR},
-            </if>
-            <if test="dataFile.previewUrl != null">
-                #{dataFile.previewUrl,jdbcType=VARCHAR},
-            </if>
-            <if test="dataFile.templateId != null">
-                #{dataFile.templateId,jdbcType=BIGINT},
             </if>
             <if test="dataFile.dataType != null">
                 #{dataFile.dataType,jdbcType=BIGINT},
@@ -259,8 +237,18 @@
                 #{dataFile.lastUpdateDate,jdbcType=TIMESTAMP},
             </if>
             <if test="dataFile.dataSize != null">
-                #{dataFile.dataSize,jdbcType=BIGINT}
+                #{dataFile.dataSize,jdbcType=BIGINT},
             </if>
+            <if test=" dataFile.sourceModule !=null">
+                #{dataFile.sourceModule,jdbcType=VARCHAR},
+            </if>
+            <if test="dataFile.businessModule !=null">
+                #{dataFile.businessModule,jdbcType=VARCHAR},
+            </if>
+            <if test=" dtaFile.isRecall !=null">
+                #{dataFile.isRecall,jdbcType=INTEGER}
+            </if>
+
         </trim>
     </sql>
 
@@ -271,11 +259,7 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             id,
             name,
-            file_type,
             project_id,
-            file_url,
-            preview_url,
-            template_id,
             data_type,
             delete_flag,
             remark,
@@ -285,18 +269,17 @@
             creation_date,
             last_updated_by,
             last_update_date,
-            data_size
+            data_size,
+            source_module,
+            business_module,
+            is_recall
         </trim>
         values
         <foreach collection="list" index="index" item="item" separator=",">
             <trim prefix="(" suffix=")" suffixOverrides=",">
                 #{item.id,jdbcType=BIGINT},
                 #{item.name,jdbcType=VARCHAR},
-                #{item.fileType,jdbcType=VARCHAR},
                 #{item.projectId,jdbcType=BIGINT},
-                #{item.fileUrl,jdbcType=VARCHAR},
-                #{item.previewUrl,jdbcType=VARCHAR},
-                #{item.templateId,jdbcType=BIGINT},
                 #{item.dataType,jdbcType=BIGINT},
                 #{item.deleteFlag,jdbcType=INTEGER},
                 #{item.remark,jdbcType=VARCHAR},
@@ -306,7 +289,10 @@
                 #{item.creationDate,jdbcType=TIMESTAMP},
                 #{item.lastUpdatedBy,jdbcType=BIGINT},
                 #{item.lastUpdateDate,jdbcType=TIMESTAMP},
-                #{item.dataSize,jdbcType=BIGINT}
+                #{item.dataSize,jdbcType=BIGINT},
+                #{item.sourceModule,jdbcType=VARCHAR},
+                #{item.businessModule,jdbcType=VARCHAR},
+                #{item.isRecall,jdbcType=INTEGER}
             </trim>
         </foreach>
     </insert>
@@ -320,11 +306,7 @@
                 <trim suffixOverrides=",">
                     id = #{item.id,jdbcType=BIGINT},
                     name = #{item.name,jdbcType=VARCHAR},
-                    file_type = #{item.fileType,jdbcType=VARCHAR},
                     project_id = #{item.projectId,jdbcType=BIGINT},
-                    file_url = #{item.fileUrl,jdbcType=VARCHAR},
-                    preview_url = #{item.previewUrl,jdbcType=VARCHAR},
-                    template_id = #{item.templateId,jdbcType=BIGINT},
                     data_type = #{item.dataType,jdbcType=BIGINT},
                     delete_flag = #{item.deleteFlag,jdbcType=INTEGER},
                     remark = #{item.remark,jdbcType=VARCHAR},
@@ -333,7 +315,10 @@
                     created_by = #{item.createdBy,jdbcType=BIGINT},
                     creation_date = #{item.creationDate,jdbcType=TIMESTAMP},
                     last_updated_by = #{item.lastUpdatedBy,jdbcType=BIGINT},
-                    last_update_date = #{item.lastUpdateDate,jdbcType=TIMESTAMP}
+                    last_update_date = #{item.lastUpdateDate,jdbcType=TIMESTAMP},
+                    source_module= #{item.sourceModule,jdbcType=VARCHAR},
+                    business_module= #{item.businessMudule,jdbcType=VARCHAR},
+                    is_recall =#{item.isRecall,jdbcType=INTEGER}
                 </trim>
             </set>
             <where>
@@ -350,12 +335,8 @@
         insert into tpl_share_data
         <trim prefix="(" suffix=")" suffixOverrides=",">
             id ,
-            name ,
-            file_type ,
+            name,
             project_id ,
-            file_url ,
-            preview_url ,
-            template_id ,
             data_type ,
             delete_flag ,
             remark ,
@@ -364,17 +345,16 @@
             created_by ,
             creation_date ,
             last_updated_by ,
-            last_update_date
+            last_update_date,
+            source_module,
+            business_module,
+            is_recall
         </trim>
         values
         <trim prefix="(" suffix=")" suffixOverrides=",">
             #{dataFile.id,jdbcType=BIGINT},
             #{dataFile.name,jdbcType=VARCHAR},
-            #{dataFile.fileType,jdbcType=VARCHAR},
             #{dataFile.projectId,jdbcType=BIGINT},
-            #{dataFile.fileUrl,jdbcType=VARCHAR},
-            #{dataFile.previewUrl,jdbcType=VARCHAR},
-            #{dataFile.templateId,jdbcType=BIGINT},
             #{dataFile.dataType,jdbcType=BIGINT},
             #{dataFile.deleteFlag,jdbcType=INTEGER},
             #{dataFile.remark,jdbcType=VARCHAR},
@@ -383,17 +363,16 @@
             #{dataFile.createdBy,jdbcType=BIGINT},
             #{dataFile.creationDate,jdbcType=TIMESTAMP},
             #{dataFile.lastUpdatedBy,jdbcType=BIGINT},
-            #{dataFile.lastUpdateDate,jdbcType=TIMESTAMP}
+            #{dataFile.lastUpdateDate,jdbcType=TIMESTAMP},
+            #{dataFile.sourceModule,jdbcType=VARCHAR},
+            #{dataFile.businessModule,jdbcType=VARCHAR},
+            #{dataFile.isRecall,jdbcType=INTEGER}
         </trim>
         on duplicate key update
         <trim suffixOverrides=",">
             #{dataFile.id,jdbcType=BIGINT},
             #{dataFile.name,jdbcType=VARCHAR},
-            #{dataFile.fileType,jdbcType=VARCHAR},
             #{dataFile.projectId,jdbcType=BIGINT},
-            #{dataFile.fileUrl,jdbcType=VARCHAR},
-            #{dataFile.previewUrl,jdbcType=VARCHAR},
-            #{dataFile.templateId,jdbcType=BIGINT},
             #{dataFile.dataType,jdbcType=BIGINT},
             #{dataFile.deleteFlag,jdbcType=INTEGER},
             #{dataFile.remark,jdbcType=VARCHAR},
@@ -402,7 +381,10 @@
             #{dataFile.createdBy,jdbcType=BIGINT},
             #{dataFile.creationDate,jdbcType=TIMESTAMP},
             #{dataFile.lastUpdatedBy,jdbcType=BIGINT},
-            #{dataFile.lastUpdateDate,jdbcType=TIMESTAMP}
+            #{dataFile.lastUpdateDate,jdbcType=TIMESTAMP},
+            #{dataFile.sourceModule,jdbcType=VARCHAR},
+            #{dataFile.businessModule,jdbcType=VARCHAR},
+            #{dataFile.isRecall,jdbcType=INTEGER}
         </trim>
     </update>
 
@@ -414,23 +396,8 @@
             <if test="dataFile.id != null">
                 id,
             </if>
-            <if test="dataFile.name != null">
+            <if test="dataFile.name!=null">
                 name,
-            </if>
-            <if test="dataFile.fileType != null">
-                file_type,
-            </if>
-            <if test="dataFile.projectId != null">
-                project_id,
-            </if>
-            <if test="dataFile.fileUrl != null">
-                file_url,
-            </if>
-            <if test="dataFile.previewUrl != null">
-                preview_url,
-            </if>
-            <if test="dataFile.templateId != null">
-                template_id,
             </if>
             <if test="dataFile.dataType != null">
                 data_type,
@@ -457,7 +424,16 @@
                 last_updated_by,
             </if>
             <if test="dataFile.lastUpdateDate != null">
-                last_update_date
+                last_update_date,
+            </if>
+            <if test="dataFile.sourceModule !=null">
+                source_module,
+            </if>
+            <if test="dataFile.businessModule !=null">
+                business_module,
+            </if>
+            <if test="dataFile.isRecall !=null">
+                is_recall
             </if>
         </trim>
         values
@@ -468,20 +444,8 @@
             <if test="dataFile.name !=null ">
                 #{dataFile.name,jdbcType=VARCHAR},
             </if>
-            <if test="dataFile.fileType !=null ">
-                #{dataFile.fileType,jdbcType=VARCHAR},
-            </if>
             <if test="dataFile.projectId !=null ">
                 #{dataFile.projectId,jdbcType=BIGINT},
-            </if>
-            <if test="dataFile.fileUrl !=null ">
-                #{dataFile.fileUrl,jdbcType=VARCHAR},
-            </if>
-            <if test="dataFile.previewUrl !=null ">
-                #{dataFile.previewUrl,jdbcType=VARCHAR},
-            </if>
-            <if test="dataFile.templateId !=null ">
-                #{dataFile.templateId,jdbcType=BIGINT},
             </if>
             <if test="dataFile.dataType !=null ">
                 #{dataFile.dataType,jdbcType=BIGINT},
@@ -508,7 +472,16 @@
                 #{dataFile.lastUpdatedBy,jdbcType=BIGINT},
             </if>
             <if test="dataFile.lastUpdateDate !=null ">
-                #{dataFile.lastUpdateDate,jdbcType=TIMESTAMP}
+                #{dataFile.lastUpdateDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="dataFile.sourceModule!=null">
+                #{dataFile.sourceModule,jdbcType=VARCHAR},
+            </if>
+            <if test="dataFile.businessModule !=null">
+                #{dataFile.businessModule,jdbcType=VARCHAR},
+            </if>
+            <if test="dataFile.isRecall !=null">
+                #{dataFile.isRecall,jdbcType=INTEGER}
             </if>
         </trim>
         on duplicate key update
@@ -516,23 +489,11 @@
             <if test="dataFile.id !=null ">
                 #{id,jdbcType=BIGINT},
             </if>
-            <if test="dataFile.name !=null ">
-                #{name,jdbcType=VARCHAR},
-            </if>
-            <if test="dataFile.fileType !=null ">
-                #{fileType,jdbcType=VARCHAR},
+            <if test="dataFile.name !=null">
+                #{dataFile.name,jdbcType=VARCHAR},
             </if>
             <if test="dataFile.projectId !=null ">
                 #{projectId,jdbcType=BIGINT},
-            </if>
-            <if test="dataFile.fileUrl !=null ">
-                #{fileUrl,jdbcType=VARCHAR},
-            </if>
-            <if test="dataFile.previewUrl !=null ">
-                #{previewUrl,jdbcType=VARCHAR},
-            </if>
-            <if test="dataFile.templateId !=null ">
-                #{templateId,jdbcType=BIGINT},
             </if>
             <if test="dataFile.dataType !=null ">
                 #{dataType,jdbcType=BIGINT},
@@ -559,7 +520,16 @@
                 #{lastUpdatedBy,jdbcType=BIGINT},
             </if>
             <if test="dataFile.lastUpdateDate !=null ">
-                #{lastUpdateDate,jdbcType=TIMESTAMP}
+                #{lastUpdateDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="dataFile.sourceModule!=null">
+                #{dataFile.sourceModule,jdbcType=VARCHAR},
+            </if>
+            <if test="dataFile.businessModule !=null">
+                #{dataFile.businessModule,jdbcType=VARCHAR},
+            </if>
+            <if test="dataFile.isRecall !=null">
+                #{dataFile.isRecall,jdbcType=INTEGER}
             </if>
         </trim>
     </update>
@@ -574,7 +544,8 @@
     </select>
 
     <select id="queryTotalCount" resultType="long">
-        select count(*) from tpl_share_data
+        select count(*)
+        from tpl_share_data
     </select>
 
 

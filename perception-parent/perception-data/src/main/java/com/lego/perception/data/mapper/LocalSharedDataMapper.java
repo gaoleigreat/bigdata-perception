@@ -1,3 +1,4 @@
+/*
 package com.lego.perception.data.mapper;
 import com.framework.mybatis.mapper.Mapper;
 import com.lego.framework.data.model.entity.LocalSharedData;
@@ -5,11 +6,13 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+*/
 /**
  * @author yanglf
  * @description
  * @since 2019/1/19
- **/
+ **//*
+
 @Repository
 public interface LocalSharedDataMapper extends Mapper<LocalSharedData> {
 
@@ -38,3 +41,4 @@ public interface LocalSharedDataMapper extends Mapper<LocalSharedData> {
     Integer deletedByObj(LocalSharedData datasharedtable);
 
 }
+*/

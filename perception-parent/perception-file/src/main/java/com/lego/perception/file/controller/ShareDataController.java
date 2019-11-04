@@ -40,7 +40,7 @@ public class ShareDataController {
     private IDataFileService iDataFileService;
 
 
-    @ApiOperation(value = "通过主键id查询DataFile", notes = "通过主键id查询DataFile")
+    @ApiOperation(value = "通过主键id查询共享数据", notes = "通过主键id查询共享数据")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", paramType = "path", value = "id", required = true, dataType = "Long")
     })
@@ -55,7 +55,7 @@ public class ShareDataController {
         }
     }
 
-    @ApiOperation(value = "通过主键id删除DataFile", notes = "通过主键id删除DataFile")
+    @ApiOperation(value = "通过主键id删除共享数据", notes = "通过主键id删除共享数据")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", paramType = "path", value = "id", required = true, dataType = "Long")
     })
@@ -63,13 +63,13 @@ public class ShareDataController {
     public RespVO deleteByPrimaryKey(@PathVariable(value = "id") Long id) {
         Integer num = shareDataService.deleteByPrimaryKey(id);
         if (num == 0) {
-            return RespVOBuilder.failure("删除DataFile失败");
+            return RespVOBuilder.failure("删除共享数据失败");
         } else {
-            return RespVOBuilder.success("删除DataFile成功");
+            return RespVOBuilder.success("删除共享数据成功");
         }
     }
 
-    @ApiOperation(value = "新增DataFile", notes = "新增DataFile")
+    @ApiOperation(value = "新增共享数据", notes = "新增共享数据")
     @ApiImplicitParams({
     })
     @PostMapping("/")
@@ -79,13 +79,13 @@ public class ShareDataController {
         }
         Integer num = shareDataService.insert(dataFile);
         if (num == 0) {
-            return RespVOBuilder.failure("添加DataFile失败");
+            return RespVOBuilder.failure("添加共享数据失败");
         } else {
-            return RespVOBuilder.success("添加DataFile成功");
+            return RespVOBuilder.success("添加共享数据失败");
         }
     }
 
-    @ApiOperation(value = "修改DataFile", notes = "修改DataFile")
+    @ApiOperation(value = "修改共享数据", notes = "修改共享数据")
     @ApiImplicitParams({
     })
     @PutMapping("/")
@@ -95,14 +95,14 @@ public class ShareDataController {
         }
         Integer num = shareDataService.updateByPrimaryKey(dataFile);
         if (num == 0) {
-            return RespVOBuilder.failure("修改DataFile失败");
+            return RespVOBuilder.failure("修改共享数据失败");
         } else {
-            return RespVOBuilder.success("修改DataFile成功");
+            return RespVOBuilder.success("修改共享数据成功");
         }
     }
 
 
-    @ApiOperation(value = "通过主键id批量删除DataFile", notes = "通过主键id批量删除DataFile")
+    @ApiOperation(value = "通过主键id批量删除共享数据", notes = "通过主键id批量删除共享数据")
     @ApiImplicitParams({
     })
     @DeleteMapping("/deleteBatchPrimaryKeys")
@@ -112,14 +112,14 @@ public class ShareDataController {
         }
         Integer num = shareDataService.deleteBatchIds(list);
         if (num == 0) {
-            return RespVOBuilder.failure("批量删除DataFile失败");
+            return RespVOBuilder.failure("批量删除共享数据失败");
         } else {
-            return RespVOBuilder.success("批量删除DataFile成功");
+            return RespVOBuilder.success("批量删除共享数据成功");
         }
     }
 
 
-    @ApiOperation(value = "条件查询DataFile", notes = "条件查询DataFile")
+    @ApiOperation(value = "条件查询共享数据", notes = "条件查询共享数据")
     @ApiImplicitParams({
     })
     @PostMapping("/list")
@@ -132,7 +132,7 @@ public class ShareDataController {
     }
 
 
-    @ApiOperation(value = "条件查询DataFile", notes = "条件查询DataFile")
+    @ApiOperation(value = "条件查询共享数据", notes = "条件查询共享数据")
     @ApiImplicitParams({
 
     })
@@ -178,8 +178,7 @@ public class ShareDataController {
                     ShareData sd = new ShareData();
                     BeanUtils.copyProperties(dataFile, sd);
                     //TODO  更新审核时间   审核人信息
-                    sd.setLastUpdateDate(new Date());
-                    sd.setLastUpdatedBy(1L);
+                    sd.setUpdateInfo();
                     shareDatas.add(sd);
                 }
                 Integer batchInsert = shareDataService.batchInsert(shareDatas);
@@ -187,6 +186,36 @@ public class ShareDataController {
                     return RespVOBuilder.success();
                 }
             }
+        }
+        return RespVOBuilder.failure();
+    }
+
+
+    @ApiOperation(value = "撤回", notes = "撤回")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "batchNums", value = "批次号，", paramType = "query", allowMultiple = true, required = true, dataType = "String"),
+            @ApiImplicitParam(name = "tags", value = "标签(多标签用逗号隔开)", paramType = "query", dataType = "String")
+    })
+    @RequestMapping(value = "/recallByBatchAndTags", method = RequestMethod.GET)
+    @Operation(value = "recallByBatchAndTags", desc = "通过批次号撤回")
+    public RespVO recallByBatchAndTags(@RequestParam(value = "bathNums") List<String> batchNums,
+                                       @RequestParam(required = false, value = "tags") String tags) {
+        RespVO<RespDataVO<ShareData>> dataVORespVO = shareDataService.selectBybatchNums(batchNums, tags);
+        if (dataVORespVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
+            return RespVOBuilder.failure();
+        }
+        RespDataVO<ShareData> dataVO = dataVORespVO.getInfo();
+        if (dataVO == null || CollectionUtils.isEmpty(dataVO.getList())) {
+            return RespVOBuilder.failure();
+        }
+        List<ShareData> dataList = dataVO.getList();
+        for (ShareData shareData : dataList) {
+            shareData.setIsRecall(1);
+            shareData.setUpdateInfo();
+        }
+        Integer batchUpdate = shareDataService.batchUpdate(dataList);
+        if (batchUpdate > 0) {
+            return RespVOBuilder.success();
         }
         return RespVOBuilder.failure();
     }

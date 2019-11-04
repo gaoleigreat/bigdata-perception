@@ -69,22 +69,32 @@ public class DatasharedtableController {
     private FileClient fileClient;
 
 
-    @ApiOperation(value = "查询共享数据库数据", httpMethod = "GET")
+    @ApiOperation(value = "查询共享数据配置信息", httpMethod = "GET")
     @RequestMapping(value = "/shareList", method = RequestMethod.GET)
-    @Operation(value = "shareList", desc = "查询共享数据库数据")
+    @Operation(value = "shareList", desc = "查询共享数据配置信息")
     public RespVO<RespDataVO<RemoteSharedData>> shareList(@ModelAttribute RemoteSharedData datasharedtable) {
         List<RemoteSharedData> list = iRemoteShareDataService.queryRemoteList(datasharedtable);
         return RespVOBuilder.success(list);
     }
 
 
-    @ApiOperation(value = "查询共享数据库数据", httpMethod = "GET")
+    @ApiOperation(value = "查询共享数据配置信息", httpMethod = "GET")
     @RequestMapping(value = "/shareListPaged/{pageSize}/{pageIndex}", method = RequestMethod.GET)
-    @Operation(value = "shareListPaged", desc = "查询共享数据库数据")
+    @Operation(value = "shareListPaged", desc = "查询共享数据配置信息")
     public RespVO<PagedResult<RemoteSharedData>> shareListPaged(@ModelAttribute RemoteSharedData datasharedtable,
                                                                 @PathParam(value = "") Page page) {
         PagedResult<RemoteSharedData> list = iRemoteShareDataService.queryRemoteListPaged(datasharedtable, page);
         return RespVOBuilder.success(list);
+    }
+
+
+    @ApiOperation(value = "撤回共享数据", httpMethod = "POST")
+    @RequestMapping(value = "/recall", method = RequestMethod.POST)
+    @Operation(value = "recall", desc = "撤回共享数据")
+    public RespVO recall(@RequestParam String batchNum) {
+        List<String> batchNums = new ArrayList<>();
+        batchNums.add(batchNum);
+        return shareDataClient.recallByBatchAndTags(batchNums, null);
     }
 
 
@@ -104,7 +114,6 @@ public class DatasharedtableController {
         }
         List<DataFile> dataFiles = respDataVORespVO.getInfo().getList();
         List<RemoteSharedData> remoteSharedDataList = new ArrayList<>();
-        List<LocalSharedData> localSharedDataList = new ArrayList<>();
         if (CollectionUtils.isEmpty(dataFiles)) {
             return RespVOBuilder.failure("共享数据不存在");
         }
@@ -134,18 +143,15 @@ public class DatasharedtableController {
                 remoteSharedData.setSchema(dataFile.getFileUrl());
             }
             remoteSharedDataList.add(remoteSharedData);
-            LocalSharedData localSharedData = remoteSharedData.remote2LocalSharedData();
-            localSharedData.setBatchNum(batchNum1);
-            localSharedDataList.add(localSharedData);
         }
 
-        log.info("更新共享共享数据成功:{}", batchNums);
+        log.info("更新共享数据成功:{}", batchNums);
         RespVO respVO1 = shareDataClient.insertByBatchNums(batchNums, null);
         if (respVO1.getRetCode() == RespConsts.SUCCESS_RESULT_CODE) {
             log.info("更新本地共享数据成功:{}", batchNums);
             Integer dataBatch = iRemoteShareDataService.saveRemoteDataBatch(remoteSharedDataList);
             if (dataBatch > 0) {
-                log.info("更新共享共享数据成功:{}", batchNums);
+                log.info("更新共享数据成功:{}", batchNums);
                 return RespVOBuilder.success();
             }
         }

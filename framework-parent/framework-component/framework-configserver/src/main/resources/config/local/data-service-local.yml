@@ -4,9 +4,9 @@ define:
     type: com.alibaba.druid.pool.DruidDataSource
     write:
       driverClassName: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://192.168.101.76:3306/perception_business?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
-      username: business_master
-      password: business_master
+      url: ${define.mysql.write.url}
+      username: ${define.mysql.write.username}
+      password: ${define.mysql.write.password}
       initialSize: 5    #初始化时建立连接个数
       minIdle: 5
       maxActive: 20     #连接池最大连接数
@@ -27,9 +27,9 @@ define:
       useGlobalDataSourceStat: true
     read1:
       driverClassName: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://192.168.101.76:3306/perception_business?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
-      username: business_slaver
-      password: business_slaver
+      url: ${define.mysql.write.url}
+      username: ${define.mysql.write.username}
+      password: ${define.mysql.write.password}
       initialSize: 5
       minIdle: 5
       maxActive: 20
@@ -50,9 +50,9 @@ define:
     datasource:
       type: com.alibaba.druid.pool.DruidDataSource
       driverClassName: com.mysql.cj.jdbc.Driver
-      url: ${define.mysql.share.url}
-      username: ${define.mysql.share.username}
-      password: ${define.mysql.share.password}
+      url: ${define.mysql.business.url}
+      username: ${define.mysql.business.username}
+      password: ${define.mysql.business.password}
       initialSize: 5    #初始化时建立连接个数
       minIdle: 5
       maxActive: 20     #连接池最大连接数
