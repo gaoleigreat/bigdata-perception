@@ -40,11 +40,11 @@ public interface PerceptionFileClient {
 
 
     @PostMapping("/list")
-    RespVO<RespDataVO<PerceptionFile>> query(@RequestBody PerceptionFile perceptionFile);
+    RespVO<RespDataVO<PerceptionFile>>query(@RequestBody PerceptionFile perceptionFile);
 
 
-    @PostMapping(value = "/upload", headers = "content-type=multipart/form-data", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    RespVO<RespDataVO<PerceptionFile>> upload(@RequestParam(value = "files") MultipartFile[] files,
+    @PostMapping(value = "/upLoad", headers = "content-type=multipart/form-data", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    RespVO<RespDataVO<PerceptionFile>> upload(@RequestPart(value = "files") MultipartFile[] files,
                                               @RequestParam(value = "businessModule") String businessModule,
                                               @RequestParam(value = "projectId", required = false) Long projectId,
                                               @RequestParam(value = "remark") String remark,

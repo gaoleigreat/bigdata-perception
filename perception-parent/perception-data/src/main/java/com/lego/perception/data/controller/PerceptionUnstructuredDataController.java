@@ -8,13 +8,10 @@ import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.exception.ExceptionBuilder;
 import com.lego.framework.base.utils.ZipUtil;
-import com.lego.framework.data.model.entity.PerceptionStructuredData;
 import com.lego.framework.data.model.entity.PerceptionUnstructuredData;
 import com.lego.framework.file.feign.PerceptionFileClient;
 import com.lego.framework.file.model.PerceptionFile;
-import com.lego.framework.template.model.entity.FormTemplate;
 import com.lego.perception.data.service.IPerceptionUnstructuredDataService;
-import com.lego.perception.data.utils.TemplateDataUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -28,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.websocket.server.PathParam;
-import java.io.IOException;
 import java.util.*;
 
 
@@ -145,7 +141,7 @@ public class PerceptionUnstructuredDataController {
     @ApiImplicitParams({
     })
     @PostMapping("/list")
-    public RespVO query(@RequestBody PerceptionUnstructuredData perceptionUnstructuredData) {
+    public RespVO<RespDataVO<PerceptionUnstructuredData>> query(@RequestBody PerceptionUnstructuredData perceptionUnstructuredData) {
         if (perceptionUnstructuredData == null) {
             return RespVOBuilder.failure("参数不能为空");
         }
@@ -153,7 +149,7 @@ public class PerceptionUnstructuredDataController {
         return RespVOBuilder.success(list);
     }
 
-
+    @ApiOperation(value = "上传", notes = "上传")
     @PostMapping(value = "/upload", headers = "content-type=multipart/form-data")
     @Operation(value = "upload", desc = "格式化文件上传")
     public RespVO upload(@RequestParam(value = "files", required = true) MultipartFile[] files,
@@ -170,7 +166,7 @@ public class PerceptionUnstructuredDataController {
         }
 
 
-        RespVO<RespDataVO<PerceptionFile>> respDataVORespVO = perceptionFileClient.upload(files, businessModule, projectId, remark, tags, createBy, 0);
+        RespVO<RespDataVO<PerceptionFile>> respDataVORespVO = perceptionFileClient.upload(files, businessModule, projectId, remark, tags, createBy, 1);
         if (respDataVORespVO.getRetCode() != 1) {
             return RespVOBuilder.failure("上传文件失败");
         }
@@ -204,7 +200,9 @@ public class PerceptionUnstructuredDataController {
         return RespVOBuilder.success(perceptionUnstructuredData);
     }
 
-
+    @ApiOperation(value = "download", notes = "download")
+    @ApiImplicitParams({
+    })
     @GetMapping("/download")
     public void download(HttpServletResponse response, @RequestParam(value = "batchnum") String batchnum) {
         PerceptionFile perceptionFile = new PerceptionFile();

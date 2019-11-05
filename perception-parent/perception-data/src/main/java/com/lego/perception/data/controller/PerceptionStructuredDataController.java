@@ -9,13 +9,13 @@ import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.exception.ExceptionBuilder;
 import com.lego.framework.base.utils.ZipUtil;
 import com.lego.framework.data.model.entity.PerceptionStructuredData;
+import com.lego.framework.data.model.entity.PerceptionUnstructuredData;
 import com.lego.framework.file.feign.PerceptionFileClient;
 import com.lego.framework.file.model.PerceptionFile;
 import com.lego.framework.template.feign.TemplateFeignClient;
 import com.lego.framework.template.model.entity.FormTemplate;
 import com.lego.perception.data.service.IDataService;
 import com.lego.perception.data.service.IPerceptionStructuredDataService;
-import com.lego.perception.data.utils.TemplateDataUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -30,12 +30,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.websocket.server.PathParam;
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
+
 
 
 /**
@@ -162,14 +158,14 @@ public class PerceptionStructuredDataController {
     @ApiImplicitParams({
     })
     @PostMapping("/list")
-    public RespVO query(@RequestBody PerceptionStructuredData perceptionStructuredData) {
+    public RespVO<RespDataVO<PerceptionStructuredData>> query(@RequestBody PerceptionStructuredData perceptionStructuredData) {
         if (perceptionStructuredData == null) {
             return RespVOBuilder.failure("参数不能为空");
         }
         List<PerceptionStructuredData> list = perceptionStructuredDataService.query(perceptionStructuredData);
         return RespVOBuilder.success(list);
     }
-
+    @ApiOperation(value = "上传", notes = "上传")
     @PostMapping(value = "/upload", headers = "content-type=multipart/form-data")
     @Operation(value = "upload", desc = "格式化文件上传")
     public RespVO upload(@RequestParam(value = "templateId", required = true) Long templateId,
