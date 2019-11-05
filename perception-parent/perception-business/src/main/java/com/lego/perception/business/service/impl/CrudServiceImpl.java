@@ -120,10 +120,14 @@ public class CrudServiceImpl implements ICrudService {
             return RespVOBuilder.failure("找不到对应模板信息");
         }
         List<FormTemplateItem> items = formTemplate.getItems();
+        if (CollectionUtils.isEmpty(items)) {
+            return RespVOBuilder.failure("获取不到模板字段");
+        }
         StringBuilder sb = new StringBuilder();
         for (FormTemplateItem item : items) {
-            sb.append("IFNULL(" + item.getField() + ",'') as " + item.getField());
+            sb.append("IFNULL(" + item.getField() + ",'') as " + item.getField() + ",");
         }
+        sb.replace(sb.length() - 1, sb.length(), "");
         QueryWrapper wrapper = new QueryWrapper();
         if (!CollectionUtils.isEmpty(params)) {
             for (SearchParam param : params) {
@@ -158,9 +162,13 @@ public class CrudServiceImpl implements ICrudService {
         }
         List<FormTemplateItem> items = formTemplate.getItems();
         StringBuilder sb = new StringBuilder();
-        for (FormTemplateItem item : items) {
-            sb.append("IFNULL(" + item.getField() + ",'') as " + item.getField());
+        if (CollectionUtils.isEmpty(items)) {
+            return RespVOBuilder.failure("获取模板字段失败");
         }
+        for (FormTemplateItem item : items) {
+            sb.append("IFNULL(" + item.getField() + ",'') as " + item.getField() + ",");
+        }
+        sb.replace(sb.length() - 1, sb.length(), "");
         QueryWrapper wrapper = new QueryWrapper();
         if (!CollectionUtils.isEmpty(params)) {
             for (SearchParam param : params) {
@@ -206,7 +214,7 @@ public class CrudServiceImpl implements ICrudService {
         if (!data.containsKey("id")) {
             return RespVOBuilder.failure("删除条件缺失");
         }
-        Long id = Long.valueOf(data.get("id")+"");
+        Long id = Long.valueOf(data.get("id") + "");
         BusinessTable business = new BusinessTable(id, tableName, null);
         Integer delBusinessData = crudMapper.delBusinessData(business);
         if (delBusinessData > 0) {
@@ -272,11 +280,15 @@ public class CrudServiceImpl implements ICrudService {
             return RespVOBuilder.failure("找不到对应模板信息");
         }
         List<FormTemplateItem> items = formTemplate.getItems();
+        if (CollectionUtils.isEmpty(items)) {
+            return RespVOBuilder.failure("获取不到模板字段");
+        }
         StringBuilder sb = new StringBuilder();
         for (FormTemplateItem item : items) {
-            sb.append("IFNULL(" + item.getField() + ",'') as " + item.getField());
+            sb.append("IFNULL(" + item.getField() + ",'') as " + item.getField() + ",");
         }
-        Map<String, Object> data = crudMapper.queryByCode(formTemplate.getDescription(), equipmentCode,sb.toString());
+        sb.replace(sb.length() - 1, sb.length(), "");
+        Map<String, Object> data = crudMapper.queryByCode(formTemplate.getDescription(), equipmentCode, sb.toString());
         return RespVOBuilder.success(data);
     }
 
