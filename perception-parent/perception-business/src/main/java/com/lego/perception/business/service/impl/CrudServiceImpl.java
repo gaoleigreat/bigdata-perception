@@ -158,7 +158,6 @@ public class CrudServiceImpl implements ICrudService {
             return RespVOBuilder.failure("找不到对应模板信息");
         }
         StringBuilder sb = getColumns(formTemplate);
-        sb.replace(sb.length() - 1, sb.length(), "");
         QueryWrapper wrapper = getQueryWrapper(params);
 
         IPage iPage = PageUtil.page2IPage(page);
@@ -180,6 +179,7 @@ public class CrudServiceImpl implements ICrudService {
         for (FormTemplateItem item : items) {
             sb.append("IFNULL(" + item.getField() + ",'') as " + item.getField() + ",");
         }
+        sb.replace(sb.length() - 1, sb.length(), "");
         return sb;
     }
 
@@ -273,11 +273,7 @@ public class CrudServiceImpl implements ICrudService {
         if (CollectionUtils.isEmpty(items)) {
             return RespVOBuilder.failure("获取不到模板字段");
         }
-        StringBuilder sb = new StringBuilder();
-        for (FormTemplateItem item : items) {
-            sb.append("IFNULL(" + item.getField() + ",'') as " + item.getField() + ",");
-        }
-        sb.replace(sb.length() - 1, sb.length(), "");
+        StringBuilder sb = getColumns(formTemplate);
         Map<String, Object> data = crudMapper.queryByCode(formTemplate.getDescription(), equipmentCode, sb.toString());
         return RespVOBuilder.success(data);
     }
