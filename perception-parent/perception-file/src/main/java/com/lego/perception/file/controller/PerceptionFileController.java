@@ -2,11 +2,13 @@ package com.lego.perception.file.controller;
 
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
+import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.exception.ExceptionBuilder;
 import com.lego.framework.base.utils.UuidUtils;
+import com.lego.framework.base.utils.ZipUtil;
 import com.lego.framework.file.model.PerceptionFile;
 import com.lego.perception.file.service.IFdfsFileService;
 import com.lego.perception.file.service.IPerceptionFileService;
@@ -22,8 +24,14 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.websocket.server.PathParam;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 
 /**
@@ -149,6 +157,7 @@ public class PerceptionFileController {
 
     /**
      * 文件上传，返回批次还号
+     *
      * @param files
      * @param businessModule
      * @param projectId
@@ -162,20 +171,19 @@ public class PerceptionFileController {
             @ApiImplicitParam(name = "businessModule", value = "业务模块，", paramType = "query", dataType = "String"),
             @ApiImplicitParam(name = "projectId", value = "projectId，", paramType = "query", required = false, dataType = "Long"),
             @ApiImplicitParam(name = "remark", value = "备注", paramType = "query", dataType = "String"),
-            @ApiImplicitParam(name = "tags", value = "标签", paramType = "query", required = false,dataType = "String"),
+            @ApiImplicitParam(name = "tags", value = "标签", paramType = "query", required = false, dataType = "String"),
             @ApiImplicitParam(name = "createBy", value = "上传人", dataType = "String"),
 
     })
     @PostMapping(value = "/upLoad", headers = "content-type=multipart/form-data")
-    public RespVO upload(@RequestParam(value = "files") MultipartFile[] files,
-                         @RequestParam(value = "businessModule") String businessModule,
-                         @RequestParam(value = "projectId", required = false) Long projectId,
-                         @RequestParam(value = "remark") String remark,
-                         @RequestParam(value = "tags",required = false) String tags,
-                         @RequestParam(value = "createBy") String createBy,
-                         @RequestParam(value = "isStructured",required = false,defaultValue = "1") int isStructured
+    public RespVO<RespDataVO<PerceptionFile>> upload(@RequestParam(value = "files") MultipartFile[] files,
+                                                     @RequestParam(value = "businessModule") String businessModule,
+                                                     @RequestParam(value = "projectId", required = false) Long projectId,
+                                                     @RequestParam(value = "remark") String remark,
+                                                     @RequestParam(value = "tags", required = false) String tags,
+                                                     @RequestParam(value = "createBy") String createBy,
+                                                     @RequestParam(value = "isStructured", required = false, defaultValue = "1") int isStructured
     ) {
-        Map<String, String> fileNamemap = new HashMap<>();
         String batchnum = UuidUtils.generateShortUuid();
         if (files == null || files.length == 0) {
             ExceptionBuilder.operateFailException("上传文件files不能为空");
@@ -215,11 +223,30 @@ public class PerceptionFileController {
 
         }
         if (!CollectionUtils.isEmpty(perceptionFiles)) {
-            perceptionFileService.batchInsert(perceptionFiles);
-            return RespVOBuilder.success(batchnum);
-        } else {
-            return RespVOBuilder.failure("上传失败");
+            int insert = perceptionFileService.batchInsert(perceptionFiles);
+            if (insert == perceptionFiles.size()) {
+                return RespVOBuilder.success(perceptionFiles);
+            }
+
         }
+        return RespVOBuilder.failure("上传失败");
+    }
+
+
+    @ApiOperation(value = "download", notes = "download")
+    @ApiImplicitParams({
+    })
+    @GetMapping("/download")
+    public void download(HttpServletResponse response, @RequestParam(value = "batchnum") String batchnum) {
+        PerceptionFile perceptionFile = new PerceptionFile();
+        perceptionFile.setBatchNum(batchnum);
+        perceptionFile.setDeleteFlag(0);
+        List<PerceptionFile> perceptionFiles = perceptionFileService.query(perceptionFile);
+        Map<String, byte[]> map = new HashMap<>();
+        perceptionFiles.stream().forEach(pf -> {
+            map.put(pf.getName(), ZipUtil.getFileByte(perceptionFile.getFileUrl()));
+        });
+        ZipUtil.downloadBatchByFile(response, map, batchnum);
     }
 
 }

@@ -1,11 +1,20 @@
 package com.lego.perception.data.controller;
+
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
+import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.base.annotation.Operation;
+import com.lego.framework.base.exception.ExceptionBuilder;
+import com.lego.framework.base.utils.ZipUtil;
+import com.lego.framework.data.model.entity.PerceptionStructuredData;
 import com.lego.framework.data.model.entity.PerceptionUnstructuredData;
+import com.lego.framework.file.feign.PerceptionFileClient;
+import com.lego.framework.file.model.PerceptionFile;
+import com.lego.framework.template.model.entity.FormTemplate;
 import com.lego.perception.data.service.IPerceptionUnstructuredDataService;
+import com.lego.perception.data.utils.TemplateDataUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -15,9 +24,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.websocket.server.PathParam;
-import java.util.List;
+import java.io.IOException;
+import java.util.*;
 
 
 /**
@@ -35,6 +47,8 @@ import java.util.List;
 public class PerceptionUnstructuredDataController {
     @Autowired
     private IPerceptionUnstructuredDataService perceptionUnstructuredDataService;
+    @Autowired
+    private PerceptionFileClient perceptionFileClient;
 
     @ApiOperation(value = "分页查询PerceptionUnstructuredData", notes = "分页查询PerceptionUnstructuredData")
     @ApiImplicitParams({
@@ -55,10 +69,10 @@ public class PerceptionUnstructuredDataController {
     @GetMapping("/{id}")
     public RespVO<PerceptionUnstructuredData> selectByPrimaryKey(@PathVariable(value = "id") Long id) {
         PerceptionUnstructuredData perceptionUnstructuredData =
-            perceptionUnstructuredDataService.selectByPrimaryKey(id);
-        if (perceptionUnstructuredData == null){
+                perceptionUnstructuredDataService.selectByPrimaryKey(id);
+        if (perceptionUnstructuredData == null) {
             return RespVOBuilder.failure("当前PerceptionUnstructuredData不存在");
-        } else{
+        } else {
             return RespVOBuilder.success(perceptionUnstructuredData);
         }
     }
@@ -82,7 +96,7 @@ public class PerceptionUnstructuredDataController {
     })
     @PostMapping("/")
     public RespVO insert(@RequestBody PerceptionUnstructuredData perceptionUnstructuredData) {
-        if (perceptionUnstructuredData == null){
+        if (perceptionUnstructuredData == null) {
             return RespVOBuilder.failure("参数不能为空");
         }
         Integer num = perceptionUnstructuredDataService.insert(perceptionUnstructuredData);
@@ -98,7 +112,7 @@ public class PerceptionUnstructuredDataController {
     })
     @PutMapping("/")
     public RespVO updateByPrimaryKey(@RequestBody PerceptionUnstructuredData perceptionUnstructuredData) {
-        if (perceptionUnstructuredData == null){
+        if (perceptionUnstructuredData == null) {
             return RespVOBuilder.failure("参数不能为空");
         }
         Integer num = perceptionUnstructuredDataService.updateByPrimaryKey(perceptionUnstructuredData);
@@ -132,10 +146,95 @@ public class PerceptionUnstructuredDataController {
     })
     @PostMapping("/list")
     public RespVO query(@RequestBody PerceptionUnstructuredData perceptionUnstructuredData) {
-        if (perceptionUnstructuredData ==null){
+        if (perceptionUnstructuredData == null) {
             return RespVOBuilder.failure("参数不能为空");
         }
         List<PerceptionUnstructuredData> list = perceptionUnstructuredDataService.query(perceptionUnstructuredData);
         return RespVOBuilder.success(list);
     }
+
+
+    @PostMapping(value = "/upload", headers = "content-type=multipart/form-data")
+    @Operation(value = "upload", desc = "格式化文件上传")
+    public RespVO upload(@RequestParam(value = "files", required = true) MultipartFile[] files,
+                         @RequestParam(value = "businessModule", required = false) String businessModule,
+                         @RequestParam(value = "sourceModule", required = false) String sourceModule,
+                         @RequestParam(value = "name", required = false) String name,
+                         @RequestParam(value = "projectId", required = false) Long projectId,
+                         @RequestParam(value = "remark", required = false) String remark,
+                         @RequestParam(value = "tags", required = false) String tags,
+                         @RequestParam(value = "createBy", required = false) String createBy
+    ) {
+        if (files == null || files.length <= 0) {
+            return RespVOBuilder.failure("上传文件为空");
+        }
+
+
+        RespVO<RespDataVO<PerceptionFile>> respDataVORespVO = perceptionFileClient.upload(files, businessModule, projectId, remark, tags, createBy, 0);
+        if (respDataVORespVO.getRetCode() != 1) {
+            return RespVOBuilder.failure("上传文件失败");
+        }
+        List<PerceptionFile> perceptionFileList = respDataVORespVO.getInfo().getList();
+        if (CollectionUtils.isEmpty(perceptionFileList)){
+            return RespVOBuilder.failure("上传文件失败");
+        }
+
+
+        PerceptionUnstructuredData perceptionUnstructuredData = new PerceptionUnstructuredData();
+        perceptionUnstructuredData.setPublishFlag(0);
+        perceptionUnstructuredData.setDeleteFlag(0);
+        perceptionUnstructuredData.setBatchNum(perceptionFileList.get(0).getBatchNum());
+        perceptionUnstructuredData.setBusinessModule(businessModule);
+        perceptionUnstructuredData.setCreatedBy(createBy);
+        perceptionUnstructuredData.setCreationDate(new Date());
+        perceptionUnstructuredData.setLastUpdateDate(new Date());
+        perceptionUnstructuredData.setLastUpdatedBy(createBy);
+        perceptionUnstructuredData.setTags(tags);
+        perceptionUnstructuredData.setRemark(remark);
+        perceptionUnstructuredData.setName(name);
+        perceptionUnstructuredData.setSourceModule(sourceModule);
+        perceptionUnstructuredData.setProjectId(projectId);
+
+        Long size = 0L;
+        for (MultipartFile f: files){
+            size = size +f.getSize();
+        }
+        perceptionUnstructuredData.setSize(size);
+        perceptionUnstructuredDataService.insert(perceptionUnstructuredData);
+        return RespVOBuilder.success(perceptionUnstructuredData);
+    }
+
+
+    @GetMapping("/download")
+    public void download(HttpServletResponse response, @RequestParam(value = "batchnum") String batchnum) {
+        PerceptionFile perceptionFile = new PerceptionFile();
+        PerceptionUnstructuredData perceptionStructuredData = new PerceptionUnstructuredData();
+        perceptionStructuredData.setBatchNum(batchnum);
+        List<PerceptionUnstructuredData> perceptionUnstructuredDataList = perceptionUnstructuredDataService.query(perceptionStructuredData);
+        if (CollectionUtils.isEmpty(perceptionUnstructuredDataList)){
+            ExceptionBuilder.operateFailException("该批次号文件不存在");
+        }
+        perceptionFile.setBatchNum(batchnum);
+        perceptionFile.setDeleteFlag(0);
+        perceptionFile.setIsStructured(1);
+        RespVO<RespDataVO<PerceptionFile>> query = perceptionFileClient.query(perceptionFile);
+
+        if (query.getRetCode() == 1) {
+            List<PerceptionFile> perceptionFiles = query.getInfo().getList();
+            if (CollectionUtils.isEmpty(perceptionFiles)){
+                ExceptionBuilder.operateFailException("文件不存在");
+            }
+            Map<String, byte[]> map = new HashMap<>();
+            perceptionFiles.stream().forEach(pf -> {
+                map.put(pf.getName(), ZipUtil.getFileByte(pf.getFileUrl()));
+            });
+            String zipName = perceptionUnstructuredDataList.get(0).getName()== null?batchnum:perceptionUnstructuredDataList.get(0).getName();
+
+            ZipUtil.downloadBatchByFile(response, map, zipName);
+        } else {
+            ExceptionBuilder.operateFailException("文件下载失败");
+        }
+
+    }
+
 }

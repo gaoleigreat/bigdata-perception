@@ -1,23 +1,41 @@
 package com.lego.perception.data.controller;
+
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
+import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.base.annotation.Operation;
+import com.lego.framework.base.exception.ExceptionBuilder;
+import com.lego.framework.base.utils.ZipUtil;
 import com.lego.framework.data.model.entity.PerceptionStructuredData;
+import com.lego.framework.file.feign.PerceptionFileClient;
+import com.lego.framework.file.model.PerceptionFile;
+import com.lego.framework.template.feign.TemplateFeignClient;
+import com.lego.framework.template.model.entity.FormTemplate;
+import com.lego.perception.data.service.IDataService;
 import com.lego.perception.data.service.IPerceptionStructuredDataService;
+import com.lego.perception.data.utils.TemplateDataUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.websocket.server.PathParam;
-import java.util.List;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 
 /**
@@ -34,7 +52,20 @@ import java.util.List;
 @Slf4j
 public class PerceptionStructuredDataController {
     @Autowired
+    private TemplateFeignClient templateFeignClient;
+    @Autowired
     private IPerceptionStructuredDataService perceptionStructuredDataService;
+
+    @Autowired
+    @Qualifier(value = "mySqlDataServiceImpl")
+    private IDataService mySqlDataService;
+
+    @Autowired
+    @Qualifier(value = "mongoDataServiceImpl")
+    private IDataService mongoDataService;
+
+    @Autowired
+    private PerceptionFileClient perceptionFileClient;
 
     @ApiOperation(value = "分页查询PerceptionStructuredData", notes = "分页查询PerceptionStructuredData")
     @ApiImplicitParams({
@@ -55,10 +86,10 @@ public class PerceptionStructuredDataController {
     @GetMapping("/{id}")
     public RespVO<PerceptionStructuredData> selectByPrimaryKey(@PathVariable(value = "id") Long id) {
         PerceptionStructuredData perceptionStructuredData =
-            perceptionStructuredDataService.selectByPrimaryKey(id);
-        if (perceptionStructuredData == null){
+                perceptionStructuredDataService.selectByPrimaryKey(id);
+        if (perceptionStructuredData == null) {
             return RespVOBuilder.failure("当前PerceptionStructuredData不存在");
-        } else{
+        } else {
             return RespVOBuilder.success(perceptionStructuredData);
         }
     }
@@ -82,7 +113,7 @@ public class PerceptionStructuredDataController {
     })
     @PostMapping("/")
     public RespVO insert(@RequestBody PerceptionStructuredData perceptionStructuredData) {
-        if (perceptionStructuredData == null){
+        if (perceptionStructuredData == null) {
             return RespVOBuilder.failure("参数不能为空");
         }
         Integer num = perceptionStructuredDataService.insert(perceptionStructuredData);
@@ -98,7 +129,7 @@ public class PerceptionStructuredDataController {
     })
     @PutMapping("/")
     public RespVO updateByPrimaryKey(@RequestBody PerceptionStructuredData perceptionStructuredData) {
-        if (perceptionStructuredData == null){
+        if (perceptionStructuredData == null) {
             return RespVOBuilder.failure("参数不能为空");
         }
         Integer num = perceptionStructuredDataService.updateByPrimaryKey(perceptionStructuredData);
@@ -132,19 +163,24 @@ public class PerceptionStructuredDataController {
     })
     @PostMapping("/list")
     public RespVO query(@RequestBody PerceptionStructuredData perceptionStructuredData) {
-        if (perceptionStructuredData ==null){
+        if (perceptionStructuredData == null) {
             return RespVOBuilder.failure("参数不能为空");
         }
         List<PerceptionStructuredData> list = perceptionStructuredDataService.query(perceptionStructuredData);
         return RespVOBuilder.success(list);
     }
 
-/*    @PostMapping(value = "/upload", headers = "content-type=multipart/form-data")
+    @PostMapping(value = "/upload", headers = "content-type=multipart/form-data")
     @Operation(value = "upload", desc = "格式化文件上传")
-    public RespVO uplodeFormatted(@RequestParam(value = "templateId", required = true) Long templateId,
-                                  @RequestParam(value = "files", required = true) MultipartFile[] files,
-                                  @RequestParam(value = "projectId", required = false) Long projectId,
-                                  @RequestParam(value = "remark", required = false) String remark
+    public RespVO upload(@RequestParam(value = "templateId", required = true) Long templateId,
+                         @RequestParam(value = "files", required = true) MultipartFile[] files,
+                         @RequestParam(value = "businessModule", required = false) String businessModule,
+                         @RequestParam(value = "sourceModule", required = false) String sourceModule,
+                         @RequestParam(value = "name", required = false) String name,
+                         @RequestParam(value = "projectId", required = false) Long projectId,
+                         @RequestParam(value = "remark", required = false) String remark,
+                         @RequestParam(value = "tags", required = false) String tags,
+                         @RequestParam(value = "createBy", required = false) String createBy
     ) {
         if (files == null || files.length <= 0) {
             return RespVOBuilder.failure("上传文件为空");
@@ -159,44 +195,79 @@ public class PerceptionStructuredDataController {
         if (template == null) {
             return RespVOBuilder.failure("所选模板不存在");
         }
-        Integer dataType = template.getDataType();
-        RespVO<RespDataVO<DataFile>> uploads = fileClient.uploads(files, projectId, templateId, template.getDataType(), remark, tags.get(dataType));
-        if (uploads.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
-            return uploads;
+        RespVO<RespDataVO<PerceptionFile>> respDataVORespVO = perceptionFileClient.upload(files, businessModule, projectId, remark, tags, createBy, 0);
+        if (respDataVORespVO.getRetCode() != 1) {
+            return RespVOBuilder.failure("上传文件失败");
         }
-        RespDataVO<DataFile> dataVO = uploads.getInfo();
-        if (dataVO == null || CollectionUtils.isEmpty(dataVO.getList())) {
-            return uploads;
+        List<PerceptionFile> perceptionFileList = respDataVORespVO.getInfo().getList();
+        if (CollectionUtils.isEmpty(perceptionFileList)) {
+            return RespVOBuilder.failure("上传文件失败");
         }
-        Set<DataFile> dataFileSet = new HashSet<>();
-        Arrays.stream(files).forEach(mf -> {
-            List<DataFile> dataFiles = uploads.getInfo().getList();
-            dataFiles.forEach(dataFile -> {
-                if (mf.getOriginalFilename().endsWith(dataFile.getName())) {
-                    dataFileSet.add(dataFile);
-                    try {
-                        List<Map<String, Object>> maps = TemplateDataUtil.analyticalData(mf, dataFile.getId(), template);
-                        Integer type = template.getType();
-                        if (type != null && type == 0) {
-                            mySqlDataService.insertData(template, maps, dataFile.getId());
-                        } else {
-                            mongoDataService.insertData(template, maps, dataFile.getId());
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
 
-        });
+        Set<PerceptionFile> dataFileSet = new HashSet<>();
+        PerceptionStructuredData perceptionStructuredData = new PerceptionStructuredData();
+        perceptionStructuredData.setPublishFlag(0);
+        perceptionStructuredData.setDeleteFlag(0);
+        perceptionStructuredData.setBatchNum(perceptionFileList.get(0).getBatchNum());
+        perceptionStructuredData.setBusinessModule(businessModule);
+        perceptionStructuredData.setCreatedBy(createBy);
+        perceptionStructuredData.setCreationDate(new Date());
+        perceptionStructuredData.setLastUpdateDate(new Date());
+        perceptionStructuredData.setLastUpdatedBy(createBy);
+        perceptionStructuredData.setTemplateId(templateId);
+        perceptionStructuredData.setTags(tags);
+        perceptionStructuredData.setRemark(remark);
+        perceptionStructuredData.setName(name);
+        perceptionStructuredData.setSourceModule(sourceModule);
+        perceptionStructuredData.setProjectId(projectId);
+
+        Long size = 0L;
+        for (MultipartFile f : files) {
+            size = size + f.getSize();
+        }
+        perceptionStructuredData.setSize(size);
+        perceptionStructuredDataService.insert(perceptionStructuredData);
         if (dataFileSet.size() != files.length) {
             return RespVOBuilder.failure("上传文件失败");
         }
-        return RespVOBuilder.success(uploads.getInfo().getList().get(0).getBatchNum());
-
-    }*/
-
+        return RespVOBuilder.success(respDataVORespVO.getInfo().getList().get(0).getBatchNum());
+    }
 
 
+    @ApiOperation(value = "download", notes = "download")
+    @ApiImplicitParams({
+    })
+    @GetMapping("/download")
+    public void download(HttpServletResponse response, @RequestParam(value = "batchnum") String batchnum) {
+        PerceptionFile perceptionFile = new PerceptionFile();
+        PerceptionStructuredData perceptionStructuredData = new PerceptionStructuredData();
+        perceptionStructuredData.setBatchNum(batchnum);
+        List<PerceptionStructuredData> perceptionStructuredDataList = perceptionStructuredDataService.query(perceptionStructuredData);
+        if (CollectionUtils.isEmpty(perceptionStructuredDataList)) {
+            ExceptionBuilder.operateFailException("该批次号文件不存在");
+        }
+        perceptionFile.setBatchNum(batchnum);
+        perceptionFile.setDeleteFlag(0);
+        perceptionFile.setIsStructured(0);
+        RespVO<RespDataVO<PerceptionFile>> query = perceptionFileClient.query(perceptionFile);
+
+        if (query.getRetCode() == 1) {
+            List<PerceptionFile> perceptionFiles = query.getInfo().getList();
+            if (CollectionUtils.isEmpty(perceptionFiles)) {
+                ExceptionBuilder.operateFailException("文件不存在");
+            }
+            Map<String, byte[]> map = new HashMap<>();
+            perceptionFiles.stream().forEach(pf -> {
+                map.put(pf.getName(), ZipUtil.getFileByte(pf.getFileUrl()));
+            });
+            String zipName = perceptionStructuredDataList.get(0).getName() == null ? batchnum : perceptionStructuredDataList.get(0).getName();
+
+            ZipUtil.downloadBatchByFile(response, map, zipName);
+            ZipUtil.downloadBatchByFile(response, map, perceptionStructuredDataList.get(0).getName());
+        } else {
+            ExceptionBuilder.operateFailException("文件下载失败");
+        }
+
+    }
 
 }
