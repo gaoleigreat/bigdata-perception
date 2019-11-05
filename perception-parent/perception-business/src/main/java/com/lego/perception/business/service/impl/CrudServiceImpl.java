@@ -119,15 +119,18 @@ public class CrudServiceImpl implements ICrudService {
         if (formTemplate == null) {
             return RespVOBuilder.failure("找不到对应模板信息");
         }
-        List<FormTemplateItem> items = formTemplate.getItems();
-        if (CollectionUtils.isEmpty(items)) {
-            return RespVOBuilder.failure("获取不到模板字段");
+        StringBuilder sb = getColumns(formTemplate);
+        QueryWrapper wrapper = getQueryWrapper(params);
+        List<Map<String, Object>> data = crudMapper.queryBusinessData(formTemplate.getDescription(), wrapper, sb.toString());
+        if (!CollectionUtils.isEmpty(data)) {
+            for (Map datum : data) {
+                datum.remove("file_id");
+            }
         }
-        StringBuilder sb = new StringBuilder();
-        for (FormTemplateItem item : items) {
-            sb.append("IFNULL(" + item.getField() + ",'') as " + item.getField() + ",");
-        }
-        sb.replace(sb.length() - 1, sb.length(), "");
+        return RespVOBuilder.success(data);
+    }
+
+    private QueryWrapper getQueryWrapper(List<SearchParam> params) {
         QueryWrapper wrapper = new QueryWrapper();
         if (!CollectionUtils.isEmpty(params)) {
             for (SearchParam param : params) {
@@ -141,13 +144,7 @@ public class CrudServiceImpl implements ICrudService {
                 WrapperUtils.addAdvancedCondition(wrapper, symbol, absoluteField, value);
             }
         }
-        List<Map<String, Object>> data = crudMapper.queryBusinessData(formTemplate.getDescription(), wrapper, sb.toString());
-        if (!CollectionUtils.isEmpty(data)) {
-            for (Map datum : data) {
-                datum.remove("file_id");
-            }
-        }
-        return RespVOBuilder.success(data);
+        return wrapper;
     }
 
     @Override
@@ -160,28 +157,9 @@ public class CrudServiceImpl implements ICrudService {
         if (formTemplate == null) {
             return RespVOBuilder.failure("找不到对应模板信息");
         }
-        List<FormTemplateItem> items = formTemplate.getItems();
-        StringBuilder sb = new StringBuilder();
-        if (CollectionUtils.isEmpty(items)) {
-            return RespVOBuilder.failure("获取模板字段失败");
-        }
-        for (FormTemplateItem item : items) {
-            sb.append("IFNULL(" + item.getField() + ",'') as " + item.getField() + ",");
-        }
+        StringBuilder sb = getColumns(formTemplate);
         sb.replace(sb.length() - 1, sb.length(), "");
-        QueryWrapper wrapper = new QueryWrapper();
-        if (!CollectionUtils.isEmpty(params)) {
-            for (SearchParam param : params) {
-                String symbol = param.getSymbol();
-                String absoluteField = param.getAbsoluteField();
-                String value = param.getValue();
-                Integer dataType = param.getDataType();
-                if (null == symbol || null == absoluteField || null == value || null == dataType) {
-                    continue;
-                }
-                WrapperUtils.addAdvancedCondition(wrapper, symbol, absoluteField, value);
-            }
-        }
+        QueryWrapper wrapper = getQueryWrapper(params);
 
         IPage iPage = PageUtil.page2IPage(page);
         IPage<Map<String, Object>> data = crudMapper.queryBusinessData(iPage, formTemplate.getDescription(), wrapper, sb.toString());
@@ -191,6 +169,18 @@ public class CrudServiceImpl implements ICrudService {
             }
         }
         return RespVOBuilder.success(PageUtil.iPage2Result(data));
+    }
+
+    private StringBuilder getColumns(FormTemplate formTemplate) {
+        List<FormTemplateItem> items = formTemplate.getItems();
+        StringBuilder sb = new StringBuilder();
+        if (CollectionUtils.isEmpty(items)) {
+            ExceptionBuilder.operateFailException("获取模板字段失败");
+        }
+        for (FormTemplateItem item : items) {
+            sb.append("IFNULL(" + item.getField() + ",'') as " + item.getField() + ",");
+        }
+        return sb;
     }
 
     @Override
@@ -294,37 +284,13 @@ public class CrudServiceImpl implements ICrudService {
 
     @Override
     public Integer queryCount(String description, List<SearchParam> searchParams) {
-        QueryWrapper<BusinessTable> wrapper = new QueryWrapper<>();
-        if (!CollectionUtils.isEmpty(searchParams)) {
-            for (SearchParam param : searchParams) {
-                String symbol = param.getSymbol();
-                String absoluteField = param.getAbsoluteField();
-                String value = param.getValue();
-                Integer dataType = param.getDataType();
-                if (null == symbol || null == absoluteField || null == value || null == dataType) {
-                    continue;
-                }
-                WrapperUtils.addAdvancedCondition(wrapper, symbol, absoluteField, value);
-            }
-        }
+        QueryWrapper<BusinessTable> wrapper = getQueryWrapper(searchParams);
         return crudMapper.findCountByCondition(description, wrapper);
     }
 
     @Override
     public List<Map<String, String>> findSumExcavationByCondition(String description, List<SearchParam> searchParams, Integer type) {
-        QueryWrapper<BusinessTable> wrapper = new QueryWrapper<>();
-        if (!CollectionUtils.isEmpty(searchParams)) {
-            for (SearchParam param : searchParams) {
-                String symbol = param.getSymbol();
-                String absoluteField = param.getAbsoluteField();
-                String value = param.getValue();
-                Integer dataType = param.getDataType();
-                if (null == symbol || null == absoluteField || null == value || null == dataType) {
-                    continue;
-                }
-                WrapperUtils.addAdvancedCondition(wrapper, symbol, absoluteField, value);
-            }
-        }
+        QueryWrapper<BusinessTable> wrapper = getQueryWrapper(searchParams);
         return crudMapper.findSumExcavationByCondition(description, wrapper, type);
     }
 
