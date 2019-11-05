@@ -17,6 +17,10 @@ define:
       username: ywgzuser
       password: ywgz#(!)123
     share:
+      url: jdbc:mysql://172.16.1.5:3306/sharing_db?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+      username: dbadmin
+      password: dbadmin#(!)
+    business:
       url: jdbc:mysql://172.16.19.15:3306/perception_business?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
       username: ywgzuser
       password: ywgz#(!)123

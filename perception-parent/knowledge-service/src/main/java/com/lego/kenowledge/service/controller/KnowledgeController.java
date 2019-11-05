@@ -9,6 +9,7 @@ import com.lego.framework.base.annotation.Resource;
 import com.lego.kenowledge.service.model.entity.Answer;
 import com.lego.kenowledge.service.model.entity.Ask;
 import com.lego.kenowledge.service.model.entity.Knowledge;
+import com.lego.kenowledge.service.model.vo.AnswerVo;
 import com.lego.kenowledge.service.model.vo.AskVo;
 import com.lego.kenowledge.service.model.vo.KnowledgeVo;
 import com.lego.kenowledge.service.service.IKnowledgeService;
@@ -121,6 +122,18 @@ public class KnowledgeController {
     public RespVO<RespDataVO<AskVo>> myAsk() {
         List<AskVo> askVos = iKnowledgeService.myAsk();
         return RespVOBuilder.success(askVos);
+    }
+
+
+    @ApiOperation(value = "我的回答", httpMethod = "GET")
+    @ApiImplicitParams({
+
+    })
+    @Operation(value = "myAnswer", desc = "我的回答")
+    @RequestMapping(value = "/myAnswer", method = RequestMethod.GET)
+    public RespVO<RespDataVO<AnswerVo>> myAnswer() {
+        List<AnswerVo> answerVos = iKnowledgeService.myAnswer();
+        return RespVOBuilder.success(answerVos);
     }
 
 

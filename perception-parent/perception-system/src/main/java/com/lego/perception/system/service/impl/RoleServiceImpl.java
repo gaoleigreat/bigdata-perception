@@ -1,9 +1,13 @@
 package com.lego.perception.system.service.impl;
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
+import com.framework.mybatis.tool.WhereEntityTool;
 import com.framework.mybatis.utils.PageUtil;
 import com.lego.perception.system.mapper.RoleMapper;
 import com.lego.perception.system.service.IRoleService;
@@ -14,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+
 /**
  * @author yanglf
  */
@@ -46,7 +51,12 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
 
     @Override
     public PagedResult<Role> findPagedList(Role role, Page page) {
-        return PageUtil.queryPaged(page, role, roleMapper);
+        IPage<Role> iPage = PageUtil.page2IPage(page);
+        QueryWrapper<Role> wrapper = new QueryWrapper();
+        WhereEntityTool.invoke(role, wrapper);
+        wrapper.orderByDesc("creation_date");
+        IPage selectPage = roleMapper.selectPage(iPage, wrapper);
+        return PageUtil.iPage2Result(selectPage);
     }
 
     @Override

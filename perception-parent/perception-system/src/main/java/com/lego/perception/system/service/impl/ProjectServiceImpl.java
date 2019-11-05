@@ -32,7 +32,12 @@ public class ProjectServiceImpl implements IProjectService {
 
     @Override
     public PagedResult<Project> selectPaged(Page page, Project project) {
-        return PageUtil.queryPaged(page, project, projectMapper);
+        IPage<Project> iPage = PageUtil.page2IPage(page);
+        QueryWrapper<Project> wrapper= new QueryWrapper<>();
+        WhereEntityTool.invoke(project,wrapper);
+        wrapper.orderByDesc("creation_date");
+        IPage selectPage = projectMapper.selectPage(iPage, wrapper);
+        return PageUtil.iPage2Result(selectPage);
     }
 
     @Override

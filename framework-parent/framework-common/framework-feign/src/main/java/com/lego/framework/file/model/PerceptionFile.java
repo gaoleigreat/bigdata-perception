@@ -2,6 +2,8 @@ package com.lego.framework.file.model;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.framework.mybatis.tool.WhereType;
+import com.framework.mybatis.tool.WhereTypeEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +35,7 @@ public class PerceptionFile  {
      */
     
     @ApiModelProperty("文件名称")
+    @WhereType(type = WhereTypeEnum.LIKE)
     private String name;
 
 

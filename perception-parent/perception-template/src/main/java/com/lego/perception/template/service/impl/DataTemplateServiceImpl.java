@@ -47,7 +47,11 @@ public class DataTemplateServiceImpl implements IDataTemplateService {
 
     @Override
     public PagedResult<DataTemplate> findPagedList(DataTemplate template, Page page) {
-        return PageUtil.queryPaged(page,template,dataTemplateMapper);
+        IPage iPage = PageUtil.page2IPage(page);
+        QueryWrapper<DataTemplate> wrapper = new QueryWrapper<>();
+        wrapper.orderByDesc("creation_date");
+        IPage selectPage = dataTemplateMapper.selectPage(iPage, wrapper);
+        return PageUtil.iPage2Result(selectPage);
     }
 
     @Override

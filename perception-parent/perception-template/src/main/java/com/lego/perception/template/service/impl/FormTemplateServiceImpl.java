@@ -1,10 +1,13 @@
 package com.lego.perception.template.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.framework.common.consts.RespConsts;
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
+import com.framework.mybatis.tool.WhereEntityTool;
 import com.framework.mybatis.utils.PageUtil;
 import com.lego.framework.base.exception.ExceptionBuilder;
 import com.lego.framework.business.feign.CrudClient;
@@ -54,7 +57,12 @@ public class FormTemplateServiceImpl implements IFormTemplateService {
 
     @Override
     public PagedResult<FormTemplate> findPagedList(FormTemplate template, Page page) {
-        return PageUtil.queryPaged(page, template, formTemplateMapper);
+        IPage iPage = PageUtil.page2IPage(page);
+        QueryWrapper<FormTemplate> wrapper = new QueryWrapper<>();
+        WhereEntityTool.invoke(template, wrapper);
+        wrapper.orderByDesc("creation_date");
+        IPage selectPage = formTemplateMapper.selectPage(iPage, wrapper);
+        return PageUtil.iPage2Result(selectPage);
     }
 
     @Override

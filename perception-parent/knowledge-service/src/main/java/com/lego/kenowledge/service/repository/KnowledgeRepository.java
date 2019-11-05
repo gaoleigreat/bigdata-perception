@@ -45,6 +45,13 @@ public interface KnowledgeRepository extends ElasticsearchRepository<Knowledge, 
 
 
     /**
+     * @param answerBy
+     * @return
+     */
+    List<Knowledge> findAllByAnswersCreatedIdOrderByCreatedDateDesc(Long answerBy);
+
+
+    /**
      * 通过回复id获取知识库信息
      *
      * @param answerId

@@ -178,6 +178,27 @@ public class KnowledgeServiceImpl implements IKnowledgeService {
     }
 
     @Override
+    public List<AnswerVo> myAnswer() {
+        List<Knowledge> knowledgeList = knowledgeRepository.findAllByAnswersCreatedIdOrderByCreatedDateDesc(1L);
+        return getAnswersVos(knowledgeList);
+    }
+
+    private List<AnswerVo> getAnswersVos(List<Knowledge> knowledgeList) {
+        List<AnswerVo> answerVoList = new ArrayList<>();
+        if (CollectionUtils.isEmpty(knowledgeList)) {
+            return answerVoList;
+        }
+        for (Knowledge knowledge : knowledgeList) {
+            List<Answer> answers = knowledge.getAnswers();
+            if (!CollectionUtils.isEmpty(answers)) {
+                List<AnswerVo> answerVos = getAnswerVos(answers);
+                answerVoList.addAll(answerVos);
+            }
+        }
+        return answerVoList;
+    }
+
+    @Override
     public List<KnowledgeVo> searchTag(String q, String tag) {
         NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
         // queryStringQuery 全文检索

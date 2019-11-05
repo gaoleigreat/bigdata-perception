@@ -41,7 +41,7 @@ public class ProjectController {
     @Operation(value = "findPaged", desc = "分页查询")
     @ApiOperation("分页查询")
     public RespVO<PagedResult<Project>> selectPaged(@PathParam(value = "") Page page, @ModelAttribute Project project) {
-        PagedResult<Project> result = iProjectService.selectPaged(page,project);
+        PagedResult<Project> result = iProjectService.selectPaged(page, project);
         return RespVOBuilder.success(result);
     }
 
@@ -93,10 +93,13 @@ public class ProjectController {
     @RequestMapping(value = "/update_tplProject", method = RequestMethod.PUT)
     @Operation(value = "update_tplProject", desc = "修改项目")
     @ApiOperation("修改项目")
-    public RespVO updateByPrimaryKeySelective(@ModelAttribute Project project, HttpServletRequest request) {
+    public RespVO updateByPrimaryKeySelective(@RequestBody Project project, HttpServletRequest request) {
         String userId = request.getHeader(HttpConsts.USER_ID);
         Integer num = iProjectService.updateByPrimaryKeySelective(project, Long.valueOf(userId));
-        return RespVOBuilder.success();
+        if (num > 0) {
+            return RespVOBuilder.success();
+        }
+        return RespVOBuilder.failure("修改失败");
     }
 
 

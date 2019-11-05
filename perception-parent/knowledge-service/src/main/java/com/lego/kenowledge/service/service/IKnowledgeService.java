@@ -6,6 +6,7 @@ import com.framework.common.sdto.RespVO;
 import com.lego.kenowledge.service.model.entity.Answer;
 import com.lego.kenowledge.service.model.entity.Ask;
 import com.lego.kenowledge.service.model.entity.Knowledge;
+import com.lego.kenowledge.service.model.vo.AnswerVo;
 import com.lego.kenowledge.service.model.vo.AskVo;
 import com.lego.kenowledge.service.model.vo.KnowledgeVo;
 import org.springframework.web.multipart.MultipartFile;
@@ -62,6 +63,11 @@ public interface IKnowledgeService {
      * @return
      */
     List<AskVo> myAsk();
+
+    /**
+     * @return
+     */
+    List<AnswerVo> myAnswer();
 
     /**
      * @param q

@@ -1,8 +1,11 @@
 package com.lego.perception.file.service.impl;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.framework.common.page.Page;
 import com.framework.common.page.PagedResult;
+import com.framework.mybatis.tool.WhereEntityTool;
 import com.framework.mybatis.utils.PageUtil;
 import com.lego.framework.file.model.PerceptionFile;
 import com.lego.perception.file.mapper.PerceptionFileMapper;
@@ -92,8 +95,12 @@ public class PerceptionFileServiceImpl implements IPerceptionFileService {
 
     @Override
     public PagedResult<PerceptionFile> selectPaged(PerceptionFile perceptionFile, Page page) {
-        PagedResult pagedResult = PageUtil.queryPaged(page, perceptionFile, perceptionFileMapper);
-        return pagedResult;
+        IPage iPage = PageUtil.page2IPage(page);
+        QueryWrapper<PerceptionFile> wrapper = new QueryWrapper<>();
+        WhereEntityTool.invoke(perceptionFile, wrapper);
+        wrapper.orderByDesc("creation_date");
+        IPage selectPage = perceptionFileMapper.selectPage(iPage, wrapper);
+        return PageUtil.iPage2Result(selectPage);
     }
 
     /**
