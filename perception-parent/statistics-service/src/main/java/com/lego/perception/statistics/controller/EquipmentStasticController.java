@@ -1,17 +1,24 @@
 package com.lego.perception.statistics.controller;
 
+import com.framework.common.consts.RespConsts;
 import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
 import com.lego.framework.base.utils.BigDecimalUtils;
+import com.lego.framework.business.feign.CrudClient;
 import com.lego.framework.equipment.feign.EquipmentCostClient;
 import com.lego.framework.equipment.feign.EquipmentMaintenanceClient;
 import com.lego.framework.equipment.feign.EquipmentServiceClient;
+import com.lego.framework.equipment.feign.EquipmentTypeClient;
 import com.lego.framework.equipment.model.entity.EquipmentCost;
 import com.lego.framework.equipment.model.entity.EquipmentMaintenance;
 import com.lego.framework.equipment.model.entity.EquipmentService;
+import com.lego.framework.equipment.model.entity.EquipmentType;
+import com.lego.framework.template.feign.TemplateFeignClient;
+import com.lego.framework.template.model.entity.FormTemplate;
+import com.lego.framework.template.model.entity.SearchParam;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +49,16 @@ public class EquipmentStasticController {
 
     @Autowired
     private EquipmentMaintenanceClient equipmentMaintenanceClient;
+
+    @Autowired
+    private TemplateFeignClient templateFeignClient;
+
+    @Autowired
+    private CrudClient crudClient;
+
+
+    @Autowired
+    private EquipmentTypeClient equipmentTypeClient;
 
 
     @Operation(value = "find", desc = "查询")
@@ -115,7 +132,6 @@ public class EquipmentStasticController {
 
         }
         return RespVOBuilder.failure();
-
     }
 
     @Operation(value = "find", desc = "查询")
@@ -157,8 +173,22 @@ public class EquipmentStasticController {
     @ApiOperation("查询单个设备事故次数")
     @GetMapping("/numberOfAccidents")
     public RespVO numberOfAccidents(String equipmentCode) {
-       return RespVOBuilder.success(8);
+        return getBusinessDataCount(equipmentCode, "shebeisggl");
+    }
 
+    private RespVO getBusinessDataCount(String equipmentCode, String templateCode) {
+        List<SearchParam> sps = new ArrayList<>();
+        SearchParam sp = new SearchParam();
+        sp.setAbsoluteField("equipment_code");
+        sp.setValue(equipmentCode);
+        sp.setSymbol("=");
+        sp.setDataType(1);
+        sps.add(sp);
+        RespVO<Integer> integerRespVO = crudClient.queryCount(templateCode, sps);
+        if (integerRespVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
+            return RespVOBuilder.failure(integerRespVO.getMsg());
+        }
+        return RespVOBuilder.success(integerRespVO.getInfo());
     }
 
 
@@ -166,7 +196,7 @@ public class EquipmentStasticController {
     @ApiOperation("查询单个设备调动次数")
     @GetMapping("/numberOfTransfer")
     public RespVO numberOfTransfer(String equipmentCode) {
-        return RespVOBuilder.success(8);
+        return getBusinessDataCount(equipmentCode, "shebeiddxx");
     }
 
 
@@ -174,16 +204,32 @@ public class EquipmentStasticController {
     @ApiOperation("查询单个设备掘进量")
     @GetMapping("/numberOfExcavation")
     public RespVO numberOfExcavation(String equipmentCode) {
-        Map<String,Double> data  = new HashMap<>();
-        data.put("2018-12",9.0);
-        data.put("2019-1",9.0);
-        data.put("2019-2",8.0);
-        data.put("2019-3",7.0);
-        data.put("2019-4",6.0);
-        data.put("2019-5",5.0);
-        data.put("2019-6",4.0);
-
-        return RespVOBuilder.success(8);
+        return getBusinessDataSum(equipmentCode, "shebeiyzxx");
     }
+
+
+    private RespVO<RespDataVO<Map<String, String>>> getBusinessDataSum(String equipmentCode, String templateCode) {
+        RespVO<FormTemplate> byDataType = templateFeignClient.findFormTemplateByCode(templateCode);
+        if (byDataType.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
+            return RespVOBuilder.failure(byDataType.getMsg());
+        }
+        if (byDataType.getInfo() == null) {
+            return RespVOBuilder.failure("模板不存在");
+        }
+        FormTemplate formTemplate = byDataType.getInfo();
+        List<SearchParam> sps = new ArrayList<>();
+        SearchParam sp = new SearchParam();
+        sp.setAbsoluteField("equipment_code");
+        sp.setValue(equipmentCode);
+        sp.setSymbol("=");
+        sp.setDataType(1);
+        sps.add(sp);
+        RespVO<RespDataVO<Map<String, String>>> respDataVORespVO = crudClient.findSumExcavationByCondition(formTemplate.getTemplateCode(), sps, 2);
+        if (respDataVORespVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
+            return RespVOBuilder.failure(respDataVORespVO.getMsg());
+        }
+        return RespVOBuilder.success(respDataVORespVO.getInfo());
+    }
+
 
 }

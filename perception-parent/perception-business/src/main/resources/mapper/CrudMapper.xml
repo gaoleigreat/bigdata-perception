@@ -44,16 +44,46 @@
 
 
     <select id="queryBusinessData" resultType="java.util.Map">
-        select * from ${tableName}
+        select
+        ${column}
+        from ${tableName}
         <where>
             ${ew.sqlSegment}
         </where>
     </select>
 
-    <select id="queryByCode">
-        select *
+    <select id="queryByCode" resultType="java.util.Map">
+        select ${column}
         from ${tableName}
         where equipment_code = #{equipmentCode}
+    </select>
+
+
+    <select id="findCountByCondition" resultType="java.lang.Integer">
+        select count(*) from ${tableName}
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+
+
+    <select id="findSumExcavationByCondition" resultType="java.util.Map">
+        select
+        <if test="type!=null and type==3">
+            yunzhuannianfen as time,
+        </if>
+        <if test="type!=null and type==3">
+            yunzhunjidu as time,
+        </if>
+        <if test="type!=null and type==3">
+            yunzhuanyuefen as time,
+        </if>
+        sum(juejinlicheng) total
+        from ${tableName}
+        <where>
+            ${ew.sqlSegment}
+        </where>
+        group by time
     </select>
 
 

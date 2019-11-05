@@ -6,6 +6,7 @@ import com.framework.mybatis.mapper.Mapper;
 import com.lego.framework.business.model.entity.BusinessTable;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Map;
@@ -48,7 +49,8 @@ public interface CrudMapper extends Mapper<BusinessTable> {
      * @return
      */
     List<Map<String, Object>> queryBusinessData(@Param(value = "tableName") String tableName,
-                                                @Param(value = "ew") QueryWrapper wrapper);
+                                                @Param(value = "ew") QueryWrapper wrapper,
+                                                @Param(value = "column") String column);
 
 
     /**
@@ -60,7 +62,8 @@ public interface CrudMapper extends Mapper<BusinessTable> {
      * @return
      */
     IPage<Map<String, Object>> queryBusinessData(IPage iPage, @Param(value = "tableName") String tableName,
-                                                 @Param(value = "ew") QueryWrapper wrapper);
+                                                 @Param(value = "ew") QueryWrapper wrapper,
+                                                 @Param(value = "column") String column);
 
 
     /**
@@ -95,5 +98,24 @@ public interface CrudMapper extends Mapper<BusinessTable> {
      * @return
      */
     Map<String, Object> queryByCode(@Param(value = "tableName") String tableName,
-                                    @Param(value = "equipmentCode") String equipmentCode);
+                                    @Param(value = "equipmentCode") String equipmentCode,
+                                    @Param(value = "column") String column);
+
+
+    /**
+     * @param tableName
+     * @param wrapper
+     * @return
+     */
+    Integer findCountByCondition(@Param(value = "tableName") String tableName,
+                                 @Param(value = "ew") QueryWrapper wrapper);
+
+    /**
+     * @param tableName
+     * @param wrapper
+     * @return
+     */
+    List<Map<String, String>> findSumExcavationByCondition(@Param(value = "tableName") String tableName,
+                                                           @Param(value = "ew") QueryWrapper wrapper,
+                                                           @Param(value = "type") Integer type);
 }

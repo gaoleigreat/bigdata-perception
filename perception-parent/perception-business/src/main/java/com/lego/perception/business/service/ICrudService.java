@@ -45,22 +45,22 @@ public interface ICrudService {
     /**
      * 查询业务数据
      *
-     * @param tableName
+     * @param templateCode
      * @param params
      * @return
      */
-    RespVO<RespDataVO<Map<String,Object>>> queryBusinessData(String tableName, List<SearchParam> params);
+    RespVO<RespDataVO<Map<String,Object>>> queryBusinessData(String templateCode, List<SearchParam> params);
 
 
     /**
      * 分页查询业务数据
      *
-     * @param tableName
+     * @param templateCode
      * @param params
      * @param page
      * @return
      */
-    RespVO<PagedResult<Map<String, Object>>> queryBusinessDataPaged(String tableName, List<SearchParam> params, Page page);
+    RespVO<PagedResult<Map<String, Object>>> queryBusinessDataPaged(String templateCode, List<SearchParam> params, Page page);
 
 
     /**
@@ -103,9 +103,23 @@ public interface ICrudService {
 
     /**
      * 根据设备编码查询设备数据表
-     * @param description
      * @param equipmentCode
      * @return
      */
-    RespVO<Map<String, Object>> queryBusinessDataByCode(String description, String equipmentCode);
+    RespVO<Map<String, Object>> queryBusinessDataByCode(String templateCode, String equipmentCode);
+
+    /**
+     * @param description
+     * @param searchParams
+     * @return
+     */
+    Integer queryCount(String description, List<SearchParam> searchParams);
+
+    /**
+     * @param description
+     * @param searchParams
+     * @param type
+     * @return
+     */
+    List<Map<String, String>> findSumExcavationByCondition(String description, List<SearchParam> searchParams, Integer type);
 }

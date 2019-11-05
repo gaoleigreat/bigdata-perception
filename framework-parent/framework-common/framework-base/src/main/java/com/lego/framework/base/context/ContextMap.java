@@ -30,15 +30,20 @@ public class ContextMap {
     }
 
     private void initDocTypes() {
-        //0-机械图纸；1-电气图纸；2-液压图纸；3-维修方案；4-会议纪要；5-转场记录；6-维修合同;7-其他
-        docTypes.put(0, "机械图纸");
-        docTypes.put(1, "电器图纸");
-        docTypes.put(2, "液压图纸");
-        docTypes.put(3, "维修方案");
-        docTypes.put(4, "会议纪要");
-        docTypes.put(5, "转场记录");
-        docTypes.put(6, "维修合同");
-        docTypes.put(7, "其他");
+        //0-(新机-设计联络)；1-(新机-合同)；2-(新机-图纸)；3-(新机-三验报告(工厂、公司、百米))；4-(旧机-动态勘验报告)；
+        // 5-(旧机-维修方案)；6-(旧机-静态勘验报告);7-(旧机-专项方案);8-(旧机-实验过程资料);9-旧机-三研报告（工厂、公司、百米）
+        // 10-(旧机-决算资料)
+        docTypes.put(0, "新机-设计联络");
+        docTypes.put(1, "新机-合同");
+        docTypes.put(2, "新机-图纸");
+        docTypes.put(3, "新机-三验报告（工厂、公司、百米）)");
+        docTypes.put(4, "旧机-动态勘验报告");
+        docTypes.put(5, "旧机-维修方案");
+        docTypes.put(6, "旧机-静态勘验报告");
+        docTypes.put(7, "旧机-专项方案");
+        docTypes.put(8, "旧机-实验过程资料");
+        docTypes.put(9, "旧机-三研报告（工厂、公司、百米）");
+        docTypes.put(10, "旧机-决算资料");
     }
 
 

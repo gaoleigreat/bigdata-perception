@@ -87,7 +87,8 @@ public class EquipmentDocTraceController {
             @ApiImplicitParam(name = "equipmentId", value = "设备类型id", dataType = "long", required = true, paramType = "query"),
             @ApiImplicitParam(name = "equipmentCode", value = "设备编号", dataType = "String", paramType = "query"),
             @ApiImplicitParam(name = "remark", value = "备注", dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "type", value = "文档类型(0-机械图纸；1-电气图纸；2-液压图纸；3-维修方案；4-会议纪要；5-转场记录；6-维修合同;7-其他)", dataType = "int", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "type", value = "文档类型 0-(新机-设计联络)；1-(新机-合同)；2-(新机-图纸)；3-(新机-三验报告(工厂、公司、百米))；4-(旧机-动态勘验报告);" +
+                    "5-(旧机-维修方案)；6-(旧机-静态勘验报告);7-(旧机-专项方案);8-(旧机-实验过程资料);9-旧机-三研报告（工厂、公司、百米）;10-(旧机-决算资料)", dataType = "int", required = true, paramType = "query"),
 
     })
     @Operation(value = "insert", desc = "新增设备文档")

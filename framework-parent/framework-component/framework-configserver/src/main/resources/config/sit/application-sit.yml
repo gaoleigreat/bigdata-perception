@@ -24,6 +24,10 @@ define:
       url: jdbc:mysql://172.16.19.15:3306/perception_equipment?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
       username: ywgzuser
       password: ywgz#(!)123
+    template:
+      url: jdbc:mysql://172.16.19.15:3306/perception_template?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+      username: ywgzuser
+      password: ywgz#(!)123
 eureka:
   client:
     fetch-registry: true

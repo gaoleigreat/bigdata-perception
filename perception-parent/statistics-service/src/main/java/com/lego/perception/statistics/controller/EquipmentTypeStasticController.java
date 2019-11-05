@@ -41,7 +41,6 @@ public class EquipmentTypeStasticController {
         EquipmentType equipmentType = new EquipmentType();
         equipmentType.setCode(code);
         return null;
-
     }
 
 

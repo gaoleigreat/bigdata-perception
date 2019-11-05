@@ -108,6 +108,27 @@ public class EquipmentController {
     }
 
 
+    @ApiOperation(value = "刪除设备下面子设备", httpMethod = "DELETE")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "设备id", dataType = "String", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "type", value = "设备类型", dataType = "String", required = true, paramType = "query"),
+    })
+    @Operation(value = "delEquipmentByCode", desc = "刪除设备下面子设备")
+    @RequestMapping(value = "/delEquipmentByCode", method = RequestMethod.DELETE)
+    public RespVO delEquipmentByCode(@RequestParam(value = "type") String type,
+                                     @RequestParam Long id) {
+        RespVO<RespDataVO<FormTemplate>> respDataVORespVO = templateFeignClient.findByDataType(Integer.valueOf(type));
+        boolean b = respDataVORespVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE || respDataVORespVO.getInfo() == null && CollectionUtils.isEmpty(respDataVORespVO.getInfo().getList());
+        if (b) {
+            ExceptionBuilder.operateFailException("获取模板失败");
+        }
+        FormTemplate formTemplateGet = respDataVORespVO.getInfo().getList().get(0);
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", id);
+        return crudClient.delBusinessData(formTemplateGet.getTemplateCode(), map);
+    }
+
+
     /**
      * 通过设备类型code查询该类型下面的设备信息
      *
@@ -155,7 +176,8 @@ public class EquipmentController {
     })
     @Operation(value = "save_equipment", desc = "新增设备")
     @RequestMapping(value = "/save_equipmentCost", method = RequestMethod.POST)
-    public RespVO insert(@RequestParam(value = "equipmentTypeCode") String equipmentTypeCode, @RequestBody Map<String, Object> data) {
+    public RespVO insert(@RequestParam(value = "equipmentTypeCode") String equipmentTypeCode,
+                         @RequestBody Map<String, Object> data) {
 
         if (StringUtils.isBlank(equipmentTypeCode)) {
             return RespVOBuilder.failure("设备类型code不能为空");

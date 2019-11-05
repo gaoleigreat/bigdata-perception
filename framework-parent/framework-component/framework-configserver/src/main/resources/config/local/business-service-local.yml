@@ -4,9 +4,9 @@ define:
     type: com.alibaba.druid.pool.DruidDataSource
     write:
       driverClassName: com.mysql.cj.jdbc.Driver
-      url: ${define.mysql.write.url}
-      username: ${define.mysql.write.username}
-      password: ${define.mysql.write.password}
+      url: ${define.mysql.business.url}
+      username: ${define.mysql.business.username}
+      password: ${define.mysql.business.password}
       initialSize: 5    #初始化时建立连接个数
       minIdle: 5
       maxActive: 20     #连接池最大连接数

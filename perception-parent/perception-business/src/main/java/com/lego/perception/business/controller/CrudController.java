@@ -22,6 +22,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.servlet.http.HttpServletResponse;
 import javax.websocket.server.PathParam;
 import java.util.List;
@@ -99,6 +100,17 @@ public class CrudController {
     @Operation(value = "query", desc = "查询业务数据")
     public RespVO<RespDataVO<Map<String, Object>>> queryBusinessData(@RequestParam String templateCode,
                                                                      @RequestBody(required = false) List<SearchParam> searchParams) {
+        return mySqlBusinessService.queryBusinessData(templateCode, searchParams);
+    }
+
+
+    @ApiOperation(value = "查询业务数据", httpMethod = "POST")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "templateCode", value = "表单模板code", dataType = "String", required = true, paramType = "query"),
+    })
+    @RequestMapping(value = "/queryCount", method = RequestMethod.POST)
+    public RespVO<Integer> queryCount(@RequestParam("templateCode") String templateCode,
+                                      @RequestBody List<SearchParam> searchParams) {
         RespVO<FormTemplate> respVO = templateFeignClient.findFormTemplateByCode(templateCode);
         if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
             return RespVOBuilder.failure("获取模板信息失败");
@@ -107,7 +119,30 @@ public class CrudController {
         if (formTemplate == null) {
             return RespVOBuilder.failure("找不到对应模板信息");
         }
-        return mySqlBusinessService.queryBusinessData(formTemplate.getDescription(), searchParams);
+        Integer count = mySqlBusinessService.queryCount(formTemplate.getDescription(), searchParams);
+        return RespVOBuilder.success(count);
+    }
+
+
+    @ApiOperation(value = "统计累积掘进量", httpMethod = "POST")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "templateCode", value = "表单模板code", dataType = "String", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "type", value = "1-年;2-季度;3-月份", dataType = "int", defaultValue = "3", paramType = "query"),
+    })
+    @RequestMapping(value = "/findSumExcavationByCondition", method = RequestMethod.POST)
+    public RespVO<RespDataVO<Map<String, String>>> findSumExcavationByCondition(@RequestParam("templateCode") String templateCode,
+                                                                                @RequestBody List<SearchParam> searchParams,
+                                                                                @RequestParam(required = false, defaultValue = "3") Integer type) {
+        RespVO<FormTemplate> respVO = templateFeignClient.findFormTemplateByCode(templateCode);
+        if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
+            return RespVOBuilder.failure("获取模板信息失败");
+        }
+        FormTemplate formTemplate = respVO.getInfo();
+        if (formTemplate == null) {
+            return RespVOBuilder.failure("找不到对应模板信息");
+        }
+        List<Map<String, String>> mapList = mySqlBusinessService.findSumExcavationByCondition(formTemplate.getDescription(), searchParams, type);
+        return RespVOBuilder.success(mapList);
     }
 
 
@@ -141,15 +176,7 @@ public class CrudController {
     public RespVO<PagedResult<Map<String, Object>>> queryPaged(@RequestParam String templateCode,
                                                                @RequestBody List<SearchParam> searchParams,
                                                                @PathParam(value = "") Page page) {
-        RespVO<FormTemplate> respVO = templateFeignClient.findFormTemplateByCode(templateCode);
-        if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
-            return RespVOBuilder.failure("获取模板信息失败");
-        }
-        FormTemplate formTemplate = respVO.getInfo();
-        if (formTemplate == null) {
-            return RespVOBuilder.failure("找不到对应模板信息");
-        }
-        return mySqlBusinessService.queryBusinessDataPaged(formTemplate.getDescription(), searchParams, page);
+        return mySqlBusinessService.queryBusinessDataPaged(templateCode, searchParams, page);
     }
 
 
@@ -163,18 +190,10 @@ public class CrudController {
                                                                    @RequestBody List<SearchParam> searchParams,
                                                                    @PathVariable(value = "pageSize") Integer pageSize,
                                                                    @PathVariable(value = "pageIndex") Integer pageIndex) {
-        RespVO<FormTemplate> respVO = templateFeignClient.findFormTemplateByCode(templateCode);
-        if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
-            return RespVOBuilder.failure("获取模板信息失败");
-        }
-        FormTemplate formTemplate = respVO.getInfo();
-        if (formTemplate == null) {
-            return RespVOBuilder.failure("找不到对应模板信息");
-        }
         Page page = new Page();
         page.setPageSize(pageSize);
         page.setPageIndex(pageIndex);
-        return mySqlBusinessService.queryBusinessDataPaged(formTemplate.getDescription(), searchParams, page);
+        return mySqlBusinessService.queryBusinessDataPaged(templateCode, searchParams, page);
     }
 
 

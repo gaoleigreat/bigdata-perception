@@ -4,8 +4,6 @@ import com.framework.common.sdto.RespDataVO;
 import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.base.annotation.Operation;
-import com.lego.framework.data.model.entity.PerceptionStructuredData;
-import com.lego.framework.data.model.entity.PerceptionUnstructuredData;
 import com.lego.framework.data.model.entity.ShareData;
 import com.lego.perception.data.service.IShareDataService;
 import io.swagger.annotations.Api;

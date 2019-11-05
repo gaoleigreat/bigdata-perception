@@ -120,6 +120,29 @@ public interface CrudClient {
     RespVO uploadBusinessData(@RequestParam(value = "templateCode") String templateCode,
                               @RequestParam(value = "file") MultipartFile file);
 
+    /**
+     * @param templateCode
+     * @param searchParams
+     * @return
+     */
+    @RequestMapping(value = "/queryCount", method = RequestMethod.POST)
+    RespVO<Integer> queryCount(@RequestParam("templateCode") String templateCode,
+                               @RequestBody List<SearchParam> searchParams);
+
+
+    /**
+     * 累积掘进量
+     *
+     * @param templateCode
+     * @param searchParams
+     * @param type
+     * @return
+     */
+    @RequestMapping(value = "/findSumExcavationByCondition", method = RequestMethod.POST)
+    RespVO<RespDataVO<Map<String, String>>> findSumExcavationByCondition(@RequestParam("templateCode") String templateCode,
+                                                                         @RequestBody List<SearchParam> searchParams,
+                                                                         @RequestParam(value = "type", required = false, defaultValue = "3") Integer type);
+
 }
 
 @Slf4j
@@ -167,6 +190,16 @@ class CrudClientFallbackFactory implements FallbackFactory<CrudClient> {
 
             @Override
             public RespVO uploadBusinessData(String templateCode, MultipartFile file) {
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
+            }
+
+            @Override
+            public RespVO<Integer> queryCount(String templateCode, List<SearchParam> searchParams) {
+                return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
+            }
+
+            @Override
+            public RespVO<RespDataVO<Map<String, String>>> findSumExcavationByCondition(String templateCode, List<SearchParam> searchParams, Integer type) {
                 return RespVOBuilder.failure(RespConsts.ERROR_SERVER_CODE, "business服务不可用");
             }
         };

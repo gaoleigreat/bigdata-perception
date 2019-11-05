@@ -31,7 +31,7 @@ public class EquipmentServiceRecordServiceImpl implements IEquipmentServiceRecor
     public PagedResult<EquipmentServiceRecord> selectPaged(EquipmentServiceRecord equipmentServiceRecord, Page page) {
         IPage<EquipmentServiceRecord> iPage = PageUtil.page2IPage(page);
         QueryWrapper<EquipmentServiceRecord> wrapper = new QueryWrapper<>();
-        WhereEntityTool.excute(equipmentServiceRecord, wrapper);
+        WhereEntityTool.invoke(equipmentServiceRecord, wrapper);
         com.baomidou.mybatisplus.extension.plugins.pagination.Page<EquipmentServiceRecord> recordPage = equipmentServiceRecordMapper.queryList(iPage, wrapper);
         return PageUtil.iPage2Result(recordPage);
     }

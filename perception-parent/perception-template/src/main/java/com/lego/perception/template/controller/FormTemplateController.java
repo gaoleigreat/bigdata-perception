@@ -80,6 +80,17 @@ public class FormTemplateController {
     }
 
 
+    @RequestMapping(value = "/findDetailsByDataType/{dataType}", method = RequestMethod.GET)
+    @Operation(value = "find", desc = "查询")
+    @ApiOperation("查询模板详情")
+    public RespVO<FormTemplate> findDetailsByDataType(@PathVariable Integer dataType) {
+        FormTemplate template = new FormTemplate();
+        template.setDataType(dataType);
+        FormTemplate formTemplate = formTemplateService.find(template);
+        return RespVOBuilder.success(formTemplate);
+    }
+
+
     @RequestMapping(value = "/insert", method = RequestMethod.PUT)
     @Operation(value = "insert", desc = "新增")
     @ApiOperation("新增")
@@ -101,7 +112,6 @@ public class FormTemplateController {
     @ApiOperation("删除")
     public RespVO delete(@PathVariable Long id) {
         //TODO  查询关联表 是否存在业务
-
         return formTemplateService.delete(id);
     }
 
