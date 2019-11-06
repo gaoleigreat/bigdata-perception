@@ -4,9 +4,9 @@ define:
     type: com.alibaba.druid.pool.DruidDataSource
     write:
       driverClassName: com.mysql.cj.jdbc.Driver
-      url: ${define.mysql.template.username}
+      url: ${define.mysql.template.url}
       username: ${define.mysql.template.username}
-      password: ${define.mysql.template.username}
+      password: ${define.mysql.template.password}
       initialSize: 5    #初始化时建立连接个数
       minIdle: 5
       maxActive: 20     #连接池最大连接数
@@ -27,9 +27,9 @@ define:
       useGlobalDataSourceStat: true
     read1:
       driverClassName: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://192.168.105.22:3306/perception_template?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
-      username: tmp_slaver
-      password: tmp_slaver
+      url: ${define.mysql.template.url}
+      username: ${define.mysql.template.username}
+      password: ${define.mysql.template.password}
       initialSize: 5
       minIdle: 5
       maxActive: 20
