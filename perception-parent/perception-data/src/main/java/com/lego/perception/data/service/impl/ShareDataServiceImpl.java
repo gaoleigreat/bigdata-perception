@@ -44,11 +44,11 @@ public class ShareDataServiceImpl implements IShareDataService {
 
 
     @Override
-    public List<ShareData> selectDataByBatchNum(List<String> batchNums, String tags) {
+    public List<ShareData> selectDataByBatchNum(List<String> batchNums, String tags,Integer publishFlag) {
         List<ShareData> shareDataList = new ArrayList<>();
-        List<PerceptionStructuredData> perceptionStructuredDataList = iPerceptionStructuredDataService.selectDataByBatchNum(batchNums, tags);
+        List<PerceptionStructuredData> perceptionStructuredDataList = iPerceptionStructuredDataService.selectDataByBatchNum(batchNums, tags,publishFlag);
         perceptionStructuredDataList.forEach(psd -> shareDataList.add(convertPerceptionStructuredData2ShareData(psd)));
-        List<PerceptionUnstructuredData> perceptionUnstructuredDataList = iPerceptionUnstructuredDataService.selectDataByBatchNum(batchNums, tags);
+        List<PerceptionUnstructuredData> perceptionUnstructuredDataList = iPerceptionUnstructuredDataService.selectDataByBatchNum(batchNums, tags,publishFlag);
         perceptionUnstructuredDataList.forEach(psd -> shareDataList.add(convertPerceptionUnstructuredData2ShareData(psd)));
         return shareDataList;
     }
@@ -288,13 +288,13 @@ public class ShareDataServiceImpl implements IShareDataService {
     }
 
     @Override
-    public int updatePerceptionByBatchNum(List<String> batchNums, String tags, int isRecall) {
-        List<PerceptionStructuredData> perceptionStructuredDataList = iPerceptionStructuredDataService.selectDataByBatchNum(batchNums, tags);
+    public int updatePerceptionByBatchNum(List<String> batchNums, String tags, int isRecall,int publishFlag) {
+        List<PerceptionStructuredData> perceptionStructuredDataList = iPerceptionStructuredDataService.selectDataByBatchNum(batchNums, tags,publishFlag);
         if (!CollectionUtils.isEmpty(perceptionStructuredDataList)) {
             perceptionStructuredDataList.forEach(perceptionStructuredData -> perceptionStructuredData.setPublishFlag(isRecall));
         }
         iPerceptionStructuredDataService.batchUpdate(perceptionStructuredDataList);
-        List<PerceptionUnstructuredData> perceptionUnstructuredDataList = iPerceptionUnstructuredDataService.selectDataByBatchNum(batchNums, tags);
+        List<PerceptionUnstructuredData> perceptionUnstructuredDataList = iPerceptionUnstructuredDataService.selectDataByBatchNum(batchNums, tags,publishFlag);
         if (!CollectionUtils.isEmpty(perceptionUnstructuredDataList)) {
             perceptionUnstructuredDataList.forEach(perceptionUnstructuredData -> perceptionUnstructuredData.setPublishFlag(isRecall));
         }

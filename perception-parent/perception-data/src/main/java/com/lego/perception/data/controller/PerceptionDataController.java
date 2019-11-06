@@ -41,7 +41,7 @@ public class PerceptionDataController {
     public RespVO<RespDataVO<ShareData>> selectPerceptionByBatchNum(@RequestParam(value = "batchNum") String batchNum) {
         List<String> batchNums = new ArrayList<>();
         batchNums.add(batchNum);
-        List<ShareData> dataList = iShareDataService.selectDataByBatchNum(batchNums, null);
+        List<ShareData> dataList = iShareDataService.selectDataByBatchNum(batchNums, null, 0);
         return RespVOBuilder.success(dataList);
     }
 }

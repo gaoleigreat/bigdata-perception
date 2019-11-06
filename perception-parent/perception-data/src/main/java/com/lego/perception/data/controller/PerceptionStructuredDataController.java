@@ -200,7 +200,6 @@ public class PerceptionStructuredDataController {
             return RespVOBuilder.failure("上传文件失败");
         }
 
-        Set<PerceptionFile> dataFileSet = new HashSet<>();
         PerceptionStructuredData perceptionStructuredData = new PerceptionStructuredData();
         perceptionStructuredData.setPublishFlag(0);
         perceptionStructuredData.setDeleteFlag(0);
@@ -222,11 +221,11 @@ public class PerceptionStructuredDataController {
             size = size + f.getSize();
         }
         perceptionStructuredData.setSize(size);
-        perceptionStructuredDataService.insert(perceptionStructuredData);
-        if (dataFileSet.size() != files.length) {
-            return RespVOBuilder.failure("上传文件失败");
+        Integer insert = perceptionStructuredDataService.insert(perceptionStructuredData);
+        if(insert>0) {
+            return RespVOBuilder.success(perceptionStructuredData);
         }
-        return RespVOBuilder.success(respDataVORespVO.getInfo().getList().get(0).getBatchNum());
+        return RespVOBuilder.failure("上次失败");
     }
 
 

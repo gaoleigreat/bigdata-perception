@@ -210,7 +210,8 @@ public class PerceptionStructuredDataServiceImpl extends ServiceImpl<PerceptionS
 
     @Override
     public List<PerceptionStructuredData> selectDataByBatchNum(List<String> batchNums,
-                                                               String tags) {
+                                                               String tags,
+                                                               Integer publishFlag) {
         QueryWrapper<PerceptionStructuredData> wrapper = new QueryWrapper<>();
         if (!CollectionUtils.isEmpty(batchNums)) {
             wrapper.in("batch_num", batchNums);
@@ -222,7 +223,7 @@ public class PerceptionStructuredDataServiceImpl extends ServiceImpl<PerceptionS
             }
         }
         wrapper.eq("delete_flag",0);
-        wrapper.eq("publish_flag",0);
+        wrapper.eq("publish_flag",publishFlag);
         return perceptionStructuredDataMapper.selectList(wrapper);
     }
 }

@@ -189,13 +189,14 @@ public class ShareDataController {
     @Operation(value = "insertByBatchNums", desc = "通过批次号查询")
     public RespVO insertByBatchNums(@RequestParam(value = "bathNums") List<String> batchNums,
                                     @RequestParam(required = false) String tags) {
-        List<ShareData> dataList = shareDataService.selectDataByBatchNum(batchNums, tags);
+        List<ShareData> dataList = shareDataService.selectDataByBatchNum(batchNums, tags, 0);
         if (!CollectionUtils.isEmpty(dataList)) {
             List<ShareData> shareDataList = new ArrayList<>();
             for (ShareData shareData : dataList) {
                 //TODO  更新审核时间   审核人信息
                 shareData.setIsRecall(0);
                 shareData.setUpdateInfo();
+                shareData.setDeleteFlag(0);
                 shareDataList.add(shareData);
             }
             Integer batchInsert = shareDataService.batchInsert(shareDataList);
@@ -208,7 +209,6 @@ public class ShareDataController {
 
 
     @RequestMapping(value = "/recallByBatchAndTags", method = RequestMethod.GET)
-    @Operation(value = "recallByBatchAndTags", desc = "通过批次号撤回")
     public RespVO recallByBatchAndTags(@RequestParam(value = "bathNums") List<String> batchNums,
                                        @RequestParam(required = false, value = "tags") String tags) {
         RespVO<RespDataVO<ShareData>> dataVORespVO = shareDataService.selectByBatchNums(batchNums, tags, 0);
@@ -242,7 +242,7 @@ public class ShareDataController {
         if (respVO.getRetCode() != RespConsts.SUCCESS_RESULT_CODE) {
             return respVO;
         }
-        int byBatchNum = shareDataService.updatePerceptionByBatchNum(batchNums, null, 0);
+        int byBatchNum = shareDataService.updatePerceptionByBatchNum(batchNums, null, 0, 1);
         if (byBatchNum > 0) {
             return RespVOBuilder.success();
         }
@@ -260,7 +260,7 @@ public class ShareDataController {
         //  获取所属数据源
         List<String> batchNums = new ArrayList<>();
         batchNums.add(batchNum);
-        List<ShareData> dataList = shareDataService.selectDataByBatchNum(batchNums, null);
+        List<ShareData> dataList = shareDataService.selectDataByBatchNum(batchNums, null, 0);
         List<RemoteSharedData> remoteSharedDataList = new ArrayList<>();
         if (CollectionUtils.isEmpty(dataList)) {
             return RespVOBuilder.failure("共享数据不存在");
@@ -297,7 +297,7 @@ public class ShareDataController {
             Integer dataBatch = iRemoteShareDataService.saveRemoteDataBatch(remoteSharedDataList);
             if (dataBatch > 0) {
                 log.info("更新共享数据成功:{}", batchNums);
-                int byBatchNum = shareDataService.updatePerceptionByBatchNum(batchNums, null, 1);
+                int byBatchNum = shareDataService.updatePerceptionByBatchNum(batchNums, null, 1, 0);
                 if (byBatchNum > 0) {
                     log.info("更新数据表状态成功----------");
                     return RespVOBuilder.success();

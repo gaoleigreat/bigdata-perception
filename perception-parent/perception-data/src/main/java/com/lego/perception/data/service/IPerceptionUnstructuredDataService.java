@@ -116,5 +116,5 @@ public interface IPerceptionUnstructuredDataService {
      * @param tags
      * @return
      */
-    List<PerceptionUnstructuredData> selectDataByBatchNum(List<String> batchNums, String tags);
+    List<PerceptionUnstructuredData> selectDataByBatchNum(List<String> batchNums, String tags,Integer publishFlag);
 }

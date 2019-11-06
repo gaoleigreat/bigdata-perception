@@ -8,6 +8,7 @@ import com.framework.common.sdto.RespVO;
 import com.framework.common.sdto.RespVOBuilder;
 import com.lego.framework.base.annotation.Operation;
 import com.lego.framework.base.annotation.Resource;
+import com.lego.framework.event.log.LogSender;
 import com.lego.framework.system.model.entity.Project;
 import com.lego.perception.system.service.IProjectService;
 import io.swagger.annotations.Api;
@@ -33,6 +34,9 @@ public class ProjectController {
 
     @Autowired
     private IProjectService iProjectService;
+
+    @Autowired
+    private LogSender logSender;
 
     /**
      * 分页查询数据
@@ -82,7 +86,10 @@ public class ProjectController {
     public RespVO insert(@RequestBody Project project, HttpServletRequest request) {
         String userId = request.getHeader(HttpConsts.USER_ID);
         Integer num = iProjectService.insertSelective(project, Long.valueOf(userId));
-        return RespVOBuilder.success();
+        if (num > 0) {
+            return RespVOBuilder.success();
+        }
+        return RespVOBuilder.failure("新增项目失败");
     }
 
     /**
@@ -97,6 +104,7 @@ public class ProjectController {
         String userId = request.getHeader(HttpConsts.USER_ID);
         Integer num = iProjectService.updateByPrimaryKeySelective(project, Long.valueOf(userId));
         if (num > 0) {
+            logSender.sendLogEvent(request, "修改项目", "修改项目", "system-service", "修改项目", "UPDATE");
             return RespVOBuilder.success();
         }
         return RespVOBuilder.failure("修改失败");

@@ -208,9 +208,9 @@ public class PerceptionUnstructuredDataServiceImpl implements IPerceptionUnstruc
     }
 
     @Override
-    public List<PerceptionUnstructuredData> selectDataByBatchNum(List<String> batchNums, String tags) {
+    public List<PerceptionUnstructuredData> selectDataByBatchNum(List<String> batchNums, String tags,Integer publishFlag) {
         QueryWrapper<PerceptionUnstructuredData> wrapper = new QueryWrapper<>();
-        if (CollectionUtils.isEmpty(batchNums)) {
+        if (!CollectionUtils.isEmpty(batchNums)) {
             wrapper.in("batch_num", batchNums);
         }
         if (!StringUtils.isEmpty(tags)) {
@@ -219,7 +219,7 @@ public class PerceptionUnstructuredDataServiceImpl implements IPerceptionUnstruc
                 wrapper.in("tags", split);
             }
         }
-        wrapper.eq("publish_flag", 0);
+        wrapper.eq("publish_flag", publishFlag);
         wrapper.eq("delete_flag", 0);
         return perceptionUnstructuredDataMapper.selectList(wrapper);
     }

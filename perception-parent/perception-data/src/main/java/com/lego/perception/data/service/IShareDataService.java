@@ -29,7 +29,7 @@ public interface IShareDataService {
      * @param tags
      * @return
      */
-    List<ShareData> selectDataByBatchNum(List<String> batchNum,String tags);
+    List<ShareData> selectDataByBatchNum(List<String> batchNum,String tags,Integer publishFlag);
 
 
     /**
@@ -143,5 +143,5 @@ public interface IShareDataService {
      * @param isRecall
      * @return
      */
-    int updatePerceptionByBatchNum(List<String> batchNums, String tags,int isRecall);
+    int updatePerceptionByBatchNum(List<String> batchNums, String tags,int isRecall,int publishFlag);
 }

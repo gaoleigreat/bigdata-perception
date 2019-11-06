@@ -119,5 +119,5 @@ public interface IPerceptionStructuredDataService extends IService<PerceptionStr
      * @param tags
      * @return
      */
-    List<PerceptionStructuredData> selectDataByBatchNum(List<String> batchNums, String tags);
+    List<PerceptionStructuredData> selectDataByBatchNum(List<String> batchNums, String tags,Integer publishFlag);
 }
