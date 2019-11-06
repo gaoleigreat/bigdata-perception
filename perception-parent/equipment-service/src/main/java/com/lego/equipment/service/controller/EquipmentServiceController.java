@@ -73,7 +73,10 @@ public class EquipmentServiceController {
     public RespVO<Integer> deleteByPrimaryKey(@RequestParam Long id) {
 
         Integer num = equipmentServiceService.deleteByPrimaryKey(id);
-        return RespVOBuilder.success(num);
+        if (num > 0) {
+            return RespVOBuilder.success(num);
+        }
+        return RespVOBuilder.failure("删除维修项失败");
     }
 
 
@@ -90,8 +93,10 @@ public class EquipmentServiceController {
     public RespVO<Integer> insert(@RequestBody EquipmentService equipmentService) {
 
         Integer num = equipmentServiceService.insert(equipmentService);
-
-        return RespVOBuilder.success(num);
+        if (num > 0) {
+            return RespVOBuilder.success(num);
+        }
+        return RespVOBuilder.failure("新增维修项失败");
     }
 
     /**
@@ -122,7 +127,10 @@ public class EquipmentServiceController {
     public RespVO<Integer> updateByPrimaryKeySelective(@RequestBody EquipmentService tplEquipmentService) {
 
         Integer num = equipmentServiceService.updateByPrimaryKeySelective(tplEquipmentService);
-        return RespVOBuilder.success(num);
+        if (num > 0) {
+            return RespVOBuilder.success();
+        }
+        return RespVOBuilder.failure("修改维修项失败");
     }
 
 
