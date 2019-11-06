@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@FeignClient(value = "file-service", path = "/perceptionUnstructuredData", fallbackFactory = PerceptionUnstructuredDataClientFallback.class, configuration = MultipartSupportConfig.class)
+@FeignClient(value = "data-service", path = "/perceptionUnstructuredData", fallbackFactory = PerceptionUnstructuredDataClientFallback.class, configuration = MultipartSupportConfig.class)
 public interface PerceptionUnstructuredDataClient {
 
 

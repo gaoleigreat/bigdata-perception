@@ -68,7 +68,7 @@ public class PerceptionFile  {
      */
     
     @ApiModelProperty("结构化为0，非结构化为1")
-    private int isStructured;
+    private Integer isStructured;
 
 
     /**
